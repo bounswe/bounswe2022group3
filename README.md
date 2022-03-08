@@ -1,7 +1,7 @@
 ## CmpE 352 Spring 2022 - Group 3
 
 ## Description
-Welcome to our github repository for Bogazici University's Fundamentals of Software Engineering courses, CMPE352. We are working on an Academic Collaboration Platform project as group 3. For further information, please see our [Wiki](https://github.com/bounswe/bounswe2022group3/wiki) page.
+Welcome to our github repository for Bogazici University's Fundamentals of Software Engineering courses, CMPE352. For further information, please see our [Wiki](https://github.com/bounswe/bounswe2022group3/wiki) page.
 
 ## Project
 _Hopefully more will follow soon._
