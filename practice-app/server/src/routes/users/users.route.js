@@ -9,7 +9,7 @@ usersRouter.post(
     "/register",
     validate("register"),
     handleValidation,
-    UserController.registerUser
+    UserController.register
 );
 
 module.exports = usersRouter;
