@@ -1,0 +1,43 @@
+@import "../../styles/variables.scss";
+
+.container {
+    display: grid;
+    align-items: center;
+    height: 100vh;
+}
+
+.loginFormContainer {
+    text-align: center;
+    font-size: 1.5rem;
+    margin-top: 1.5rem;
+
+    h1 {
+        font-family: "Sacramento", sans-serif;
+    }
+
+    div {
+        font-size: 0.8rem;
+    }
+
+    p {
+        display: inline;
+    }
+
+    a {
+        color: $secondary;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    button {
+        margin-top: 0;
+    }
+
+    @media screen and (min-width: 48rem) {
+        margin-top: -2.5rem;
+
+        h1 {
+            margin-bottom: 3.5rem;
+        }
+    }
+}

@@ -1,0 +1,26 @@
+@import '../../styles/variables.scss';
+
+.button {
+    font-family: "Montserrat", sans-serif;
+    width: 100%;
+    border: 3px solid $base-color;
+    background-color: $base-color;
+    text-transform: uppercase;
+    outline: none;
+    height: 3rem;
+    color: #fff;
+    font-size: 1rem;
+    letter-spacing: 2px;
+    margin-top: 1.25rem;
+    font-weight: 600;
+    transition: .5s;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    display: block;
+    margin: 1rem auto;
+
+    &:hover {
+        background-color: #fff;
+        color: $base-color;
+    }
+}
