@@ -1,4 +1,4 @@
-const { db } = require("../../services/db");
+// const { db } = require("../../services/db");
 
 const ChessModel = {
     createGame: async function (game_id, color) {
