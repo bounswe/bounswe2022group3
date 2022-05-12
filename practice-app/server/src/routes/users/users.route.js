@@ -11,5 +11,12 @@ usersRouter.post(
     handleValidation,
     UserController.register
 );
+usersRouter.post(
+    "/login",
+    validate("login"),
+    handleValidation,
+    UserController.login
+);
+
 
 module.exports = usersRouter;
