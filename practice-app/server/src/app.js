@@ -14,6 +14,6 @@ app.use(express.json());
 
 morganBody(app);
 
-app.use("/v1", api);
+app.use("/", api);
 
 module.exports = app;
