@@ -13,10 +13,15 @@ twitterSearchRouter.post(
 );
 twitterSearchRouter.get(
     "/listen",
-    validate("listen"),
-    handleValidation,
     TwitterSearchController.listenStream
-
+)
+twitterSearchRouter.get(
+    "/rules",
+    TwitterSearchController.getRules
+)
+twitterSearchRouter.get(
+    "/getTweets",
+    TwitterSearchController.getTweets
 )
 
 module.exports = twitterSearchRouter;

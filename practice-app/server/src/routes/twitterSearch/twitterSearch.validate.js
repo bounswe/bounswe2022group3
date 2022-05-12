@@ -9,10 +9,5 @@ exports.validate = (method) => {
                 body("lang", "please provide a language").exists().isString().isLength({ min: 1 }),
             ];
         }
-        case "listen": {
-            return [
-                query("tag", "please provide a tag").exists().isString().isLength({ min: 1 }),
-            ];
-        }
     }
 };

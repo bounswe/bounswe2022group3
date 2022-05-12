@@ -1,7 +1,6 @@
 const axios = require("axios");
-const res = require("express/lib/response");
-const needle = require('needle')
-
+const TweetModel = require("../../models/tweet/tweet.model")
+const request = require('request');
 
 
 const API_URL = 'https://api.twitter.com/2'
@@ -20,6 +19,20 @@ const defineRule = (hashtag, has_image, lang) => {
 }
 
 const TwitterSearchController = {
+    getRules: async (req, res) => {
+        const options = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${process.env.TWITTER_BEARER_TOKEN}`,
+            }
+        };
+        const response = (await axios.get(`${API_URL}/tweets/search/stream/rules`, options)).data;
+        console.log(response);
+        res.status(200).json(
+            response.data.map(e => e.value)
+        )
+
+    },
     createRule: async (req, res) => {
         try {
             const { hashtag, has_image, lang } = req.body;
@@ -54,38 +67,44 @@ const TwitterSearchController = {
         }
     },
     listenStream: async (req, res) => {
-
         const url = "https://api.twitter.com/2/tweets/search/stream?tweet.fields=created_at&expansions=author_id&user.fields=created_at"
-        const stream = needle.get(url, {
-            headers: {
-                "User-Agent": "v2FilterStreamJS",
-                'Authorization': `Bearer ${process.env.TWITTER_BEARER_TOKEN}`,
-            },
-        });
-
-        stream.on('data', data => {
-            try {
+        try {
+            const stream = request({
+                method: "GET",
+                url: url,
+                json: true,
+                forever: false,
+                headers: {
+                    'Authorization': `Bearer ${process.env.TWITTER_BEARER_TOKEN}`,
+                },
+            }).on("data", (data) => {
                 const json = JSON.parse(data);
+                const { tag } = json.matching_rules[0]
                 const tweet = json.data
+                console.log(tweet);
+                const tweetObject = new TweetModel({
+                    id: tweet.id,
+                    date: tweet.created_at,
+                    text: tweet.text,
+                    author_id: tweet.author_id,
+                    tag,
+                })
+                tweetObject.save()
+                // res.write(JSON.stringify(tweet) + '\n')
+            });
 
-                console.log(json);
-                res.write(JSON.stringify(tweet) + '\n')
-
-            } catch (e) {
-                console.log(e);
-            }
-        }).on('err', error =>
-            res.end()
-        );
-        req.on('close', () => {
-            try {
-                stream.removeAllListeners()
-                stream.request.end()
+            res.status(200).json({ message: "Will listern for 20 seconds" })
+            setTimeout(() => {
                 stream.abort()
-            } catch (error) {
-                console.log(error);
-            }
-        })
+            }, 20000);
+        } catch (error) {
+            console.log(error);
+        }
+    },
+    getTweets: async (req, res) => {
+        const { tag } = req.query
+        const tweets = await TweetModel.find({ tag }, { "__v": 0, "_id": 0 }).lean()
+        res.status(200).json(tweets)
     }
 }
 
