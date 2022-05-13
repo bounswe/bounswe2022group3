@@ -17,9 +17,13 @@
     "dotenv": "^16.0.0",
     "express": "^4.17.2",
     "express-validator": "^6.14.0",
+    "i": "^0.3.7",
     "mongoose": "^6.3.3",
     "morgan-body": "^2.6.6",
-    "needle": "^3.1.0"
+    "ndjson": "^2.0.0",
+    "ndjson-parse": "^1.0.4",
+    "needle": "^3.1.0",
+    "npm": "^8.10.0"
   },
   "devDependencies": {
     "jest": "^28.1.0",
