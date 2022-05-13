@@ -1,13 +1,16 @@
 const http = require("http");
 const mongoose = require('mongoose');
+const jwkToPem = require("jwk-to-pem");
+const axios = require("axios");
 require("dotenv").config();
 
 const app = require("./app");
 
 const PORT = process.env.API_PORT;
 const server = http.createServer(app);
-
 const DB = process.env.DB;
+const AUTH0_DOMAIN = process.env.auth0_domain
+var KEYS =[];
 
 const connectDB = async () => {
     await mongoose
@@ -35,6 +38,22 @@ const connectDB = async () => {
 
 };
 
+const getJwks = async () => {
+    const url = `https://${AUTH0_DOMAIN}/.well-known/jwks.json`;
+    const response = (await axios.get(url)).data;
+    //const pem = jwkToPem()
+    //console.log(response);
+    response.keys.forEach(function(e,i,a) {
+        //console.log("--->>", e);
+        const pem = jwkToPem(e)
+        KEYS.push(pem);
+    });
+    KEYS.forEach(function(e,i,a) {
+        //console.log("--->>", e);
+    });
+};
+
+getJwks();
 
 async function startServer() {
   server.listen(PORT, () => {
