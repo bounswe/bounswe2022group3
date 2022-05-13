@@ -35,7 +35,20 @@ export default function register() {
         // use axios to make request, 
         // API_URL is base url of server,
         // redirect user to login page on success.
-        console.log(values)
+        try{
+            console.log(values)
+            const url = `${API_URL}/users/register`;
+            const payload = {
+                'first_name': values.first_name,
+                'last_name': values.last_name,
+                'email': values.email,
+                'password': values.password,
+            };
+            const response = (await axios.post(url, payload)).data;
+            console.log(response)
+        }catch (error) {
+            console.log(error.toString());
+        }
     };
 
     return (

@@ -27,7 +27,13 @@ export default function login() {
         // use axios to make request, 
         // API_URL is base url of server,
         // use router.push("some_route") to redirext user.
-        console.log(values)
+        const url = `${API_URL}/users/login`;
+        const payload = {
+            'email': values.username,
+            'password': values.password,
+        };
+        const response = (await axios.post(url, payload)).data;
+        console.log(response)
     };
 
     return (
@@ -68,7 +74,7 @@ export default function login() {
                                 {errors.password}
                             </div>
                         )}
-                        <Button type="submit">Sign up</Button>
+                        <Button type="submit">Login</Button>
                         <div>
                             <p>Don't have an account?</p>{" "}
                             <Link href="/user/register">Click here</Link>
