@@ -34,6 +34,7 @@ export default function login() {
         };
         const response = (await axios.post(url, payload)).data;
         console.log(response)
+        localStorage.setItem('access_token',response.access_token);
     };
 
     return (
