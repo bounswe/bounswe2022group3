@@ -5,16 +5,12 @@ const request = require('request');
 
 const API_URL = 'https://api.twitter.com/2'
 
-const defineRule = (hashtag, has_image, lang) => {
+const defineRule = (hashtag, ) => {
     // Insert # if not provided 
     if (hashtag.length > 0 && hashtag[0] != '#')
         hashtag = `#${hashtag}`
     let rule = hashtag
-    if (has_image)
-        rule += ` has:images`
-    if (lang)
-        rule += ` lang:${lang}`
-    const tag = `${hashtag} in ${lang}${has_image ? ' that has image(s)' : ''}`
+    const tag = `${hashtag}`
     return { rule, tag }
 }
 
@@ -29,7 +25,7 @@ const TwitterSearchController = {
         const response = (await axios.get(`${API_URL}/tweets/search/stream/rules`, options)).data;
         console.log(response);
         res.status(200).json(
-            response.data.map(e => e.value)
+            response.data.map(e => e.tag)
         )
 
     },
@@ -78,11 +74,12 @@ const TwitterSearchController = {
                     'Authorization': `Bearer ${process.env.TWITTER_BEARER_TOKEN}`,
                 },
             }).on("data", (data) => {
+                try {
+                    if(data.length < 10)return;
                 const json = JSON.parse(data);
                 const { tag } = json.matching_rules[0]
                 const tweet = json.data
-                console.log(tweet);
-                const tweetObject = new TweetModel({
+                const tweetObject = new TweetModel.Tweet({
                     id: tweet.id,
                     date: tweet.created_at,
                     text: tweet.text,
@@ -90,21 +87,22 @@ const TwitterSearchController = {
                     tag,
                 })
                 tweetObject.save()
-                // res.write(JSON.stringify(tweet) + '\n')
+            } catch (error) {
+             console.log(error);       
+            }
             });
-
-            res.status(200).json({ message: "Will listern for 20 seconds" })
+            res.status(200).json({ message: "Will listern for 2 minutes" })
             setTimeout(() => {
                 stream.abort()
-            }, 20000);
+            }, 2*60*1000);
         } catch (error) {
             console.log(error);
         }
     },
     getTweets: async (req, res) => {
-        const { tag } = req.query
-        const tweets = await TweetModel.find({ tag }, { "__v": 0, "_id": 0 }).lean()
-        res.status(200).json(tweets)
+        const { tags } = req.body
+        let counts = await TweetModel.getTweets(tags)        
+        res.status(200).json(counts)
     }
 }
 

@@ -35,14 +35,14 @@ const getTweets = async (x) => {
         },
         {
             $facet: {
-                // 0: [
-                //     { $match: { diff: { $eq: -0 } } },
-                //     {
-                //         $group: {
-                //             _id: "$tag", averageLength: { $avg: "$length" }, avgNumberOfWords: { $avg: "$numberOfWords" }
-                //         }
-                //     },
-                // ],
+                0: [
+                    { $match: { diff: { $eq: -0 } } },
+                    {
+                        $group: {
+                            _id: "$tag", averageLength: { $avg: "$length" }, avgNumberOfWords: { $avg: "$numberOfWords" }
+                        }
+                    },
+                ],
                 1: [
                     { $match: { diff: { $eq: -1 } } },
                     {

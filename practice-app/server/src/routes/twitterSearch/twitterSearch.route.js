@@ -19,8 +19,10 @@ twitterSearchRouter.get(
     "/rules",
     TwitterSearchController.getRules
 )
-twitterSearchRouter.get(
-    "/getTweets",
+twitterSearchRouter.post(
+    "/get_tweets",
+    validate("get_tweets"),
+    handleValidation,
     TwitterSearchController.getTweets
 )
 

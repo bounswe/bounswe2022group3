@@ -5,8 +5,11 @@ exports.validate = (method) => {
         case "create_rule": {
             return [
                 body("hashtag", "please provide a hashtag").exists().isString().isLength({ min: 3 }),
-                body("has_image", "indicate whether tweets must include images or nor").exists().isBoolean(),
-                body("lang", "please provide a language").exists().isString().isLength({ min: 1 }),
+            ];
+        }
+        case "get_tweets": {
+            return [
+                body("tags", "please provide a list of tags").exists().isArray(),
             ];
         }
     }
