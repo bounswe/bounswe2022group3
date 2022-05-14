@@ -32,7 +32,7 @@ export default function Tweets() {
         }
         try {
             const body = { tags: s }
-            const res = await axios.post(`${API_URL}/twitterSearch/getTweets`, body)
+            const res = await axios.post(`${API_URL}/twitterSearch/get_tweets`, body)
             setAverageLengths(res.data.averageLengths)
             setAverageWordCounts(res.data.averageWordCounts)
             setTags(res.data.tags)
