@@ -12,6 +12,12 @@ twitterSearchRouter.post(
     TwitterSearchController.createRule
 );
 twitterSearchRouter.get(
+    "/delete_rule",
+    validate("delete_rule"),
+    handleValidation,
+    TwitterSearchController.deleteRule
+);
+twitterSearchRouter.get(
     "/listen",
     TwitterSearchController.listenStream
 )
@@ -25,5 +31,6 @@ twitterSearchRouter.post(
     handleValidation,
     TwitterSearchController.getTweets
 )
+
 
 module.exports = twitterSearchRouter;

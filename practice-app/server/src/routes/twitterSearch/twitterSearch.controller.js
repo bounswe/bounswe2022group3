@@ -26,7 +26,7 @@ const TwitterSearchController = {
         if (response.data.length > 5) {
             // Delete the oldest rule if there are more than 5 rules since Twitter API returns only 5 rules in one stream
             const idToDelete = response.data[0].id
-            axios.post(`${API_URL}/tweets/search/stream/rules`, { "delete": { "ids": [idToDelete] } },options)
+            axios.post(`${API_URL}/tweets/search/stream/rules`, { "delete": { "ids": [idToDelete] } }, options)
         }
         res.status(200).json(
             response.data.map(e => e.tag)
@@ -60,7 +60,8 @@ const TwitterSearchController = {
             }
             res.status(201).json({
                 message: `Created a rule with tag \'${tag}\'`,
-                tag
+                tag,
+                id: response.data[0].id
             })
         } catch (error) {
             console.log(error.toString());
@@ -107,7 +108,21 @@ const TwitterSearchController = {
         const { tags } = req.body
         let counts = await TweetModel.getTweets(tags)
         res.status(200).json(counts)
-    }
+    },
+    deleteRule: async (req, res) => {
+        const { id } = req.query
+        console.log(id);
+        const options = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${process.env.TWITTER_BEARER_TOKEN}`,
+            }
+        };
+        axios.post(`${API_URL}/tweets/search/stream/rules`, {
+            "delete": { "ids": [id] }
+        }, options)
+        res.status(200).json({})
+    },
 }
 
 module.exports = TwitterSearchController
