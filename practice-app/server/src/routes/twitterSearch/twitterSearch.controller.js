@@ -5,7 +5,7 @@ const request = require('request');
 
 const API_URL = 'https://api.twitter.com/2'
 
-const defineRule = (hashtag, ) => {
+const defineRule = (hashtag) => {
     // Insert # if not provided 
     if (hashtag.length > 0 && hashtag[0] != '#')
         hashtag = `#${hashtag}`
@@ -23,7 +23,11 @@ const TwitterSearchController = {
             }
         };
         const response = (await axios.get(`${API_URL}/tweets/search/stream/rules`, options)).data;
-        console.log(response);
+        if (response.data.length > 5) {
+            // Delete the oldest rule if there are more than 5 rules since Twitter API returns only 5 rules in one stream
+            const idToDelete = response.data[0].id
+            axios.post(`${API_URL}/tweets/search/stream/rules`, { "delete": { "ids": [idToDelete] } },options)
+        }
         res.status(200).json(
             response.data.map(e => e.tag)
         )
@@ -31,8 +35,8 @@ const TwitterSearchController = {
     },
     createRule: async (req, res) => {
         try {
-            const { hashtag, has_image, lang } = req.body;
-            let { rule, tag } = defineRule(hashtag, has_image, lang)
+            const { hashtag } = req.body;
+            let { rule, tag } = defineRule(hashtag)
             const payload = {
                 "add": [
                     {
@@ -75,33 +79,33 @@ const TwitterSearchController = {
                 },
             }).on("data", (data) => {
                 try {
-                    if(data.length < 10)return;
-                const json = JSON.parse(data);
-                const { tag } = json.matching_rules[0]
-                const tweet = json.data
-                const tweetObject = new TweetModel.Tweet({
-                    id: tweet.id,
-                    date: tweet.created_at,
-                    text: tweet.text,
-                    author_id: tweet.author_id,
-                    tag,
-                })
-                tweetObject.save()
-            } catch (error) {
-             console.log(error);       
-            }
+                    if (data.length < 10) return;
+                    const json = JSON.parse(data);
+                    const { tag } = json.matching_rules[0]
+                    const tweet = json.data
+                    const tweetObject = new TweetModel.Tweet({
+                        id: tweet.id,
+                        date: tweet.created_at,
+                        text: tweet.text,
+                        author_id: tweet.author_id,
+                        tag,
+                    })
+                    tweetObject.save()
+                } catch (error) {
+                    console.log(error);
+                }
             });
-            res.status(200).json({ message: "Will listern for 2 minutes" })
+            res.status(200).json({ message: "System will listen to tweets for 2 minutes." })
             setTimeout(() => {
                 stream.abort()
-            }, 2*60*1000);
+            }, 2 * 60 * 1000);
         } catch (error) {
             console.log(error);
         }
     },
     getTweets: async (req, res) => {
         const { tags } = req.body
-        let counts = await TweetModel.getTweets(tags)        
+        let counts = await TweetModel.getTweets(tags)
         res.status(200).json(counts)
     }
 }
