@@ -14,6 +14,10 @@ quizRouter.get
     quizController.quizCategoryInfo
 );
 
+quizRouter.post(
+    "/new_quiz",
+    quizController.createQuiz
+);
 
 
 module.exports = quizRouter;
