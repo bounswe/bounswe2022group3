@@ -18,6 +18,7 @@
     "express": "^4.17.2",
     "express-validator": "^6.14.0",
     "i": "^0.3.7",
+    "mongodb-memory-server-core": "^8.5.2",
     "mongoose": "^6.3.3",
     "morgan-body": "^2.6.6",
     "ndjson": "^2.0.0",
