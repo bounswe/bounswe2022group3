@@ -21,6 +21,23 @@ const QuizController =
         return res.status(200).json(response);
     },
 
+    quizCategoryInfo: async function (req,res) 
+    {
+        console.log("imma here")
+        try
+        {
+        console.log("imma there")
+
+            const response = await QuizCategories.find({}, 'category_id name')
+            return res.status(200).json(response)
+        }        
+        catch(e)
+        {
+            return res.status(500).json({message: "Could not retrieve categories"})
+        }
+    },
+
+
 };
 
 module.exports = QuizController; 

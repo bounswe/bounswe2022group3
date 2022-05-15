@@ -21,15 +21,7 @@ const quizSchema = new mongoose.Schema
     questions : {type : [String]},
 });
 
-/*const questionSchema = new mongoose.Schema
-({
-    question_body : {type : String},
-    correct_answer : {type : String},
-    incorrect_answers : {type : [String]},
-});*/
-
 const Quiz = mongoose.model("Quiz", quizSchema)
-//const Question = mongoose.model("Question", questionSchema)
 const QuizCategories = mongoose.model("QuizCategories", categorySchema)
 module.exports = {Quiz, QuizCategories}
 

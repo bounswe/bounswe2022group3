@@ -3,10 +3,15 @@ const quizController = require("./quiz.controller");
 
 const quizRouter = express.Router();
 
-quizRouter.get
+/*quizRouter.get
 (
     "/one_shot",
     quizController.oneShotCategorySaver
+);*/
+quizRouter.get
+(
+    "/categories",
+    quizController.quizCategoryInfo
 );
 
 
