@@ -1,9 +1,9 @@
 const express = require("express");
-const usersRouter = require("./users/users.route");
+const quizRouter = require("./quiz/quiz.route");
 
 const api = express.Router();
 
-api.use("/users", usersRouter);
+api.use("/quiz", quizRouter);
 
 module.exports = {
   api,

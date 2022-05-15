@@ -1,23 +1,9 @@
-const Pool = require('pg').Pool
-const Query = require('pg').Query;
-const submit = Query.prototype.submit;
+const mongoose = require("mongoose");
 
-const pool = new Pool({
-  user: process.env.DB_USER,
-  host: process.env.DB_HOST,
-  database: process.env.DB_NAME,
-  password: process.env.DB_PASSWORD,
-  port: process.env.DB_PORT
-})
+const db = mongoose.connection;
+db.on("error", console.error.bind(console, "connection error: "));
+db.once("open", function () {
+    console.log("Connected successfully");
+});
 
-Query.prototype.submit = function () {
-  const text = this.text;
-  const values = this.values || [];
-  const query = text.replace(/\$([0-9]+)/g, (m, v) => JSON.stringify(values[parseInt(v) - 1]))
-  console.log(query.split("\n").map((v) => v.trim()).join("\n"));
-  submit.apply(this, arguments);
-};
-
-module.exports = {
-    db: pool
-}
+module.exports = db;
