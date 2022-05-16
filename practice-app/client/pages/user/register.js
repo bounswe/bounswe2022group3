@@ -54,12 +54,11 @@ export default function register() {
                 router.push(`/user/login`);
             }
             else{
-                toast.warning(`Registration failed due to, "${response_signup.message}", try again!`);
+                console.log(response_signup.message);
             }
 
         }catch (error) {
             console.log(error.toString());
-            toast.warning(`Something went wrong, try again`);
         }
     };
 

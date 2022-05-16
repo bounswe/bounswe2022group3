@@ -48,11 +48,10 @@ export default function login() {
                 toast.success('Welcome to the desert of the real!')
             }
             else{
-                toast.warning(`Login failed due to "${response.message}", try again!`);
+                console.log(response.message);
             }
         }catch(error){
             console.log(error.toString());
-            toast.warning(`Something went wrong, try again`); // Dont show user error message ??????
         }
     };
 
