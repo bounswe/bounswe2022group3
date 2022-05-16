@@ -14,7 +14,6 @@ import {
     DialogContentText,
     DialogTitle,
 } from "@mui/material";
-import { TRUE } from "sass";
 
 export default function Board() {
     const chessboardRef = useRef();
