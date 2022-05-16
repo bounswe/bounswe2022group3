@@ -23,8 +23,6 @@ const connectDB = async () => {
 
 connectDB();
 
-mongoose.connection.useDb("practice");
-
 const PORT = process.env.API_PORT;
 const server = http.createServer(app);
 
