@@ -47,6 +47,7 @@ This directory contains useful services that can be used in Models or Routes.
 API_PORT=5000
 
 FRONTEND_URL=http://localhost:3001
+LICHESS_TOKEN=<LICHESS_TOKEN>
 
 DB_PORT=<database_port> # (i.e. 5432)
 DB_USER=<database_user> # (i.e. postgres)
