@@ -1,12 +1,13 @@
 const axios = require("axios");
 const jwkToPem = require("jwk-to-pem");
-
+require("dotenv").config();
 var KEYS =[];
 const AUTH0_DOMAIN = process.env.auth0_domain
 
 const getJwks = async () => {
     try{
         const url = `https://${AUTH0_DOMAIN}/.well-known/jwks.json`;
+        console.log(process.env.auth0_domain)
         const response = (await axios.get(url)).data;
         response.keys.forEach(function(e,i,a) {
             const pem = jwkToPem(e)
