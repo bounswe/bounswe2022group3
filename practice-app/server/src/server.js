@@ -1,5 +1,6 @@
 const http = require("http");
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
+const jwks = require("./services/jwkeys")
 require("dotenv").config();
 
 const app = require("./app");
@@ -26,6 +27,9 @@ mongoose.connection.useDb("practice");
 
 const PORT = process.env.API_PORT;
 const server = http.createServer(app);
+
+jwks.getJwks();
+
 
 async function startServer() {
     server.listen(PORT, () => {
