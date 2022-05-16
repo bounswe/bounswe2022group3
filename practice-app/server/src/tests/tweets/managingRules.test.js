@@ -1,9 +1,9 @@
 const supertest = require("supertest");
 const { MongoMemoryServer } = require("mongodb-memory-server-core");
 const mongoose = require("mongoose");
-const app = require("../app");
+const app = require("../../app");
 
-describe("Chess", () => {
+describe("Tweets - Managing Rules", () => {
     beforeAll(async () => {
         const mongoServer = await MongoMemoryServer.create();
         await mongoose.connect(mongoServer.getUri());
