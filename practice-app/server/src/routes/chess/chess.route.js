@@ -12,4 +12,26 @@ chessRouter.post(
     ChessController.createGame
 );
 
+chessRouter.post(
+    "/make_move",
+    validate("make_move"),
+    handleValidation,
+    ChessController.makeMove
+);
+
+chessRouter.get(
+    "/stream_game/:gameId",
+    ChessController.streamGame
+);
+
+chessRouter.get(
+    "/games",
+    ChessController.getGames
+);
+
+chessRouter.get(
+    "/game/:gameId",
+    ChessController.getGame
+);
+
 module.exports = chessRouter;
