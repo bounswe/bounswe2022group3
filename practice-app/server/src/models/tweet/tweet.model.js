@@ -106,13 +106,6 @@ const getTweets = async (x) => {
                             _id: "$tag", averageLength: { $avg: "$length" }, avgNumberOfWords: { $avg: "$numberOfWords" }
                         }
                     },],
-                10: [
-                    { $match: { diff: { $eq: -10 } } },
-                    {
-                        $group: {
-                            _id: "$tag", averageLength: { $avg: "$length" }, avgNumberOfWords: { $avg: "$numberOfWords" }
-                        }
-                    },],
             }
         },
     ]);
