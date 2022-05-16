@@ -1,9 +1,6 @@
 const supertest = require("supertest");
-const { MongoMemoryServer } = require("mongodb-memory-server-core");
-const mongoose = require("mongoose");
 const app = require("../app");
 const axios = require("axios");
-const ChessGame = require("../models/chess/chess.model");
 const { dbConnect, dbDisconnect } = require("./utils/db");
 jest.mock("axios");
 
@@ -138,7 +135,7 @@ describe("Chess", () => {
     });
 
     describe("games route", () => {
-        describe("-", () => {
+        describe("given user wants to list all games", () => {
             it("should return a 200 with correct response", async () => {
                 const { body, statusCode } = await supertest(app).get(
                     "/chess/games"
