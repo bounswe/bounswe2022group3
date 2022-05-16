@@ -19,27 +19,53 @@ const authorization = async (req, res, next) => {
         // JWT Validation
         // Get pem certificates and verify the header token
         const pem = jwks.getPem();
-        jwt.verify(req.headers.authorization, pem, (err, decoded) => {
-            tokenError = err;
-            decrytedData = decoded;
-        });
-        // Token audience validation
         try{
-            if(decrytedData.aud !== aud ){
-                return res.status(400).json({
-                    message: "Audience mismatch !",
-                });
-            }
+            token = req.headers.authorization
         }catch (error){
             return res.status(400).json({
                 message: error.toString(),
             });
         }
-        // Acquire ID from decrypted token and 
+        if(!token){
+            return res.status(400).json({
+                message: "Authorization token missing !",
+            });
+        }
+        token = token.substring(7);
+        jwt.verify(token, pem, (err, decoded) => {
+            tokenError = err;
+            decrytedData = decoded;
+        });
+        // Token audience validation
+        try{
+            if(tokenError){
+                return res.status(400).json({
+                    message: tokenError.toString(),
+                });
+            }
+            if(decrytedData.aud !== aud ){
+                return res.status(400).json({
+                    message: "Audience mismatch !",
+                });
+            }
+            // Acquire ID from decrypted token
+            id = decrytedData.sub.substring(6);
+        }catch (error){
+            return res.status(400).json({
+                message: error.toString(),
+            });
+        }
+        
         // Get user data, inserting it to request
-        const id = decrytedData.sub.substring(6);
         const user = await UserModel.getUserByID(id);
-        req.auth = user
+        if(user){
+            req.auth = user
+        }
+        else{
+            return res.status(400).json({
+                message: "There is no existing user with the given token !",
+            });
+        }
         return next();
     }catch (error) {
         console.log(error.toString());

@@ -2,6 +2,7 @@ import axios from "axios";
 import { Field, Form, Formik } from "formik";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { toast } from "react-toastify";
 import * as Yup from "yup";
 import Button from "../../components/Button/Button";
 import AuthLayout from "../../layouts/auth/AuthLayout";
@@ -27,14 +28,32 @@ export default function login() {
         // use axios to make request, 
         // API_URL is base url of server,
         // use router.push("some_route") to redirext user.
-        const url = `${API_URL}/users/login`;
-        const payload = {
-            'email': values.username,
-            'password': values.password,
-        };
-        const response = (await axios.post(url, payload)).data;
-        console.log(response)
-        localStorage.setItem('access_token',response.access_token);
+
+        try{
+            const url = `${API_URL}/users/login`;
+            const payload = {
+                'email': values.username,
+                'password': values.password,
+            };
+            const response = (await axios.post(url, payload)).data;
+            if(response.access_token){ // Login Successfull
+
+
+                // TODO:  router.push("index page"), we need an index page to redirect from login
+                
+                // To redirect from login to your endpoint OPEN the comment below and insert your endpoint route !!
+                // router.push("some_route")
+
+                localStorage.setItem('access_token',response.access_token);
+                toast.success('Welcome to the desert of the real!')
+            }
+            else{
+                toast.warning(`Login failed due to "${response.message}", try again!`);
+            }
+        }catch(error){
+            console.log(error.toString());
+            toast.warning(`Something went wrong, try again`); // Dont show user error message ??????
+        }
     };
 
     return (

@@ -1,6 +1,5 @@
 const crypto = require("crypto");
 const UserModel = require("../../models/users/users.model");
-const { encryptPassword } = require("../../services/password");
 const {authorization_admin} = require("../../services/auth");
 const axios = require("axios");
 const jwt = require('jsonwebtoken');
@@ -11,7 +10,6 @@ const client_id = process.env.auth0_client_id;
 const client_secret = process.env.auth0_clientSecret;
 const audience = process.env.auth0_audience;
 const auth0_connection = process.env.auth0_connection
-access_token_admin ="";
 
 const UserController = {
     trialEndpoint: async function (req, res) {
@@ -23,7 +21,6 @@ const UserController = {
         try {
             try{
                 access_token_admin = await authorization_admin();
-                console.log(access_token_admin)
                 if(access_token_admin.error){
                     return res.status(401).json({
                         message: access_token_admin.error,
@@ -60,6 +57,7 @@ const UserController = {
             if (response_signup.created_at) {
                 // TODO: We need to redirect user to login after sign-up
                 return res.status(201).json({
+                    created_at: response_signup.created_at,
                     message: `Created the user with ${email}`,
                 })
             }else{
@@ -88,11 +86,22 @@ const UserController = {
                 'username': email,
                 'password': password,
             };
-            const response = (await axios.post(url, payload)).data;
-            if (response.access_token) {
-                res.status(202).json({
-                    access_token: response.access_token,
+            try{
+                response = (await axios.post(url, payload));
+            }catch (error) {
+                return res.status(400).json({
+                    message: " Wrong email or password, try again!",
+                });
+            }
+            if (response.data.access_token) {
+                return res.status(200).json({
+                    access_token: response.data.access_token,
                 })
+            }
+            else{
+                return res.status(400).json({
+                    message:" Failed to acquire access token!",
+                });
             }
         } catch (error) {
             return res.status(400).json({
