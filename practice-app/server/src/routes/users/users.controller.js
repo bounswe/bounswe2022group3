@@ -1,9 +1,6 @@
-const crypto = require("crypto");
 const UserModel = require("../../models/users/users.model");
 const {authorization_admin} = require("../../services/auth");
 const axios = require("axios");
-const jwt = require('jsonwebtoken');
-require("dotenv").config();
 
 const AUTH0_DOMAIN = process.env.auth0_domain;
 const client_id = process.env.auth0_client_id;
