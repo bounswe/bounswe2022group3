@@ -1,9 +1,7 @@
 const axios = require("axios");
 const needle = require("needle");
-const ndjsonParser = require("ndjson-parse");
 const ndjson = require("ndjson");
 const ChessGame = require("../../models/chess/chess.model");
-const db = require("../../services/db");
 
 const ChessController = {
     createGame: async function (req, res) {
@@ -43,12 +41,10 @@ const ChessController = {
                 }
             }
         } catch (e) {
-            console.log(e);
+            return res
+                .status(400)
+                .json({ message: "Could not initiate a game against the AI" });
         }
-
-        return res.status(500).json({
-            message: "Could not initiate a game against the AI",
-        });
     },
     makeMove: async function (req, res) {
         // Get user input
@@ -76,8 +72,6 @@ const ChessController = {
                 .status(400)
                 .json({ message: "Could not make the move." });
         }
-
-        return res.status(500).json(response);
     },
     streamGame: async function (req, res) {
         const { gameId } = req.params;
@@ -101,7 +95,7 @@ const ChessController = {
                             state.moves !== undefined &&
                             state.status !== undefined
                         ) {
-                            db.collection("chessgames").updateOne(
+                            ChessGame.updateOne(
                                 { game_id: gameId },
                                 {
                                     $set: {
@@ -112,13 +106,12 @@ const ChessController = {
                             );
                         }
 
-                     
                         if (state.status === "mate") {
-                            db.collection("chessgames").updateOne(
+                            ChessGame.updateOne(
                                 { game_id: gameId },
                                 {
                                     $set: {
-                                        winner_color: state.winner
+                                        winner_color: state.winner,
                                     },
                                 }
                             );
@@ -143,7 +136,10 @@ const ChessController = {
     },
     getGames: async function (req, res) {
         try {
-            const games = await ChessGame.find({}, 'game_id createdAt player_color winner_color status');
+            const games = await ChessGame.find(
+                {},
+                "game_id createdAt player_color winner_color status"
+            );
             return res.status(200).json({
                 games,
             });
@@ -156,10 +152,19 @@ const ChessController = {
     getGame: async function (req, res) {
         const { gameId } = req.params;
         try {
-            const game = (await ChessGame.find({ game_id: gameId }, 'moves player_color'))[0];
-            return res.status(200).json({
-                game,
-            });
+            const game = (
+                await ChessGame.find({ game_id: gameId }, "moves player_color")
+            )[0];
+            if (game) {
+                return res.status(200).json({
+                    game,
+                });
+            }
+            else {
+                return res.status(404).json({
+                    message: "Game not found.",
+                });
+            }
         } catch (e) {
             return res
                 .status(500)

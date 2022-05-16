@@ -31,7 +31,7 @@ function MyApp({ Component, pageProps }) {
                 if (token) {
                     config.headers.Authorization = `Bearer ${token}`;
                 }
-                if(!config.url.includes("/chess/make_move")) {
+                if(!config.DISABLE_LOADING) {
                     setLoading(true);
                 }
                 return config;

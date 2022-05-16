@@ -14,6 +14,7 @@ import {
     DialogContentText,
     DialogTitle,
 } from "@mui/material";
+import { TRUE } from "sass";
 
 export default function Board() {
     const chessboardRef = useRef();
@@ -63,10 +64,16 @@ export default function Board() {
         if (move === null) return false;
 
         const res = (
-            await axios.post(`${API_URL}/chess/make_move`, {
-                gameId,
-                moveStr,
-            })
+            await axios.post(
+                `${API_URL}/chess/make_move`,
+                {
+                    gameId,
+                    moveStr,
+                },
+                {
+                    DISABLE_LOADING: true,
+                }
+            )
         ).data;
 
         if (!res["ok"]) return false;
@@ -88,7 +95,7 @@ export default function Board() {
             if (done) {
                 break;
             }
-            console.log(value);
+            // console.log(value);
             if (
                 value &&
                 ["mate", "resign", "stalemate", "draw"].includes(value.status)
