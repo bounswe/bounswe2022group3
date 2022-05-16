@@ -1,6 +1,6 @@
 const axios = require("axios");
 const jwkToPem = require("jwk-to-pem");
-
+require("dotenv").config();
 var KEYS =[];
 const AUTH0_DOMAIN = process.env.auth0_domain
 
