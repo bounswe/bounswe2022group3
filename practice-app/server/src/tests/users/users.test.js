@@ -12,6 +12,13 @@ describe("User", () => {
     beforeAll(async () => dbConnect());
     afterAll(async () => dbDisconnect());
     describe("register route", () => {
+        describe("given no body was provided", () => {
+            it("should return a 400", async () => {
+                await supertest(app)
+                .post("/users/register")
+                .expect(400);
+            });
+        });
         describe("given no first_name was provided", () => {
             it("should return a 400", async () => {
                 await supertest(app)
@@ -123,4 +130,76 @@ describe("User", () => {
         });
     });
 
+});
+
+describe("login route", () => {
+    describe("given no body was provided", () => {
+        it("should return a 400", async () => {
+            await supertest(app)
+            .post("/users/login")
+            .expect(400);
+        });
+    });
+    describe("given no email was provided", () => {
+        it("should return a 400", async () => {
+            await supertest(app)
+                .post("/users/login")
+                .send({
+                    password: "Password*11",
+                })
+                .expect(400);
+        });
+    });
+    describe("given no password was provided", () => {
+        it("should return a 400", async () => {
+            await supertest(app)
+                .post("/users/login")
+                .send({
+                    email: "kadir@gmail.com",
+                })
+                .expect(400);
+        });
+    });
+    describe("given correct body was provided", () => {
+        it("should return a 200 with correct response", async () => {
+            axios.post.mockResolvedValueOnce({
+                data: {
+                    access_token: "access_token",
+                },
+            });
+
+            const { body, statusCode } = await supertest(app)
+                .post("/users/login")
+                .send({
+                    email: "kadir@gmail.com",
+                    password: "Password*11",
+                });
+
+            expect(statusCode).toBe(200);
+            expect(body).toEqual({
+                access_token: "access_token",
+            });
+        });
+    });
+    describe("given incorrect body was provided", () => {
+        it("should return a 400 with correct response", async () => {
+            axios.post.mockResolvedValueOnce({
+                data: {
+                    error: "error",
+                },
+            });
+
+            const { body, statusCode } = await supertest(app)
+                .post("/users/login")
+                .send({
+                    email: "kadir@gmail.com",
+                    password: "Password*11",
+                });
+
+            expect(statusCode).toBe(400);
+            expect(body).toEqual({
+                message: "Failed to acquire access token!",
+            });
+        });
+    });
 });

@@ -87,7 +87,7 @@ const UserController = {
                 response = (await axios.post(url, payload));
             }catch (error) {
                 return res.status(400).json({
-                    message: " Wrong email or password, try again!",
+                    message: "Wrong email or password, try again!",
                 });
             }
             if (response.data.access_token) {
@@ -97,7 +97,7 @@ const UserController = {
             }
             else{
                 return res.status(400).json({
-                    message:" Failed to acquire access token!",
+                    message:"Failed to acquire access token!",
                 });
             }
         } catch (error) {
