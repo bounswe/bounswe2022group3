@@ -23,7 +23,9 @@
     "mongoose": "^6.3.3",
     "morgan-body": "^2.6.6",
     "ndjson": "^2.0.0",
-    "needle": "^3.1.0"
+    "needle": "^3.1.0",
+    "swagger-jsdoc": "^6.2.1",
+    "swagger-ui-express": "^4.4.0"
   },
   "devDependencies": {
     "jest": "^28.1.0",
