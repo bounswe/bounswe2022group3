@@ -24,16 +24,16 @@ const UserController = {
                     })
                 }
             }catch (error) {
-                return res.status(400).json({
+                return res.status(error.response.status).json({
                     message: error.toString(),
                 });
             } 
-            // Check if user already exist
+            //Check if user already exist
             const user = await UserModel.getUserByEmail(email);
             if (user) {
                 return res
                     .status(409)
-                    .json({ message: "User Already Exists. Please Login" });
+                    .json({ message: "The user already exists." });
             }
             console.log("Proceeding with signup")
             // Proceeding with signup
@@ -63,8 +63,8 @@ const UserController = {
                 });
             }
         } catch (error) {
-            return res.status(400).json({
-                message: error.toString(),
+            return res.status(error.response.status).json({
+                message: error.response.data.message,
             });
         }
     },
@@ -86,8 +86,8 @@ const UserController = {
             try{
                 response = (await axios.post(url, payload));
             }catch (error) {
-                return res.status(400).json({
-                    message: "Wrong email or password, try again!",
+                return res.status(error.response.status).json({
+                    message: error.response.data.message,
                 });
             }
             if (response.data.access_token) {
@@ -101,8 +101,8 @@ const UserController = {
                 });
             }
         } catch (error) {
-            return res.status(400).json({
-                message: error.toString(),
+            return res.status(error.response.status).json({
+                message: error.response.data.message,
             });
         }
     },

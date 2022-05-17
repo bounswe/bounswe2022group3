@@ -99,7 +99,7 @@ describe("User", () => {
                 }
             });
         });
-        describe("given correct body was provided", () => { // Fails !!! cannot connect to 
+        describe("given correct body was provided", () => {
             it("should return a 201 with correct response", async () => {
                 axios.post.mockResolvedValueOnce({
                     data: {
@@ -125,6 +125,40 @@ describe("User", () => {
                 expect(body).toEqual({
                     created_at: "created_at",
                     message: `Created the user with kadir@gmail.com`,
+                });
+                const user = new User({ client_id:"id",email: 'kadir@gmail.com', first_name:"kadir",last_name:"ersoy",password:"Password*11" });
+                user.save();
+            });
+        });
+        describe("given already existing user was provided", () => {
+            it("should return a 409", async () => {
+                axios.post.mockResolvedValueOnce({
+                    data: {
+                        access_token: "access_token",
+                    },
+                });
+                axios.post.mockRejectedValueOnce({
+                    response: {
+                        status: 409,
+                        data:{
+                            statusCode: 409,
+                            error: "Conflict",
+                            message: 'The user already exists.',
+                            errorCode: 'auth0_idp_error' 
+                        }
+                    }
+                });
+                const { body, statusCode } = await supertest(app)
+                    .post("/users/register")
+                    .send({
+                        first_name: "ersoy",
+                        last_name: "ersoy",
+                        email: "kadir@gmail.com",
+                        password: "Password*11",
+                });
+                expect(statusCode).toBe(409);
+                expect(body).toEqual({
+                    message: "The user already exists.",
                 });
             });
         });
