@@ -4,7 +4,7 @@ exports.validate = (method) => {
     switch (method) {
         case "verify": {
             return [
-                body("email", "Invalid email").exists().isEmail(),
+                body("email")
            ];
         }
     }

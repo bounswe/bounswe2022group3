@@ -24,7 +24,7 @@ const EmailController = {
         const { email } = req.body;
         try {
         
-            if(!emailModel.getEmail(email)){
+            if(!(await emailModel.getEmail(email))){
                 savedEmail = await emailModel.Email.create({
                     email: email,
                 });

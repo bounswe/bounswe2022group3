@@ -39,10 +39,10 @@ function MyApp({ Component, pageProps }) {
             function (error) {
                 // Do something with request error
                 if (error && error.message) {
-                    toast.error(error.message);
+                    //toast.error(error.message);
                 }
                 setLoading(false);
-                return Promise.reject(error);
+                return /*Promise.reject(error);*/
             }
         );
 
@@ -60,7 +60,7 @@ function MyApp({ Component, pageProps }) {
             function (error) {
                 // Any status codes that falls outside the range of 2xx cause this function to trigger
                 // Do something with response error
-                if (error && error.response && error.response.data) {
+                /*if (error && error.response && error.response.data) {
                     toast.error(
                         error.response.data.message ||
                             (typeof error.response.data === "string"
@@ -71,7 +71,7 @@ function MyApp({ Component, pageProps }) {
                 setTimeout(() => {
                     setLoading(false);
                 }, 500);
-                return Promise.reject(error);
+                return Promise.reject(error);*/
             }
         );
     }, []);
