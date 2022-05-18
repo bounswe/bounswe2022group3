@@ -7,6 +7,7 @@ const ChessController = {
     createGame: async function (req, res) {
         // Get user input
         const { difficulty, color } = req.body;
+        const user = req.auth;
 
         const url = "https://lichess.org/api/challenge/ai";
 
@@ -30,6 +31,7 @@ const ChessController = {
 
             if (response && response.id) {
                 const game = await ChessGame.create({
+                    user,
                     game_id: response.id,
                     player_color: selectedColor,
                 });
@@ -49,6 +51,20 @@ const ChessController = {
     makeMove: async function (req, res) {
         // Get user input
         const { gameId, moveStr } = req.body;
+        const user = req.auth;
+
+        const game = (
+            await ChessGame.find(
+                { game_id: gameId, user },
+                "moves player_color"
+            )
+        )[0];
+
+        if (!game) {
+            return res
+                .status(500)
+                .json({ message: "Cannot not make move in this game." });
+        }
 
         const url = `https://lichess.org/api/board/game/${gameId}/move/${moveStr}`;
 
@@ -75,6 +91,20 @@ const ChessController = {
     },
     streamGame: async function (req, res) {
         const { gameId } = req.params;
+        const user = req.auth;
+
+        const game = (
+            await ChessGame.find(
+                { game_id: gameId, user },
+                "moves player_color"
+            )
+        )[0];
+
+        if (!game) {
+            return res
+                .status(500)
+                .json({ message: "Cannot not stream the game." });
+        }
 
         const url = `https://lichess.org/api/board/game/stream/${gameId}`;
         const headers = {
@@ -87,7 +117,7 @@ const ChessController = {
             });
             stream
                 .pipe(ndjson.parse())
-                .on("data", (data) => {
+                .on("data", async (data) => {
                     try {
                         const state = data.state ? data.state : data;
 
@@ -95,7 +125,7 @@ const ChessController = {
                             state.moves !== undefined &&
                             state.status !== undefined
                         ) {
-                            ChessGame.updateOne(
+                            await ChessGame.updateOne(
                                 { game_id: gameId },
                                 {
                                     $set: {
@@ -107,7 +137,7 @@ const ChessController = {
                         }
 
                         if (state.status === "mate") {
-                            ChessGame.updateOne(
+                            await ChessGame.updateOne(
                                 { game_id: gameId },
                                 {
                                     $set: {
@@ -132,14 +162,20 @@ const ChessController = {
             });
         } catch (e) {
             console.log(e);
+            return res
+                .status(500)
+                .json({ message: "Cannot not stream the game." });
         }
     },
     getGames: async function (req, res) {
+        const user = req.auth;
+
         try {
             const games = await ChessGame.find(
-                {},
+                { user },
                 "game_id createdAt player_color winner_color status"
             );
+
             return res.status(200).json({
                 games,
             });
@@ -151,16 +187,20 @@ const ChessController = {
     },
     getGame: async function (req, res) {
         const { gameId } = req.params;
+        const user = req.auth;
+
         try {
             const game = (
-                await ChessGame.find({ game_id: gameId }, "moves player_color")
+                await ChessGame.find(
+                    { game_id: gameId, user },
+                    "moves player_color"
+                )
             )[0];
             if (game) {
                 return res.status(200).json({
                     game,
                 });
-            }
-            else {
+            } else {
                 return res.status(404).json({
                     message: "Game not found.",
                 });

@@ -12,7 +12,7 @@ app.use(
 
 app.use(express.json());
 
-morganBody(app);
+// morganBody(app);
 
 app.use("/", api);
 
