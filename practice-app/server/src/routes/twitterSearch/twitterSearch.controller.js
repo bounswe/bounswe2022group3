@@ -111,7 +111,6 @@ const TwitterSearchController = {
     },
     deleteRule: async (req, res) => {
         const { id } = req.query
-        console.log(id);
         const options = {
             headers: {
                 'Content-Type': 'application/json',

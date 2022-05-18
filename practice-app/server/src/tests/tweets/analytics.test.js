@@ -32,8 +32,6 @@ describe("Tweets - Managing Rules", () => {
             expect(body.averageWordCounts).toHaveLength(10)
             expect(body).toHaveProperty("averageLengths")
             expect(body.averageLengths).toHaveLength(10)
-
-
         });
     });
 
