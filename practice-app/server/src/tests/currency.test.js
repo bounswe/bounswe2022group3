@@ -93,4 +93,11 @@ describe("get for conversion", () => {
         expect(statusCode).toBe(404)
     })
 
+    it("should return 400 for requests without the query parameters", async () => {
+        const { body, statusCode } = await supertest(app)
+            .get("/currency/getConversion")
+
+        expect(statusCode).toBe(400)
+    })
+
 })

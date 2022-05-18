@@ -33,7 +33,7 @@ const swaggerOptions = {
       },
     ],
   },
-  apis: ["./routes/users/users.route.js"],
+  apis: ["./routes/users/users.route.js", "./routes/currency/currency.route.js"],
 };
 const specs = swaggerJsdoc(swaggerOptions);
 
