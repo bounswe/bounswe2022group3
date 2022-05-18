@@ -8,6 +8,8 @@ const api = express.Router();
 
 api.use("/users", usersRouter);
 api.use("/chess", chessRouter);
+api.use("/currency", currencyRouter);
+
 
 module.exports = {
   api,

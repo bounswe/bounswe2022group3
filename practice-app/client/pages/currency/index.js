@@ -4,7 +4,7 @@ import { API_URL } from "../../next.config";
 
 export default function Home() {
 
-    const allCurrencies = ["USD", "EUR", "TRY"]
+    const allCurrencies = ["USD", "EUR", "TRY", "AZN"]
 
     const [ratesTable, setRatesTable] = useState(null)
     const [from, setFrom] = useState("USD")
