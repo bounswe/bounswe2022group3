@@ -5,7 +5,7 @@ const LyricsController = require("./lyrics.controller");
 
 const lyricsRouter = express.Router();
 
-lyricsRouter.get(
+lyricsRouter.post(
     "/search_lyrics",
     validate("search_lyrics"),
     handleValidation,
