@@ -1,25 +1,26 @@
 const express = require("express");
 const { handleValidation } = require("../../services/validate");
 const CurrencyController = require("./currency.controller");
+const { validate } = require("./currency.validate");
 
 const currencyRouter = express.Router();
 
-
-
 currencyRouter.get(
     "/getConversion",
+    validate("getConversion"),
     handleValidation,
     CurrencyController.getConversion
 );
 
 currencyRouter.post(
     "/allConversions",
+    validate("allConversions"),
+    handleValidation,
     CurrencyController.allConversions
 )
 
 
 module.exports = currencyRouter;
-
 
 
 /**

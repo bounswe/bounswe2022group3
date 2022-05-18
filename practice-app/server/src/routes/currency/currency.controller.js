@@ -11,7 +11,7 @@ const CurrencyController = {
             const rates = []
 
             for (let i = 0; i < allCurrencies.length; i++) {
-                const response = (await axios.get(`${currencyApiUrl}/convert?q=USD_${allCurrencies[i]}&compact=ultra&apiKey=${currencyApiKey}`)).data
+                const response = (await axios.get(`https://free.currconv.com/api/v7/convert?q=USD_${allCurrencies[i]}&compact=ultra&apiKey=${currencyApiKey}`)).data
                 const rate = response[`USD_${allCurrencies[i]}`]
                 rates.push(rate)
             }
@@ -27,7 +27,7 @@ const CurrencyController = {
 
         try {
             const { from, to, amount } = req.query
-            const response = (await axios.get(`${currencyApiUrl}/convert?q=${from}_${to}&compact=ultra&apiKey=${currencyApiKey}`)).data
+            const response = (await axios.get(`https://free.currconv.com/api/v7/convert?q=${from}_${to}&compact=ultra&apiKey=${currencyApiKey}`)).data
 
             const rate = response[`${from}_${to}`]
             const convertedValue = amount * rate
