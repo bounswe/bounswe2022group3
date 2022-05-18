@@ -126,8 +126,8 @@ describe("User", () => {
                     created_at: "created_at",
                     message: `Created the user with kadir@gmail.com`,
                 });
-                const user = new User({ client_id:"id",email: 'kadir@gmail.com', first_name:"kadir",last_name:"ersoy",password:"Password*11" });
-                user.save();
+                const user_test = new User({ client_id:"id",email: 'kadir@gmail.com', first_name:"kadir",last_name:"ersoy",password:"Password*11" });
+                user_test.save();
             });
         });
         describe("given already existing user was provided", () => {
@@ -167,6 +167,8 @@ describe("User", () => {
 });
 
 describe("login route", () => {
+    beforeAll(async () => dbConnect());
+    afterAll(async () => dbDisconnect());
     describe("given no body was provided", () => {
         it("should return a 400", async () => {
             await supertest(app)
@@ -194,6 +196,34 @@ describe("login route", () => {
                 .expect(400);
         });
     });
+    describe("given incorrect email was provided", () => {
+        it("should return a 400", async () => {
+            wrong_emails = ["ahmet","ahmet@","ahmet@gmail","ahmet@gmail.","ahmet@.com","@gmail.com","ahmet.com"]
+            for (const wEmail in wrong_emails) {
+                await supertest(app)
+                .post("/users/login")
+                .send({
+                    email: wrong_emails[wEmail],
+                    password: "Password*11",
+                })
+                .expect(400);
+            }
+        });
+    });
+    describe("given incorrect password was provided", () => {
+        it("should return a 400", async () => {
+            wrong_passwords = ["password","Password","password*","password*12","Password11","Password*"]
+            for (const i in wrong_passwords) {
+                await supertest(app)
+                .post("/users/login")
+                .send({
+                    email: "kadir@gmail.com",
+                    password: wrong_passwords[i],
+                })
+                .expect(400);
+            }
+        });
+    });
     describe("given correct body was provided", () => {
         it("should return a 200 with correct response", async () => {
             axios.post.mockResolvedValueOnce({
@@ -201,7 +231,8 @@ describe("login route", () => {
                     access_token: "access_token",
                 },
             });
-
+            const user_test = new User({ client_id:"id",email: 'kadir@gmail.com', first_name:"kadir",last_name:"ersoy",password:"Password*11" });
+            await user_test.save();
             const { body, statusCode } = await supertest(app)
                 .post("/users/login")
                 .send({
@@ -215,24 +246,22 @@ describe("login route", () => {
             });
         });
     });
-    describe("given incorrect body was provided", () => {
-        it("should return a 400 with correct response", async () => {
-            axios.post.mockResolvedValueOnce({
-                data: {
-                    error: "error",
-                },
+    describe("given correct body was provided, but email does not exist in db", () => {
+        it("should return a 409", async () => {
+            axios.post.mockRejectedValueOnce({
+                
             });
-
+            
             const { body, statusCode } = await supertest(app)
                 .post("/users/login")
                 .send({
-                    email: "kadir@gmail.com",
+                    email: "batu@gmail.com",
                     password: "Password*11",
                 });
 
-            expect(statusCode).toBe(400);
+            expect(statusCode).toBe(403);
             expect(body).toEqual({
-                message: "Failed to acquire access token!",
+                message: "The user does not exist.",
             });
         });
     });

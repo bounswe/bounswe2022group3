@@ -33,7 +33,7 @@ const UserController = {
             if (user) {
                 return res
                     .status(409)
-                    .json({ message: "The user already exists." });
+                    .json({ message: "The user already exists."});
             }
             console.log("Proceeding with signup")
             // Proceeding with signup
@@ -83,26 +83,19 @@ const UserController = {
                 'username': email,
                 'password': password,
             };
-            try{
-                response = (await axios.post(url, payload));
-            }catch (error) {
-                return res.status(error.response.status).json({
-                    message: error.response.data.message,
-                });
+            const user = await UserModel.getUserByEmail(email);
+            if (!user) {
+                return res
+                    .status(403)
+                    .json({ message: "The user does not exist." });
             }
-            if (response.data.access_token) {
-                return res.status(200).json({
-                    access_token: response.data.access_token,
-                })
-            }
-            else{
-                return res.status(400).json({
-                    message:"Failed to acquire access token!",
-                });
-            }
+            const response = (await axios.post(url, payload)).data;
+            return res.status(200).json({
+                access_token: response.access_token,
+            })
         } catch (error) {
-            return res.status(error.response.status).json({
-                message: error.response.data.message,
+            return res.status(403).json({
+                message:"Failed to acquire access token!",
             });
         }
     },
