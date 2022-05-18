@@ -112,6 +112,27 @@ const usersRouter = express.Router();
  *                          type: string
  *                  example:
  *                      message: "Failed to acquire access token!"
+ * /users/getUsername:
+ *   get:
+ *     summary: get User name and surname 
+ *     tags: [User]
+ *     consumes:
+ *       - "application/json"
+ *     produces:
+ *       - "application/json"
+ *     parameters:
+ *      - in: "body"
+ *        name: "Body"
+ *        description: "descc"
+ *        required: true
+ *        schema:
+ *          type: object
+ *          properties:
+ *              email:
+ *                type: string
+ *              password:
+ *                type: string 
+ *      
  */
 
 usersRouter.post(
@@ -125,6 +146,10 @@ usersRouter.post(
     validate("login"),
     handleValidation,
     UserController.login
+);
+usersRouter.get(
+    "/getUsername",
+    UserController.getUsername
 );
 usersRouter.post(
     "/tryAuth",

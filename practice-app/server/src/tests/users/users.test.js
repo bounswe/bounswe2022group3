@@ -126,7 +126,7 @@ describe("User", () => {
                     created_at: "created_at",
                     message: `Created the user with kadir@gmail.com`,
                 });
-                const user_test = new User({ client_id:"id",email: 'kadir@gmail.com', first_name:"kadir",last_name:"ersoy",password:"Password*11" });
+                const user_test = new User({ client_id:"id",email: 'kadir@gmail.com', given_name:"kadir",family_name:"ersoy",password:"Password*11" });
                 user_test.save();
             });
         });
@@ -164,104 +164,128 @@ describe("User", () => {
         });
     });
 
-});
+    describe("login route", () => {
+        describe("given no body was provided", () => {
+            it("should return a 400", async () => {
+                await supertest(app)
+                .post("/users/login")
+                .expect(400);
+            });
+        });
+        describe("given no email was provided", () => {
+            it("should return a 400", async () => {
+                await supertest(app)
+                    .post("/users/login")
+                    .send({
+                        password: "Password*11",
+                    })
+                    .expect(400);
+            });
+        });
+        describe("given no password was provided", () => {
+            it("should return a 400", async () => {
+                await supertest(app)
+                    .post("/users/login")
+                    .send({
+                        email: "kadir@gmail.com",
+                    })
+                    .expect(400);
+            });
+        });
+        describe("given incorrect email was provided", () => {
+            it("should return a 400", async () => {
+                wrong_emails = ["ahmet","ahmet@","ahmet@gmail","ahmet@gmail.","ahmet@.com","@gmail.com","ahmet.com"]
+                for (const wEmail in wrong_emails) {
+                    await supertest(app)
+                    .post("/users/login")
+                    .send({
+                        email: wrong_emails[wEmail],
+                        password: "Password*11",
+                    })
+                    .expect(400);
+                }
+            });
+        });
+        describe("given incorrect password was provided", () => {
+            it("should return a 400", async () => {
+                wrong_passwords = ["password","Password","password*","password*12","Password11","Password*"]
+                for (const i in wrong_passwords) {
+                    await supertest(app)
+                    .post("/users/login")
+                    .send({
+                        email: "kadir@gmail.com",
+                        password: wrong_passwords[i],
+                    })
+                    .expect(400);
+                }
+            });
+        });
+        describe("given correct body was provided and email exists", () => {
+            it("should return a 200 with correct response", async () => {
+                axios.post.mockResolvedValueOnce({
+                    data: {
+                        access_token: "access_token",
+                        email: "kadir@gmail.com",
+                    },
+                });
+                const { body, statusCode } = await supertest(app)
+                    .post("/users/login")
+                    .send({
+                        email: "kadir@gmail.com",
+                        password: "Password*11",
+                    });
 
-describe("login route", () => {
-    beforeAll(async () => dbConnect());
-    afterAll(async () => dbDisconnect());
-    describe("given no body was provided", () => {
-        it("should return a 400", async () => {
-            await supertest(app)
-            .post("/users/login")
-            .expect(400);
-        });
-    });
-    describe("given no email was provided", () => {
-        it("should return a 400", async () => {
-            await supertest(app)
-                .post("/users/login")
-                .send({
-                    password: "Password*11",
-                })
-                .expect(400);
-        });
-    });
-    describe("given no password was provided", () => {
-        it("should return a 400", async () => {
-            await supertest(app)
-                .post("/users/login")
-                .send({
-                    email: "kadir@gmail.com",
-                })
-                .expect(400);
-        });
-    });
-    describe("given incorrect email was provided", () => {
-        it("should return a 400", async () => {
-            wrong_emails = ["ahmet","ahmet@","ahmet@gmail","ahmet@gmail.","ahmet@.com","@gmail.com","ahmet.com"]
-            for (const wEmail in wrong_emails) {
-                await supertest(app)
-                .post("/users/login")
-                .send({
-                    email: wrong_emails[wEmail],
-                    password: "Password*11",
-                })
-                .expect(400);
-            }
-        });
-    });
-    describe("given incorrect password was provided", () => {
-        it("should return a 400", async () => {
-            wrong_passwords = ["password","Password","password*","password*12","Password11","Password*"]
-            for (const i in wrong_passwords) {
-                await supertest(app)
-                .post("/users/login")
-                .send({
-                    email: "kadir@gmail.com",
-                    password: wrong_passwords[i],
-                })
-                .expect(400);
-            }
-        });
-    });
-    describe("given correct body was provided", () => {
-        it("should return a 200 with correct response", async () => {
-            axios.post.mockResolvedValueOnce({
-                data: {
+                expect(statusCode).toBe(200);
+                expect(body).toEqual({
                     access_token: "access_token",
-                },
-            });
-            const user_test = new User({ client_id:"id",email: 'kadir@gmail.com', first_name:"kadir",last_name:"ersoy",password:"Password*11" });
-            await user_test.save();
-            const { body, statusCode } = await supertest(app)
-                .post("/users/login")
-                .send({
                     email: "kadir@gmail.com",
-                    password: "Password*11",
                 });
+            });
+        });
+        describe("given correct body was provided, but email does not exist in db", () => {
+            it("should return a 409", async () => {
+                axios.post.mockRejectedValueOnce({
+                    
+                });
+                
+                const { body, statusCode } = await supertest(app)
+                    .post("/users/login")
+                    .send({
+                        email: "batu@gmail.com",
+                        password: "Password*11",
+                    });
 
-            expect(statusCode).toBe(200);
-            expect(body).toEqual({
-                access_token: "access_token",
+                expect(statusCode).toBe(403);
+                expect(body).toEqual({
+                    message: "The user does not exist.",
+                });
             });
         });
     });
-    describe("given correct body was provided, but email does not exist in db", () => {
-        it("should return a 409", async () => {
-            axios.post.mockRejectedValueOnce({
-                
-            });
-            
-            const { body, statusCode } = await supertest(app)
-                .post("/users/login")
-                .send({
-                    email: "batu@gmail.com",
-                    password: "Password*11",
-                });
 
-            expect(statusCode).toBe(403);
-            expect(body).toEqual({
-                message: "The user does not exist.",
+    describe("getUsername route", () => {
+        describe("given email exists", () => {
+            it("should return a 200 with correct response", async () => {
+                const { body, statusCode } = await supertest(app).get(
+                    "/users/getUsername?email=kadir@gmail.com"
+                );
+
+                expect(statusCode).toBe(200);
+                expect(body).toEqual({
+                    user_name: "kadir ersoy"
+                });
+            });
+        });
+        describe("given email does not exist", () => {
+            it("should return a 400 with correct response", async () => {
+                const { body, statusCode } = await supertest(app).get(
+                    "/users/getUsername?email=batu@gmail.com"
+                );
+
+                expect(statusCode).toBe(400);
+                expect(body).toEqual({
+                    message: "User not found!"
+                });
             });
         });
     });

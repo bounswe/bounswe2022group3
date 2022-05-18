@@ -84,6 +84,7 @@ const UserController = {
                 'password': password,
             };
             const user = await UserModel.getUserByEmail(email);
+            console.log(user)
             if (!user) {
                 return res
                     .status(403)
@@ -92,11 +93,37 @@ const UserController = {
             const response = (await axios.post(url, payload)).data;
             return res.status(200).json({
                 access_token: response.access_token,
+                email: email,
             })
         } catch (error) {
             return res.status(403).json({
                 message:"Failed to acquire access token!",
             });
+        }
+    },
+    getUsername: async function (req, res) {
+        let email = req.query.email;
+        console.log(email)
+        try {
+            const user = await UserModel.getUsernameByEmail(email);
+            if(user){
+                const user_name = user.given_name + " " + user.family_name;
+                return res
+                        .status(200)
+                        .json({ user_name: user_name });
+            }
+            else{
+                return res
+                        .status(400)
+                        .json({ 
+                            message: "User not found!"
+                        });
+            }
+        }catch(e){
+            console.log(e)
+            return res
+                .status(500)
+                .json({ message: "Could not retrieve username." });
         }
     },
 };
