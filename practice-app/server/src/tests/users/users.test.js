@@ -243,7 +243,7 @@ describe("User", () => {
             });
         });
         describe("given correct body was provided, but email does not exist in db", () => {
-            it("should return a 409", async () => {
+            it("should return a 403", async () => {
                 axios.post.mockRejectedValueOnce({
                     
                 });

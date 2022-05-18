@@ -19,7 +19,7 @@ const usersRouter = express.Router();
  *     parameters:
  *      - in: "body"
  *        name: "Body"
- *        description: "descc"
+ *        description: "Creates a user with given data."
  *        required: true
  *        schema:
  *          type: object
@@ -80,7 +80,7 @@ const usersRouter = express.Router();
  *     parameters:
  *      - in: "body"
  *        name: "Body"
- *        description: "descc"
+ *        description: "Provides authorization token for given user."
  *        required: true
  *        schema:
  *          type: object
@@ -112,26 +112,54 @@ const usersRouter = express.Router();
  *                          type: string
  *                  example:
  *                      message: "Failed to acquire access token!"
+ *       "403":
+ *         description: There is no user with given email!
+ *         content:
+ *           application/json:
+ *             schema:
+ *                  type: object
+ *                  properties:
+ *                      message:
+ *                          type: string
+ *                  example:
+ *                      message: "The user does not exist."
  * /users/getUsername:
  *   get:
- *     summary: get User name and surname 
+ *     summary: Get username
  *     tags: [User]
  *     consumes:
  *       - "application/json"
  *     produces:
  *       - "application/json"
  *     parameters:
- *      - in: "body"
- *        name: "Body"
- *        description: "descc"
+ *      - in: "query"
+ *        name: "Email"
+ *        description: "Provides username(firstname lastname) from user with given email."
  *        required: true
- *        schema:
- *          type: object
- *          properties:
- *              email:
- *                type: string
- *              password:
- *                type: string 
+ *        type : string
+ *     responses:
+ *       "200":
+ *         description: "successful operation"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *               example:
+ *                 user_name: "Name surname"
+ *       "400":
+ *         description: "failed operation"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *               example:
+ *                 message: "User not found!"
  *      
  */
 

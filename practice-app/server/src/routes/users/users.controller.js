@@ -96,7 +96,7 @@ const UserController = {
                 email: email,
             })
         } catch (error) {
-            return res.status(403).json({
+            return res.status(400).json({
                 message:"Failed to acquire access token!",
             });
         }
