@@ -32,7 +32,10 @@ const swaggerOptions = {
       },
     ],
   },
-  apis: ["./routes/users/users.route.js"],
+  apis: [
+    "./routes/users/users.route.js",
+    "./routes/twitterSearch/twitterSearch.route.js",
+  ],
 };
 const specs = swaggerJsdoc(swaggerOptions);
 

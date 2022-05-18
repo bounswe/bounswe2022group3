@@ -55,7 +55,7 @@ const TwitterSearchController = {
             const meta = response.meta
             if (meta.summary.created != 1) {
                 res.status(400).json({
-                    message: "Could not create a rule with the parameters you provided.",
+                    message: "  ",
                 })
             }
             res.status(201).json({
