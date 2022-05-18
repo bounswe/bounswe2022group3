@@ -1,34 +1,43 @@
-// const { db } = require("../../services/db");
+const mongoose = require("mongoose");
 
-const UserModel = {
-    getUserByEmail: async function (email) {
-        return (
-            await db.query(
-                `SELECT *
-                FROM users
-                WHERE email=$1`,
-                [email]
-            )
-        ).rows[0];
+const userSchema = new mongoose.Schema({
+    client_id: {
+        type: String, 
+        unique: true, 
+        required: true
     },
-    createUser: async function (
-        first_name,
-        last_name,
-        email,
-        hashed_password,
-        salt
-    ) {
-        return (
-            await db.query(
-                `INSERT INTO users 
-                (first_name, last_name, email, hashed_password, salt) 
-                VALUES 
-                ($1, $2, $3, $4, $5)
-                RETURNING *`,
-                [first_name, last_name, email, hashed_password, salt]
-            )
-        ).rows[0];
+    tenant: {
+        type: String
     },
-};
+    email:{
+        unique: true,
+        type: String
+    },
+    password: {
+        type: String
+    },
+    connection: {
+        type: String
+    },
+    given_name: {
+        type: String
+    },
+    family_name: {
+        type: String
+    },
+});
+const User = mongoose.model('User', userSchema);
 
-module.exports = UserModel;
+const getUserByID = async (user_id) => {
+
+    const result = await User.findById(user_id, 'email given_name family_name').exec();
+    return result;
+}
+
+const getUserByEmail = async (email) => {
+
+    const result = await User.findOne({email : `${email}`}, '_id').exec();
+    return result;
+}
+
+module.exports = {User, getUserByID, getUserByEmail};

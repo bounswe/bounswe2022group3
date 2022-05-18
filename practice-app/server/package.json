@@ -14,13 +14,19 @@
   "dependencies": {
     "axios": "^0.27.2",
     "cors": "^2.8.5",
-    "dotenv": "^16.0.0",
+    "dotenv": "^16.0.1",
     "express": "^4.17.2",
     "express-validator": "^6.14.0",
+    "jsonwebtoken": "^8.5.1",
+    "jwk-to-pem": "^2.0.5",
+    "mongodb-memory-server-core": "^8.5.2",
     "mongoose": "^6.3.3",
     "morgan-body": "^2.6.6",
+    "request": "^2.88.2",
+    "ndjson": "^2.0.0",
     "needle": "^3.1.0",
-    "request": "^2.88.2"
+    "swagger-jsdoc": "^6.2.1",
+    "swagger-ui-express": "^4.4.0"
   },
   "devDependencies": {
     "jest": "^28.1.0",

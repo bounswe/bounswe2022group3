@@ -1,13 +1,38 @@
-// const { db } = require("../../services/db");
+const mongoose = require("mongoose");
 
-const ChessModel = {
-    createGame: async function (game_id, color) {
-        // TO-DO: insert game data to DB
-        return {
-            game_id,
-            color,
-        };
+const chessGameSchema = new mongoose.Schema({
+    // user: {
+    //     type: mongoose.Schema.ObjectId,
+    //     ref: "User",
+    //     required: [true, "Booking must belong to a User!"],
+    // },
+    game_id: {
+        type: String,
+        default: "",
+        required: [true, "Must have id!"],
     },
-};
+    createdAt: {
+        type: Date,
+        default: Date.now(),
+    },
+    moves: {
+        type: String,
+        default: "",
+    },
+    player_color: {
+        type: String,
+        default: "",
+    },
+    winner_color: {
+        type: String,
+        default: "",
+    },
+    status: {
+        type: String,
+        default: "started",
+    },
+});
 
-module.exports = ChessModel;
+const ChessGame = mongoose.model("ChessGame", chessGameSchema);
+
+module.exports = ChessGame;
