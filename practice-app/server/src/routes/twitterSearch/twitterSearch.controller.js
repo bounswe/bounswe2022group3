@@ -96,10 +96,10 @@ const TwitterSearchController = {
                     console.log(error);
                 }
             });
-            res.status(200).json({ message: "System will listen to tweets for 2 minutes." })
+            res.status(200).json({ message: "System will listen to tweets for 4 minutes." })
             setTimeout(() => {
                 stream.abort()
-            }, 2 * 60 * 1000);
+            }, 4 * 60 * 1000);
         } catch (error) {
             console.log(error);
         }

@@ -92,7 +92,7 @@ export default function Tweets() {
                 </DialogActions>
             </Dialog>
             <Button onClick={listenTweets}>
-                Fetch Tweets for 2 minutes
+                Fetch Tweets for 4 minutes
             </Button>
             <div></div>
             <Button onClick={() => setOpen(true)}>
