@@ -45,7 +45,8 @@ export default function login() {
                 // router.push("some_route")
                 
                 localStorage.setItem('access_token',response.access_token);
-                toast.success('Welcome to the desert of the real!')
+                toast.success('Welcome to the desert of the real!');
+                localStorage.setItem("email", response.email);
                 router.push(`/user/main`);
             }
             else{
