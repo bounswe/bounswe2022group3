@@ -11,7 +11,11 @@ export default function main() {
     const handleClick = async (values) => {
         router.push(`/chess`);
     };
-
+    if (typeof window !== 'undefined') {
+        if(!localStorage.getItem("access_token")){
+            router.push(`/user/login`);
+        };
+    }
 
     const getUsername = async () => {
         const email = localStorage.getItem("email");
@@ -38,7 +42,8 @@ export default function main() {
                 {/* <div>
                     {Endpoints.map(MainButton, this)}
                 </div> */}
-
+                {/* TODO: Add necessary buttons for each feature, after all added to master */}
+                {/* Make half of the buttons blue and half red, represnting bluepil redpil, maybe add a little border radius to make them look like pill.  */}
                 <MainButton type="submit" onClick={handleClick}>Chess</MainButton>
                 <MainButton type="submit">Login</MainButton>
                 <MainButton type="submit">Login</MainButton>
