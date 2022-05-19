@@ -14,16 +14,16 @@ const twitterSearchRouter = express.Router();
  *       - "application/json"
  *     produces:
  *       - "application/json"
- *     parameters:
- *      - in: "body"
- *        name: "Body"
- *        description: "Hashtag to listen for"
- *        required: true
- *        schema:
- *          type: object
- *          properties:
- *              hashtag:
- *                type: string
+ *     requestBody:
+ *       description: "Create Hashtag."
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               hashtag:
+ *                 type: string
  *     responses:
  *       "201":
  *         description: Created a new rule
@@ -141,18 +141,18 @@ twitterSearchRouter.get(
  *       - "application/json"
  *     produces:
  *       - "application/json"
- *     parameters:
- *      - in: "body"
- *        name: "Body"
- *        description: "Tags to analyze for"
- *        required: true
- *        schema:
- *          type: object
- *          properties:
- *            tags:  
- *              type: "array"
- *              items:
- *                type: "string"
+ *     requestBody:
+ *       description: "Get tweet analytics."
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               tags:
+ *                 type: array
+ *                 items:
+ *                   properties:
  *     responses:
  *       "200":
  *         description: Fetched and analyzed tweets
