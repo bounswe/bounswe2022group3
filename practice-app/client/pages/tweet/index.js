@@ -71,6 +71,11 @@ export default function Tweets() {
 
     return <div style={{ margin: "40px" }}>
         <div>
+            <p style={{padding:"8px"}}>
+            Usage Guide:<br/>
+                You can add new hashtags with the "Create A New Rule" button.<br/>
+                You can trigger the system to listen for tweets with "Fetch Tweets" button. System will listen to tweets for 5 minutes.<br/><br/>
+            </p>
             <Dialog open={open} onClose={() => setOpen(false)}>
                 <DialogTitle>Create Hashtag</DialogTitle>
                 <DialogContent>
@@ -91,12 +96,12 @@ export default function Tweets() {
                     <Button onClick={handleSubmitAndClose}>Submit</Button>
                 </DialogActions>
             </Dialog>
-            <Button onClick={listenTweets}>
-                Fetch Tweets for 4 minutes
-            </Button>
-            <div></div>
             <Button onClick={() => setOpen(true)}>
                 Create a new rule
+            </Button>
+            <div></div>
+            <Button onClick={listenTweets}>
+                Fetch Tweets for 4 minutes
             </Button>
             <div></div>
             <FormControl variant="standard" sx={{ m: 1, minWidth: 200 }} >
