@@ -83,45 +83,58 @@ export default function Board() {
     const fetchNdjson = async () => {
         const { gameId } = router.query;
 
-        const response = await fetch(`${API_URL}/chess/stream_game/${gameId}`, {
-            method: "get",
-        });
-        const ndjson = ndjsonStream(response.body);
-        const reader = ndjson.getReader();
+        try {
+            const response = await fetch(`${API_URL}/chess/stream_game/${gameId}`, {
+                method: "get",
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+                },
+            });
+            const ndjson = ndjsonStream(response.body);
+            const reader = ndjson.getReader();
 
-        while (true) {
-            const { done, value } = await reader.read();
-            if (done) {
-                break;
-            }
-            // console.log(value);
-            if (
-                value &&
-                ["mate", "resign", "stalemate", "draw"].includes(value.status)
-            ) {
-                setWon(value.status);
-                if (["mate", "resign"].includes(value.status)) {
-                    setWinner(value.winner);
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) {
+                    break;
+                }
+                // console.log(value);
+                if (
+                    value &&
+                    ["mate", "resign", "stalemate", "draw"].includes(value.status)
+                ) {
+                    setWon(value.status);
+                    if (["mate", "resign"].includes(value.status)) {
+                        setWinner(value.winner);
+                    }
+                }
+                if (value && (value["moves"] || value.state.moves)) {
+                    const moves = (value["moves"] || value.state.moves).split(" ");
+                    makeMove(moves[moves.length - 1]);
                 }
             }
-            if (value && (value["moves"] || value.state.moves)) {
-                const moves = (value["moves"] || value.state.moves).split(" ");
-                makeMove(moves[moves.length - 1]);
-            }
+            reader.releaseLock();
         }
-        reader.releaseLock();
+        catch(e) {
+            router.push("/chess");
+        }
     };
 
     async function getGame() {
         const { gameId } = router.query;
-        const res = (await axios.get(`${API_URL}/chess/game/${gameId}`)).data;
-        if (res && res.game) {
-            res.game.moves.split(" ").forEach((move) => {
-                makeMove(move);
-            });
-            setBoardOrientation(res.game.player_color);
-        } else {
-            toast.warning("Something went wrong. Try again.");
+        try {
+            const res = (await axios.get(`${API_URL}/chess/game/${gameId}`)).data;
+            if (res && res.game) {
+                res.game.moves.split(" ").forEach((move) => {
+                    makeMove(move);
+                });
+                setBoardOrientation(res.game.player_color);
+            } else {
+                toast.warning("Something went wrong. Try again.");
+            }
+        }
+        catch(e) {
+            router.push("/chess");
         }
     }
 

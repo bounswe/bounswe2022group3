@@ -85,6 +85,9 @@ export default function Board() {
 
         const response = await fetch(`${API_URL}/chess/stream_game/${gameId}`, {
             method: "get",
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            },
         });
         const ndjson = ndjsonStream(response.body);
         const reader = ndjson.getReader();

@@ -1,4 +1,7 @@
-import { PlayCircleFilledOutlined, PreviewOutlined, Visibility } from "@mui/icons-material";
+import {
+    PlayCircleFilledOutlined,
+    Visibility,
+} from "@mui/icons-material";
 import { Button, Grid, Icon, Tooltip } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
@@ -87,7 +90,10 @@ export default function Chess() {
     }, []);
 
     return (
-        <div className={`${styles.container} chess`}>
+        <div
+            className={styles.container}
+            style={{ display: "block", paddingBottom: "30px", height: "100%" }}
+        >
             <h1>Your Previous Games</h1>
             <Grid container justifyContent="flex-end" sx={{ mb: 3 }}>
                 <Button
