@@ -86,7 +86,7 @@ const LyricsController = {
 
         if (saved_lyrics) {
             return res.status(200).json({
-                saved_lyrics
+                saved_lyrics : saved_lyrics,
             });
         }
     }
