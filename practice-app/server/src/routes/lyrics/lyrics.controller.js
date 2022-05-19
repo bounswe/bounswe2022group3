@@ -66,6 +66,7 @@ const LyricsController = {
         const { lyrics_id, full_title, url } = req.body;
 
         const save_lyrics = await Lyrics.create({
+            user:  mongoose.Types.ObjectId(req.auth),
             lyrics_id: lyrics_id,
             full_title: full_title,
             url: url,
@@ -77,11 +78,11 @@ const LyricsController = {
         }
     },
     savedLyrics: async function (req, res) {
-        const { user_id } = req.body;
+        const user_id = req.auth;
         const user_obj_id = mongoose.Types.ObjectId(user_id);
-        const saved_lyrics = await Lyrics.find({user: user_obj_id}, 'full_title url').exec(); // TODO: This does not work it gives all records.
-        console.log("user id is : ",user_id);
-        console.log("user obj id is : ",user_obj_id);
+        const saved_lyrics = await Lyrics.find({ user: user_obj_id }, 'user full_title url').exec(); // TODO: This does not work it gives all records.
+        console.log("user id is : ", user_id);
+        console.log("user obj id is : ", user_obj_id);
 
         if (saved_lyrics) {
             return res.status(200).json({

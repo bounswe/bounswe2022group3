@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
 
 const lyricsSchema = new mongoose.Schema({
-    // user: {
-    //     type: mongoose.Types.ObjectId,
-    //     ref:"User",
-    //     required: [true, "Saved lyrics must belong to a user"],
-    // },
+    user: {
+        type: mongoose.Types.ObjectId,
+        ref:"User",
+        required: [true, "Saved lyrics must belong to a user"],
+    },
     lyrics_id: {
         type: Number,
         default: -1,
