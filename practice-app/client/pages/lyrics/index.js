@@ -18,7 +18,7 @@ export default function Lyrics() {
     const router = useRouter();
 
     const getInputValue = async (event) => {
-        setSearchParameter(event.target.value);   
+        setSearchParameter(event.target.value);
         // console.log(searchParameter);     
     };
 
@@ -28,7 +28,7 @@ export default function Lyrics() {
             return;
         }
         try {
-            const body = { 'searchparameter': searchParameter};
+            const body = { 'searchparameter': searchParameter };
             const res = (
                 await axios.post(`${API_URL}/lyrics/search_lyrics`, body)
             ).data;
@@ -36,13 +36,30 @@ export default function Lyrics() {
                 console.log(res.searchresult);
                 setResults(res.searchresult);
             }
-            else { 
+            else {
                 console.log("yok yok")
                 toast.warning("Something went wrong. Try again.");
             }
         } catch (e) {
             console.log(e);
         }
+    }
+
+    const save_lyrics = async (lyrics_id, full_title, url) => {
+        const body = { 'lyrics_id': lyrics_id, 'full_title': full_title, 'url': url };
+        const res = (
+            await axios.post(`${API_URL}/lyrics/save_lyrics`, body)
+        ).data;
+        if (res) {
+            console.log(res.searchresult);
+            toast.success("Lyrics saved");
+        }
+        else {
+            console.log("sth went wrong");
+            toast.error("Something went wrong. Try again.");
+        }
+
+        return;
     }
 
 
@@ -52,20 +69,24 @@ export default function Lyrics() {
             <h3>Please enter a search parameter and hit search button to search lyrics</h3>
             <div>
                 <label>
-                    <input type="text" onChange={getInputValue} defaultValue=""/>
+                    <input type="text" onChange={getInputValue} defaultValue="" />
                 </label>
-                <MyButton onClick={search_lyrics}>Search</MyButton>
-            </div>
-            
-            <div>
-                <ul>
-
-                    {results.map(({full_title, url})=> <li><a href={url} target="_blank">{full_title}</a></li>)}
-                </ul>
-            </div>
-
-            <div>
-                <MyButton onClick={() => router.push("/lyrics/saved")}>Saved Lyrics</MyButton>
+                <div>
+                    <MyButton style={{ width: "30%", display: "inline-block" }} onClick={search_lyrics}>Search</MyButton>
+                    {results.length > 0 && <ul>
+                        {results.map(({ full_title, url, lyrics_id }) =>
+                            <li>
+                                <Link href={url}>
+                                    <a target="_blank">{full_title}</a>
+                                </Link>
+                                <MyButton onClick={() => save_lyrics(lyrics_id, full_title, url)}>Save</MyButton>
+                                <MyButton onClick={() => window.open(url,"_blank")}>Go {'>'}</MyButton>
+                            </li>
+                        )
+                        }
+                    </ul>}
+                    <MyButton style={{ width: "30%", display: "inline-block" }} onClick={() => router.push("/lyrics/saved")}>Saved Lyrics</MyButton>
+                </div>
             </div>
         </div>
     );
