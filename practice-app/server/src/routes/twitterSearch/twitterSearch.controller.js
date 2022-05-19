@@ -9,9 +9,7 @@ const defineRule = (hashtag) => {
     // Insert # if not provided 
     if (hashtag.length > 0 && hashtag[0] != '#')
         hashtag = `#${hashtag}`
-    let rule = hashtag
-    const tag = `${hashtag}`
-    return { rule, tag }
+    return { rule: hashtag }
 }
 
 const TwitterSearchController = {
@@ -36,12 +34,14 @@ const TwitterSearchController = {
     createRule: async (req, res) => {
         try {
             const { hashtag } = req.body;
-            let { rule, tag } = defineRule(hashtag)
+            let { rule } = defineRule(hashtag)
+            // Twitter lets us define a tag to easily understand the created rule. 
+            // Since our rules are just one word hashtags, there is no need to have a tag so I am providing rule itself as the tag.
             const payload = {
                 "add": [
                     {
                         value: rule,
-                        tag: tag
+                        tag: rule
                     }
                 ]
             }
@@ -59,8 +59,8 @@ const TwitterSearchController = {
                 })
             }
             res.status(201).json({
-                message: `Created a rule with tag \'${tag}\'`,
-                tag,
+                message: `Created a rule with tag \'${rule}\'`,
+                tag: rule,
                 id: response.data[0].id
             })
         } catch (error) {

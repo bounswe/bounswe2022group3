@@ -17,7 +17,7 @@ subtractMinutes = (numOfMinutes, date = new Date()) => {
 
     return `${hour}:${minute}`
 }
-const getTweets = async (x) => {
+const getTweets = async (givenTags) => {
     const a = await Tweet.aggregate([
         {
             $project: {
@@ -113,20 +113,20 @@ const getTweets = async (x) => {
     const averageLengths = []
     const averageWordCounts = []
     for (const minute in res) {
-        let x = { name: subtractMinutes(parseInt(minute)) }
+        let averagesByMinute = { name: subtractMinutes(parseInt(minute)) }
         for (const i of res[minute]) {
-            x[i._id] = i.averageLength.toFixed(2);
+            averagesByMinute[i._id] = i.averageLength.toFixed(2);
         }
-        averageLengths.push(x)
+        averageLengths.push(averagesByMinute)
     }
     for (const minute in res) {
-        let x = { name: subtractMinutes(parseInt(minute)) }
+        let averagesByMinute = { name: subtractMinutes(parseInt(minute)) }
         for (const i of res[minute]) {
-            x[i._id] = i.avgNumberOfWords.toFixed(2);
+            averagesByMinute[i._id] = i.avgNumberOfWords.toFixed(2);
         }
-        averageWordCounts.push(x)
+        averageWordCounts.push(averagesByMinute)
     }
-    return { averageLengths: averageLengths.reverse(), averageWordCounts: averageWordCounts.reverse(), tags: x }
+    return { averageLengths: averageLengths.reverse(), averageWordCounts: averageWordCounts.reverse(), tags: givenTags }
 
 }
 

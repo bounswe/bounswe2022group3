@@ -99,7 +99,7 @@ twitterSearchRouter.get(
  *       - "application/json"
  *     responses:
  *       "200":
- *         description: Deleted rule
+ *         description: System will start listening
  */
 twitterSearchRouter.get(
     "/listen",
@@ -155,7 +155,7 @@ twitterSearchRouter.get(
  *                type: "string"
  *     responses:
  *       "200":
- *         description: Created a new rule
+ *         description: Fetched and analyzed tweets
  *         content:
  *           application/json:
  *             schema:
