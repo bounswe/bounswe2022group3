@@ -1,14 +1,29 @@
 const supertest = require("supertest");
-const { MongoMemoryServer } = require("mongodb-memory-server-core");
-const mongoose = require("mongoose");
-const app = require("../app");
 const axios = require("axios");
-const ChessGame = require("../models/chess/chess.model");
 const { dbConnect, dbDisconnect } = require("./utils/db");
+const { User } = require("../models/users/users.model");
+let app;
+let spy;
+let user;
 jest.mock("axios");
 
 describe("Chess", () => {
-    beforeAll(async () => dbConnect());
+    beforeAll(async () => {
+        dbConnect();
+        user = await User.create({
+            client_id: "74EQuuHnACLWcjAG53sMsz9F52Z34oo0",
+            tenant: "dev-mh-acvm7",
+            email: "example@example.com",
+            password:
+                "$2b$10$iiQm9KRyIn7t9RKLO8da2.P18CXsn6GByjN3xXtmw9rLaRcH74qLO",
+            connection: "Username-Password-Authentication",
+            given_name: "john",
+            family_name: "doe",
+        });
+        const AuthService = require("../services/auth");
+        spy = jest.spyOn(AuthService, "authorization");
+        app = require("../app");
+    });
     afterAll(async () => dbDisconnect());
     describe("create_game route", () => {
         describe("given no difficulty was provided", () => {
@@ -45,6 +60,10 @@ describe("Chess", () => {
         });
         describe("given correct body was provided", () => {
             it("should return a 200 with correct response", async () => {
+                spy.mockImplementation(async (req, _, next) => {
+                    req.auth = user;
+                    return next();
+                });
                 axios.post.mockResolvedValueOnce({
                     data: {
                         id: "id",
@@ -95,6 +114,10 @@ describe("Chess", () => {
         });
         describe("given correct body (move) was provided", () => {
             it("should return a 200 with correct response", async () => {
+                spy.mockImplementation(async (req, _, next) => {
+                    req.auth = user;
+                    return next();
+                });
                 axios.post.mockResolvedValueOnce({
                     data: {
                         ok: true,
@@ -116,6 +139,10 @@ describe("Chess", () => {
         });
         describe("given incorrect body (move) was provided", () => {
             it("should return a 400 with correct response", async () => {
+                spy.mockImplementation(async (req, _, next) => {
+                    req.auth = user;
+                    return next();
+                });
                 axios.post.mockRejectedValueOnce({
                     data: {
                         error: "error",
@@ -138,8 +165,12 @@ describe("Chess", () => {
     });
 
     describe("games route", () => {
-        describe("-", () => {
+        describe("given user wants to list all games", () => {
             it("should return a 200 with correct response", async () => {
+                spy.mockImplementation(async (req, _, next) => {
+                    req.auth = user;
+                    return next();
+                });
                 const { body, statusCode } = await supertest(app).get(
                     "/chess/games"
                 );
@@ -163,6 +194,10 @@ describe("Chess", () => {
     describe("/game/:gameId route", () => {
         describe("given game gameId does not exist", () => {
             it("should return a 200 with correct response", async () => {
+                spy.mockImplementation(async (req, _, next) => {
+                    req.auth = user;
+                    return next();
+                });
                 const { body, statusCode } = await supertest(app).get(
                     "/chess/game/QBqUFwvF"
                 );
@@ -175,6 +210,10 @@ describe("Chess", () => {
         });
         describe("given game gameId exists", () => {
             it("should return a 200 with correct response", async () => {
+                spy.mockImplementation(async (req, _, next) => {
+                    req.auth = user;
+                    return next();
+                });
                 const { body, statusCode } = await supertest(app).get(
                     "/chess/game/id"
                 );
@@ -184,8 +223,8 @@ describe("Chess", () => {
                     game: {
                         _id: expect.any(String),
                         player_color: "white",
-                        moves: ""
-                    }
+                        moves: "",
+                    },
                 });
             });
         });
