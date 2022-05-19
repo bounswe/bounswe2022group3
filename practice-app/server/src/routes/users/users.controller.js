@@ -93,7 +93,6 @@ const UserController = {
             const response = (await axios.post(url, payload)).data;
             return res.status(200).json({
                 access_token: response.access_token,
-                email: email,
             })
         } catch (error) {
             return res.status(400).json({

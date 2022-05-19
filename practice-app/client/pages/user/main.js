@@ -15,7 +15,6 @@ export default function main() {
 
     const getUsername = async () => {
         const email = localStorage.getItem("email");
-        console.log(email)
         if(!email){
             return
         }
