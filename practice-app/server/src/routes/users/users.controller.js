@@ -103,7 +103,6 @@ const UserController = {
     },
     getUsername: async function (req, res) {
         let email = req.query.email;
-        console.log(email)
         try {
             const user = await UserModel.getUsernameByEmail(email);
             if(user){
