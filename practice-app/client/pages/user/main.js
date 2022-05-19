@@ -11,6 +11,7 @@ export default function main() {
     const handleClick = async (values) => {
         router.push(`/chess`);
     };
+// 
 
     const getUsername = async () => {
         const email = localStorage.getItem("email");
@@ -26,6 +27,9 @@ export default function main() {
         }
     };
     useEffect(() => {
+        if(!localStorage.getItem("access_token")){
+            router.push(`/user/login`);
+        };
         getUsername();
     }, []);
     return (
