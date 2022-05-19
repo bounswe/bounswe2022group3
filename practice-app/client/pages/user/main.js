@@ -11,11 +11,6 @@ export default function main() {
     const handleClick = async (values) => {
         router.push(`/chess`);
     };
-    if (typeof window !== 'undefined') {
-        if(!localStorage.getItem("access_token")){
-            router.push(`/user/login`);
-        };
-    }
 
     const getUsername = async () => {
         const email = localStorage.getItem("email");
