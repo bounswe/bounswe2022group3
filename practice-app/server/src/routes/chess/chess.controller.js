@@ -44,7 +44,7 @@ const ChessController = {
             }
         } catch (e) {
             return res
-                .status(400)
+                .status(500)
                 .json({ message: "Could not initiate a game against the AI" });
         }
     },
@@ -53,17 +53,15 @@ const ChessController = {
         const { gameId, moveStr } = req.body;
         const user = req.auth;
 
-        const game = (
-            await ChessGame.find(
-                { game_id: gameId, user },
-                "moves player_color"
-            )
-        )[0];
+        const game = await ChessGame.findOne(
+            { game_id: gameId, user },
+            "moves player_color"
+        );
 
         if (!game) {
             return res
-                .status(500)
-                .json({ message: "Cannot not make move in this game." });
+                .status(404)
+                .json({ message: "Game not found." });
         }
 
         const url = `https://lichess.org/api/board/game/${gameId}/move/${moveStr}`;
@@ -85,7 +83,7 @@ const ChessController = {
             }
         } catch (e) {
             return res
-                .status(400)
+                .status(500)
                 .json({ message: "Could not make the move." });
         }
     },
@@ -93,17 +91,15 @@ const ChessController = {
         const { gameId } = req.params;
         const user = req.auth;
 
-        const game = (
-            await ChessGame.find(
-                { game_id: gameId, user },
-                "moves player_color"
-            )
-        )[0];
+        const game = await ChessGame.findOne(
+            { game_id: gameId, user },
+            "moves player_color"
+        );
 
         if (!game) {
             return res
-                .status(500)
-                .json({ message: "Cannot not stream the game." });
+                .status(404)
+                .json({ message: "Game not found." });
         }
 
         const url = `https://lichess.org/api/board/game/stream/${gameId}`;
@@ -190,12 +186,10 @@ const ChessController = {
         const user = req.auth;
 
         try {
-            const game = (
-                await ChessGame.find(
-                    { game_id: gameId, user },
-                    "moves player_color"
-                )
-            )[0];
+            const game = await ChessGame.findOne(
+                { game_id: gameId, user },
+                "moves player_color"
+            );
             if (game) {
                 return res.status(200).json({
                     game,
