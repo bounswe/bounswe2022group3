@@ -28,21 +28,17 @@ export default function NewQuiz() {
         //burada ayır  gelen inputu
         const body = { categories: x }
         var y = JSON.stringify(body)
-        console.log(body)
         const response = await axios.post(`${API_URL}quiz/new_quiz`, y, {
             headers: {
                 "Content-Type": "application/json; charset=utf-8",
                 "Access-Control-Allow-Origin": "*",
             }
-        })
+        }).catch(err => console.log(err))
         let r = response.data
         setRequest([])
-        console.log(response)
-        console.log(r)
         if (response) {
-            console.log(response);
             localStorage.setItem("quiz_id", r.quiz_id)
-            localStorage.setItem("questions", JSON.stringify(r.questions))
+            localStorage.setItem("questions", r.questions)
             router.push({ pathname: `/quiz/view/${r.quiz_id}`, })
         }
 
@@ -62,9 +58,7 @@ export default function NewQuiz() {
 
             if (values._submittype === "add") {
                 const newRequest = { "_questionCount": values._questionCount.toString(), "_category": values._category, "_difficulty": values._difficulty }
-                console.log(newRequest)
                 await setRequest([...request, newRequest])
-                console.log(request)
 
                 formik.setFieldValue("_questionCount", "5", false)
                 formik.setFieldValue("_category", "", false)
@@ -73,9 +67,7 @@ export default function NewQuiz() {
             }
             if (values._submittype === "create") {
                 const newRequest = { "_questionCount": values._questionCount.toString(), "_category": values._category, "_difficulty": values._difficulty }
-                console.log(newRequest)
                 await setRequest([...request, newRequest])
-                console.log(request)
 
                 var x = request.length === 0 ? newRequest : request
                 await createQuiz(x)

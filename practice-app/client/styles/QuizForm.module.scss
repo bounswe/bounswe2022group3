@@ -111,11 +111,9 @@
     margin-right: 5rem;
     padding: 10px;
     background-color: white;
-    font-family: "Montferat", sans-serif;
     align-self: center;
 
     h1 {
-        font-family: "Montferat", sans-serif;
         font-size: 36px;
         margin-top: 16px;
     }
@@ -129,11 +127,10 @@
 
     height: 90vh;
     display: flex;
+    margin-top: 15vh;
     flex-direction: column;
     gap: 15px;
     align-items: center;
-    font-family: "Montferat", sans-serif;
-
 }
 
 .middle>* {

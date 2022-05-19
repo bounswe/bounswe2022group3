@@ -15,12 +15,6 @@ async function onequizrequest(rr) {
         type: "boolean",
         encode: 'url3986'
     }
-    /*const newRequest = {"_questionCount" : rr._questionCount, "_category" : rr._category, "_difficulty" : rr._difficulty, "_type" : rr._type}
-    console.log(newRequest)
-
-    const x = JSON.stringify(newRequest)
-    console.log(x)
-    */
     const response = (await axios.post(quiz_url, null, { params: input })).data
     var categoryno = rr._category
     var count = rr._questionCount
@@ -28,14 +22,14 @@ async function onequizrequest(rr) {
     if (response.response_code == "0") {
         const results = response.results
         let tmp = results
-        var questions = []
+        questions = []
 
         for (let j = 0; j < tmp.length; j++) {
             let x = decodeURIComponent(tmp[j].question)
             let y = decodeURIComponent(tmp[j].correct_answer)
             let z = decodeURI(tmp[j].incorrect_answers)
 
-            questions[j] = x + ", " + y + ", " + z
+            questions[j] = { "question": x, "correct_answer": y }
         }
 
         return [questions, categoryno, count]
@@ -73,7 +67,7 @@ const QuizController =
     },
 
     quizCategoryInfo: async function (req, res) {
-
+        console.log(req)
         try {
             const response = await QuizCategories.find({}, 'category_id name')
             return res.status(200).json(response)
@@ -114,9 +108,10 @@ const QuizController =
 
             if (i == request.length - 1) {
 
+                user_quiz = JSON.stringify(user_quiz)
                 const quiz = await Quiz.create
                     ({
-                        quiz_id: 5,
+                        quiz_id: Date.now(),
                         questionCount: count,
                         categories: categories,
                         questions: user_quiz,
