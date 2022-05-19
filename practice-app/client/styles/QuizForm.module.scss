@@ -42,8 +42,8 @@
     color: #fff;
     font-size: 1rem;
     letter-spacing: 2px;
-    margin-top: 1.25rem;
-    font-weight: 600;
+    margin-top: 1rem;
+    font-weight: 900;
     transition: .5s;
     border-radius: 0.5rem;
     cursor: pointer;
@@ -92,9 +92,9 @@
     min-height: fit-content;
     min-width: auto;
     margin: 15px;
-    justify-content: space-between;
+    justify-content: center;
     box-sizing: border-box;
-
+    padding: 1rem;
 
 }
 
@@ -130,6 +130,7 @@
     margin-top: 15vh;
     flex-direction: column;
     gap: 15px;
+    font-family: "Montserrat", sans-serif;
     align-items: center;
 }
 

@@ -181,6 +181,7 @@ export default function QuizForm(props) {
                 onChange={formik.handleChange}
                 className={styles.select}
                 value={formik.values._category}
+                key={formik.values._category}
               >
                 <option value=""> Any Category </option>
 

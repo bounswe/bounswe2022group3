@@ -10,10 +10,8 @@ export default function Quiz(props) {
     const k = router.query
 
     const quiz = JSON.parse(localStorage.getItem("questions"))
-    console.log(quiz)
     const questions = []
     const answers = []
-    //var splitter = new RegExp('\\.\\s*\\,')
     for (let i = 0; i < quiz.length; i++) {
         let obj = quiz[i]
         questions.push(obj.question)
@@ -23,7 +21,7 @@ export default function Quiz(props) {
     return (
         <React.Fragment>
             <div className={styles.middle}>
-                <h1>View</h1>
+                <h2>HERE IS YOUR QUIZ</h2>
 
                 <ul >
                     {quiz.map((e) => (
