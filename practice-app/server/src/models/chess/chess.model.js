@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
 
 const chessGameSchema = new mongoose.Schema({
-    // user: {
-    //     type: mongoose.Schema.ObjectId,
-    //     ref: "User",
-    //     required: [true, "Booking must belong to a User!"],
-    // },
+    user: {
+        type: mongoose.Schema.ObjectId,
+        ref: "User",
+        required: [true, "Game must belong to a User!"],
+    },
     game_id: {
         type: String,
         default: "",
