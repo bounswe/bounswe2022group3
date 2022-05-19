@@ -225,7 +225,6 @@ describe("User", () => {
                 axios.post.mockResolvedValueOnce({
                     data: {
                         access_token: "access_token",
-                        email: "kadir@gmail.com",
                     },
                 });
                 const { body, statusCode } = await supertest(app)
@@ -238,7 +237,6 @@ describe("User", () => {
                 expect(statusCode).toBe(200);
                 expect(body).toEqual({
                     access_token: "access_token",
-                    email: "kadir@gmail.com",
                 });
             });
         });
