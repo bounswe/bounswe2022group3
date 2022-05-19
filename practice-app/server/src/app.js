@@ -45,14 +45,16 @@ const swaggerOptions = {
         },
     },
     servers: [
-      {
-        url: process.env.API_URL,
-      },
+        {
+            url: process.env.API_URL,
+        },
     ],
-  },
-
-  apis: ["./routes/users/users.route.js", "./routes/chess/chess.route.js", "./routes/currency/currency.route.js"],
-
+    apis: [
+        "./routes/users/users.route.js",
+        "./routes/chess/chess.route.js",
+        "./routes/twitterSearch/twitterSearch.route.js",
+        "./routes/currency/currency.route.js",
+    ],
 };
 const specs = swaggerJsdoc(swaggerOptions);
 

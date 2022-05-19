@@ -40,4 +40,10 @@ const getUserByEmail = async (email) => {
     return result;
 }
 
-module.exports = {User, getUserByID, getUserByEmail};
+const getUsernameByEmail = async (email) => {
+
+    const result = await User.findOne({email : `${email}`}, 'given_name family_name').exec();
+    return result;
+}
+
+module.exports = {User, getUsernameByEmail, getUserByEmail};
