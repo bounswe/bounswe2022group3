@@ -24,16 +24,16 @@ const UserController = {
                     })
                 }
             }catch (error) {
-                return res.status(400).json({
+                return res.status(error.response.status).json({
                     message: error.toString(),
                 });
             } 
-            // Check if user already exist
+            //Check if user already exist
             const user = await UserModel.getUserByEmail(email);
             if (user) {
                 return res
                     .status(409)
-                    .json({ message: "User Already Exists. Please Login" });
+                    .json({ message: "The user already exists."});
             }
             console.log("Proceeding with signup")
             // Proceeding with signup
@@ -63,8 +63,8 @@ const UserController = {
                 });
             }
         } catch (error) {
-            return res.status(400).json({
-                message: error.toString(),
+            return res.status(error.response.status).json({
+                message: error.response.data.message,
             });
         }
     },
@@ -83,27 +83,46 @@ const UserController = {
                 'username': email,
                 'password': password,
             };
-            try{
-                response = (await axios.post(url, payload));
-            }catch (error) {
-                return res.status(400).json({
-                    message: " Wrong email or password, try again!",
-                });
+            const user = await UserModel.getUserByEmail(email);
+            console.log(user)
+            if (!user) {
+                return res
+                    .status(403)
+                    .json({ message: "The user does not exist." });
             }
-            if (response.data.access_token) {
-                return res.status(200).json({
-                    access_token: response.data.access_token,
-                })
-            }
-            else{
-                return res.status(400).json({
-                    message:" Failed to acquire access token!",
-                });
-            }
+            const response = (await axios.post(url, payload)).data;
+            return res.status(200).json({
+                access_token: response.access_token,
+                email: email,
+            })
         } catch (error) {
             return res.status(400).json({
-                message: error.toString(),
+                message:"Failed to acquire access token!",
             });
+        }
+    },
+    getUsername: async function (req, res) {
+        let email = req.query.email;
+        try {
+            const user = await UserModel.getUsernameByEmail(email);
+            if(user){
+                const user_name = user.given_name + " " + user.family_name;
+                return res
+                        .status(200)
+                        .json({ user_name: user_name });
+            }
+            else{
+                return res
+                        .status(400)
+                        .json({ 
+                            message: "User not found!"
+                        });
+            }
+        }catch(e){
+            console.log(e)
+            return res
+                .status(500)
+                .json({ message: "Could not retrieve username." });
         }
     },
 };
