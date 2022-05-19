@@ -64,29 +64,29 @@ export default function Lyrics() {
 
 
     return (
-        <div className={`${styles.container} chess`}>
+        <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", margin: "20px" }}>
             <h1>Welcome to the Lyrics Corner!</h1>
             <h3>Please enter a search parameter and hit search button to search lyrics</h3>
             <div>
-                <label>
-                    <input type="text" onChange={getInputValue} defaultValue="" />
-                </label>
                 <div>
-                    <MyButton style={{ width: "30%", display: "inline-block" }} onClick={search_lyrics}>Search</MyButton>
-                    {results.length > 0 && <ul>
-                        {results.map(({ full_title, url, lyrics_id }) =>
-                            <li>
-                                <Link href={url}>
-                                    <a target="_blank">{full_title}</a>
-                                </Link>
-                                <MyButton onClick={() => save_lyrics(lyrics_id, full_title, url)}>Save</MyButton>
-                                <MyButton onClick={() => window.open(url,"_blank")}>Go {'>'}</MyButton>
-                            </li>
-                        )
-                        }
-                    </ul>}
-                    <MyButton style={{ width: "30%", display: "inline-block" }} onClick={() => router.push("/lyrics/saved")}>Saved Lyrics</MyButton>
+                    <input style={{border:"1px solid #4d4ffa", fontSize:"1rem", marginLeft: "2%",height:"3rem",borderRadius:"0.5rem", width: "40%", display: "inline-block" }} type="text" onChange={getInputValue} defaultValue="" />
+                    <MyButton style={{ marginLeft: "2%", width: "20%", display: "inline-block" }} onClick={search_lyrics}>Search</MyButton>
+                    <MyButton style={{ marginLeft: "2%", marginRight: "2%", width: "20%", display: "inline-block" }} onClick={() => router.push("/lyrics/saved")}>Saved Lyrics</MyButton>
                 </div>
+                {results.length > 0 && <ul>
+                    {results.map(({ full_title, url, lyrics_id }) =>
+                        <li>
+
+                            <Link href={url}>
+                                <a target="_blank">{full_title}</a>
+                            </Link>
+                            <MyButton style={{ margin: "10px", height: "30px", width: "80px", display: "inline-block" }} onClick={() => save_lyrics(lyrics_id, full_title, url)}>Save</MyButton>
+                            <MyButton style={{ margin: "10px", height: "30px", width: "80px", display: "inline-block" }} onClick={() => window.open(url, "_blank")}>Go {'>'}</MyButton>
+                        </li>
+                    )
+                    }
+                </ul>}
+
             </div>
         </div>
     );
