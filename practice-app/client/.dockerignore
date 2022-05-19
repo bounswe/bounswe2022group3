@@ -3,3 +3,4 @@
 .dockerignore
 .node_modules/
 Dockerfile
+next.config.js
