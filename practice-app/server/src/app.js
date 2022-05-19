@@ -12,6 +12,7 @@ app.use(
     })
 );
 
+app.use(cors());
 app.use(express.json());
 
 if (process.env.LOG === "true") {
@@ -52,6 +53,7 @@ const swaggerOptions = {
         "./routes/users/users.route.js",
         "./routes/chess/chess.route.js",
         "./routes/twitterSearch/twitterSearch.route.js",
+        "./routes/currency/currency.route.js",
     ],
 };
 const specs = swaggerJsdoc(swaggerOptions);
