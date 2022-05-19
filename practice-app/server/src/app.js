@@ -43,7 +43,16 @@ const swaggerOptions = {
             },
         },
     },
-    apis: ["./routes/users/users.route.js", "./routes/chess/chess.route.js"],
+    servers: [
+        {
+            url: process.env.API_URL,
+        },
+    ],
+    apis: [
+        "./routes/users/users.route.js",
+        "./routes/chess/chess.route.js",
+        "./routes/twitterSearch/twitterSearch.route.js",
+    ],
 };
 const specs = swaggerJsdoc(swaggerOptions);
 
