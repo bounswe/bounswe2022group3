@@ -1,0 +1,195 @@
+@import './variables.scss';
+
+
+.card {
+    font-family: "Montserrat", sans-serif;
+
+    border: 1.5px solid $base-color;
+    background-color: $base-color-light;
+    outline: none;
+    height: 85vh;
+    color: $base-color;
+    font-size: 1rem;
+    letter-spacing: 2px;
+    margin-top: 1.25rem;
+    font-weight: 600;
+    transition: .5s;
+    border-radius: 0.5rem;
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: 5rem;
+    margin-right: 5rem;
+    margin-top: 4.55rem;
+    justify-content: center;
+    box-sizing: border-box;
+    min-width: fit-content;
+    width: 45%;
+    padding: 10px;
+
+}
+
+
+.button {
+    font-family: "Montserrat", sans-serif;
+    width: 80%;
+    border: 1.5px solid $base-color;
+    background-color: $base-color;
+    text-transform: uppercase;
+    outline: none;
+    height: 3rem;
+    color: #fff;
+    font-size: 1rem;
+    letter-spacing: 2px;
+    margin-top: 1.25rem;
+    font-weight: 600;
+    transition: .5s;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    display: block;
+    margin: 1rem auto;
+
+    &:hover {
+        background-color: #fff;
+        color: $base-color;
+    }
+}
+
+.body {
+    margin: 0;
+    height: 99vh;
+    color: #333;
+    box-sizing: content-box;
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+
+    h3 {
+        margin: 20px 0;
+    }
+}
+
+.miniblock {
+
+    display: flex;
+    flex-direction: column;
+    min-height: fit-content;
+    min-width: 80%;
+    align-items: center;
+    align-content: center;
+    align-self: center;
+    margin: 5 5;
+    padding: 3px;
+    justify-content: center;
+    box-sizing: border-box;
+
+}
+
+.mininext {
+    display: flex;
+    flex-direction: row;
+    min-height: fit-content;
+    min-width: auto;
+    margin: 15px;
+    justify-content: space-between;
+    box-sizing: border-box;
+
+
+}
+
+.main {
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: 5rem;
+    justify-content: center;
+    box-sizing: border-box;
+    min-width: fit-content;
+    width: 45%;
+    margin-right: 5rem;
+    padding: 10px;
+    background-color: white;
+    font-family: "Montferat", sans-serif;
+    align-self: center;
+
+    h1 {
+        font-family: "Montferat", sans-serif;
+        font-size: 36px;
+        margin-top: 16px;
+    }
+
+    h3 {
+        margin: 20px 0;
+    }
+}
+
+.middle {
+
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+    font-family: "Montferat", sans-serif;
+
+}
+
+.middle>* {
+    justify-content: space-evenly;
+}
+
+
+.select {
+    box-sizing: border-box;
+    width: 100%;
+    border: 3px solid $base-color-light;
+    padding: 10px;
+    align-items: center;
+    text-align: center;
+    border-radius: 10px;
+    font-family: "Montserrat", sans-serif;
+}
+
+
+.input {
+    font-family: "Montserrat", sans-serif;
+    padding: 10px;
+    margin: 10px 0;
+    border: 3px solid $base-color-light;
+    padding: 10px;
+    border-radius: 10px;
+    box-sizing: border-box;
+    vertical-align: middle;
+
+
+    &::placeholder {
+        color: #aaa;
+    }
+
+    &:focus {
+        border-color: $base-color-light;
+        outline: none;
+    }
+}
+
+.label {
+    font-family: "Montserrat", sans-serif;
+    box-sizing: border-box;
+    align-self: center;
+
+    text-align: center;
+    margin-top: -0.7rem !important;
+    margin-bottom: 0.8rem;
+    margin-left: 5px;
+}
+
+.error {
+    margin-top: -0.7rem !important;
+    margin-bottom: 0.8rem;
+    margin-left: 5px;
+    text-align: left;
+    color: $secondary;
+    font-weight: 600;
+}
