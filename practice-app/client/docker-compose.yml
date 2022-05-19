@@ -6,6 +6,6 @@ services:
     container_name: client
     hostname: client
     ports:
-      - "3000:3000"
+      - "3001:3001"
     restart: always
               
