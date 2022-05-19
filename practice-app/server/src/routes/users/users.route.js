@@ -16,22 +16,22 @@ const usersRouter = express.Router();
  *       - "application/json"
  *     produces:
  *       - "application/json"
- *     parameters:
- *      - in: "body"
- *        name: "Body"
+ *     requestBody:
  *        description: "Creates a user with given data."
  *        required: true
- *        schema:
- *          type: object
- *          properties:
- *              email:
- *                type: string
- *              first_name:
- *                type: string
- *              last_name:
- *                type: string
- *              password:
- *                type: string
+ *        content:
+ *          application/json:
+ *               schema:
+ *                 type: object
+ *                 properties:
+ *                   email:
+ *                     type: string
+ *                   first_name:
+ *                     type: string
+ *                   last_name:
+ *                     type: string
+ *                   password:
+ *                     type: string  
  *     responses:
  *       "201":
  *         description: Created a new user
@@ -77,18 +77,18 @@ const usersRouter = express.Router();
  *       - "application/json"
  *     produces:
  *       - "application/json"
- *     parameters:
- *      - in: "body"
- *        name: "Body"
+ *     requestBody:
  *        description: "Provides authorization token for given user."
  *        required: true
- *        schema:
- *          type: object
- *          properties:
- *              email:
- *                type: string
- *              password:
- *                type: string
+ *        content:
+ *          application/json:
+ *               schema:
+ *                 type: object
+ *                 properties:
+ *                   email:
+ *                     type: string
+ *                   password:
+ *                     type: string
  *     responses:
  *       "200":
  *         description: Created a new user
@@ -133,7 +133,7 @@ const usersRouter = express.Router();
  *       - "application/json"
  *     parameters:
  *      - in: "query"
- *        name: "Email"
+ *        name: "email"
  *        description: "Provides username(firstname lastname) from user with given email."
  *        required: true
  *        type : string

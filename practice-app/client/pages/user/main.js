@@ -35,23 +35,21 @@ export default function main() {
     }, []);
     return (
         <>
-            <h1>Welcome to The Desert of the Real ! </h1>
-                <h1>{user_name}</h1>
+            <h1 style={{marginBottom:"0"}}>Welcome to The Desert of the Real !</h1>
+                <h2 style={{marginBottom:"20px"}}>{user_name}</h2>
+                <h2 style={{marginBottom:"30px"}}>Choose Wisely!</h2>
             {/* <Image src="/desert.png"  width="729" height="300" /> */}
             <div className='buttons'>
-                {/* <div>
-                    {Endpoints.map(MainButton, this)}
-                </div> */}
                 {/* TODO: Add necessary buttons for each feature, after all added to master */}
                 {/* Make half of the buttons blue and half red, represnting bluepil redpil, maybe add a little border radius to make them look like pill.  */}
-                <MainButton type="submit" onClick={handleClick}>Chess</MainButton>
-                <MainButton type="submit">Login</MainButton>
-                <MainButton type="submit">Login</MainButton>
-                <MainButton type="submit">Login</MainButton>
-                <MainButton type="submit">Login</MainButton>
-                <MainButton type="submit">Login</MainButton>
-            </div>
+                <MainButton style={{backgroundColor:"#4253b5", marginRight: "4rem"}} onClick={handleClick}>Chess</MainButton>
+                <MainButton style={{backgroundColor:"#CB3C27", marginLeft: "4rem"}}>Login</MainButton>
+                <MainButton style={{backgroundColor:"#4253b5", marginRight: "4rem"}}>Login</MainButton>
 
+                <MainButton style={{backgroundColor:"#CB3C27", marginLeft: "4rem"}}>Login</MainButton>
+                <MainButton style={{backgroundColor:"#4253b5", marginRight: "4rem"}}>Login</MainButton>
+                <MainButton style={{backgroundColor:"#CB3C27", marginLeft: "4rem"}}>Login</MainButton>
+            </div>
         </>
     );
 }
