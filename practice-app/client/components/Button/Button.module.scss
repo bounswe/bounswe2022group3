@@ -24,31 +24,3 @@
         color: $base-color;
     }
 }
-.mainButton {
-    font-family: "Montserrat", sans-serif;
-    // width: 40%;
-    border: 3px solid $base-color;
-    background-color: $base-color;
-    text-transform: uppercase;
-    outline: none;
-    height: 3rem;
-    color: #fff;
-    font-size: 1rem;
-    letter-spacing: 2px;
-    margin-top: 1.25rem;
-    font-weight: 600;
-    transition: .5s;
-    border-radius: 5rem;
-    cursor: pointer;
-    display: inline-block;
-    margin: 1rem;
-    margin-left: 10rem;
-    margin-right: 10rem;
-    padding-left: 7rem;
-    padding-right: 7rem;
-
-    &:hover {
-        background-color: #fff;
-        color: $base-color;
-    }
-}

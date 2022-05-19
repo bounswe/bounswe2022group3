@@ -6,12 +6,8 @@ import AuthLayout from "../../layouts/auth/AuthLayout";
 import styles from "../../styles/user/form.module.scss";
 import axios from "axios";
 import { API_URL } from "../../next.config";
-import { useRouter } from "next/router";
-import { toast } from "react-toastify";
 
 export default function register() {
-    const router = useRouter();
-
     const SignupSchema = Yup.object().shape({
         first_name: Yup.string()
             .min(2, "Too Short")
@@ -39,27 +35,7 @@ export default function register() {
         // use axios to make request, 
         // API_URL is base url of server,
         // redirect user to login page on success.
-        try{
-            console.log(values)
-            const url = `${API_URL}/users/register`;
-            const payload = {
-                'first_name': values.first_name,
-                'last_name': values.last_name,
-                'email': values.email,
-                'password': values.password,
-            };
-            const response_signup = (await axios.post(url, payload)).data;
-
-            if (response_signup.created_at) {// Register Successfull
-                router.push(`/user/login`);
-            }
-            else{
-                console.log(response_signup.message);
-            }
-
-        }catch (error) {
-            console.log(error.toString());
-        }
+        console.log(values)
     };
 
     return (

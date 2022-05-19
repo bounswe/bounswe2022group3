@@ -9,7 +9,7 @@ class MyDocument extends Document {
                     <meta name="description" content="Practice App for Group 3 - CmpE352" />
                     <link rel="icon" href="/favicon.ico" />
                     <link
-                        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Merriweather:wght@700&display=swap"
+                        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Sacramento&display=swap"
                         rel="stylesheet"
                     />
                 </Head>

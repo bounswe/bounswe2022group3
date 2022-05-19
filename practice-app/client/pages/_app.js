@@ -5,16 +5,7 @@ import NextNProgress from "nextjs-progressbar";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import Loading from "../components/Loading/Loading";
-import { createTheme } from '@mui/material/styles';
-import { ThemeProvider } from "@mui/material";
-
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#4d4ffa'
-    }
-  },
-});
+import Head from "next/head";
 
 function MyApp({ Component, pageProps }) {
     const [loading, setLoading] = useState(false);
@@ -31,9 +22,7 @@ function MyApp({ Component, pageProps }) {
                 if (token) {
                     config.headers.Authorization = `Bearer ${token}`;
                 }
-                if(!config.DISABLE_LOADING) {
-                    setLoading(true);
-                }
+                setLoading(true);
                 return config;
             },
             function (error) {
@@ -77,13 +66,13 @@ function MyApp({ Component, pageProps }) {
     }, []);
 
     return (
-        <ThemeProvider theme={theme}>
+        <>
             <NextNProgress color="#e1493f" height={2} />
             <Loading show={loading} />
             {getLayout(<Component {...pageProps} setLoading={setLoading} />)}
             <ToastContainer position="bottom-right" />
             {loading && <style>{"body {overflow: hidden}"}</style>}
-        </ThemeProvider>
+        </>
     );
 }
 
