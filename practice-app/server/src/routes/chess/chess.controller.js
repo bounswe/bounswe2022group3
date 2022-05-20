@@ -88,25 +88,27 @@ const ChessController = {
         }
     },
     streamGame: async function (req, res) {
+        console.log(1)
         const { gameId } = req.params;
+        console.log(2)
         const user = req.auth;
-
+        console.log(3)
         const game = await ChessGame.findOne(
             { game_id: gameId, user },
             "moves player_color"
         );
-
+        console.log(4)
         if (!game) {
             return res
                 .status(404)
                 .json({ message: "Game not found." });
         }
-
+        console.log(5)
         const url = `https://lichess.org/api/board/game/stream/${gameId}`;
         const headers = {
             Authorization: `Bearer ${process.env.LICHESS_TOKEN}`,
         };
-
+        console.log(6)
         try {
             const stream = needle.get(url, {
                 headers,
@@ -114,9 +116,10 @@ const ChessController = {
             stream
                 .pipe(ndjson.parse())
                 .on("data", async (data) => {
+                    console.log(data)
                     try {
                         const state = data.state ? data.state : data;
-
+                        console.log(state.moves, state.status)
                         if (
                             state.moves !== undefined &&
                             state.status !== undefined
@@ -131,7 +134,7 @@ const ChessController = {
                                 }
                             );
                         }
-
+                        console.log(8)
                         if (state.status === "mate") {
                             await ChessGame.updateOne(
                                 { game_id: gameId },
@@ -142,9 +145,10 @@ const ChessController = {
                                 }
                             );
                         }
-
+                        console.log(9)
                         res.write(JSON.stringify(data) + "\n");
                     } catch (e) {
+                        console.log(10)
                         console.log(e);
                     }
                 })
@@ -154,6 +158,7 @@ const ChessController = {
                 });
 
             req.on("close", function () {
+                console.log(11)
                 stream.removeAllListeners();
             });
         } catch (e) {
