@@ -20,3 +20,8 @@ a {
     box-sizing: border-box;
     margin: 0;
 }
+
+.chess .MuiButton-root.Mui-disabled {
+    border-color: $secondary;
+    color: $secondary
+}
