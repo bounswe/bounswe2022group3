@@ -49,7 +49,8 @@ const swaggerOptions = {
         "./routes/twitterSearch/twitterSearch.route.js",
         "./routes/currency/currency.route.js",
         "./routes/quiz/quiz.route.js",
-        "./routes/coin/coin.route.js"
+        "./routes/coin/coin.route.js",
+        "./routes/posts/post.route.js"
     ],
 };
 const specs = swaggerJsdoc(swaggerOptions);
