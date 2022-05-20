@@ -20,7 +20,6 @@ exports.validate = (method) => {
         }
         case "saved_lyrics": {
             return [
-                body("user_id","no user information found").exists(),
             ];
         }
     }
