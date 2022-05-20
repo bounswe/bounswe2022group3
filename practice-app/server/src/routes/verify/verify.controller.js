@@ -39,7 +39,7 @@ const EmailController = {
             });
         }
         if(savedEmail) {
-            return res.status(200).json({
+            return res.status(201).json({
                 email: email,
             });
         }

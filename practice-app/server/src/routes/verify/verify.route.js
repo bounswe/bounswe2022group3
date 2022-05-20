@@ -67,7 +67,7 @@ const verifyRouter = express.Router();
  *              email:
  *                type: string
  *     responses:
- *       "200":
+ *       "201":
  *         description: 
  *         content:
  *           application/json:
@@ -152,7 +152,6 @@ verifyRouter.post(
 
 verifyRouter.get(
     "/getEmails",
-    validate("verify"),
     handleValidation,
     EmailController.getEmails
 );
