@@ -165,12 +165,12 @@ chessRouter.post(
 
 /**
  * @swagger
- * /chess/stream_game/:gameId:
+ * /chess/stream_game/{gameId}:
  *   get:
  *     summary: Streams events in a Chess Game
  *     tags: [Chess]
  *     produces:
- *       - "application/json"
+ *       - "application/x-ndjson"
  *     security:
  *           - bearerAuth: []
  *     parameters:
@@ -183,28 +183,6 @@ chessRouter.post(
  *     responses:
  *       "200":
  *         description: Successfully started stream
- *         content:
- *           application/json:
- *             schema:
- *                  oneOf:
- *                     - type: object
- *                       properties:
- *                           message:
- *                               type: string
- *                       example:
- *                            message: "gameId is not provided"
- *                     - type: object
- *                       properties:
- *                           message:
- *                               type: string
- *                       example:
- *                            message: "moveStr is not provided"
- *                     - type: object
- *                       properties:
- *                           message:
- *                               type: string
- *                       example:
- *                            message: "Could not make the move."
  *       "500":
  *         description: There was an error while piping stream from Lichess API
  *         content:
@@ -219,6 +197,8 @@ chessRouter.post(
  */
 chessRouter.get(
     "/stream_game/:gameId",
+    validate("stream_game"),
+    handleValidation,
     authorization,
     ChessController.streamGame
 );
@@ -257,7 +237,7 @@ chessRouter.get(
  *                                      type: string
  *                  example:
  *                      games: [{
- *                            game_id: "756bhghru", 
+ *                            game_id: "756bhghru",
  *                            player_color: "white",
  *                            winner_color: "white",
  *                            status: "mate",
@@ -279,7 +259,7 @@ chessRouter.get("/games", authorization, ChessController.getGames);
 
 /**
  * @swagger
- * /chess/games/:gameId:
+ * /chess/game/{gameId}:
  *   get:
  *     summary: Get data of the game
  *     tags: [Chess]
@@ -334,6 +314,12 @@ chessRouter.get("/games", authorization, ChessController.getGames);
  *                  example:
  *                      message: "Could not retrieve game."
  */
-chessRouter.get("/game/:gameId", authorization, ChessController.getGame);
+chessRouter.get(
+    "/game/:gameId",
+    validate("get_game"),
+    handleValidation,
+    authorization,
+    ChessController.getGame
+);
 
 module.exports = chessRouter;
