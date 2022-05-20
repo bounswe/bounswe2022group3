@@ -7,9 +7,6 @@ const usersRouter = require("./users/users.route");
 const currencyRouter = require("./currency/currency.route");
 const twitterSearchRouter = require("./twitterSearch/twitterSearch.route")
 const quizRouter = require("./quiz/quiz.route");
-const quizRouter = require("./quiz/quiz.route");
-
-const api = express.Router();
 
 api.use("/users", usersRouter);
 api.use("/chess", chessRouter);

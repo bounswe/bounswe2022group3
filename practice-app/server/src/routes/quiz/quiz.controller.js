@@ -15,7 +15,6 @@ async function onequizrequest(rr) {
         type: "boolean",
         encode: 'url3986'
     }
-    console.log("inpu" + input.category)
 
     if (input.category === "8") {
         input.category = "";
@@ -32,7 +31,6 @@ async function onequizrequest(rr) {
                 const results = response.results
                 let tmp = results
                 var questions = []
-                console.log(results)
 
                 for (let j = 0; j < tmp.length; j++) {
                     let x = decodeURIComponent(tmp[j].question)
@@ -40,7 +38,6 @@ async function onequizrequest(rr) {
                     let z = decodeURI(tmp[j].incorrect_answers)
 
                     questions[j] = { "question": x, "correct_answer": y }
-                    console.log(questions[j])
 
                 }
 
@@ -96,8 +93,9 @@ const QuizController =
     },
 
     createQuiz: async function (req, res) {
-        const user = "74EQuuHnACLWcjAG53sMsz9F52Z34oo0"//req.auth;
+        const user = req.auth.email;
 
+        console.log(user)
         const request = req.body.categories;
         var user_quiz = []
         var categories = []
@@ -154,7 +152,8 @@ const QuizController =
     },
     userQuizzes: async function (req, res) {
 
-        const user = "74EQuuHnACLWcjAG53sMsz9F52Z34oo0" //req.auth;
+        const user = req.auth.email;
+
         try {
             const quizzes = await Quiz.find(
                 { user },
@@ -169,7 +168,9 @@ const QuizController =
         }
     },
     oneQuiz: async function (req, res) {
-        const user = "74EQuuHnACLWcjAG53sMsz9F52Z34oo0" //req.auth;
+        const user = req.auth.email;
+        console.log(user)
+
         const quiz_id = req.params.quiz_id
         try {
             const quiz = await Quiz.find(

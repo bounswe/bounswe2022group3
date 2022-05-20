@@ -8,7 +8,7 @@ import { API_URL } from "../../next.config";
 export default function Categories() {
 
     const fetchCategories = async () => {
-        let c = await axios.get(`${API_URL}quiz/categories`);
+        let c = await axios.get(`${API_URL}/quiz/categories`);
         var tmp = []
         Object.entries(c.data).map((e) => { tmp.push(e[1].name) })
         setCategories(tmp)

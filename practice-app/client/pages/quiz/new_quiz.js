@@ -35,7 +35,7 @@ export default function NewQuiz() {
         if (createDisabled) return
         const body = { categories: x }
         var y = JSON.stringify(body)
-        const response = await axios.post(`${API_URL}quiz/new_quiz`, y, {
+        const response = await axios.post(`${API_URL}/quiz/new_quiz`, y, {
             headers: {
                 "Content-Type": "application/json; charset=utf-8",
                 "Access-Control-Allow-Origin": "*",
@@ -43,12 +43,13 @@ export default function NewQuiz() {
         }).catch(err => console.log(err))
         let r = response.data
         setRequest([])
+        console.log(response)
         if (response) {
             router.push({ pathname: `/quiz/view/${r.quiz_id}` })
         }
 
     }
-
+    useEffect(() => setInfoCards([]), [])
     const formik = useFormik({
         enableReinitialize: "true",
 

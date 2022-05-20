@@ -11,7 +11,7 @@ export default function View(props) {
     const [quizzes, setQuizzes] = useState([])
 
     const fetchQuizzes = async () => {
-        let res = await (await axios.get(`${API_URL}quiz/view/all`)).data.quizzes
+        let res = await (await axios.get(`${API_URL}/quiz/view/all`)).data.quizzes
         var tmp = []
         for (let i = 0; i < res.length; i++) {
             let obj = res[i]
