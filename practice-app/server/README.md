@@ -38,20 +38,3 @@ In order to not to perform validation inside controller functions, payload valid
 ## Services
 
 This directory contains useful services that can be used in Models or Routes. 
-
-## .env
-
-`.env` file is not included in the git repository for security reasons. You shall create it yourself. Currently, it needs to be in this form:
-
-```
-API_PORT=5000
-
-FRONTEND_URL=http://localhost:3001
-LICHESS_TOKEN=<LICHESS_TOKEN>
-
-DB_PORT=<database_port> # (i.e. 5432)
-DB_USER=<database_user> # (i.e. postgres)
-DB_HOST=<database_host> # (i.e. localhost)
-DB_NAME=<database_name>
-DB_PASSWORD=<database_password>
-```
