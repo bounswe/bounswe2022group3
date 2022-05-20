@@ -82,7 +82,7 @@ movieRouter.get(
  *                  message:
  *                      type: string
  *               example:
- *                  error: "Search successful."
+ *                  error: "Successfully added."
  *       "404":
  *         description: The title did not return anything.
  *         content:

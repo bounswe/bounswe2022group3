@@ -38,7 +38,7 @@ const MovieController = {
                 );
 
             res.status(201).json({
-                message: "Search successful."
+                message: "Successfully added."
             });
         } catch (error) {
             console.log(error);
