@@ -1,0 +1,73 @@
+$background: #efefef;
+$lfs-blue: #006ac6;
+$lfs-yellow: #fab700;
+$lfs-grey: #75787b;
+
+.tablelatitude {
+    background-color: $lfs-blue;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 100%;
+    white-space: nowrap;
+    padding: 10px;
+    border: 2px white;
+    caption {
+        text-transform: uppercase;
+        font-weight: bold;
+        color: $lfs-yellow;
+        text-align: center;
+    }
+    thead {
+        background: #FFED86;
+        th {
+            text-transform: uppercase;
+            text-align: center;
+            padding: 5px;
+            color: solid white;
+            border-top: 2px solid orange;
+        }
+    }
+    tbody {
+        tr {
+            color: black;
+            background-color: white;
+            td {
+                padding: 5px;
+                text-align: center;
+            }
+            th {
+                padding: 5px;
+                border: 1px solid #F1F1F1;
+            }
+        }
+    }
+    tfoot {
+        color: $lfs-yellow;
+        font-style: italic;
+        border-bottom: 2px solid $lfs-yellow;
+        tr {
+            td {
+                padding: 10px;
+                border: 1px solid #F1F1F1;
+            }
+        }
+    }
+}
+
+.divStyle{
+  
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: white;
+    text-shadow: 0px 0px 5px #123456;
+    height: 100vh;
+    background:
+      linear-gradient(-135deg, rgb(34, 76, 152) 10%, transparent),
+      repeating-linear-gradient(45deg, rgba(34, 76, 152, 1) 0%, rgba(31, 48, 94, 0.6) 5%, transparent 5%, transparent 10%),
+      repeating-linear-gradient(-45deg, rgba(34, 76, 152, 0.4) 0%, rgba(31, 48, 94, 0.5) 5%, transparent 5%, transparent 10%);
+    background-color: rgba(34, 76, 152, 0.25);
+    
+  
+}

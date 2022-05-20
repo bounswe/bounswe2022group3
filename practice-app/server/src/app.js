@@ -54,6 +54,7 @@ const swaggerOptions = {
         "./routes/chess/chess.route.js",
         "./routes/twitterSearch/twitterSearch.route.js",
         "./routes/currency/currency.route.js",
+        "./routes/coin/coin.route.js"
     ],
 };
 const specs = swaggerJsdoc(swaggerOptions);
