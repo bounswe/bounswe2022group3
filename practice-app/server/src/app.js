@@ -6,12 +6,6 @@ const morganBody = require("morgan-body");
 const { api } = require("./routes/api");
 const app = express();
 
-app.use(
-    cors({
-        origin: process.env.FRONTEND_URL,
-    })
-);
-
 app.use(cors());
 app.use(express.json());
 
