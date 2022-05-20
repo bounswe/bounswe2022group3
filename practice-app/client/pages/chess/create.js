@@ -79,21 +79,21 @@ export default function Chess() {
                     onClick={() => setColor("black")}
                     disabled={color === "black"}
                 >
-                    <img src="/bK.svg" width="50px" height="50px" />
+                    <img src="https://lichess1.org/assets/_vvLrNQ/piece/cburnett/bK.svg" width="50px" height="50px" />
                 </Button>
                 <Button
                     variant="outlined"
                     onClick={() => setColor("random")}
                     disabled={color === "random"}
                 >
-                    <img src="/wbk.svg" width="75px" height="75px" />
+                    <img src="https://lichess1.org/assets/_vvLrNQ/images/wbK.svg" width="75px" height="75px" />
                 </Button>
                 <Button
                     variant="outlined"
                     onClick={() => setColor("white")}
                     disabled={color === "white"}
                 >
-                    <img src="/wk.svg" width="50px" height="50px" />
+                    <img src="https://lichess1.org/assets/_vvLrNQ/piece/cburnett/wK.svg" width="50px" height="50px" />
                 </Button>
             </Stack>
             <MyButton onClick={startGame}>Play vs AI</MyButton>
