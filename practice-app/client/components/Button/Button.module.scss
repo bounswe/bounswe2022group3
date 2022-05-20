@@ -24,11 +24,10 @@
         color: $base-color;
     }
 }
+
 .mainButton {
     font-family: "Montserrat", sans-serif;
     width: 70%;
-    border: 3px solid $base-color;
-    background-color: $base-color;
     text-transform: uppercase;
     outline: none;
     height: 3rem;
@@ -50,5 +49,20 @@
     &:hover {
         background-color: #fff;
         color: $base-color;
+    }
+}
+
+.mainButton_blue {
+    border: 3px solid $base-color;
+    background-color: $base-color;
+}
+
+.mainButton_red {
+    border: 3px solid $secondary;
+    background-color: $secondary;
+
+    &:hover {
+        background-color: #fff;
+        color: $secondary;
     }
 }
