@@ -1,6 +1,6 @@
 import MainButton from "../../components/Button/MainButton";
 import { useRef, useState, useEffect } from "react";
-import MainLayout from "../../layouts/main/MainLayout";
+import AuthLayout from "../../layouts/auth/AuthLayout";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { API_URL } from "../../next.config";
@@ -37,21 +37,20 @@ export default function main() {
                 <h2 style={{marginBottom:"20px"}}>{user_name}</h2>
                 <h2 style={{marginBottom:"30px"}}>Choose Wisely!</h2>
             {/* <Image src="/desert.png"  width="729" height="300" /> */}
-            <div className="grid-container">
-                <div className="grid-item" style={{display:"inline-block"}}>
-                <MainButton style={{backgroundColor:"#4253b5"}} onClick={handleClick}>Chess</MainButton>
-                <MainButton style={{backgroundColor:"#4253b5"}}>Login</MainButton>
-                <MainButton style={{backgroundColor:"#4253b5"}}>Login</MainButton>
-                </div>
-                <div className="grid-item" style={{display:"inline-block"}}>
-                <MainButton style={{backgroundColor:"#CB3C27"}}>Login</MainButton>
-                <MainButton style={{backgroundColor:"#CB3C27"}}>Login</MainButton>
-                <MainButton style={{backgroundColor:"#CB3C27"}}>Login</MainButton>
-                </div>
+            <div className='buttons'>
+                {/* TODO: Add necessary buttons for each feature, after all added to master */}
+                {/* Make half of the buttons blue and half red, represnting bluepil redpil, maybe add a little border radius to make them look like pill.  */}
+                <MainButton style={{backgroundColor:"#4253b5", marginRight: "4rem"}} onClick={handleClick}>Chess</MainButton>
+                <MainButton style={{backgroundColor:"#CB3C27", marginLeft: "4rem"}}>Login</MainButton>
+                <MainButton style={{backgroundColor:"#4253b5", marginRight: "4rem"}}>Login</MainButton>
+
+                <MainButton style={{backgroundColor:"#CB3C27", marginLeft: "4rem"}}>Login</MainButton>
+                <MainButton style={{backgroundColor:"#4253b5", marginRight: "4rem"}}>Login</MainButton>
+                <MainButton style={{backgroundColor:"#CB3C27", marginLeft: "4rem"}}>Login</MainButton>
             </div>
         </>
     );
 }
 main.getLayout = function getLayout(page) {
-    return <MainLayout>{page}</MainLayout>;
+    return <AuthLayout>{page}</AuthLayout>;
 };
