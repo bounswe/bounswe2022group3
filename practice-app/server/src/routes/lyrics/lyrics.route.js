@@ -116,9 +116,13 @@ const lyricsRouter = express.Router();
  *                              message:    
  *                                  type: string
  *                          example:
- *                              message: "Could not save the lyrics"        
+ *                              message: "Could not save the lyrics"  
  * /lyrics/saved_lyrics:
  *  get: 
+ *      summary: show saved lyrics
+ *      tags: [Lyrics]
+ *      produces:
+ *          - "application/json"
  *      responses:
  *          "200":
  *              description: Show successfull
@@ -127,7 +131,7 @@ const lyricsRouter = express.Router();
  *                      schema:
  *                          type: object
  *                          properties:
- *                              searchresult:
+ *                              saved_lyrics:
  *                                  type: array
  *                                  items:
  *                                      type: object
@@ -139,7 +143,7 @@ const lyricsRouter = express.Router();
  *                                          lyrics_id:
  *                                              type: number
  *                          example:
- *                                     "savedresult": [
+ *                                     "saved_lyrics": [
  *                                         {
  *                                             "full_title": "Rap God by Eminem",
  *                                             "url": "https://genius.com/Eminem-rap-god-lyrics",
