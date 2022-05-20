@@ -4,6 +4,7 @@ const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 const morganBody = require("morgan-body");
 const { api } = require("./routes/api");
+const booksRouter = require("./books/books.route");
 const app = express();
 
 app.use(
@@ -50,6 +51,7 @@ const swaggerOptions = {
         },
     ],
     apis: [
+       "./routes/books/books.route.js",
         "./routes/users/users.route.js",
         "./routes/chess/chess.route.js",
         "./routes/twitterSearch/twitterSearch.route.js",
