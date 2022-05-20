@@ -43,9 +43,11 @@ export default function login() {
                 
                 // To redirect from login to your endpoint OPEN the comment below and insert your endpoint route !!
                 // router.push("some_route")
-
+                
                 localStorage.setItem('access_token',response.access_token);
-                toast.success('Welcome to the desert of the real!')
+                toast.success('Welcome to the desert of the real!');
+                localStorage.setItem("email", values.username);
+                router.push(`/user/main`);
             }
             else{
                 console.log(response.message);

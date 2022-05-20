@@ -51,7 +51,8 @@ const swaggerOptions = {
         "./routes/quiz/quiz.route.js",
         "./routes/coin/coin.route.js",
         "./routes/posts/post.route.js",
-        "./routes/lyrics/lyrics.route.js"
+        "./routes/lyrics/lyrics.route.js",
+        "./routes/verify/verify.route.js",
     ],
 };
 const specs = swaggerJsdoc(swaggerOptions);
