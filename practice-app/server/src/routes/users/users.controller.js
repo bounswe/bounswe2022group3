@@ -9,9 +9,6 @@ const audience = process.env.auth0_audience;
 const auth0_connection = process.env.auth0_connection
 
 const UserController = {
-    trialEndpoint: async function (req, res) {
-        console.log(req.auth);
-    },
     register: async function (req, res) {
         const { first_name, last_name, email, password } = req.body;
 
@@ -84,7 +81,6 @@ const UserController = {
                 'password': password,
             };
             const user = await UserModel.getUserByEmail(email);
-            console.log(user)
             if (!user) {
                 return res
                     .status(403)
