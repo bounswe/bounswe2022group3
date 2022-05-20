@@ -62,8 +62,11 @@
     color: #333;
     box-sizing: content-box;
     display: flex;
-    flex-direction: row;
-    align-content: center;
+    flex-flow: row wrap;
+
+    justify-content: space-evenly;
+    align-items: center;
+    width: 100%;
 
     h3 {
         margin: 20px 0;
@@ -72,6 +75,7 @@
 
 .miniblock {
 
+    flex-basis: content;
     display: flex;
     flex-direction: column;
     min-height: fit-content;
@@ -83,6 +87,10 @@
     padding: 3px;
     justify-content: center;
     box-sizing: border-box;
+
+    li {
+        color: $base-color
+    }
 
 }
 
@@ -99,6 +107,7 @@
 }
 
 .main {
+
     height: 90vh;
     display: flex;
     flex-direction: column;
@@ -109,12 +118,13 @@
     min-width: fit-content;
     width: 45%;
     margin-right: 5rem;
-    padding: 10px;
+    padding: 30px;
+    gap: 10px;
     background-color: white;
     align-self: center;
 
     h1 {
-        font-size: 36px;
+        font-size: 40px;
         margin-top: 16px;
     }
 

@@ -15,6 +15,12 @@ async function onequizrequest(rr) {
         type: "boolean",
         encode: 'url3986'
     }
+    console.log("inpu" + input.category)
+
+    if (input.category === "8") {
+        input.category = "";
+    }
+
     try {
         const response = (await axios.post(quiz_url, null, { params: input })).data
         var categoryno = rr._category
@@ -22,9 +28,11 @@ async function onequizrequest(rr) {
 
         if (response) {
             if (response.response_code == "0") {
+
                 const results = response.results
                 let tmp = results
-                questions = []
+                var questions = []
+                console.log(results)
 
                 for (let j = 0; j < tmp.length; j++) {
                     let x = decodeURIComponent(tmp[j].question)
@@ -32,6 +40,8 @@ async function onequizrequest(rr) {
                     let z = decodeURI(tmp[j].incorrect_answers)
 
                     questions[j] = { "question": x, "correct_answer": y }
+                    console.log(questions[j])
+
                 }
 
                 return [questions, categoryno, count]
@@ -86,7 +96,7 @@ const QuizController =
     },
 
     createQuiz: async function (req, res) {
-        const user = req.auth;
+        const user = "74EQuuHnACLWcjAG53sMsz9F52Z34oo0"//req.auth;
 
         const request = req.body.categories;
         var user_quiz = []
@@ -131,6 +141,7 @@ const QuizController =
                             categories: categories,
                             questions: user_quiz,
                         })
+                    console.log(quiz)
                     return res.status(200).json(quiz)
                 } catch (e) {
                     return res.status(500).json({ message: "Could not save the quiz" })
@@ -142,24 +153,40 @@ const QuizController =
 
     },
     userQuizzes: async function (req, res) {
-        const user = req.auth;
-        console.log(user)
+
+        const user = "74EQuuHnACLWcjAG53sMsz9F52Z34oo0" //req.auth;
         try {
             const quizzes = await Quiz.find(
                 { user },
-                "quiz_id question_count categories questions"
+                "quiz_id questions"
             );
-
-            return res.status(200).json({
-                quizzes,
-            });
+            console.log(quizzes)
+            return res.status(200).json({ quizzes });
+        } catch (e) {
+            return res
+                .status(500)
+                .json({ message: "Could not retrieve quizzes." });
+        }
+    },
+    oneQuiz: async function (req, res) {
+        const user = "74EQuuHnACLWcjAG53sMsz9F52Z34oo0" //req.auth;
+        const quiz_id = req.params.quiz_id
+        try {
+            const quiz = await Quiz.find(
+                { quiz_id },
+                "user_id questions"
+            );
+            if (quiz[0].user_id === user) {
+                return res.status(200).json(quiz[0]);
+            }
+            else
+                return res.status(401).json({ message: "Not authorized" });
         } catch (e) {
             return res
                 .status(500)
                 .json({ message: "Could not retrieve quizzes." });
         }
     }
-
 };
 
 module.exports = QuizController

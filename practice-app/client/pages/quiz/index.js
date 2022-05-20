@@ -13,7 +13,7 @@ export default function Quiz() {
                 <MyButton onClick={() => router.push("/quiz/new_quiz")}>Create a New Quiz</MyButton>
             </div>
             <div>
-                <MyButton onClick={() => router.push("/quiz/user_quiz")}>Saved Quizzes</MyButton>
+                <MyButton onClick={() => router.push("/quiz/view/all")}>Saved Quizzes</MyButton>
             </div>
         </div>
     );

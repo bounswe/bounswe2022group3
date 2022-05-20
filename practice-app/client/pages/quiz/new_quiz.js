@@ -5,7 +5,6 @@ import { useRouter } from "next/router"
 import { Field, Formik, useFormik } from "formik";
 
 import QuizForm from "../../components/Quiz/QuizForm";
-import QuizSummary from "../../components/Quiz/QuizSummary";
 import styles from "../../styles/QuizForm.module.scss"
 
 
@@ -21,11 +20,19 @@ export default function NewQuiz() {
     const router = useRouter();
 
     const [request, setRequest] = useState([]);
+    const [createDisabled, setCreateDisabled] = useState(true);
+    const [infoCards, setInfoCards] = useState([])
+    useEffect(() => {
+        if (request.length === 0) {
+            setCreateDisabled(true)
+        }
+        else setCreateDisabled(false)
 
-
-
+    }, [request])
     const createQuiz = async (x) => {
-        //burada ayır  gelen inputu
+        console.log(createDisabled)
+
+        if (createDisabled) return
         const body = { categories: x }
         var y = JSON.stringify(body)
         const response = await axios.post(`${API_URL}quiz/new_quiz`, y, {
@@ -37,9 +44,7 @@ export default function NewQuiz() {
         let r = response.data
         setRequest([])
         if (response) {
-            localStorage.setItem("quiz_id", r.quiz_id)
-            localStorage.setItem("questions", r.questions)
-            router.push({ pathname: `/quiz/view/${r.quiz_id}`, })
+            router.push({ pathname: `/quiz/view/${r.quiz_id}` })
         }
 
     }
@@ -49,7 +54,7 @@ export default function NewQuiz() {
 
         initialValues: {
             _questionCount: "5",
-            _category: "",
+            _category: "8",
             _difficulty: "",
             _submittype: "",
         },
@@ -61,40 +66,51 @@ export default function NewQuiz() {
                 await setRequest([...request, newRequest])
 
                 formik.setFieldValue("_questionCount", "5", false)
-                formik.setFieldValue("_category", "", false)
+                formik.setFieldValue("_category", "8", false)
                 formik.setFieldValue("_difficulty", "", false)
+                let str = <Row key={Date.now()}>From Category:  {values._category}, difficulty: {values._difficulty}, questionCount: {values._questionCount}</Row>
+                let a = [...infoCards, str]
+                setInfoCards(a)
 
             }
             if (values._submittype === "create") {
-                const newRequest = { "_questionCount": values._questionCount.toString(), "_category": values._category, "_difficulty": values._difficulty }
-                await setRequest([...request, newRequest])
-
-                var x = request.length === 0 ? newRequest : request
-                await createQuiz(x)
+                await createQuiz(request)
             }
             if (values._submittype === "delete") {
 
                 setRequest([])
+                setInfoCards([])
+
                 formik.setFieldValue("_questionCount", "5", false)
-                formik.setFieldValue("_category", "", false)
+                formik.setFieldValue("_category", "8", false)
                 formik.setFieldValue("_difficulty", "", false)
             }
             formik.setFieldValue("_submittype", "", false)
+        },
 
-
-
-
-        }
-    })
-
+    }
+    )
 
     return (
         <React.Fragment>
-            <Form onSubmit={formik.handleSubmit}>
-                <QuizForm formik={formik} ></QuizForm>
-            </Form>
+            <Container className={styles.body}>
+                <Form onSubmit={formik.handleSubmit}>
+                    <QuizForm formik={formik} ></QuizForm>
+                </Form>
+                <Form>
+                    <Card key="showselection" className={styles.main}>
+                        <h1 key="showselectionheader" className={styles.label}> Selection</h1>
+                        <Row key="header" className={styles.label}>
+                            You have selected :
+                        </Row>
+                        <Row key="infokeeper" className={styles.label}>
+                            {infoCards}
+
+                        </Row>
+                    </Card>
+                </Form>
+            </Container>
         </React.Fragment >
     );
 }
-        //    <QuizSummary formik={formik} ></QuizSummary>
 

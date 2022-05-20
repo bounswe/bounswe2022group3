@@ -16,9 +16,8 @@ const categorySchema = new mongoose.Schema({
 const quizSchema = new mongoose.Schema
     ({
         user_id: {
-            type: mongoose.Schema.ObjectId,
-            ref: "User",
-            required: [true, "Game must belong to a User!"],
+            type: String,
+            required: [true],
         },
         quiz_id: {
             type: String,

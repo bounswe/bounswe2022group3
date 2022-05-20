@@ -31,6 +31,11 @@ const difficultyLevel = [
 const categoryList = [
 
   {
+    key: "8",
+    label: "Any Category",
+    value: "8",
+  },
+  {
     key: "9",
     label: "General Knowledge",
     value: "9",
@@ -162,10 +167,10 @@ export default function QuizForm(props) {
       <Card className={styles.main}>
         <h1 className={styles.label}>Quizzes!</h1>
         <Row className={styles.miniblock}>
-          <FormGroup className={styles.miniblock}>
-            <Form.Label className={styles.label} />Question Amount
+          <FormGroup key="questionCountGroup" className={styles.miniblock}>
+            <Form.Label key="questionCountLabel" className={styles.label} />Question Amount
             <InputGroup className={styles.input} >
-              <Form.Control name="_questionCount" value={formik.values._questionCount} type="number" placeholder="5" onChange={formik.handleChange} />
+              <Form.Control key="questionCountControl" name="_questionCount" value={formik.values._questionCount} type="number" placeholder="5" onChange={formik.handleChange} />
             </InputGroup>
             <Form.Text className="text-muted">
               Please enter a number between 1 and 50
@@ -173,41 +178,39 @@ export default function QuizForm(props) {
           </FormGroup>
           <br />
 
-          <Form.Group className={styles.miniblock}>
-            <Form.Label className={styles.label} />Category
+          <Form.Group key="categoryGroup" className={styles.miniblock}>
+            <Form.Label key="categoryLabel" className={styles.label} />Category
             <InputGroup >
               <Form.Select
                 name="_category"
                 onChange={formik.handleChange}
                 className={styles.select}
                 value={formik.values._category}
-                key={formik.values._category}
+                key="categorySelect"
               >
-                <option value=""> Any Category </option>
-
                 {categoryList.map((c) => (
-                  <option value={c.value}> {c.label} </option>
+                  <option key={c.value} value={c.value}> {c.label} </option>
                 ))}
               </Form.Select>
             </InputGroup>
-            <Form.Text className="text-muted">
+            <Form.Text key="categoryText" className="text-muted">
               Please choose a category
             </Form.Text>
           </Form.Group>
 
           <br />
-          <Form.Group className={styles.miniblock}>
-            <Form.Label className={styles.label} />Difficulty
+          <Form.Group key="difficultyGroup" className={styles.miniblock}>
+            <Form.Label key="difficultyLabel" className={styles.label} />Difficulty
             <InputGroup>
               <Form.Select
                 name="_difficulty"
                 onChange={formik.handleChange}
                 className={styles.select}
-
+                key="difficultySelect"
                 value={formik.values._difficulty}
               >
                 {difficultyLevel.map((c) => (
-                  <option value={c.value}> {c.label} </option>
+                  <option key={c.value} value={c.value}> {c.label} </option>
                 ))}
               </Form.Select>
             </InputGroup>
