@@ -26,7 +26,7 @@
 }
 .mainButton {
     font-family: "Montserrat", sans-serif;
-    width: 70%;
+    // width: 40%;
     border: 3px solid $base-color;
     background-color: $base-color;
     text-transform: uppercase;
@@ -42,8 +42,8 @@
     cursor: pointer;
     display: inline-block;
     margin: 1rem;
-    margin-left: 1rem;
-    margin-right: 1rem;
+    margin-left: 10rem;
+    margin-right: 10rem;
     padding-left: 7rem;
     padding-right: 7rem;
 
