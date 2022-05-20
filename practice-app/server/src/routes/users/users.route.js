@@ -179,12 +179,6 @@ usersRouter.get(
     "/getUsername",
     UserController.getUsername
 );
-usersRouter.post(
-    "/tryAuth",
-    authorization,
-    UserController.trialEndpoint
-);
-
 
 
 module.exports = usersRouter;
