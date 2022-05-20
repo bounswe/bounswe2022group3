@@ -10,11 +10,6 @@ const movieRouter = require("./movies/movies.route");
 const coinRouter = require("./coin/coin.route")
 const quizRouter = require("./quiz/quiz.route");
 
-
-const api = express.Router();
-
-
-
 api.use("/users", usersRouter);
 api.use("/chess", chessRouter);
 api.use("/currency", currencyRouter);
