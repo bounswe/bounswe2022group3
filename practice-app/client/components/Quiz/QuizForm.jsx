@@ -1,5 +1,4 @@
 import React from "react";
-import MyButton from '../Button/Button'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Card, Col, Container, Form, FormFloating, Row, Alert, Dropdown, DropdownButton, DropdownMenu, FormGroup, InputGroup } from "react-bootstrap";
 import styles from "../../styles/QuizForm.module.scss"
@@ -219,11 +218,9 @@ export default function QuizForm(props) {
           <Row className={styles.mininext}>
 
             <Button className={styles.button} type="submit" name="add" onClick={() => { formik.setFieldValue("_submittype", "add", false); formik.handleSubmit }} >Add New Category</Button>
-            <Col style={{ width: "20px" }}></Col>
 
             <Button className={styles.button} type="submit" name="create" onClick={() => { formik.setFieldValue("_submittype", "create", false); formik.handleSubmit }}> Create Quiz </Button>
 
-            <Col style={{ width: "20px" }}></Col>
 
 
             <Button className={styles.button} type="submit" name="delete" onClick={() => { formik.setFieldValue("_submittype", "delete", false); formik.handleSubmit }}> Delete Selection </Button>
