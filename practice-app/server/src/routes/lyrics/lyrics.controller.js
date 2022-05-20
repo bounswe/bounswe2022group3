@@ -6,7 +6,6 @@ const { use } = require("./lyrics.route");
 
 const LyricsController = {
     searchLyrics: async function (req, res) {
-        // Get user input
         const { searchparameter } = req.body;
 
         if (searchparameter === "") {
@@ -14,16 +13,6 @@ const LyricsController = {
                 .status(400)
                 .json({ message: "Please enter a search parameter" })
         }
-
-        // const options = {
-        //     method: 'GET',
-        //     url: 'https://genius.p.rapidapi.com/search',
-        //     params: {q: searchparameter},
-        //     headers: {
-        //       'X-RapidAPI-Host': 'genius.p.rapidapi.com',
-        //       'X-RapidAPI-Key': `${process.env.GENIUS_TOKEN}`
-        //     }
-        // };
 
         const url = 'https://genius.p.rapidapi.com/search';
 
@@ -37,20 +26,13 @@ const LyricsController = {
         try {
             const searchUrl = url + "?q=" + searchparameter
             const resp = (await axios.get(searchUrl, headers)).data;
-            // axios.request(options).then(function (response) {
-            //     console.log("response data");
-            //     console.log(response.data);
-            //     resp = response.data;
-            // }).catch(function (error) {
-            //     console.error(error);
-            // });
             const hits = resp['response']['hits']
 
             function mappingFunction({ result }) {
                 let { full_title: full_title, url: url, id: id } = result;
                 return { full_title: full_title, url: url, lyrics_id: id };
             };
-
+            
             if (resp) {
                 return res.status(200).json({
                     searchresult: hits.map(mappingFunction)
@@ -65,16 +47,22 @@ const LyricsController = {
     saveLyrics: async function (req, res) {
         const { lyrics_id, full_title, url } = req.body;
 
-        const save_lyrics = await Lyrics.create({
-            user:  mongoose.Types.ObjectId(req.auth),
-            lyrics_id: lyrics_id,
-            full_title: full_title,
-            url: url,
-        });
-        if (save_lyrics) {
-            return res.status(200).json({
+        try {
+            const save_lyrics = await Lyrics.create({
+                user:  mongoose.Types.ObjectId(req.auth),
                 lyrics_id: lyrics_id,
+                full_title: full_title,
+                url: url,
             });
+            if (save_lyrics) {
+                return res.status(200).json({
+                    lyrics_id: lyrics_id,
+                });
+            }
+        } catch(e) {
+            return res
+                .status(400)
+                .json({message: "Could not save the lyrics."});
         }
     },
     savedLyrics: async function (req, res) {
