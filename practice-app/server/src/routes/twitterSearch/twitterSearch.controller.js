@@ -55,7 +55,7 @@ const TwitterSearchController = {
             const meta = response.meta
             if (meta.summary.created != 1) {
                 res.status(400).json({
-                    message: "  ",
+                    message: "Could not create the given hashtag",
                 })
             }
             res.status(201).json({

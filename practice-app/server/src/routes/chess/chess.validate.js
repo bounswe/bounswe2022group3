@@ -1,4 +1,4 @@
-const { body } = require("express-validator");
+const { body, param } = require("express-validator");
 
 exports.validate = (method) => {
     switch (method) {
@@ -17,6 +17,12 @@ exports.validate = (method) => {
                 body("gameId", "gameId is not provided").exists(),
                 body("moveStr", "moveStr is not provided").exists(),
             ];
+        }
+        case "stream_game": {
+            return [param("gameId", "gameId is not provided").exists()];
+        }
+        case "get_game": {
+            return [param("gameId", "gameId is not provided").exists()];
         }
     }
 };

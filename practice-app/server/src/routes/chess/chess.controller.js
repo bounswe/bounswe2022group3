@@ -90,23 +90,20 @@ const ChessController = {
     streamGame: async function (req, res) {
         const { gameId } = req.params;
         const user = req.auth;
-
+        
         const game = await ChessGame.findOne(
             { game_id: gameId, user },
             "moves player_color"
         );
-
         if (!game) {
             return res
                 .status(404)
                 .json({ message: "Game not found." });
         }
-
         const url = `https://lichess.org/api/board/game/stream/${gameId}`;
         const headers = {
             Authorization: `Bearer ${process.env.LICHESS_TOKEN}`,
         };
-
         try {
             const stream = needle.get(url, {
                 headers,
@@ -116,7 +113,6 @@ const ChessController = {
                 .on("data", async (data) => {
                     try {
                         const state = data.state ? data.state : data;
-
                         if (
                             state.moves !== undefined &&
                             state.status !== undefined
@@ -131,7 +127,6 @@ const ChessController = {
                                 }
                             );
                         }
-
                         if (state.status === "mate") {
                             await ChessGame.updateOne(
                                 { game_id: gameId },
@@ -142,7 +137,6 @@ const ChessController = {
                                 }
                             );
                         }
-
                         res.write(JSON.stringify(data) + "\n");
                     } catch (e) {
                         console.log(e);
