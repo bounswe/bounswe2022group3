@@ -46,4 +46,4 @@ const getUsernameByEmail = async (email) => {
     return result;
 }
 
-module.exports = {User, getUsernameByEmail, getUserByEmail};
+module.exports = {User, getUsernameByEmail, getUserByEmail,getUserByID};
