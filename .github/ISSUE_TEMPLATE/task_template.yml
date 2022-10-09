@@ -1,0 +1,71 @@
+name: Issue Template
+description: It can be used for any issue
+body:
+  - type: textarea
+    id: issue
+    attributes:
+      label: Issue
+      description: "Brief description of the problem(s) from a customer or technical point of view."
+    validations:
+      required: true
+  - type: textarea
+    id: tasks
+    attributes:
+      value: | 
+              - [ ] ...
+              - [ ] ...
+              - [ ] ...
+      label: Task(s)
+      description: "Description of work items to be completed as a part of this issue"
+  - type: textarea
+    id: deliverables
+    attributes:
+      label: Deliverable(s)
+      value: | 
+              * ...
+              * ...
+              * ...
+      description: "Items to be delivered"
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance Criteria
+      value: | 
+              * ...
+              * ...
+              * ...
+      description: "Criteria that need to be satisfied to be able to close this issue"
+    validations:
+      required: true
+  - type: input
+    id: deadline
+    attributes:
+      label: Deadline of the issue
+      description: "deadline for the issue."
+      placeholder: "01.01.2022 @23:59"
+    validations:
+      required: true
+  - type: dropdown
+    id: reviewer
+    attributes:
+      label: Reviewer
+      description: "Who will review this issue?"
+      options:
+        - Burak Yılmaz
+        - Arif Akbaba
+        - Gökberk Arslan
+        - Bilal Aytekin
+        - Nurlan Dadashov
+        - Şule Erkul
+        - Kadir Ersoy
+        - Salim Tirit
+        - Mertcan Özkan
+        - Muhammet Şen
+        - Furkan Akkurt
+        - Berke Özdemir
+  - type: input
+    id: review-deadline
+    attributes:
+      label: Deadline for Review
+      description: "Please provide a deadline for the reviewer."
+      placeholder: "01.01.2022 @23:59"
