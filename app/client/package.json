@@ -1,0 +1,28 @@
+{
+  "name": "mylms-client",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.10.4",
+    "@emotion/styled": "^11.10.4",
+    "@mui/material": "^5.10.10",
+    "axios": "^0.26.0",
+    "formik": "^2.2.9",
+    "next": "12.0.10",
+    "nextjs-progressbar": "0.0.14",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-toastify": "^8.2.0",
+    "sass": "^1.49.8",
+    "yup": "^0.32.11"
+  },
+  "devDependencies": {
+    "eslint": "8.9.0",
+    "eslint-config-next": "12.0.10"
+  }
+}
