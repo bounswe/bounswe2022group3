@@ -10,7 +10,7 @@ npm run dev
 yarn dev
 ```
 ## To Run in Local Environment
-If you cannot run `npm` command install [Node.js](https://nodejs.org/). LTS version is recommended.
+If you cannot run the `npm` command, install [Node.js](https://nodejs.org/). LTS version is recommended.
 
 Open [http://localhost:3001](http://localhost:3001) with your browser to see the result.
 
@@ -26,3 +26,4 @@ To learn more about Next.js, take a look at the following resources:
 ## Deploy on Next.js
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
