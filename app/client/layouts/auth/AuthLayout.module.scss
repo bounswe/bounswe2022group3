@@ -1,0 +1,117 @@
+@import "../../styles/variables.scss";
+
+.container {
+    display: grid;
+    row-gap: 2rem;
+    align-items: center;
+    height: 100vh;
+
+    @media screen and (min-width: 48rem) {
+        column-gap: 1.5rem;
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.loginImageContainer {
+    background-color: #d2d9f2;
+    display: grid;
+    align-items: center;
+    padding: 0% 10% 5% 10%;
+    height: 45vh;
+
+    @media screen and (min-width: 48rem) {
+        height: 100vh;
+        padding: 0% 15% 5% 15%;
+    }
+}
+
+.loginFormContainer {
+    text-align: center;
+    font-size: 1.5rem;
+    margin-top: 1.5rem;
+
+    h1 {
+        font-family: "Merriweather", sans-serif;
+
+        @media screen and (max-width: 48rem) {
+            margin-top: 70px;
+            margin-bottom: 1rem;
+            font-size: 2.5rem;
+        }
+    }
+
+    div {
+        font-size: 0.8rem;
+    }
+
+    p {
+        display: inline;
+    }
+
+    a {
+        color: $secondary;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    button {
+        margin-top: 0;
+    }
+
+    @media screen and (min-width: 48rem) {
+        margin-top: -2.5rem;
+
+        h1 {
+            margin-bottom: 3.5rem;
+        }
+    }
+}
+
+.loginForm {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    max-width: 350px;
+    width: 80%;
+
+    @media screen and (min-width: 48rem) {
+        margin-top: -2.5rem;
+        width: 50%;
+    }
+}
+
+.loginInput {
+    height: calc(1.8em + 1.375rem + 2px);
+    padding: 0.6875rem 0.75rem;
+    font-size: 0.9rem;
+    font-weight: 400;
+    border: 2px solid #ddd;
+    color: inherit;
+    font-family: inherit;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    transition: 0.5s;
+
+    &::placeholder {
+        color: #aaa;
+    }
+
+    &:focus {
+        border-color: $base-color-light;
+        outline: none;
+    }
+}
+
+.icon {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    padding: 30px;
+
+    h2 {
+        font-family: "Merriweather", sans-serif;
+        color: $secondary;
+        margin-left: 15px;
+        margin-top: -8px;
+    }
+}
