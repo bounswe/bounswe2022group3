@@ -9,19 +9,13 @@ const jwt_ref_secret = process.env.JWT_REF_KEY
 const authorization = async (req, res, next) => {
 
     try{
-        // JWT Validation
-        try{
-            token = req.headers.authorization
-        }catch (error){
-            return res.status(400).json({
-                message: error.toString(),
-            });
-        }
+        token = req.headers.authorization
         if(!token){
             return res.status(400).json({
                 message: "Authorization token missing !",
             });
         }
+        // JWT Validation
         token = token.substring(7); // getting rid of  'Bearer' part
         jwt.verify(token, jwt_ac_secret, (err, decoded) => {
             tokenError = err;
@@ -37,13 +31,10 @@ const authorization = async (req, res, next) => {
         // Acquire email from decrypted token
         email = decrytedData.email;
         
-        // Get user data, inserting it to request
-        console.log(decrytedData)
-        // !!!!!!!!!!!!!!!!!!!!!!!!!
-        // What data should I put in request, all user data or just email,name,surname 
+        // Return user data
         const user = await UserModel.getUserByEmail(id);
         if(user){
-            req.auth = user // user_id
+            req.auth = user
         }
         else{
             return res.status(400).json({
@@ -87,37 +78,18 @@ function isPasswordCorrect(savedHash, savedSalt, savedIterations, passwordAttemp
     return savedHash == trial;
 }
 
-async function generateAccessToken(user_id, refresh_token) {
+async function generateToken(email, secret, expiry) {
     try{
-        jwt.verify(refresh_token, jwt_ref_secret, (err, decoded) => {
-            tokenError = err;
-            decrytedData = decoded;
-        });
-        // Acquire ID from decrypted token
-        id = decrytedData.id;
-        // Does given refresh token exist in db
-        const tokens = await UserModel.getTokensById(id);
-        if (!tokens) {
-            return res
-                .status(400)
-                .json({ message: "The token does not exist." });
-        }
-        // Token exists, check if it belongs to same user
-        if(user_id !== id){
-            return res
-                .status(400)
-                .json({ message: "The token exists but user id mismatch." });
-        }
         // Generate ACT
         const payload = {
-            'id': id,
+            'email': email,
         };
         const options = {
             algorithm: "HS256",
-            expiresIn: access_jwtExpiry,
+            expiresIn: expiry,
         }
-        var access_token = jwt.sign(payload,jwt_ac_secret,options)
-        return access_token
+        const created_token = jwt.sign(payload, secret, options)
+        return created_token
     }catch (error) {
         return {
             error: error
@@ -125,4 +97,4 @@ async function generateAccessToken(user_id, refresh_token) {
     }
 }
 
-module.exports = {authorization, hashPassword, isPasswordCorrect}
+module.exports = {authorization, hashPassword, isPasswordCorrect,generateToken}

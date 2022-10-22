@@ -76,12 +76,20 @@ const tokenSchema = new mongoose.Schema({
 const Tokens = mongoose.model('Tokens', tokenSchema);
 
 const createToken= async ({email, access_token, refresh_token}) => {
-    var tokens = new Tokens({ 
-        email: email, 
-        access_token: access_token, 
-        refresh_token: refresh_token
-    })
-    const res = await tokens.save()
+    const tokens_db = await getTokensByEmail(email);
+    let res;
+    if(tokens_db){
+        tokens_db.access_token = access_token
+        tokens_db.refresh_token = refresh_token
+        res = await tokens_db.save()
+    }else{
+        const tokens = new Tokens({ 
+            email: email, 
+            access_token: access_token, 
+            refresh_token: refresh_token
+        })
+        res = await tokens.save()
+    }
     return res
 }
 

@@ -8,21 +8,21 @@ const userRouter = express.Router();
 
 userRouter.post(
     "/register",
-    // validate("register"),
-    // handleValidation,
+    validate("register"),
+    handleValidation,
     UserController.register
 );
 userRouter.post(
     "/login",
-    // validate("login"),
-    // handleValidation,
+    validate("login"),
+    handleValidation,
     UserController.login
 );
 userRouter.post(
-    "/refresh_access_token",
-    // validate("login"),
-    // handleValidation,
-    UserController.refresh_access_token
+    "/refresh_tokens",
+    validate("refresh_tokens"),
+    handleValidation,
+    UserController.refresh_tokens
 );
 
 module.exports = userRouter;

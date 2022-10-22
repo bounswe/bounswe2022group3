@@ -13,10 +13,8 @@ const refresh_jwtExpiry = '30d'
 const UserController = {
     register: async function (req, res) {
         const { email, name, surname, password } = req.body;
-
         try {
-
-            //Check if user already exist
+            // Check if user already exists
             const user = await UserModel.getUserByEmail(email);
             if (user) {
                 return res
@@ -24,12 +22,11 @@ const UserController = {
                     .json({ message: "The user already exists." });
             }
 
-            console.log("Proceeding with signup")
             // Proceeding with signup
-
+            // Hash the password
             passwd_data = auth.hashPassword(password)
 
-            console.log(passwd_data)
+            // Save all data in DB
             user_data = {
                 email: email,
                 name: name,
@@ -58,39 +55,29 @@ const UserController = {
         }
     },
     login: async function (req, res) {
-
         const { email, password } = req.body;
-
         try {
+            // Check if user exists in DB
             const user = await UserModel.getUserByEmail(email);
             if (!user) {
                 return res
                     .status(403)
                     .json({ message: "The user does not exist." });
             }
-            // hash request password, compare with the one in db
+
+            // Hash the req password, compare with the one in db
             const comparison_result = auth.isPasswordCorrect(user.password_hash, user.password_salt, user.password_iter, password)
             if (!comparison_result) {
                 return res.status(401).json({
                     message: "Incorrect Password !",
                 });
             }
-            // if they match create access token, refresh token, return them 
-            
-            const payload = {
-                'email': email,
-            };
-            const access_options = {
-                algorithm: "HS256",
-                expiresIn: access_jwtExpiry,
-            }
-            const refresh_options = {
-                algorithm: "HS256",
-                expiresIn: refresh_jwtExpiry,
-            }
-            var access_token = jwt.sign(payload, jwt_ac_secret, access_options)
-            var refresh_token = jwt.sign(payload, jwt_ref_secret, refresh_options)
 
+            // If they match, create access token and refresh token, return them 
+            const access_token = await auth.generateToken(email, jwt_ac_secret,access_jwtExpiry)
+            const refresh_token = await auth.generateToken(email, jwt_ref_secret,refresh_jwtExpiry)
+
+            // Save them to DB
             token_data = {
                 email: email,
                 access_token: access_token,
@@ -116,19 +103,17 @@ const UserController = {
             });
         }
     },
-    refresh_access_token: async function (req, res) {
-
+    refresh_tokens: async function (req, res) {
         const { email, refresh_token } = req.body;// email?
-
         try {
-            // Does given refresh token exist in db
+            // does refresh token exist in DB 
             const tokens = await UserModel.getTokensByEmail(email);
             if (!tokens) {
                 return res
                     .status(400)
                     .json({ message: "The token does not exist." });
             }
-            // If exists decrypt
+            // If exists, decrypt
             jwt.verify(refresh_token, jwt_ref_secret, (err, decoded) => {
                 tokenError = err;
                 decrytedData = decoded;
@@ -144,25 +129,20 @@ const UserController = {
                     .status(400)
                     .json({ message: "The token exists but email mismatch." });
             }
-            // Generate ACT
-            const payload = {
-                'email': email,
-            };
-            const options = {
-                algorithm: "HS256",
-                expiresIn: access_jwtExpiry,
-            }
-            const access_token = jwt.sign(payload, jwt_ac_secret, options)
-            // TODO: Check if this updates the token data, if not avoid duplicates
-            tokens.access_token = access_token
+            // Generate new tokens and update DB
+            const new_access_token = await auth.generateToken(email, jwt_ac_secret,access_jwtExpiry)
+            const new_refresh_token = await auth.generateToken(email, jwt_ref_secret,refresh_jwtExpiry)
+            tokens.access_token = new_access_token
+            tokens.refresh_token = new_refresh_token
             tokens.save()
             return res.status(200).json({
-                message: "Access Token Updated!",
-                access_token: access_token
+                message: "Access and Refresh Tokens are Updated!",
+                access_token: new_access_token,
+                refresh_token: new_refresh_token,
             })
         } catch (error) {
             return res.status(400).json({
-                message: "Failed to refresh access-token!",
+                message: "Failed to refresh tokens!",
                 error: error.toString()
             });
         }
