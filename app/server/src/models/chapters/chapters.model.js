@@ -22,7 +22,16 @@ const createChapter = async (chapterName, chapterBadge, contentList) => {
 
 
 const getPopulatedChapter = async (id) => {
-  return Chapter.findById(id).populate("chapter_badge content chapter_name").exec()
+  return Chapter.findById(id)
+    .populate("chapter_badge content chapter_name")
+    .populate({
+      path: 'content',
+      populate: {
+        path: 'discussion',
+        populate: { path: 'comments' }
+      }
+    })
+    .exec()
 }
 
 const getChapter = async (id) => {
