@@ -10,6 +10,8 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
+import styles from '../../styles/course/courseSummary.module.scss'
+import { popoverClasses } from '@mui/material';
 
 
 
@@ -69,100 +71,100 @@ const post = {
 }
 
 
-
+///styles ekle şimdi 
+//component ları ayrıştır
+///layout sal 
 export default function courseSummary() {
 
 
-  post.chapters.map((chapter) => {
-    console.log(chapter.chapter_name)
-  })
-
   return (
     < >
-      <Grid sx={{ width: '100%', minHeight: 250, 'background-color': '#3D8BE0', height: 250, 'padding-top': 20 }}  >
-        <Grid  sx={{ height: '95%', width: '80%', margin: 'auto' }}>
-          < Grid container sx={{ float: 'left', width: '60%', height: '100%', padding: 3, 'grid-row-gap': 20}}>
-            <Grid item xs={12} sx={{ margin: 'auto' }}>
-              <Typography variant="h3"   >
-                {post.title}
-              </Typography>
-            </Grid>
-            <Grid item xs={6} >
+      <Grid container className={styles.description}  >
+        < Grid container className={styles.left} >
 
-              <Typography variant="h5"  >
-                Rating:  {post.rating}
-              </Typography>
-
-              <Typography variant="h7"  >
-                {post.lecturer.name}
-              </Typography>
-              <Typography variant="h7"  >
-                &nbsp;
-                &nbsp;
-                &nbsp;
-                &nbsp;
-              </Typography>
-              <Typography variant="h7"  >
-                {post.lecturer.email}
-              </Typography>
-            </Grid>
-
-            <Grid item xs={6} sx={{ width: '60%', 'background-color': '#3178C4' }}  >
-
-              <Button fullWidth variant="contained" sx={{ width: '100%' }}>
-                <Typography variant="h4"  >
-                  Enroll
-                </Typography>
-              </Button>
-
-            </Grid>
-
+          <Grid item sx={{ margin: 'auto', width: '100%' }}>
+            <h1   >
+              {post.title}
+            </h1>
           </Grid>
 
-          <Grid container sx={{ float: 'left', width: '40%', height: '100%', padding: 1 }}>
-            <Grid item xs={12}>
-              <Typography component="h8"   >
-                <img src={post.image} style={{
-                  display: 'block',
-                  'margin-left': 'auto',
-                  'margin-right': 'auto',
-                  height: '95%',
-                  width: '85%',
-                }} />
-              </Typography>
-
+          <Grid item>            
+          <h2 >
+              {post.rating}
+            </h2>
             </Grid>
+          <Grid item >
+            <div style={{ position: 'relative', display: 'inline-block' }}>
+              <div className={styles.emptyStars} ></div>
+              <div className={styles.fullStars} style={{ width: post.rating * 100 / 5 + '%' }}></div>
+            </div>
+          </Grid>
+          <Grid item >
+            <h2 >
+            &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;
+              {post.lecturer.name}
+            </h2>
+          </Grid>
+
+          <Grid item sx={{ width: '60%', width: '66%' }}  >
+            <Button fullWidth variant="contained" sx={{ width: '100%' }}>
+              <h1   >
+                Enroll
+              </h1>
+            </Button>
+
           </Grid>
 
         </Grid>
+
+        <Grid container className={styles.right}>
+          <img src={post.image} style={{
+            display: 'block',
+            'margin-left': 'auto',
+            'margin-right': 'auto', 
+            height: '100%',
+            width: '85%',
+          }} />
+        </Grid>
+
+
       </Grid>
-      <Container sx={{ 'margin-bottom': '80px' }}>
+
+
+
+
+
+
+
+
+
+      <Container sx={{ 'margin-bottom': '80px' }} className={styles.details} >
 
         <Box sx={{ overflow: 'hidden', minWidth: 250, mt: 1 }}>
           <Paper variant='outlined' sx={{ 'margin-bottom': 20 }}>
             <Grid container spacing={2} sx={{ 'margin-bottom': 20, padding: 5 }}>
 
               <Grid item sx={{ width: '100%' }}>
-                <Typography variant="h4">
+                <h1>
                   Course Description
-                </Typography>
+                </h1>
 
               </Grid>
               <Grid item sx={{ width: '100%' }}>
-                <Typography>
+                <p>
                   {post.course_info}
 
-                </Typography>
+                </p>
                 <Grid item sx={{
                   width: '100%', display: 'flex',
                   'flex-wrap': 'wrap'
                 }}>
                   {post.tags.map((tag) => {
                     return (
-                      <Paper variant='elevation' sx={{ 'margin-right': 7, 'margin-top': 19 }}>
-                        <Typography sx={{ padding: 1 }}>
+                      <Paper variant='elevation' sx={{ 'margin-right': 12, 'margin-top': 19,padding:1.3 }}>
+                        <h3>
                           {tag}
-                        </Typography>
+                        </h3>
                       </Paper>)
                   })}
                 </Grid>
@@ -173,28 +175,14 @@ export default function courseSummary() {
           <Paper variant='outlined' >
             <Grid container spacing={2} sx={{ 'margin-bottom': 20, padding: 5 }}>
               <Grid item sx={{ width: '100%' }}>
-                <Typography variant="h4">
+                <h1 >
                   Course Chapters
-                </Typography>
+                </h1>
               </Grid>
               <Grid item sx={{ width: '100%' }}>
                 <Table sx={{ minWidth: 250 }} >
                   <TableHead>
                     <TableRow>
-                      <TableCell>
-                        &nbsp;
-                        &nbsp;
-                        &nbsp;
-                        &nbsp;
-                        &nbsp;
-                        &nbsp;
-                        &nbsp;
-                        &nbsp;
-                        &nbsp;
-                        &nbsp;
-                        &nbsp;
-                        &nbsp;
-                      </TableCell>
                       <TableCell>Chapter Name</TableCell>
                     </TableRow>
                   </TableHead>
@@ -202,8 +190,7 @@ export default function courseSummary() {
                     {post.chapters.map((chapter, index) => {
                       return (
                         <TableRow>
-                          <TableCell>{index + 1}</TableCell>
-                          <TableCell>{chapter.chapter_name}</TableCell>
+                          <TableCell>- {chapter.chapter_name}</TableCell>
                         </TableRow>
                       );
                     })}
