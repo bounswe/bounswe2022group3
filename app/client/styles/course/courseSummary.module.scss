@@ -1,0 +1,68 @@
+.description {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 250px;
+    background-color: #3d6ee0;
+    margin-top: 20px;
+    height: 100%;
+    margin: auto ;
+    display: 'block';
+    @media screen and (max-width: 65rem) {
+        background-color:#ffffff;
+    }
+}
+
+.left {
+    width: 48%;
+    height: 100%;
+    float: right;
+    grid-gap: 10px;
+    padding: 25px;
+    @media screen and (max-width: 65rem) {
+        margin-top: 2.5rem;
+        background-color:#3d6ee0;
+        margin-bottom: 2.5rem;
+        width: 100%;
+    }
+}
+
+.right {
+    width: 32%;
+    height: 100%;
+    float: right;
+    color: pink;
+    @media screen and (max-width: 65rem) {
+        margin-top: 2.5rem;
+        margin-bottom: 2.5rem;
+        width: 100%;
+    }
+}
+
+.fullStars {
+    position: absolute;
+    left: 0;
+    top: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    color: #fde16d;
+}
+.emptyStars:before, .fullStars:before {
+    content:"\2605\2605\2605\2605\2605";
+    font-size: 15pt;
+}
+.emptyStars:before {
+    -webkit-text-stroke: 1px #848484;
+}
+.fullStars:before {
+    -webkit-text-stroke: 1px orange;
+}
+/* Webkit-text-stroke is not supported on firefox or IE */
+
+/* Firefox */
+ @-moz-document url-prefix() {
+    .full-stars {
+        color: #ECBE24;
+    }
+}
