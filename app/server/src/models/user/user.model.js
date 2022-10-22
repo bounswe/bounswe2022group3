@@ -6,11 +6,9 @@ const userSchema = new mongoose.Schema({
         type: String
     },
     name: {
-        unique: true,
         type: String
     },
     surname: {
-        unique: true,
         type: String
     },
     password_hash: {
@@ -21,8 +19,12 @@ const userSchema = new mongoose.Schema({
     },
     password_iter: {
         type: String
+    },
+},
+    {
+        timestamps:true
     }
-});
+);
 const User = mongoose.model('User', userSchema);
 
 const createUser = async (email, name, surname, password_hash) => {
@@ -33,7 +35,12 @@ const createUser = async (email, name, surname, password_hash) => {
 
 const getUserByEmail = async (email) => {
 
-    const result = await User.findOne({email : `${email}`}, '_id').exec();
+    const result = await User.findOne({email : `${email}`}).exec();
+    return result;
+}
+const getUserByID = async (user_id) => {
+
+    const result = await User.findById(user_id).exec();
     return result;
 }
 
@@ -43,4 +50,4 @@ const deleteUser = async (email) => {
 }
 
 
-module.exports = { User, createUser, deleteUser, getUserByEmail };
+module.exports = { User, createUser, deleteUser, getUserByEmail, getUserByID };

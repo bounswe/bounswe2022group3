@@ -13,8 +13,8 @@ userRouter.post(
 );
 userRouter.post(
     "/login",
-    validate("login"),
-    handleValidation,
+    // validate("login"),
+    // handleValidation,
     UserController.login
 );
 
