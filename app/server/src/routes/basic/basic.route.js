@@ -27,7 +27,7 @@ basicRouter.get(
 );
 
 // Chapters...
-basicRouter.get(
+basicRouter.post(
     "/create-chapter",
     // validate("call"),
     // handleValidation,
@@ -41,7 +41,7 @@ basicRouter.get(
 );
 
 // Badges...
-basicRouter.get(
+basicRouter.post(
     "/create-badge",
     // validate("call"),
     // handleValidation,
@@ -55,7 +55,7 @@ basicRouter.get(
 );
 
 // Contents ...
-basicRouter.get(
+basicRouter.post(
     "/create-content",
     // validate("call"),
     // handleValidation,
@@ -70,7 +70,7 @@ basicRouter.get(
 );
 
 //Discussions ...
-basicRouter.get(
+basicRouter.post(
     "/create-discussion",
     // validate("call"),
     // handleValidation,
@@ -84,5 +84,19 @@ basicRouter.get(
     BasicController.getDiscussion
 );
 
+//Discussions ...
+basicRouter.post(
+    "/create-comment",
+    // validate("call"),
+    // handleValidation,
+    BasicController.getCommentCreate
+);
+
+basicRouter.get(
+    "/get-comment/:id",
+    // validate("call"),
+    // handleValidation,
+    BasicController.getComment
+);
 
 module.exports = basicRouter;

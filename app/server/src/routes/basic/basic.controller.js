@@ -3,10 +3,7 @@ const ChapterModel = require("../../models/chapters/chapters.model");
 const BadgeModel = require("../../models/badges/badges.model");
 const ContentModel = require("../../models/contents/contents.model");
 const DiscussionModel = require("../../models/discussions/discussions.model");
-
-
-
-
+const CommentModel = require("../../models/comments/comments.model");
 
 const BasicController = {
 
@@ -44,12 +41,13 @@ const BasicController = {
     // Chapters...
     getChapterCreate: async function (req, res) {
         try {
-            await ChapterModel.createChapter(
-                "chapter_name",
-                "635433911505679c5136adfb",
-                ["6354270ce9005b8ba3e50f52", "63542711e9005b8ba3e50f54"]
+            const { chapter_name, chapter_badge_id, content_id_list } = req.body
+            const chapter = await ChapterModel.createChapter(
+                chapter_name,
+                chapter_badge_id,
+                content_id_list,
             )
-            res.send({ "status": "ok", "message": "Chapter Created!" })
+            res.send({ "status": "ok", "message": chapter })
         }
         catch (e) {
             console.log("Error on getCreate:", e)
@@ -70,7 +68,11 @@ const BasicController = {
     // Badges...
     getBadgeCreate: async function (req, res) {
         try {
-            const badge = await BadgeModel.createBadge("badge_title", "badge_description")
+            const { title, description } = req.body
+            const badge = await BadgeModel.createBadge(
+                title,
+                description,
+            )
             res.send({ "status": "ok", "message": badge })
         }
         catch (e) {
@@ -92,11 +94,12 @@ const BasicController = {
     // Content
     getContentCreate: async function (req, res) {
         try {
+            const { name, body, media, discussion_id } = req.body
             const badge = await ContentModel.createContent(
-                "content_name",
-                "content_body",
-                ["content_media_1", "content_media_2"],
-                "discussion_id"
+                name,
+                body,
+                media,
+                discussion_id,
             )
             res.send({ "status": "ok", "message": badge })
         }
@@ -108,7 +111,7 @@ const BasicController = {
     getContent: async function (req, res) {
         try {
             console.log("REQ:", req.params.id)
-            const content = await ContentModel.getContent(req.params.id)
+            const content = await ContentModel.getPopulatedContent(req.params.id)
             res.send({ "status": "ok", "message": content })
         }
         catch (e) {
@@ -117,16 +120,21 @@ const BasicController = {
         }
     },
 
-     // Discussion...
-     getDiscussionCreate: async function (req, res) {
+    // Discussion...
+    getDiscussionCreate: async function (req, res) {
         try {
+            // const { user_id, course_id, comment_id_list, discussion_body, discussion_files } = req.body
+            var { user_id, course_id, comment_id_list, discussion_body, discussion_files } = req.body
+
+            // comment_id_list = ["comment_id_1", "comment_id_2"],
+            console.log("PARAMETERS:", req.body, user_id, course_id, comment_id_list, discussion_body, discussion_files)
             const discussion = await DiscussionModel.createDiscussion(
-                "user_id",
-                "course_id",
-                ["comment_id_1", "comment_id_2"],
-                "discussion_body",
-                ["discussion_file_1", "discussion_file_2"]
-                )
+                user_id,
+                course_id,
+                comment_id_list,
+                discussion_body,
+                discussion_files,
+            )
             res.send({ "status": "ok", "message": discussion })
         }
         catch (e) {
@@ -137,7 +145,36 @@ const BasicController = {
     getDiscussion: async function (req, res) {
         try {
             console.log("REQ:", req.params.id)
-            const content = await DiscussionModel.getDiscussion(req.params.id)
+            const content = await DiscussionModel.getPopulatedDiscussion(req.params.id)
+            res.send({ "status": "ok", "message": content })
+        }
+        catch (e) {
+            console.log("Error on getCreate:", e)
+            res.status(400).send({ "error": e })
+        }
+    },
+
+    // Comment...
+    getCommentCreate: async function (req, res) {
+        try {
+            var { user_id, comment_body, comment_files } = req.body
+
+            const comment = await CommentModel.createComment(
+                user_id,
+                comment_body,
+                comment_files,
+            )
+            res.send({ "status": "ok", "message": comment })
+        }
+        catch (e) {
+            console.log("Error on getCreate:", e)
+            res.status(400).send({ "error": e })
+        }
+    },
+    getComment: async function (req, res) {
+        try {
+            console.log("REQ:", req.params.id)
+            const content = await CommentModel.getComment(req.params.id)
             res.send({ "status": "ok", "message": content })
         }
         catch (e) {
