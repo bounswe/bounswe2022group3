@@ -1,35 +1,15 @@
 const UserModel = require("../../models/user/user.model");
+const auth = require("../../services/auth");
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken")
 //const {authorization_admin} = require("../../services/auth");
 //const axios = require("axios");
-const jwt_secret = process.env.JWT_KEY
+const jwt_ac_secret = process.env.JWT_AC_KEY
+const jwt_ref_secret = process.env.JWT_REF_KEY
 const access_jwtExpiry = '24h'
 const refresh_jwtExpiry = '30d'
 
-function hashPassword(password) {
-    try{
-        var salt = crypto.randomBytes(128).toString('hex');
-        var iterations = 10000;
-        var hash = crypto.pbkdf2Sync(password, salt, iterations,keylen=512,'sha256').toString('hex');;
-    }catch (error) {
-        console.log(error,"hash")
-    }
-    return {
-        salt: salt,
-        hash: hash,
-        iterations: iterations
-    };
-}
 
-function isPasswordCorrect(savedHash, savedSalt, savedIterations, passwordAttempt) {
-    try{
-        var trial = crypto.pbkdf2Sync(passwordAttempt, savedSalt, Number(savedIterations),keylen=512,'sha256').toString('hex'); 
-    }catch (error) {
-        console.log(error,"trial")
-    }
-    return savedHash == trial;
-}
 
 const UserController = {
     register: async function (req, res) {
@@ -47,7 +27,7 @@ const UserController = {
 
             console.log("Proceeding with signup")
             // Proceeding with signup
-            passwd_data = hashPassword(password)
+            passwd_data = auth.hashPassword(password)
 
             user_data = {
                 email: email,
@@ -57,9 +37,9 @@ const UserController = {
                 password_salt: passwd_data.salt,
                 password_iter: passwd_data.iterations
             }
-            var new_user = new UserModel.User(user_data);
-            const response = (await new_user.save()); 
+            const response = (await UserModel.createUser(user_data)); 
             if(response.createdAt){
+                // TODO: User created, we must send confirmation email!
                 return res.status(201).json({
                     created_at: response.createdAt,
                     message: `Created the user with ${email}`,
@@ -88,7 +68,7 @@ const UserController = {
                     .json({ message: "The user does not exist." });
             }
             // hash request password, compare with the one in db
-            const comparison_result = isPasswordCorrect(user.password_hash,user.password_salt,user.password_iter,password)
+            const comparison_result = auth.isPasswordCorrect(user.password_hash,user.password_salt,user.password_iter,password)
             if(!comparison_result){
                 return res.status(401).json({
                     message: "Incorrect Password !",
@@ -103,16 +83,28 @@ const UserController = {
                 algorithm: "HS256",
                 expiresIn: access_jwtExpiry,
             }
-            try{
-                var access_token = jwt.sign(payload,jwt_secret,options)
-            }catch (error) {
-                console.log(error,"trial")
+
+            var access_token = jwt.sign(payload,jwt_ac_secret,options)
+            var refresh_token = jwt.sign(payload,jwt_ref_secret,options)
+
+            token_data = {
+                user_id: id,
+                access_token: access_token,
+                refresh_token: refresh_token
+            };
+            const response = (await UserModel.createToken(token_data)); 
+            if(response.createdAt){
+                return res.status(200).json({
+                    id: id,
+                    email: email,
+                    access_token: access_token,
+                    refresh_token: refresh_token
+                })
+            }else{
+                return res.status(400).json({
+                    message: "Could not login with the parameters you provided.",
+                });
             }
-            return res.status(200).json({
-                'id': id,
-                'email': user.email,
-                'accessToken': access_token,
-            })
         } catch (error) {
             return res.status(400).json({
                 message:"Failed to login!",
@@ -120,7 +112,77 @@ const UserController = {
             });
         }
     },
+    refresh_access_token: async function (req, res) {
 
+        const { user_id, refresh_token } = req.body;
+
+        try {
+            jwt.verify(refresh_token, jwt_ref_secret, (err, decoded) => {
+                tokenError = err;
+                decrytedData = decoded;
+            });
+            // Acquire ID from decrypted token
+            id = decrytedData.id;
+            // Does given refresh token exist in db
+            const tokens = await UserModel.getTokensById(id);
+            if (!tokens) {
+                return res
+                    .status(400)
+                    .json({ message: "The token does not exist." });
+            }
+            // Token exists, check if it belongs to same user
+            if(user_id !== id){
+                return res
+                    .status(400)
+                    .json({ message: "The token exists but user id mismatch." });
+            }
+            // Generate ACT
+            const payload = {
+                'id': id,
+            };
+            const options = {
+                algorithm: "HS256",
+                expiresIn: access_jwtExpiry,
+            }
+            var access_token = jwt.sign(payload,jwt_ac_secret,options)
+            token_data = {
+                user_id: id,
+                access_token: access_token,
+                refresh_token: refresh_token
+            };
+            const response = (await UserModel.createToken(token_data)); 
+            // TODO: Check if this updates the token data, if not avoid duplicates
+            if(response.createdAt){
+                return res.status(200).json({
+                    message: "Access Token Updated!",
+                    access_token: access_token
+                })
+            }else{
+                return res.status(400).json({
+                    message: "Failed while creating Tokens at db!",
+                });
+            }
+        } catch (error) {
+            return res.status(400).json({
+                message:"Failed to refresh access-token!",
+                error: error.toString()
+            });
+        }
+    },
+    confirmEmail: async function (req, res) {
+
+        const { email, password } = req.body;
+
+        try {
+           
+
+        } catch (error) {
+            return res.status(400).json({
+                message:"Failed to send confirmation mail!",
+                error: error.toString()
+            });
+        }
+    },
 };
 
 module.exports = UserController;
