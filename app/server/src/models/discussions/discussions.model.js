@@ -20,22 +20,22 @@ const createDiscussion = async (userId, courseId, comments, discussionBody, disc
         discussion_body: discussionBody,
         discussion_files: discussionFiles,
     })
-    // discussion.discussion_date = discussion
-    console.log("DISCUSSION:", discussion)
-    const res = await discussion.save()
+
+    // Just to set the creation time...
+    const discussionTemp = await discussion.save()
+    discussionTemp.discussion_date = discussionTemp.createdAt
+    const res = await discussionTemp.save()
     return res
 }
 
 
 
-//   const getPopulatedDiscussion = async (id) => {
-//     return Discussion.findById(id).populate("")
-//   return Chapter.findById(id).populate("chapter_badge content chapter_name").exec()
-
-//   }
+  const getPopulatedDiscussion = async (id) => {
+    return Discussion.findById(id).populate("comments").exec()
+  }
 
 const getDiscussion = async (id) => {
     return Discussion.findById(id)
 }
 
-module.exports = { Discussion, createDiscussion, getDiscussion };
+module.exports = { Discussion, createDiscussion, getDiscussion, getPopulatedDiscussion };

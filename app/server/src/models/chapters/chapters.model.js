@@ -23,7 +23,6 @@ const createChapter = async (chapterName, chapterBadge, contentList) => {
 
 const getPopulatedChapter = async (id) => {
   return Chapter.findById(id).populate("chapter_badge content chapter_name").exec()
-
 }
 
 const getChapter = async (id) => {
