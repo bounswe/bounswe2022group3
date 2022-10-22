@@ -6,24 +6,24 @@ const { handleValidation } = require("../../services/validate");
 const courseRouter = express.Router();
 
 courseRouter.get(
-    "/getCourses",
-    // validate("getCourses"),
-    // handleValidation,
-    CourseController.getCourses
+  "/getCourses",
+  // validate("getCourses"),
+  // handleValidation,
+  CourseController.getCourses
 );
 
 courseRouter.get(
-    "/getEnrolledCourses",
-    // validate("getEnrolledCourses"),
-    // handleValidation,
-    CourseController.getEnrolledCourses
+  "/getEnrolledCourses",
+  // validate("getEnrolledCourses"),
+  // handleValidation,
+  CourseController.getEnrolledCourses
 );
 
 courseRouter.get(
-    "/getCourseDetail",
-    // validate("getCourseDetail"),
-    // handleValidation,
-    CourseController.getCourseDetail
+  "/getCourseDetail",
+  // validate("getCourseDetail"),
+  // handleValidation,
+  CourseController.getCourseDetail
 );
 
 module.exports = courseRouter;
