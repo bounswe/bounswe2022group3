@@ -71,9 +71,7 @@ const post = {
 }
 
 
-///styles ekle şimdi 
-//component ları ayrıştır
-///layout sal 
+
 export default function courseSummary() {
 
 
