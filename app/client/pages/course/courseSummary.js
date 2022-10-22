@@ -183,14 +183,14 @@ export default function courseSummary() {
                 <Table sx={{ minWidth: 250 }} >
                   <TableHead>
                     <TableRow>
-                      <TableCell>Chapter Name</TableCell>
+                      <TableCell><h3> Chapter Name</h3></TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {post.chapters.map((chapter, index) => {
                       return (
                         <TableRow>
-                          <TableCell>- {chapter.chapter_name}</TableCell>
+                          <TableCell><h4> - {chapter.chapter_name}</h4></TableCell>
                         </TableRow>
                       );
                     })}
