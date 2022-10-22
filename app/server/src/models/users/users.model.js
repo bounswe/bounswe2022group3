@@ -17,6 +17,8 @@ const userSchema = new mongoose.Schema({
         type: String
     },
 });
+
+userSchema.set("timestamps", true)
 const User = mongoose.model('User', userSchema);
 
 const createUser = async (email, name, surname, password) => {
