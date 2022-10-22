@@ -11,7 +11,6 @@ const courseSchema = new mongoose.Schema({
     type: String,
   },
   lecturer_id: {
-    unique: true,
     type: String,
     required: true,
   },
@@ -50,7 +49,9 @@ const courseSchema = new mongoose.Schema({
 const Course = mongoose.model("Course", courseSchema);
 
 const createCourse = async () => {
-  var course = new Course({ course_id: crypto.randomUUID() }); // lecturer_id required
+  // randomUUID not necessary, use mongodb ID
+  var course = new Course({ }); // lecturer_id required
+  course.course_id = course._id;
   const res = await course.save();
   return res;
 };

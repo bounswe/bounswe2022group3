@@ -3,6 +3,8 @@ const EnrollmentModel = require("../../models/enrollment/enrollment.model");
 const ChapterModel = require("../../models/chapter/chapter.model");
 
 const CourseController = {
+  // add create functions
+
   getCourses: async function (req, res) {
     const courses = await CourseModel.find({});
     const keyword = req.keyword;
