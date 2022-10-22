@@ -25,24 +25,6 @@ const userSchema = new mongoose.Schema({
         timestamps:true
     }
 );
-const tokenSchema = new mongoose.Schema({
-    user_id: {
-        unique: true,
-        type: String
-    },
-    access_token: {
-        unique: true,
-        type: String
-    },
-    refresh_token: {
-        unique: true,
-        type: String
-    },
-},
-    {
-        timestamps:true
-    }
-);
 const User = mongoose.model('User', userSchema);
 
 const createUser = async ({email, name, surname, password_hash, password_salt, password_iter}) => {
@@ -50,9 +32,9 @@ const createUser = async ({email, name, surname, password_hash, password_salt, p
         email: email,
         name: name,
         surname: surname,
-        password_hash: passwd_data.hash,
-        password_salt: passwd_data.salt,
-        password_iter: passwd_data.iterations
+        password_hash: password_hash,
+        password_salt: password_salt,
+        password_iter: password_iter
     })
     const res = await user.save()
     return res
@@ -73,12 +55,29 @@ const deleteUser = async (email) => {
     const res = await User.findOneAndDelete({ email: email })
     return res
 }
-
+const tokenSchema = new mongoose.Schema({
+    email: {
+        unique: true,
+        type: String
+    },
+    access_token: {
+        unique: true,
+        type: String
+    },
+    refresh_token: {
+        unique: true,
+        type: String
+    },
+},
+    {
+        timestamps:true
+    }
+);
 const Tokens = mongoose.model('Tokens', tokenSchema);
 
-const createToken= async ({user_id, access_token, refresh_token}) => {
+const createToken= async ({email, access_token, refresh_token}) => {
     var tokens = new Tokens({ 
-        user_id: user_id, 
+        email: email, 
         access_token: access_token, 
         refresh_token: refresh_token
     })
@@ -86,9 +85,9 @@ const createToken= async ({user_id, access_token, refresh_token}) => {
     return res
 }
 
-const getTokensById = async (user_id) => {
-    const result = await Tokens.findById(user_id).exec();
+const getTokensByEmail = async (email) => {
+    const result = await Tokens.findOne({email}).exec();
     return result;
 }
 
-module.exports = { User, Tokens,createUser, deleteUser, getUserByEmail, getUserByID, createToken, getTokensById };
+module.exports = { User, Tokens,createUser, deleteUser, getUserByEmail, getUserByID, createToken, getTokensByEmail };

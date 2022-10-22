@@ -24,11 +24,5 @@ userRouter.post(
     // handleValidation,
     UserController.refresh_access_token
 );
-userRouter.post(
-    "/confirmEmail",
-    // validate("login"),
-    // handleValidation,
-    UserController.confirmEmail
-);
 
 module.exports = userRouter;

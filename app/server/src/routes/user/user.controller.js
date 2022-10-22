@@ -1,6 +1,5 @@
 const UserModel = require("../../models/user/user.model");
 const auth = require("../../services/auth");
-const crypto = require("crypto");
 const jwt = require("jsonwebtoken")
 //const {authorization_admin} = require("../../services/auth");
 //const axios = require("axios");
@@ -16,19 +15,21 @@ const UserController = {
         const { email, name, surname, password } = req.body;
 
         try {
-            
+
             //Check if user already exist
             const user = await UserModel.getUserByEmail(email);
             if (user) {
                 return res
                     .status(409)
-                    .json({ message: "The user already exists."});
+                    .json({ message: "The user already exists." });
             }
 
             console.log("Proceeding with signup")
             // Proceeding with signup
+
             passwd_data = auth.hashPassword(password)
 
+            console.log(passwd_data)
             user_data = {
                 email: email,
                 name: name,
@@ -37,14 +38,14 @@ const UserController = {
                 password_salt: passwd_data.salt,
                 password_iter: passwd_data.iterations
             }
-            const response = (await UserModel.createUser(user_data)); 
-            if(response.createdAt){
+            const response = (await UserModel.createUser(user_data));
+            if (response.createdAt) {
                 // TODO: User created, we must send confirmation email!
                 return res.status(201).json({
                     created_at: response.createdAt,
                     message: `Created the user with ${email}`,
                 })
-            }else{
+            } else {
                 return res.status(400).json({
                     message: "Could not create a user with the parameters you provided.",
                 });
@@ -68,117 +69,100 @@ const UserController = {
                     .json({ message: "The user does not exist." });
             }
             // hash request password, compare with the one in db
-            const comparison_result = auth.isPasswordCorrect(user.password_hash,user.password_salt,user.password_iter,password)
-            if(!comparison_result){
+            const comparison_result = auth.isPasswordCorrect(user.password_hash, user.password_salt, user.password_iter, password)
+            if (!comparison_result) {
                 return res.status(401).json({
                     message: "Incorrect Password !",
                 });
             }
             // if they match create access token, refresh token, return them 
-            var id = user._id.toString()
+            
             const payload = {
-                'id': id,
+                'email': email,
             };
-            const options = {
+            const access_options = {
                 algorithm: "HS256",
                 expiresIn: access_jwtExpiry,
             }
-
-            var access_token = jwt.sign(payload,jwt_ac_secret,options)
-            var refresh_token = jwt.sign(payload,jwt_ref_secret,options)
+            const refresh_options = {
+                algorithm: "HS256",
+                expiresIn: refresh_jwtExpiry,
+            }
+            var access_token = jwt.sign(payload, jwt_ac_secret, access_options)
+            var refresh_token = jwt.sign(payload, jwt_ref_secret, refresh_options)
 
             token_data = {
-                user_id: id,
+                email: email,
                 access_token: access_token,
                 refresh_token: refresh_token
             };
-            const response = (await UserModel.createToken(token_data)); 
-            if(response.createdAt){
+            const response = (await UserModel.createToken(token_data));
+            if (response.createdAt) {
                 return res.status(200).json({
-                    id: id,
+                    id: user._id,
                     email: email,
                     access_token: access_token,
                     refresh_token: refresh_token
                 })
-            }else{
+            } else {
                 return res.status(400).json({
                     message: "Could not login with the parameters you provided.",
                 });
             }
         } catch (error) {
             return res.status(400).json({
-                message:"Failed to login!",
+                message: "Failed to login!",
                 error: error.toString()
             });
         }
     },
     refresh_access_token: async function (req, res) {
 
-        const { user_id, refresh_token } = req.body;
+        const { email, refresh_token } = req.body;// email?
 
         try {
-            jwt.verify(refresh_token, jwt_ref_secret, (err, decoded) => {
-                tokenError = err;
-                decrytedData = decoded;
-            });
-            // Acquire ID from decrypted token
-            id = decrytedData.id;
             // Does given refresh token exist in db
-            const tokens = await UserModel.getTokensById(id);
+            const tokens = await UserModel.getTokensByEmail(email);
             if (!tokens) {
                 return res
                     .status(400)
                     .json({ message: "The token does not exist." });
             }
+            // If exists decrypt
+            jwt.verify(refresh_token, jwt_ref_secret, (err, decoded) => {
+                tokenError = err;
+                decrytedData = decoded;
+                console.log(decoded)
+            });
+            // Acquire email from decrypted token
+            console.log(decrytedData)
+            token_email = decrytedData.email;
+
             // Token exists, check if it belongs to same user
-            if(user_id !== id){
+            if (email !== token_email) {
                 return res
                     .status(400)
-                    .json({ message: "The token exists but user id mismatch." });
+                    .json({ message: "The token exists but email mismatch." });
             }
             // Generate ACT
             const payload = {
-                'id': id,
+                'email': email,
             };
             const options = {
                 algorithm: "HS256",
                 expiresIn: access_jwtExpiry,
             }
-            var access_token = jwt.sign(payload,jwt_ac_secret,options)
-            token_data = {
-                user_id: id,
-                access_token: access_token,
-                refresh_token: refresh_token
-            };
-            const response = (await UserModel.createToken(token_data)); 
+            const access_token = jwt.sign(payload, jwt_ac_secret, options)
             // TODO: Check if this updates the token data, if not avoid duplicates
-            if(response.createdAt){
-                return res.status(200).json({
-                    message: "Access Token Updated!",
-                    access_token: access_token
-                })
-            }else{
-                return res.status(400).json({
-                    message: "Failed while creating Tokens at db!",
-                });
-            }
+            tokens.access_token = access_token
+            tokens.save()
+            return res.status(200).json({
+                message: "Access Token Updated!",
+                access_token: access_token
+            })
         } catch (error) {
             return res.status(400).json({
-                message:"Failed to refresh access-token!",
-                error: error.toString()
-            });
-        }
-    },
-    confirmEmail: async function (req, res) {
-
-        const { email, password } = req.body;
-
-        try {
-           
-
-        } catch (error) {
-            return res.status(400).json({
-                message:"Failed to send confirmation mail!",
+                message: "Failed to refresh access-token!",
                 error: error.toString()
             });
         }

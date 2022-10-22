@@ -1,7 +1,7 @@
 //We will do the authorization checks here !!
 const jwt = require('jsonwebtoken');
 const UserModel = require("../models/user/user.model");
-
+const crypto = require("crypto");
 const jwt_ac_secret = process.env.JWT_AC_KEY
 const jwt_ref_secret = process.env.JWT_REF_KEY
 
@@ -34,14 +34,16 @@ const authorization = async (req, res, next) => {
             });
         }
 
-        // Acquire ID from decrypted token
-        id = decrytedData.id;
+        // Acquire email from decrypted token
+        email = decrytedData.email;
         
         // Get user data, inserting it to request
+        console.log(decrytedData)
+        // !!!!!!!!!!!!!!!!!!!!!!!!!
         // What data should I put in request, all user data or just email,name,surname 
-        const user = await UserModel.getUserByID(id);
+        const user = await UserModel.getUserByEmail(id);
         if(user){
-            req.auth = user
+            req.auth = user // user_id
         }
         else{
             return res.status(400).json({
@@ -62,16 +64,16 @@ function hashPassword(password) {
         var salt = crypto.randomBytes(128).toString('hex');
         var iterations = 10000;
         var hash = crypto.pbkdf2Sync(password, salt, iterations,keylen=512,'sha256').toString('hex');;
+        return {
+            salt: salt,
+            hash: hash,
+            iterations: iterations
+        };
     }catch (error) {
         return {
             error: error
         }
     }
-    return {
-        salt: salt,
-        hash: hash,
-        iterations: iterations
-    };
 }
 
 function isPasswordCorrect(savedHash, savedSalt, savedIterations, passwordAttempt) {
