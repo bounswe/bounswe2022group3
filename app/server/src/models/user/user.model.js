@@ -21,18 +21,18 @@ const userSchema = new mongoose.Schema({
         type: String
     },
     tokens: {
-        type: mongoose.Schema.Types.ObjectId, 
+        type: mongoose.Schema.Types.ObjectId,
         ref: "Tokens"
     },
 },
     {
-        timestamps:true
+        timestamps: true
     }
 );
 const User = mongoose.model('User', userSchema);
 
-const createUser = async ({email, name, surname, password_hash, password_salt, password_iter,tokens}) => {
-    var user = new User({ 
+const createUser = async ({ email, name, surname, password_hash, password_salt, password_iter, tokens }) => {
+    var user = new User({
         email: email,
         name: name,
         surname: surname,
@@ -47,7 +47,7 @@ const createUser = async ({email, name, surname, password_hash, password_salt, p
 
 const getUserByEmail = async (email) => {
 
-    const result = await User.findOne({email : `${email}`}).exec();
+    const result = await User.findOne({ email: `${email}` }).exec();
     return result;
 }
 const getUserByID = async (user_id) => {
@@ -63,7 +63,7 @@ const deleteUser = async (email) => {
 
 const getPopulatedTokens = async (user_id) => {
     return User.findById(user_id)
-    .populate("tokens").exec()
+        .populate("tokens").exec()
 }
 
-module.exports = { User, createUser, deleteUser, getUserByEmail, getUserByID, getPopulatedTokens};
+module.exports = { User, createUser, deleteUser, getUserByEmail, getUserByID, getPopulatedTokens };

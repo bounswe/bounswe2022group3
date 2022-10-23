@@ -15,15 +15,15 @@ const tokenSchema = new mongoose.Schema({
     },
 },
     {
-        timestamps:true
+        timestamps: true
     }
 );
 const Tokens = mongoose.model('Tokens', tokenSchema);
 
-const createToken= async ({email, access_token, refresh_token}) => {
+const createToken = async ({ email, access_token, refresh_token }) => {
     let tokens = await getTokensByEmail(email);
-    if(!tokens){
-        tokens = new Tokens({ 
+    if (!tokens) {
+        tokens = new Tokens({
             email: email,
         })
     }
@@ -34,7 +34,7 @@ const createToken= async ({email, access_token, refresh_token}) => {
 }
 
 const getTokensByEmail = async (email) => {
-    const result = await Tokens.findOne({email}).exec();
+    const result = await Tokens.findOne({ email }).exec();
     return result;
 }
 

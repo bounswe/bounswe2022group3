@@ -9,9 +9,9 @@ const jwt_ref_secret = process.env.JWT_REF_KEY
 
 const authorization = async (req, res, next) => {
 
-    try{
+    try {
         let token = req.headers.authorization
-        if(!token){
+        if (!token) {
             return res.status(400).json({
                 message: "Authorization token missing !",
             });
@@ -22,8 +22,8 @@ const authorization = async (req, res, next) => {
             tokenError = err;
             decrytedData = decoded;
         });
-        
-        if(tokenError){
+
+        if (tokenError) {
             return res.status(400).json({
                 message: tokenError.toString(),
             });
@@ -33,23 +33,23 @@ const authorization = async (req, res, next) => {
 
         // Return user data
         const user = await UserModel.getUserByEmail(email);
-        if(user){
+        if (user) {
             // Populating user token and checking if the request token is deprecated.
             token_populated_user = await UserModel.getPopulatedTokens(user._id)
-            if(token_populated_user.tokens.access_token !== token){
+            if (token_populated_user.tokens.access_token !== token) {
                 return res.status(400).json({
                     message: "This token is deprecated, user has been logged-out or has a new token now!",
                 });
             }
             req.body.auth = user
         }
-        else{
+        else {
             return res.status(400).json({
                 message: "There is no existing user with the given token !",
             });
         }
         return next();
-    }catch (error) {
+    } catch (error) {
         return res.status(400).json({
             message: error.toString(),
         });
@@ -58,16 +58,16 @@ const authorization = async (req, res, next) => {
 };
 
 function hashPassword(password) {
-    try{
+    try {
         var salt = crypto.randomBytes(128).toString('hex');
         var iterations = 10000;
-        var hash = crypto.pbkdf2Sync(password, salt, iterations,keylen=512,'sha256').toString('hex');;
+        var hash = crypto.pbkdf2Sync(password, salt, iterations, keylen = 512, 'sha256').toString('hex');;
         return {
             salt: salt,
             hash: hash,
             iterations: iterations
         };
-    }catch (error) {
+    } catch (error) {
         return {
             error: error
         }
@@ -75,9 +75,9 @@ function hashPassword(password) {
 }
 
 function isPasswordCorrect(savedHash, savedSalt, savedIterations, passwordAttempt) {
-    try{
-        var trial = crypto.pbkdf2Sync(passwordAttempt, savedSalt, Number(savedIterations),keylen=512,'sha256').toString('hex'); 
-    }catch (error) {
+    try {
+        var trial = crypto.pbkdf2Sync(passwordAttempt, savedSalt, Number(savedIterations), keylen = 512, 'sha256').toString('hex');
+    } catch (error) {
         return {
             error: error
         }
@@ -86,7 +86,7 @@ function isPasswordCorrect(savedHash, savedSalt, savedIterations, passwordAttemp
 }
 
 async function generateToken(email, secret, expiry) {
-    try{
+    try {
         // Generate ACT
         const payload = {
             'email': email,
@@ -97,11 +97,11 @@ async function generateToken(email, secret, expiry) {
         }
         const created_token = jwt.sign(payload, secret, options)
         return created_token
-    }catch (error) {
+    } catch (error) {
         return {
             error: error
         }
     }
 }
 
-module.exports = {authorization, hashPassword, isPasswordCorrect,generateToken}
+module.exports = { authorization, hashPassword, isPasswordCorrect, generateToken }

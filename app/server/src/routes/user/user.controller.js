@@ -79,9 +79,9 @@ const UserController = {
 
             // If they match, create access token and refresh token, return them 
 
-            const access_token = await auth.generateToken(email, jwt_ac_secret,access_jwtExpiry)
-            const refresh_token = await auth.generateToken(email, jwt_ref_secret,refresh_jwtExpiry)
-            
+            const access_token = await auth.generateToken(email, jwt_ac_secret, access_jwtExpiry)
+            const refresh_token = await auth.generateToken(email, jwt_ref_secret, refresh_jwtExpiry)
+
             // Save them to DB
             token_data = {
                 email: email,
@@ -134,8 +134,8 @@ const UserController = {
                     .json({ message: "The token does not exist." });// The token exists but email mismatch.
             }
             // Generate new tokens and update DB
-            const new_access_token = await auth.generateToken(email, jwt_ac_secret,access_jwtExpiry)
-            const new_refresh_token = await auth.generateToken(email, jwt_ref_secret,refresh_jwtExpiry)
+            const new_access_token = await auth.generateToken(email, jwt_ac_secret, access_jwtExpiry)
+            const new_refresh_token = await auth.generateToken(email, jwt_ref_secret, refresh_jwtExpiry)
             tokens.access_token = new_access_token
             tokens.refresh_token = new_refresh_token
             tokens.save()
@@ -157,7 +157,7 @@ const UserController = {
             // Remove access and refresh tokens upon logging out
             const tokens = await TokensModel.getTokensByEmail(auth.email);
             tokens.access_token = ""
-            tokens.refresh_token= ""
+            tokens.refresh_token = ""
             tokens.save()
             return res.status(200).json({
                 message: "Logout is successful!",
