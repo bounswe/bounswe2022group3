@@ -1,43 +1,22 @@
 const express = require("express");
-const CourseController = require("./course.controller");
-const { validate } = require("./course.validate");
+const EnrollmentController = require("./enrollment.controller");
+const { validate } = require("./enrollment.validate");
 const { handleValidation } = require("../../services/validate");
 
-const courseRouter = express.Router();
+const enrollmentRouter = express.Router();
 
-courseRouter.post(
-  "/createCourse",
-  // validate('createCourse'),
+enrollmentRouter.post(
+  "/createEnrollment",
+  // validate('createEnrollment'),
   // handleValidation,
-  CourseController.createCourse
+  EnrollmentController.createEnrollment
 );
 
-courseRouter.get(
-  "/getCourses",
-  // validate('getCourses'),
-  // handleValidation,
-  CourseController.getCourses
-);
-
-courseRouter.get(
+enrollmentRouter.get(
   "/getEnrolledCourses",
   // validate('getEnrolledCourses'),
   // handleValidation,
   CourseController.getEnrolledCourses
 );
 
-courseRouter.post(
-  "/createEnrollment",
-  // validate('createEnrollment'),
-  // handleValidation,
-  CourseController.createEnrollment
-);
-
-courseRouter.get(
-  "/getCourseDetail",
-  // validate('getCourseDetail'),
-  // handleValidation,
-  CourseController.getCourseDetail
-);
-
-module.exports = courseRouter;
+module.exports = enrollmentRouter;
