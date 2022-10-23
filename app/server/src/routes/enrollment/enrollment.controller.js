@@ -4,8 +4,11 @@ const EnrollmentModel = require("../../models/enrollment/enrollment.model");
 const EnrollmentController = {
   createEnrollment: async function (req, res) {
     const { user_id, course_id } = req.body;
-    const course = await EnrollmentModel.createEnrollment(user_id, course_id);
-    res.status(201).send({ course });
+    const enrollment = await EnrollmentModel.createEnrollment(
+      user_id,
+      course_id
+    );
+    res.status(201).send({ enrollment });
   },
 
   getEnrolledCourses: async function (req, res) {

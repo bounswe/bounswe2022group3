@@ -24,7 +24,7 @@ const CourseController = {
   },
 
   getCourseDetail: async function (req, res) {
-    const { id } = req.body;
+    const { id } = req.params;
     const course = await CourseModel.findOne({ id })
       .populate("name info rating lecturer tags chapters image")
       .populate({ path: "lecturer" })

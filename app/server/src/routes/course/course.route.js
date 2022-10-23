@@ -13,7 +13,7 @@ courseRouter.post(
 );
 
 courseRouter.get(
-  "/getCourses",
+  "/:id",
   // validate('getCourses'),
   // handleValidation,
   CourseController.getCourses
