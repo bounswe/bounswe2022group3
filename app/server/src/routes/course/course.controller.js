@@ -6,14 +6,19 @@ const CourseController = {
   // add create functions
 
   createCourse: async function (req, res) {
-    const { course_name, lecturer_id } = req.body;
-    const course = await CourseModel.createCourse(
+    const {
       course_name,
       lecturer_id,
       course_info,
       course_chapters,
       course_tags,
-      course_badges
+    } = req.body;
+    const course = await CourseModel.createCourse(
+      course_name,
+      lecturer_id,
+      course_info,
+      course_chapters,
+      course_tags
     );
     res.status(201).send({ status: "OK", course });
   },
