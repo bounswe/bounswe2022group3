@@ -1,12 +1,7 @@
 const mongoose = require("mongoose");
 
 const courseSchema = new mongoose.Schema({
-  course_id: {
-    unique: true,
-    type: String,
-    required: true,
-  },
-  course_name: {
+  name: {
     type: String,
   },
   lecturer: {
@@ -14,24 +9,24 @@ const courseSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
-  course_info: {
+  info: {
     type: String,
   },
-  course_rating: {
+  rating: {
     type: Number,
   },
-  course_chapters: {
+  chapters: {
     type: [mongoose.Schema.Types.ObjectId],
     ref: "Chapter",
   },
-  course_tags: {
+  tags: {
     type: [String],
   },
-  course_badges: {
+  badges: {
     type: [mongoose.Schema.Types.ObjectId],
     ref: "Badge",
   },
-  course_feedback: {
+  feedback: {
     type: [mongoose.Schema.Types.ObjectId],
     ref: "Feedback",
   },
@@ -55,29 +50,20 @@ const courseSchema = new mongoose.Schema({
 
 const Course = mongoose.model("Course", courseSchema);
 
-const createCourse = async (
-  course_name,
-  lecturer_id,
-  course_info,
-  course_chapters,
-  course_tags,
-  course_badges
-) => {
+const createCourse = async (name, lecturer, info, chapters, tags) => {
   var course = new Course({
-    course_name,
-    lecturer_id,
-    course_info,
-    course_chapters,
-    course_tags,
-    course_badges,
+    name,
+    lecturer,
+    info,
+    chapters,
+    tags,
   });
-  course.course_id = course._id;
   const res = await course.save();
   return res;
 };
 
-const deleteCourse = async (course_id) => {
-  const res = await Course.findOneAndDelete({ course_id });
+const deleteCourse = async (_id) => {
+  const res = await Course.findOneAndDelete({ _id });
   return res;
 };
 

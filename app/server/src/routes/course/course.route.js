@@ -7,35 +7,35 @@ const courseRouter = express.Router();
 
 courseRouter.post(
   "/createCourse",
-  // validate("createCourse"),
+  // validate('createCourse'),
   // handleValidation,
   CourseController.createCourse
 );
 
 courseRouter.get(
   "/getCourses",
-  // validate("getCourses"),
+  // validate('getCourses'),
   // handleValidation,
   CourseController.getCourses
 );
 
 courseRouter.get(
   "/getEnrolledCourses",
-  // validate("getEnrolledCourses"),
+  // validate('getEnrolledCourses'),
   // handleValidation,
   CourseController.getEnrolledCourses
 );
 
 courseRouter.post(
   "/createEnrollment",
-  // validate("createEnrollment"),
+  // validate('createEnrollment'),
   // handleValidation,
   CourseController.createEnrollment
 );
 
 courseRouter.get(
   "/getCourseDetail",
-  // validate("getCourseDetail"),
+  // validate('getCourseDetail'),
   // handleValidation,
   CourseController.getCourseDetail
 );

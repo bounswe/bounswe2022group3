@@ -1,10 +1,7 @@
 const CourseModel = require("../../models/course/course.model");
 const EnrollmentModel = require("../../models/enrollment/enrollment.model");
-const ChapterModel = require("../../models/chapter/chapter.model");
 
 const CourseController = {
-  // add create functions
-
   createCourse: async function (req, res) {
     const {
       course_name,
@@ -20,7 +17,7 @@ const CourseController = {
       course_chapters,
       course_tags
     );
-    res.status(201).send({ status: "OK", course });
+    res.status(201).send({ course });
   },
 
   getCourses: async function (req, res) {
@@ -28,7 +25,7 @@ const CourseController = {
     const courses = await CourseModel.find({
       course_name: { $regex: keyword, $options: "i" },
     })
-      .populate("course_id course_name course_rating course_image lecturer")
+      .populate("name rating image lecturer")
       .populate({ path: "lecturer" });
     return res.status(200).json({ courses });
   },
@@ -36,56 +33,35 @@ const CourseController = {
   createEnrollment: async function (req, res) {
     const { user_id, course_id } = req.body;
     const course = await EnrollmentModel.createEnrollment(user_id, course_id);
-    res.status(201).send({ status: "OK", course });
+    res.status(201).send({ course });
   },
 
   getEnrolledCourses: async function (req, res) {
     const user = req.auth; // what does req.auth return?
     const enrolled_courses = await EnrollmentModel.find({ user_id: user.id });
-    var return_l = [];
+    var data = [];
     for (var enrolled_course of enrolled_courses) {
       var course = await CourseModel.findOne({
         course_id: enrolled_course.course_id,
-      });
-      return_l.push({
-        id: course.course_id,
-        title: course.course_name,
-        image: course.course_image,
-      });
+      }).populate("course_id course_name course_image");
+      data.push(course);
     }
-    return res.status(200).json({ return_l });
+    return res.status(200).json({ data });
   },
 
   getCourseDetail: async function (req, res) {
-    const course = await CourseModel.findOne({ course_id: req.id });
-    const lecturer = await UserModel.findOne({ user_id: course.lecturer_id });
+    const { id } = req.body;
+    const course = await CourseModel.findOne({ id })
+      .populate("name info rating lecturer tags chapters image")
+      .populate({ path: "lecturer" })
+      .populate({ path: "chapters", populate: { path: "name" } });
     const user = req.auth;
 
-    var return_d = {
-      id: course.course_id,
-      title: course.course_name,
-      course_info: course.course_info,
-      rating: course.course_rating,
-      lecturer: {
-        id: lecturer.user_id,
-        name: lecturer.user_name,
-        email: lecturer.user_email,
-        is_confirmed: lecturer.is_confirmed,
-        image: lecturer.user_image,
-      },
-      tags: course.course_tags,
-      chapters: [],
-      image: course.course_image,
+    var data = {
+      course,
       enrolled: user.enrolled,
     };
-    for (var chapter_id of course.course_chapters) {
-      var chapter = await ChapterModel.findOne({ chapter_id });
-      return_d.chapters.push({
-        id: chapter.chapter_id,
-        chapter_name: chapter.chapter_name,
-      });
-    }
-    return res.status(200).json({ return_d });
+    return res.status(200).json({ data });
   },
 };
 
