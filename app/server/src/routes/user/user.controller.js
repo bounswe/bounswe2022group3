@@ -1,8 +1,8 @@
 const UserModel = require("../../models/user/user.model");
+const TokensModel = require("../../models/tokens/tokens.model");
 const auth = require("../../services/auth");
 const jwt = require("jsonwebtoken")
-//const {authorization_admin} = require("../../services/auth");
-//const axios = require("axios");
+const crypto = require("crypto");
 const jwt_ac_secret = process.env.JWT_AC_KEY
 const jwt_ref_secret = process.env.JWT_REF_KEY
 const access_jwtExpiry = '24h'
@@ -25,7 +25,10 @@ const UserController = {
             // Proceeding with signup
             // Hash the password
             passwd_data = auth.hashPassword(password)
-
+            token_data = {
+                email: email,
+            };
+            const response_tokens = (await TokensModel.createToken(token_data));
             // Save all data in DB
             user_data = {
                 email: email,
@@ -33,7 +36,8 @@ const UserController = {
                 surname: surname,
                 password_hash: passwd_data.hash,
                 password_salt: passwd_data.salt,
-                password_iter: passwd_data.iterations
+                password_iter: passwd_data.iterations,
+                tokens: response_tokens._id
             }
             const response = (await UserModel.createUser(user_data));
             if (response.createdAt) {
@@ -74,17 +78,19 @@ const UserController = {
             }
 
             // If they match, create access token and refresh token, return them 
+
             const access_token = await auth.generateToken(email, jwt_ac_secret,access_jwtExpiry)
             const refresh_token = await auth.generateToken(email, jwt_ref_secret,refresh_jwtExpiry)
-
+            
             // Save them to DB
             token_data = {
                 email: email,
                 access_token: access_token,
-                refresh_token: refresh_token
+                refresh_token: refresh_token,
             };
-            const response = (await UserModel.createToken(token_data));
+            const response = (await TokensModel.createToken(token_data));
             if (response.createdAt) {
+                user.tokens = response
                 return res.status(200).json({
                     id: user._id,
                     email: email,
@@ -107,7 +113,7 @@ const UserController = {
         const { email, refresh_token } = req.body;// email?
         try {
             // does refresh token exist in DB 
-            const tokens = await UserModel.getTokensByEmail(email);
+            const tokens = await TokensModel.getTokensByEmail(email);
             if (!tokens) {
                 return res
                     .status(400)
@@ -117,10 +123,8 @@ const UserController = {
             jwt.verify(refresh_token, jwt_ref_secret, (err, decoded) => {
                 tokenError = err;
                 decrytedData = decoded;
-                console.log(decoded)
             });
             // Acquire email from decrypted token
-            console.log(decrytedData)
             token_email = decrytedData.email;
 
             // Token exists, check if it belongs to same user
@@ -143,6 +147,24 @@ const UserController = {
         } catch (error) {
             return res.status(400).json({
                 message: "Failed to refresh tokens!",
+                error: error.toString()
+            });
+        }
+    },
+    logout: async function (req, res) {
+        const { auth } = req.body;
+        try {
+            // Remove access and refresh tokens upon logging out
+            const tokens = await TokensModel.getTokensByEmail(auth.email);
+            tokens.access_token = ""
+            tokens.refresh_token= ""
+            tokens.save()
+            return res.status(200).json({
+                message: "Logout is successful!",
+            })
+        } catch (error) {
+            return res.status(400).json({
+                message: "Failed to logout!",
                 error: error.toString()
             });
         }

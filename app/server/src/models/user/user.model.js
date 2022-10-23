@@ -20,6 +20,10 @@ const userSchema = new mongoose.Schema({
     password_iter: {
         type: String
     },
+    tokens: {
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: "Tokens"
+    },
 },
     {
         timestamps:true
@@ -27,14 +31,15 @@ const userSchema = new mongoose.Schema({
 );
 const User = mongoose.model('User', userSchema);
 
-const createUser = async ({email, name, surname, password_hash, password_salt, password_iter}) => {
+const createUser = async ({email, name, surname, password_hash, password_salt, password_iter,tokens}) => {
     var user = new User({ 
         email: email,
         name: name,
         surname: surname,
         password_hash: password_hash,
         password_salt: password_salt,
-        password_iter: password_iter
+        password_iter: password_iter,
+        tokens: tokens
     })
     const res = await user.save()
     return res
@@ -55,47 +60,10 @@ const deleteUser = async (email) => {
     const res = await User.findOneAndDelete({ email: email })
     return res
 }
-const tokenSchema = new mongoose.Schema({
-    email: {
-        unique: true,
-        type: String
-    },
-    access_token: {
-        unique: true,
-        type: String
-    },
-    refresh_token: {
-        unique: true,
-        type: String
-    },
-},
-    {
-        timestamps:true
-    }
-);
-const Tokens = mongoose.model('Tokens', tokenSchema);
 
-const createToken= async ({email, access_token, refresh_token}) => {
-    const tokens_db = await getTokensByEmail(email);
-    let res;
-    if(tokens_db){
-        tokens_db.access_token = access_token
-        tokens_db.refresh_token = refresh_token
-        res = await tokens_db.save()
-    }else{
-        const tokens = new Tokens({ 
-            email: email, 
-            access_token: access_token, 
-            refresh_token: refresh_token
-        })
-        res = await tokens.save()
-    }
-    return res
+const getPopulatedTokens = async (user_id) => {
+    return User.findById(user_id)
+    .populate("tokens").exec()
 }
 
-const getTokensByEmail = async (email) => {
-    const result = await Tokens.findOne({email}).exec();
-    return result;
-}
-
-module.exports = { User, Tokens,createUser, deleteUser, getUserByEmail, getUserByID, createToken, getTokensByEmail };
+module.exports = { User, createUser, deleteUser, getUserByEmail, getUserByID, getPopulatedTokens};
