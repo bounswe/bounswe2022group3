@@ -6,16 +6,16 @@ const { handleValidation } = require("../../services/validate");
 const enrollmentRouter = express.Router();
 
 enrollmentRouter.post(
-  "/createEnrollment",
-  // validate('createEnrollment'),
-  // handleValidation,
+  "/create",
+  validate("createEnrollment"),
+  handleValidation,
   EnrollmentController.createEnrollment
 );
 
 enrollmentRouter.get(
   "/getEnrolledCourses",
-  // validate('getEnrolledCourses'),
-  // handleValidation,
+  validate("getEnrolledCourses"),
+  handleValidation,
   CourseController.getEnrolledCourses
 );
 

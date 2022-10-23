@@ -1,4 +1,4 @@
-// const { } = require('express-validator');
+const {} = require("express-validator");
 
 exports.validate = (method) => {
   switch (method) {
