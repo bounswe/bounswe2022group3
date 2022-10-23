@@ -2,11 +2,9 @@
 
 exports.validate = (method) => {
   switch (method) {
-    case "createCourse": {
+    case "createEnrollment": {
     }
-    case "getCourses": {
-    }
-    case "getCourseDetail": {
+    case "getEnrolledCourses": {
     }
   }
 };
