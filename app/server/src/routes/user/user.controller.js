@@ -104,6 +104,14 @@ const UserController = {
                     .status(403)
                     .json({ message: "The user does not exist." });
             }
+            // Hash the req password, compare with the one in db
+            const comparison_result = auth.isPasswordCorrect(user.password_hash, user.password_salt, user.password_iter, password)
+            if (!comparison_result) {
+                return res.status(401).json({
+                    message: "Incorrect Password !",
+                });
+            }
+            // If they match, create access token and refresh token, return them 
 
             const tokens = await TokensModel.getTokensByEmail(email);
             if (!tokens) {
@@ -118,6 +126,7 @@ const UserController = {
 
             const access_token = await auth.generateToken(email, jwt_ac_secret, access_jwtExpiry)
             const refresh_token = await auth.generateToken(email, jwt_ref_secret, refresh_jwtExpiry)
+            // Save them to DB
             token_data = {
                 email: email,
                 access_token: access_token,
