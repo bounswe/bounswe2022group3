@@ -3,12 +3,13 @@ const ContentModel = require("../../models/contents/contents.model");
 const ContentController = {
     createContent: async function (req, res) {
         try {
-            const { name, body, media, discussion_id } = req.body
+            const { name, body, media, discussion_id, video_link } = req.body
             const badge = await ContentModel.createContent(
                 name,
                 body,
                 media,
                 discussion_id,
+                video_link,
             )
             res.send({ "status": "ok", "message": badge })
         }

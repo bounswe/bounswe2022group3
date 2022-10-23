@@ -5,15 +5,17 @@ const contentSchema = new mongoose.Schema({
     body: String,
     media: [String],
     discussion: { type: mongoose.Schema.Types.ObjectId, ref: "Discussion" },
+    video: String,
 })
 const Content = mongoose.model('Content', contentSchema);
 
-const createContent = async (name, body, media, discussion_id) => {
+const createContent = async (name, body, media, discussion_id, video_link) => {
     var content = new Content({
         name: name,
         body: body,
         media: media,
-        discussion: discussion_id
+        discussion: discussion_id,
+        video: video_link
     })
     const res = await content.save()
     return res
