@@ -5,8 +5,8 @@ const jwt = require("jsonwebtoken")
 const crypto = require("crypto");
 const jwt_ac_secret = process.env.JWT_AC_KEY
 const jwt_ref_secret = process.env.JWT_REF_KEY
-const access_jwtExpiry = '24h'
-const refresh_jwtExpiry = '30d'
+const access_jwtExpiry = '8h'
+const refresh_jwtExpiry = '7d'
 
 
 
@@ -131,7 +131,7 @@ const UserController = {
             if (email !== token_email) {
                 return res
                     .status(400)
-                    .json({ message: "The token exists but email mismatch." });
+                    .json({ message: "The token does not exist." });// The token exists but email mismatch.
             }
             // Generate new tokens and update DB
             const new_access_token = await auth.generateToken(email, jwt_ac_secret,access_jwtExpiry)
