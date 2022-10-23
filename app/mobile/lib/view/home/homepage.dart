@@ -44,7 +44,7 @@ Widget homepageView() => ViewModelBuilder<HomeViewModel>.reactive(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const Text(
-                              'Top Courses',
+                              'Enrolled Courses',
                               style: TextStyles.subtitle,
                             ),
                             const SizedBox(height: 12),
@@ -54,7 +54,7 @@ Widget homepageView() => ViewModelBuilder<HomeViewModel>.reactive(
                             ),
                             const SizedBox(height: 20),
                             const Text(
-                              'My Courses',
+                              'Top Courses',
                               style: TextStyles.subtitle,
                             ),
                             const SizedBox(height: 12),

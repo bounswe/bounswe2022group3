@@ -35,7 +35,7 @@ Container courseTile(Course c) {
             )
           ],
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 24),
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, mainAxisSize: MainAxisSize.max, children: [
           Row(
             children: [const Icon(Icons.star, color: Colors.amber), Text("4.5", style: TextStyles.bodyWhite)],
