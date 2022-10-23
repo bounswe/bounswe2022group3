@@ -6,7 +6,8 @@ const BasicController = {
 
         try {
 
-            res.send({ "status": "ok", "message": "Hello!" })
+            // res.send({ "status": "ok", "message": "Hello!" })
+            res.sendFile("/home/ubuntu/a.png")
         }
         catch (e) {
             console.log("Error on getCall:", e)
