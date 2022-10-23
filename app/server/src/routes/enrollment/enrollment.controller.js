@@ -12,7 +12,7 @@ const EnrollmentController = {
   },
 
   getEnrolledCourses: async function (req, res) {
-    const user = req.auth; // what does req.auth return?
+    const user = req.auth;
     const enrolled_courses = await EnrollmentModel.find({ user_id: user.id });
     var data = [];
     for (var enrolled_course of enrolled_courses) {
