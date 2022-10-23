@@ -9,7 +9,7 @@ const contentRouter = express.Router();
 contentRouter.post(
     "/",
     validate("create-content"),
-    // handleValidation,
+    handleValidation,
     ContentController.createContent
 );
 

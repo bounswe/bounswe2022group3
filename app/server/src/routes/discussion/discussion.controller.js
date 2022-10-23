@@ -12,7 +12,7 @@ const DiscussionController = {
                 discussion_body,
                 discussion_files,
             )
-            res.json(201).json({ "message": discussion })
+            res.status(201).send({ "message": discussion })
         }
         catch (e) {
             res.status(400).send({ "error": e })
@@ -21,7 +21,7 @@ const DiscussionController = {
     getDiscussion: async function (req, res) {
         try {
             const content = await DiscussionModel.getPopulatedDiscussion(req.params.id)
-            res.json(200).json({ "message": content })
+            res.status(200).json({ "message": content })
         }
         catch (e) {
             res.status(400).send({ "error": e })
