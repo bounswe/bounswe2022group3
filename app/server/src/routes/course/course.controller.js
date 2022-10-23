@@ -24,22 +24,13 @@ const CourseController = {
   },
 
   getCourses: async function (req, res) {
-    const courses = await CourseModel.find({});
-    const keyword = req.keyword;
-    var return_l = [];
-    for (var course of courses) {
-      if (course.course_name.toLowerCase().includes(keyword)) {
-        var lecturer = await UserModel.findOne({ user_id: course.lecturer_id });
-        return_l.push({
-          id: course.course_id,
-          title: course.course_name,
-          rating: course.course_rating,
-          image: course.course_image,
-          lecturer: { id: lecturer.user_id, name: lecturer.user_name },
-        });
-      }
-    }
-    return res.status(200).json({ return_l });
+    const { keyword } = req.body;
+    const courses = await CourseModel.find({
+      course_name: { $regex: keyword, $options: "i" },
+    })
+      .populate("course_id course_name course_rating course_image lecturer")
+      .populate({ path: "lecturer" });
+    return res.status(200).json({ courses });
   },
 
   createEnrollment: async function (req, res) {
