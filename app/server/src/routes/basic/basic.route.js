@@ -14,18 +14,4 @@ basicRouter.get(
     BasicController.getCall
 );
 
-basicRouter.get(
-    "/create",
-    // validate("call"),
-    // handleValidation,
-    BasicController.getCreate
-);
-
-basicRouter.get(
-    "/delete",
-    // validate("call"),
-    // handleValidation,
-    BasicController.getDelete
-);
-
 module.exports = basicRouter;
