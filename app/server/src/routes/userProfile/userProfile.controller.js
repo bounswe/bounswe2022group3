@@ -13,7 +13,7 @@ const UserProfileController = {
             const [idInfo, info] = await personalInfoModel.createPersonalInfo(idProfile)
             profile.personal_info = idInfo
             profile.save()
-            res.send({ "status": "ok", "message": info})
+            res.status(201).send({"message": "Created user profile successfully"})
 
         }   
         catch (e) {
@@ -46,7 +46,7 @@ const UserProfileController = {
                 },
                 "is_private": profile.is_private 
                 }
-                res.status(200).send(valueToSend)
+                res.status(201).send({"message": valueToSend})
             }
             catch (e) {
                 console.log("Cannot get")
