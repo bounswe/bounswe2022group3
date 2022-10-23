@@ -12,7 +12,7 @@ const DiscussionController = {
                 discussion_body,
                 discussion_files,
             )
-            res.send({ "status": "ok", "message": discussion })
+            res.json(201).json({ "message": discussion })
         }
         catch (e) {
             res.status(400).send({ "error": e })
@@ -21,10 +21,9 @@ const DiscussionController = {
     getDiscussion: async function (req, res) {
         try {
             const content = await DiscussionModel.getPopulatedDiscussion(req.params.id)
-            res.send({ "status": "ok", "message": content })
+            res.json(200).json({ "message": content })
         }
         catch (e) {
-            console.log("Error on getCreate:", e)
             res.status(400).send({ "error": e })
         }
     },

@@ -9,7 +9,7 @@ const ChapterController = {
                 chapter_badge_id,
                 content_id_list,
             )
-            res.send({ "status": "ok", "message": chapter })
+            res.status(201).json({ "message": chapter })
         }
         catch (e) {
             res.status(400).send({ "error": e })
@@ -18,7 +18,7 @@ const ChapterController = {
     getPopulatedChapter: async function (req, res) {
         try {
             const chapter = await ChapterModel.getPopulatedChapter(req.params.id)
-            res.send({ "status": "ok", "message": chapter })
+            res.status(200).json({ "message": chapter })
         }
         catch (e) {
             res.status(400).send({ "error": e })

@@ -8,7 +8,7 @@ const discussionRouter = express.Router();
 
 discussionRouter.post(
     "/",
-    // validate("call"),
+    validate("create-discussion"),
     // handleValidation,
     DiscussionController.createDiscussion
 );

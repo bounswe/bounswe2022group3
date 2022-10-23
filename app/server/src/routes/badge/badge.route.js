@@ -7,7 +7,7 @@ const badgeRouter = express.Router();
 
 badgeRouter.post(
     "/",
-    // validate("call"),
+    validate("create-badge"),
     // handleValidation,
     BadgeController.createBadge
 );

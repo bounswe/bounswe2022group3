@@ -11,7 +11,7 @@ const ContentController = {
                 discussion_id,
                 video_link,
             )
-            res.send({ "status": "ok", "message": badge })
+            res.status(201).json({ "message": badge })
         }
         catch (e) {
             res.status(400).send({ "error": e })
@@ -20,7 +20,7 @@ const ContentController = {
     getContent: async function (req, res) {
         try {
             const content = await ContentModel.getPopulatedContent(req.params.id)
-            res.send({ "status": "ok", "message": content })
+            res.status(200).json({ "message": content })
         }
         catch (e) {
             res.status(400).send({ "error": e })

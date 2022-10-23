@@ -8,7 +8,7 @@ const chapterRouter = express.Router();
 
 chapterRouter.post(
     "/",
-    // validate("call"),
+    validate("create-chapter"),
     // handleValidation,
     ChapterController.createChapter
 );

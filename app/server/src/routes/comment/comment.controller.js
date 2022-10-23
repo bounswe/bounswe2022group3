@@ -1,7 +1,6 @@
 const CommentModel = require("../../models/comments/comments.model");
 
 const CommentController = {
-
     createComment: async function (req, res) {
         try {
             const { user_id, comment_body, comment_files } = req.body
@@ -11,7 +10,7 @@ const CommentController = {
                 comment_body,
                 comment_files,
             )
-            res.send({ "status": "ok", "message": comment })
+            res.status(201).json({ "message": comment })
         }
         catch (e) {
             console.log("Error on getCreate:", e)
@@ -21,7 +20,7 @@ const CommentController = {
     getComment: async function (req, res) {
         try {
             const content = await CommentModel.getComment(req.params.id)
-            res.send({ "status": "ok", "message": content })
+            res.status(200).json({ "message": content })
         }
         catch (e) {
             res.status(400).send({ "error": e })

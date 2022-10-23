@@ -7,7 +7,7 @@ const commentRouter = express.Router();
 
 commentRouter.post(
     "/",
-    // validate("call"),
+    validate("create-comment"),
     // handleValidation,
     CommnetController.createComment
 );
