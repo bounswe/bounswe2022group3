@@ -152,7 +152,7 @@ const UserController = {
         }
     },
     logout: async function (req, res) {
-        const { auth } = req.body;
+        const auth = req.auth;
         try {
             // Remove access and refresh tokens upon logging out
             const tokens = await TokensModel.getTokensByEmail(auth.email);

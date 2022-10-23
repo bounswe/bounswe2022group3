@@ -6,11 +6,9 @@ const tokenSchema = new mongoose.Schema({
         type: String
     },
     access_token: {
-        unique: true,
-        type: String
+        type: String // empty or unique
     },
     refresh_token: {
-        unique: true,
         type: String
     },
 },
