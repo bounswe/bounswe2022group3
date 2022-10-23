@@ -30,4 +30,11 @@ userRouter.post(
     UserController.refresh_tokens
 );
 
+userRouter.post(
+    "/confirm-email",
+    validate("confirm-email"),
+    handleValidation,
+    UserController.confirmEmail
+);
+
 module.exports = userRouter;
