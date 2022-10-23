@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const crypto = require("crypto");
 
 const courseSchema = new mongoose.Schema({
   course_id: {
@@ -11,7 +10,8 @@ const courseSchema = new mongoose.Schema({
     type: String,
   },
   lecturer_id: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
     required: true,
   },
   course_info: {
@@ -21,36 +21,56 @@ const courseSchema = new mongoose.Schema({
     type: Number,
   },
   course_chapters: {
-    type: [String],
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "Chapter",
   },
   course_tags: {
     type: [String],
   },
   course_badges: {
-    type: [String],
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "Badge",
   },
   course_feedback: {
-    type: [String],
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "Feedback",
   },
   event_list: {
-    type: [String],
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "Event",
   },
   discussion_list: {
-    type: [String],
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "Discussion",
   },
   poll_list: {
-    type: [String],
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "Poll",
   },
   enrollments: {
-    type: [String],
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "Enrollment",
   },
 });
 
 const Course = mongoose.model("Course", courseSchema);
 
-const createCourse = async () => {
-  // randomUUID not necessary, use mongodb ID
-  var course = new Course({ }); // lecturer_id required
+const createCourse = async (
+  course_name,
+  lecturer_id,
+  course_info,
+  course_chapters,
+  course_tags,
+  course_badges
+) => {
+  var course = new Course({
+    course_name,
+    lecturer_id,
+    course_info,
+    course_chapters,
+    course_tags,
+    course_badges,
+  });
   course.course_id = course._id;
   const res = await course.save();
   return res;

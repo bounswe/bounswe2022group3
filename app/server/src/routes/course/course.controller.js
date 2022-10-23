@@ -5,6 +5,19 @@ const ChapterModel = require("../../models/chapter/chapter.model");
 const CourseController = {
   // add create functions
 
+  createCourse: async function (req, res) {
+    const { course_name, lecturer_id } = req.body;
+    const course = await CourseModel.createCourse(
+      course_name,
+      lecturer_id,
+      course_info,
+      course_chapters,
+      course_tags,
+      course_badges
+    );
+    res.status(201).send({ status: "OK", course });
+  },
+
   getCourses: async function (req, res) {
     const courses = await CourseModel.find({});
     const keyword = req.keyword;
@@ -22,6 +35,12 @@ const CourseController = {
       }
     }
     return res.status(200).json({ return_l });
+  },
+
+  createEnrollment: async function (req, res) {
+    const { user_id, course_id } = req.body;
+    const course = await EnrollmentModel.createEnrollment(user_id, course_id);
+    res.status(201).send({ status: "OK", course });
   },
 
   getEnrolledCourses: async function (req, res) {
@@ -56,7 +75,7 @@ const CourseController = {
         name: lecturer.user_name,
         email: lecturer.user_email,
         is_confirmed: lecturer.is_confirmed,
-        image: lecturer.user_image, // user_image doesn't exist in Class Diagram
+        image: lecturer.user_image,
       },
       tags: course.course_tags,
       chapters: [],
@@ -65,7 +84,10 @@ const CourseController = {
     };
     for (var chapter_id of course.course_chapters) {
       var chapter = await ChapterModel.findOne({ chapter_id });
-      return_d.chapters.push({ id: chapter.chapter_id, chapter_name: chapter.chapter_name });
+      return_d.chapters.push({
+        id: chapter.chapter_id,
+        chapter_name: chapter.chapter_name,
+      });
     }
     return res.status(200).json({ return_d });
   },

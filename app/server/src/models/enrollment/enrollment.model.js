@@ -6,11 +6,9 @@ const enrollmentSchema = new mongoose.Schema({
     type: String,
   },
   user_id: {
-    unique: true,
     type: String,
   },
   course_id: {
-    unique: true,
     type: String,
   },
   created_at: {
@@ -20,7 +18,8 @@ const enrollmentSchema = new mongoose.Schema({
     type: Boolean,
   },
   notes: {
-    type: [String],
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "Note",
   },
   progress: {
     type: Map,
@@ -30,8 +29,10 @@ const enrollmentSchema = new mongoose.Schema({
 
 const Enrollment = mongoose.model("Enrollment", enrollmentSchema);
 
-const createEnrollment = async (enrollment_id) => {
-  var enrollment = new Enrollment({ enrollment_id });
+const createEnrollment = async (user_id, course_id) => {
+  var enrollment = new Enrollment({ user_id, course_id });
+  enrollment.enrollment_id = enrollment._id;
+  enrollment.created_at = Date.now();
   const res = await enrollment.save();
   return res;
 };

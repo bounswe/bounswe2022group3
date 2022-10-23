@@ -5,6 +5,13 @@ const { handleValidation } = require("../../services/validate");
 
 const courseRouter = express.Router();
 
+courseRouter.post(
+  "/createCourse",
+  // validate("createCourse"),
+  // handleValidation,
+  CourseController.createCourse
+);
+
 courseRouter.get(
   "/getCourses",
   // validate("getCourses"),
@@ -17,6 +24,13 @@ courseRouter.get(
   // validate("getEnrolledCourses"),
   // handleValidation,
   CourseController.getEnrolledCourses
+);
+
+courseRouter.post(
+  "/createEnrollment",
+  // validate("createEnrollment"),
+  // handleValidation,
+  CourseController.createEnrollment
 );
 
 courseRouter.get(
