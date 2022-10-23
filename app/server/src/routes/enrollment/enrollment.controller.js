@@ -3,25 +3,35 @@ const EnrollmentModel = require("../../models/enrollment/enrollment.model");
 
 const EnrollmentController = {
   createEnrollment: async function (req, res) {
-    const { user_id, course_id } = req.body;
-    const enrollment = await EnrollmentModel.createEnrollment(
-      user_id,
-      course_id
-    );
-    res.status(201).send({ enrollment });
+
+    try {
+      const { user_id, course_id } = req.body;
+      const enrollment = await EnrollmentModel.createEnrollment(
+        user_id,
+        course_id
+      );
+      res.status(201).send({ enrollment });
+    }
+    catch (e) {
+      res.status(400).send({ "error": e })
+    }
   },
 
   getEnrolledCourses: async function (req, res) {
-    const user = req.auth;
-    const enrolled_courses = await EnrollmentModel.find({ user_id: user.id });
-    var data = [];
-    for (var enrolled_course of enrolled_courses) {
-      var course = await CourseModel.findOne({
-        course_id: enrolled_course.course_id,
-      }).populate("name image");
-      data.push(course);
+
+    try {
+      const user = req.auth;
+      const enrolled_courses = await EnrollmentModel.find({ user_id: user._id });
+      var data = [];
+      for (var enrolled_course of enrolled_courses) {
+        var course = await CourseModel.findById(enrolled_course.course_id)
+        data.push(course);
+      }
+      return res.status(200).json({ data });
     }
-    return res.status(200).json({ data });
+    catch (e) {
+      res.status(400).send({ "error": e })
+    }
   },
 };
 

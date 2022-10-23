@@ -27,36 +27,43 @@ const courseSchema = new mongoose.Schema({
     ref: "Badge",
   },
   feedback: {
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: "Feedback",
+    // type: [mongoose.Schema.Types.ObjectId],
+    // ref: "Feedback",
+    type: String,
   },
   event_list: {
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: "Event",
+    // type: [mongoose.Schema.Types.ObjectId],
+    // ref: "Event",
+    type: String,
   },
   discussion_list: {
     type: [mongoose.Schema.Types.ObjectId],
     ref: "Discussion",
   },
   poll_list: {
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: "Poll",
+    // type: [mongoose.Schema.Types.ObjectId],
+    // ref: "Poll",
+    type: String,
   },
   enrollments: {
     type: [mongoose.Schema.Types.ObjectId],
     ref: "Enrollment",
   },
+  image: {
+    type: String,
+  },
 });
 
 const Course = mongoose.model("Course", courseSchema);
 
-const createCourse = async (name, lecturer, info, chapters, tags) => {
+const createCourse = async (name, lecturer, info, chapters, tags, image) => {
   var course = new Course({
     name,
     lecturer,
     info,
     chapters,
     tags,
+    image
   });
   const res = await course.save();
   return res;

@@ -9,12 +9,16 @@ const enrollmentSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Course",
     },
+    course_id: {
+      type: String,
+    },
     is_active: {
       type: Boolean,
     },
     notes: {
-      type: [mongoose.Schema.Types.ObjectId],
-      ref: "Note",
+      // type: [mongoose.Schema.Types.ObjectId],
+      // ref: "Note",
+      type: String,
     },
     progress: {
       type: Map,
