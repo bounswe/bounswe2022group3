@@ -17,18 +17,15 @@ const CourseController = {
     const { keyword } = req.body;
     const courses = await CourseModel.find({
       name: { $regex: keyword, $options: "i" },
-    })
-      .populate("name rating image lecturer")
-      .populate({ path: "lecturer" });
+    }).populate("name rating image lecturer");
     return res.status(200).json({ courses });
   },
 
   getCourseDetail: async function (req, res) {
     const { id } = req.params;
-    const course = await CourseModel.findOne({ id })
-      .populate("name info rating lecturer tags chapters image")
-      .populate({ path: "lecturer" })
-      .populate({ path: "chapters", populate: { path: "name" } });
+    const course = await CourseModel.findOne({ id }).populate(
+      "name info rating lecturer tags chapters image"
+    );
     const user = req.auth;
 
     var data = {
