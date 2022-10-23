@@ -18,7 +18,8 @@
         "mongoose": "^6.6.5",
         "morgan-body": "^2.6.8",
         "passport": "^0.6.0",
-        "watch": "^0.13.0"
+        "watch": "^0.13.0",
+        "nodemailer": "^6.8.0"
     },
     "devDependencies": {
         "jest": "^28.1.0",

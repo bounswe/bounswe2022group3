@@ -105,7 +105,7 @@ const UserController = {
                     .json({ message: "The user does not exist." });
             }
 
-            const tokens = await TokensModel.getTokensByEmail(auth.email);
+            const tokens = await TokensModel.getTokensByEmail(email);
             if (!tokens) {
                 return res
                     .status(403)
@@ -237,7 +237,8 @@ const UserController = {
             tokens.confirmation_token = "confirmed"
             tokens.save()
             return res.status(200).json({
-                message: "Access and Refresh Tokens are Updated!",
+                id: user._id,
+                email: email,
                 access_token: new_access_token,
                 refresh_token: new_refresh_token,
             })

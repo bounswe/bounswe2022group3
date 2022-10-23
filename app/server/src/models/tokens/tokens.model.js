@@ -30,7 +30,7 @@ const createToken = async ({ email, access_token, refresh_token, confirmation_to
     }
     tokens.access_token = access_token
     tokens.refresh_token = refresh_token
-    tokens.confirmation = confirmation_token
+    tokens.confirmation_token = confirmation_token
     const res = await tokens.save()
     return res
 }
