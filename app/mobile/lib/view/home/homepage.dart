@@ -40,31 +40,75 @@ Widget homepageView() => ViewModelBuilder<HomeViewModel>.reactive(
                                 ],
                               ),
                             )
-                      : Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Enrolled Courses',
-                              style: TextStyles.subtitle,
-                            ),
-                            const SizedBox(height: 12),
-                            SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Row(children: [...courseService.courses().map((Course c) => courseTile(c))]),
-                            ),
-                            const SizedBox(height: 20),
-                            const Text(
-                              'Top Courses',
-                              style: TextStyles.subtitle,
-                            ),
-                            const SizedBox(height: 12),
-                            SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Row(
-                                children: [...courseService.courses().map((Course c) => courseTile(c))],
+                      : SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Enrolled Courses',
+                                style: TextStyles.subtitle,
                               ),
-                            )
-                          ],
+                              const SizedBox(height: 12),
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(children: [
+                                  ...courseService.courses('Basics of Google').map((Course c) => courseTile(c))
+                                ]),
+                              ),
+                              const SizedBox(height: 20),
+                              const Text(
+                                'Top Courses',
+                                style: TextStyles.subtitle,
+                              ),
+                              const SizedBox(height: 12),
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children: [
+                                    ...courseService.courses('Machine Learning').map((Course c) => courseTile(c))
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                              Text(
+                                'Browse',
+                                style: TextStyles.pageTitle.copyWith(color: Colors.black),
+                              ),
+                              const SizedBox(height: 20),
+                              const Text(
+                                'Computer Sciences',
+                                style: TextStyles.subtitle,
+                              ),
+                              const SizedBox(height: 12),
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children: [
+                                    ...courseService
+                                        .courses('Introduction to Programming with C')
+                                        .map((Course c) => courseTile(c))
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                              const Text(
+                                'Art',
+                                style: TextStyles.subtitle,
+                              ),
+                              const SizedBox(height: 12),
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children: [
+                                    ...courseService
+                                        .courses('Painting Techniques for beginners')
+                                        .map((Course c) => courseTile(c))
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                            ],
+                          ),
                         ),
                 ),
               ),
