@@ -19,7 +19,7 @@ enrollmentRouter.get(
   // validate("getEnrolledCourses"),
   // handleValidation,
   authorization,
-  CourseController.getEnrolledCourses
+  EnrollmentController.getEnrolledCourses
 );
 
 module.exports = enrollmentRouter;

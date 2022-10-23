@@ -23,20 +23,21 @@ const CourseController = {
   getCourses: async function (req, res) {
     try {
       const keyword = req.params.keyword
-      const courses = await CourseModel.find({
+      const courses = await CourseModel.Course.find({
         name: { $regex: keyword, $options: "i" },
-      }).populate("name rating image lecturer");
+      }).populate("name rating image lecturer").exec();
       return res.status(200).json({ courses });
+      
     }
-    catch (e) {
-      res.status(400).send({ "error": e })
+    catch (error) {
+      res.status(400).send({ "error": error.toString() })
     }
   },
 
   getCourseDetail: async function (req, res) {
     try {
       const id = req.params.id
-      const course = await CourseModel.findById(id)
+      const course = await CourseModel.Course.findById(id)
         .populate("name info rating lecturer tags chapters image")
         .exec();
       const user = req.auth;
@@ -44,7 +45,7 @@ const CourseController = {
       let data = {
         course,
       };
-      const enrollingInfo = await EnrollmentModel.find({ course_id: id, user_id: user._id })
+      const enrollingInfo = await EnrollmentModel.Enrollment.find({ course_id: id, user_id: user._id })
       if (enrollingInfo) {
         data.enrolled = true
       } else {
@@ -53,7 +54,7 @@ const CourseController = {
       return res.status(200).json({ data });
     }
     catch (e) {
-      res.status(400).send({ "error": e })
+      res.status(400).send({ "error": e.toString() })
     }
   },
 };

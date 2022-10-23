@@ -21,16 +21,16 @@ const EnrollmentController = {
 
     try {
       const user = req.auth;
-      const enrolled_courses = await EnrollmentModel.find({ user_id: user._id });
+      const enrolled_courses = await EnrollmentModel.Enrollment.find({ user_id: user._id });
       var data = [];
       for (var enrolled_course of enrolled_courses) {
-        var course = await CourseModel.findById(enrolled_course.course_id)
+        var course = await CourseModel.Course.findById(enrolled_course.course_id)
         data.push(course);
       }
       return res.status(200).json({ data });
     }
     catch (e) {
-      res.status(400).send({ "error": e })
+      res.status(400).send({ "error": e.toString() })
     }
   },
 };
