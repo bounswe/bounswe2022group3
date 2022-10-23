@@ -29,5 +29,12 @@ userRouter.post(
     handleValidation,
     UserController.refresh_tokens
 );
+// TODO: Check if conf token expired, if so send new one
+userRouter.post(
+    "/confirm-email",
+    validate("confirm-email"),
+    handleValidation,
+    UserController.confirmEmail
+);
 
 module.exports = userRouter;

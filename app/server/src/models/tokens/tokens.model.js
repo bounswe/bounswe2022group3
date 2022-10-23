@@ -6,13 +6,14 @@ const tokenSchema = new mongoose.Schema({
         type: String
     },
     access_token: {
-        unique: true,
-        type: String
+        type: String // empty or unique
     },
     refresh_token: {
-        unique: true,
         type: String
     },
+    confirmation_token: {
+        type: String
+    }
 },
     {
         timestamps: true
@@ -20,7 +21,7 @@ const tokenSchema = new mongoose.Schema({
 );
 const Tokens = mongoose.model('Tokens', tokenSchema);
 
-const createToken = async ({ email, access_token, refresh_token }) => {
+const createToken = async ({ email, access_token, refresh_token, confirmation_token }) => {
     let tokens = await getTokensByEmail(email);
     if (!tokens) {
         tokens = new Tokens({
@@ -29,6 +30,7 @@ const createToken = async ({ email, access_token, refresh_token }) => {
     }
     tokens.access_token = access_token
     tokens.refresh_token = refresh_token
+    tokens.confirmation_token = confirmation_token
     const res = await tokens.save()
     return res
 }

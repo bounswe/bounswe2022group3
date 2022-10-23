@@ -1,12 +1,16 @@
 const UserModel = require("../../models/user/user.model");
 const TokensModel = require("../../models/tokens/tokens.model");
 const auth = require("../../services/auth");
+const { sendEmail } = require("../../services/email/email")
 const jwt = require("jsonwebtoken")
 const crypto = require("crypto");
 const jwt_ac_secret = process.env.JWT_AC_KEY
 const jwt_ref_secret = process.env.JWT_REF_KEY
+const jwt_conf_secret = jwt_ref_secret
 const access_jwtExpiry = '8h'
 const refresh_jwtExpiry = '7d'
+const confirmation_token_expiry = '1d'
+
 
 
 
@@ -25,8 +29,11 @@ const UserController = {
             // Proceeding with signup
             // Hash the password
             passwd_data = auth.hashPassword(password)
+            const confirmationToken = await auth.generateToken(email, jwt_conf_secret, confirmation_token_expiry) 
+
             token_data = {
                 email: email,
+                confirmation_token: confirmationToken
             };
             const response_tokens = (await TokensModel.createToken(token_data));
             // Save all data in DB
@@ -41,7 +48,36 @@ const UserController = {
             }
             const response = (await UserModel.createUser(user_data));
             if (response.createdAt) {
-                // TODO: User created, we must send confirmation email!
+
+                try {
+                    sendEmail(
+                        email,
+                        "Confirmation Email for Bucademy",
+                        {
+                            first_name: name,
+                            last_name: surname,
+                            token: confirmationToken,
+                        },
+                        function (err) {
+                            if (err) {
+                                res.status(500).json({
+                                    message:
+                                        "Email could not be sent.",
+                                });
+                            }
+                            res.status(200).json({
+                                message:
+                                    "A verification email has been sent to " +
+                                    email +
+                                    ". The link will be expired after one day.",
+                            });
+                        }
+                    )
+                }
+                catch (e) {
+                    res.status(400).send({ "error": e })
+                }
+
                 return res.status(201).json({
                     created_at: response.createdAt,
                     message: `Created the user with ${email}`,
@@ -68,7 +104,6 @@ const UserController = {
                     .status(403)
                     .json({ message: "The user does not exist." });
             }
-
             // Hash the req password, compare with the one in db
             const comparison_result = auth.isPasswordCorrect(user.password_hash, user.password_salt, user.password_iter, password)
             if (!comparison_result) {
@@ -76,17 +111,27 @@ const UserController = {
                     message: "Incorrect Password !",
                 });
             }
-
             // If they match, create access token and refresh token, return them 
+
+            const tokens = await TokensModel.getTokensByEmail(email);
+            if (!tokens) {
+                return res
+                    .status(403)
+                    .json({ message: "The user is not registered." });
+            } else if (tokens.confirmation_token != "confirmed") {
+                return res
+                    .status(403)
+                    .json({ message: "The user has not confirmed their email registered." });
+            }
 
             const access_token = await auth.generateToken(email, jwt_ac_secret, access_jwtExpiry)
             const refresh_token = await auth.generateToken(email, jwt_ref_secret, refresh_jwtExpiry)
-
             // Save them to DB
             token_data = {
                 email: email,
                 access_token: access_token,
                 refresh_token: refresh_token,
+                confirmation_token: "confirmed",
             };
             const response = (await TokensModel.createToken(token_data));
             if (response.createdAt) {
@@ -152,7 +197,7 @@ const UserController = {
         }
     },
     logout: async function (req, res) {
-        const { auth } = req.body;
+        const auth = req.auth;
         try {
             // Remove access and refresh tokens upon logging out
             const tokens = await TokensModel.getTokensByEmail(auth.email);
@@ -162,6 +207,51 @@ const UserController = {
             return res.status(200).json({
                 message: "Logout is successful!",
             })
+        } catch (error) {
+            return res.status(400).json({
+                message: "Failed to logout!",
+                error: error.toString()
+            });
+        }
+    },
+
+    confirmEmail: async function (req, res) {
+        const { email, code } = req.body;
+        try {
+
+            const user = await UserModel.getUserByEmail(email);
+            if (!user) {
+                return res
+                    .status(403)
+                    .json({ message: "The user does not exist." });
+            }
+
+            const tokens = await TokensModel.getTokensByEmail(email);
+            if (!tokens) {
+                return res
+                    .status(400)
+                    .json({ message: "The token does not exist." });
+            }
+
+            if (tokens.confirmation_token != code) {
+                return res.status(400).json({
+                    message: "Confirmation token does not match.",
+                })
+            }
+
+            const new_access_token = await auth.generateToken(email, jwt_ac_secret, access_jwtExpiry)
+            const new_refresh_token = await auth.generateToken(email, jwt_ref_secret, refresh_jwtExpiry)
+            tokens.access_token = new_access_token
+            tokens.refresh_token = new_refresh_token
+            tokens.confirmation_token = "confirmed"
+            tokens.save()
+            return res.status(200).json({
+                id: user._id,
+                email: email,
+                access_token: new_access_token,
+                refresh_token: new_refresh_token,
+            })
+
         } catch (error) {
             return res.status(400).json({
                 message: "Failed to logout!",
