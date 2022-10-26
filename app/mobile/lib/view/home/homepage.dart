@@ -1,7 +1,7 @@
+import 'package:bucademy/classes/course/course.dart';
 import 'package:bucademy/resources/custom_colors.dart';
 import 'package:bucademy/resources/constants.dart';
 import 'package:bucademy/resources/text_styles.dart';
-import 'package:bucademy/services/course_service.dart';
 import 'package:bucademy/services/locator.dart';
 import 'package:bucademy/view/home/appbar.dart';
 import 'package:bucademy/view/home/course_tile.dart';
