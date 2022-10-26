@@ -15,7 +15,7 @@ courseRouter.post(
 );
 
 courseRouter.get(
-  "/getCourses/:keyword",
+  "/getCourses/:keyword?",
   // validate("getCourses"),
   // handleValidation,
   authorization,
