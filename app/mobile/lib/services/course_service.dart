@@ -10,16 +10,23 @@ class Course {
   Course(this.title, this.body, {this.image, this.rating, this.teacher});
 }
 
+List<Course> mockCourses = [];
+
 @lazySingleton
 class CourseService {
-  List<Course> courses() {
-    return [
+  courses(String title) {
+    List<Course> temp = [
       for (var i = 0; i < 100; ++i)
-        Course("Introduction to Data Science with Python",
+        Course('$title - ${i.toString()}',
             "Interested in learning more about data science, but don’t know where to start?" * 10,
-            image: 'https://cdn.educba.com/academy/wp-content/uploads/2019/03/Introduction-To-Data-Science.jpg.webp',
-            teacher: "Andrew mg",
-            rating: 4.3)
+            image: 'https://cdn-icons-png.flaticon.com/512/2991/2991148.png', teacher: "Andrew mg", rating: 4.3)
     ];
+    mockCourses.addAll(temp);
+    return temp;
+  }
+
+  Future<List<Course>> searchCourse(String keyword) async {
+    await Future.delayed(const Duration(milliseconds: 300));
+    return mockCourses.where((element) => (element.title.contains(keyword) || element.body.contains(keyword))).toList();
   }
 }
