@@ -69,7 +69,7 @@ function hashPassword(password) {
         };
     } catch (error) {
         return {
-            error: error
+            error: error.toString()
         }
     }
 }
@@ -79,7 +79,7 @@ function isPasswordCorrect(savedHash, savedSalt, savedIterations, passwordAttemp
         var trial = crypto.pbkdf2Sync(passwordAttempt, savedSalt, Number(savedIterations), keylen = 512, 'sha256').toString('hex');
     } catch (error) {
         return {
-            error: error
+            error: error.toString()
         }
     }
     return savedHash == trial;
@@ -99,7 +99,7 @@ async function generateToken(email, secret, expiry) {
         return created_token
     } catch (error) {
         return {
-            error: error
+            error: error.toString()
         }
     }
 }

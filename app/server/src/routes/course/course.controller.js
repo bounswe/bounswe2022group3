@@ -14,14 +14,14 @@ const CourseController = {
         image
       );
       res.status(201).send({ course });
-    } catch (e) {
-      res.status(400).send({ error: e });
+    } catch (error) {
+      res.status(400).send({ error: error.toString() });
     }
   },
 
   getCourses: async function (req, res) {
     try {
-      const { keyword } = req.params;
+      const keyword = req.params.keyword;
       var courses;
       if (keyword) {
         courses = await CourseModel.Course.find({
