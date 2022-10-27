@@ -9,11 +9,11 @@ import { API_URL } from "../../next.config";
 
 export default function register() {
     const SignupSchema = Yup.object().shape({
-        first_name: Yup.string()
+        name: Yup.string()
             .min(2, "Too Short")
             .max(50, "Too Long")
             .required("Required"),
-        last_name: Yup.string()
+        surname: Yup.string()
             .min(2, "Too Short")
             .max(50, "Too Long")
             .required("Required"),
@@ -31,11 +31,12 @@ export default function register() {
     });
 
     const handleSubmit = async (values) => {
-        // make request to register endpoint in backend
-        // use axios to make request, 
-        // API_URL is base url of server,
-        // redirect user to login page on success.
-        console.log(values)
+        const { password2, ...payload } = values;
+        try {
+            await axios.post(API_URL + "/user/register", payload);
+        } catch (err) {
+            console.log(err);
+        }
     };
 
     return (
@@ -43,8 +44,8 @@ export default function register() {
             <h1>Welcome!</h1>
             <Formik
                 initialValues={{
-                    first_name: "",
-                    last_name: "",
+                    name: "",
+                    surname: "",
                     email: "",
                     password: "",
                     password2: "",
@@ -55,27 +56,27 @@ export default function register() {
                 {({ errors, touched }) => (
                     <Form className={styles.form}>
                         <Field
-                            id="first_name"
-                            name="first_name"
+                            id="name"
+                            name="name"
                             type="text"
                             placeholder="First Name"
                             className={styles.input}
                         ></Field>
-                        {errors.first_name && touched.first_name && (
+                        {errors.name && touched.name && (
                             <div className={styles.error}>
-                                {errors.first_name}
+                                {errors.name}
                             </div>
                         )}
                         <Field
-                            id="last_name"
-                            name="last_name"
+                            id="surname"
+                            name="surname"
                             type="text"
                             placeholder="Last Name"
                             className={styles.input}
                         ></Field>
-                        {errors.last_name && touched.last_name && (
+                        {errors.surname && touched.surname && (
                             <div className={styles.error}>
-                                {errors.last_name}
+                                {errors.surname}
                             </div>
                         )}
                         <Field
