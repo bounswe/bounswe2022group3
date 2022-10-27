@@ -16,8 +16,8 @@ enrollmentRouter.post(
 
 enrollmentRouter.get(
   "/getEnrolledCourses",
-  // validate("getEnrolledCourses"),
-  // handleValidation,
+  //validate("getEnrolledCourses"),
+  //handleValidation,
   authorization,
   EnrollmentController.getEnrolledCourses
 );

@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const PersonalInfoModel = require("../../models/personalInfo/personalInfo.model");
 
 const userSchema = new mongoose.Schema({
     email: {
@@ -27,7 +28,7 @@ const userSchema = new mongoose.Schema({
     personal_info:
     {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "PersonalInfo"
+        ref: "personal_info"
     },
     enrollments:
     [{
@@ -87,23 +88,11 @@ const createUser = async ({ email, name, surname, password_hash, password_salt, 
         password_salt: password_salt,
         password_iter: password_iter,
         tokens: tokens
-    })
+    });
     // After profile branch merged, add here
-    ```
-    const createPersonalInfo = async () => {
-        var user = new User({
-            email: email,
-            name: name,
-            surname: surname,
-            password_hash: password_hash,
-            password_salt: password_salt,
-            password_iter: password_iter,
-            tokens: tokens
-        })
-        const PersonalInfoModel = require("../../models/personalInfo/personalInfo.model");
-        const personalInfo = (await PersonalInfoModel.createPersonalInfo());
-        user.personal_info = personalInfo._id
-    ```
+
+    const personalInfo = (await PersonalInfoModel.createPersonalInfo());
+    user.personal_info = personalInfo._id
     const res = await user.save()
     return res
 }
@@ -128,5 +117,14 @@ const getPopulatedTokens = async (user_id) => {
     return User.findById(user_id)
         .populate("tokens").exec()
 }
+const getPopulatedPersonalInfo = async (user_id) => {
+    return User.findById(user_id)
+        .populate({
+            path: 'personal_info',
+            populate: {
+              path: 'badges',
+            }
+          }).exec()
+}
 
-module.exports = { User, createUser, deleteUser, getUserByEmail, getUserByID, getPopulatedTokens };
+module.exports = { User, createUser, deleteUser, getUserByEmail, getUserByID, getPopulatedTokens, getPopulatedPersonalInfo };

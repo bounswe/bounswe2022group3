@@ -6,13 +6,17 @@ const { validate } = require("./userProfile.validate");
 const userProfileRouter = express.Router();
 
 userProfileRouter.post(
-    "/update",
+    "/updatePersonalInfo",
+    validate("updatePersonalInfo"),
+    handleValidation,
     UserProfileController.updatePersonalInfo
-)
+);
 
 userProfileRouter.get(
-    "/getProfile",
+    "/getProfile/:id",
+    //validate("getProfile"),
+    //handleValidation,
     UserProfileController.getProfile
-)
+);
 
-module.exports = userProfileRouter
+module.exports = userProfileRouter;

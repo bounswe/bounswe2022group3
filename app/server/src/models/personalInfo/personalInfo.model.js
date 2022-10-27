@@ -40,7 +40,7 @@ const personalInfoSchema = new mongoose.Schema({
     }]
 });
 
-const PersonalInfo = mongoose.model('personalInfo', personalInfoSchema);
+const PersonalInfo = mongoose.model('personal_info', personalInfoSchema);
 
 const createPersonalInfo = async () => {
     var info = new PersonalInfo()
