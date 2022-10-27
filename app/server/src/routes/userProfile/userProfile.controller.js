@@ -1,56 +1,39 @@
-const userProfileModel = require("../../models/userProfile/userProfile.model");
+const userModel = require("../../models/user/user.model");
 const personalInfoModel = require("../../models/personalInfo/personalInfo.model");
-const badgeModel = require("../../models/badges/badges.model");
 const mongoose = require("mongoose");
 
 const UserProfileController = {
     
-    postCreate: async function (req,res) {
+    updatePersonalInfo: async function (req,res) {
 
         try{
-            const {name, surname, email} = req.query
-            const [idProfile, profile] = await userProfileModel.createUserProfile(name, surname, email, Date.now())
-            const [idInfo, info] = await personalInfoModel.createPersonalInfo(idProfile)
-            profile.personal_info = idInfo
-            profile.save()
-            res.status(201).send({"message": "Created user profile successfully"})
+            const {id, bio} = req.body
+            console.log(id)
+            console.log(bio)
+            const profile = await userModel.getUserByID(id)
+            const personalInfoId = profile.personal_info 
+            console.log(personalInfoId)
+            personalInfoModel.updateBio(personalInfoId, bio)
+            res.status(201).send({"message": "Updated bio successfully"})
 
         }   
         catch (e) {
-            res.status(400).send({"error": e})
+            res.status(400).send({"error": e.toString()})
         }
     }, 
 
+    
     getProfile: async function (req,res) {
             try{
-                const id = req.params.id
-                const profile = await userProfileModel.getUserProfile(id)
-                const info = await personalInfoModel.getPersonalInfo(profile.personal_info)
-                const badges = []
+                const {id} = req.body
+                console.log(id)
+                // Need a new function in user model that returns populated versions of personal info and badges
+                const profile = await userModel.getUserByID(id)
+                res.status(201).send({profile})  
 
-                for(let x of info.badges){
-                    const badge = await badgeModel.getBadge(x)
-                    badges.push({"id": badge._id, "title": badge.title, "description": badge.description})
-                }
-
-                const valueToSend = 
-                {
-                "id": profile._id, 
-                "email": profile.email,
-                "name": profile.name, 
-                "surname": profile.surname,
-                "personal info": {
-                    "bio": info.bio,
-                    "badges": badges,
-                    "interests": info.interests
-                },
-                "is_private": profile.is_private 
-                }
-                res.status(201).send({"message": valueToSend})
             }
             catch (e) {
-                console.log("Cannot get")
-                res.status(400).send({"error": e })
+                res.status(400).send({"error": e.toString() })
             }
 
     }

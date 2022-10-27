@@ -2,9 +2,6 @@ const mongoose = require("mongoose");
 
 
 const personalInfoSchema = new mongoose.Schema({
-    user_profile_id:{
-        type: mongoose.Schema.Types.ObjectId,
-    },
     bio:
     {
         type: String
@@ -39,18 +36,16 @@ const personalInfoSchema = new mongoose.Schema({
     }],
     badges:
     [{
-        type: mongoose.Schema.Types.ObjectId
+        type: mongoose.Schema.Types.ObjectId, ref: "Badge"
     }]
 });
 
 const PersonalInfo = mongoose.model('personalInfo', personalInfoSchema);
 
-const createPersonalInfo = async (id) => {
+const createPersonalInfo = async () => {
     var info = new PersonalInfo()
-    info.user_profile_id = id
-    info.bio = ""
     const res = await info.save()
-    return [info._id, res]
+    return res
 }
 
 const getPersonalInfo = async (id) => {
@@ -58,4 +53,9 @@ const getPersonalInfo = async (id) => {
     return res
 }
 
-module.exports = { PersonalInfo, createPersonalInfo, getPersonalInfo };
+const updateBio = async (id, bio) => {
+    const res = await PersonalInfo.findByIdAndUpdate(id, {"bio": bio})
+    return res
+}
+
+module.exports = { PersonalInfo, createPersonalInfo, getPersonalInfo, updateBio };
