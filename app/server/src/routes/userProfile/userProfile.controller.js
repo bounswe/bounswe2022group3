@@ -35,7 +35,7 @@ const UserProfileController = {
 
                 const valueToSend = 
                 {
-                "id": profile.user_profile_id, 
+                "id": profile._id, 
                 "email": profile.email,
                 "name": profile.name, 
                 "surname": profile.surname,

@@ -1,10 +1,6 @@
 const mongoose = require("mongoose");
 
 const userProfileSchema = new mongoose.Schema({
-    user_profile_id:
-    {
-        type: mongoose.Schema.Types.ObjectId
-    },
     name:
     {
         type: String,
@@ -83,11 +79,9 @@ const createUserProfile = async (name, surname, email, created_at) => {
         is_confirmed: false,
         failed_login_count: 0
         })
-
-    profile.user_profile_id = profile._id
  
     var res = await profile.save()
-    return [profile.user_profile_id, res]
+    return [profile._id, res]
 }
 
 const getUserProfile = async (id) => {

@@ -2,10 +2,6 @@ const mongoose = require("mongoose");
 
 
 const personalInfoSchema = new mongoose.Schema({
-    personal_info_id:
-    {
-        type: mongoose.Schema.Types.ObjectId
-    },
     user_profile_id:{
         type: mongoose.Schema.Types.ObjectId,
     },
@@ -33,6 +29,10 @@ const personalInfoSchema = new mongoose.Schema({
     {
         type: mongoose.Types.Decimal128
     },
+    bio:
+    {
+        type: String
+    },
     interests:
     [{
         type: String
@@ -47,10 +47,10 @@ const PersonalInfo = mongoose.model('personalInfo', personalInfoSchema);
 
 const createPersonalInfo = async (id) => {
     var info = new PersonalInfo()
-    info.personal_info_id = info._id
     info.user_profile_id = id
+    info.bio = ""
     const res = await info.save()
-    return [info.personal_info_id, res]
+    return [info._id, res]
 }
 
 const getPersonalInfo = async (id) => {

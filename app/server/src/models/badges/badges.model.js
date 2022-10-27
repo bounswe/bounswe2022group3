@@ -19,8 +19,4 @@ const getBadge = async (id) => {
   return badge
 }
 
-<<<<<<< HEAD
 module.exports = { Badge, createBadge, getBadge };
-=======
-module.exports = { Badge, createBadge, getBadge };
->>>>>>> a03abe4bb527745839e800de5aae6e1373ee7a1a
