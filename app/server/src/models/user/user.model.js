@@ -24,6 +24,53 @@ const userSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Tokens"
     },
+    personal_info:
+    {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "PersonalInfo"
+    },
+    enrollments:
+    [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Enrollment"
+    }],
+    created_courses:
+    [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Course"
+    }],
+    followed_users:
+    [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    }],
+    follower_users:
+    [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    }],
+    blocked_users:
+    [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    }],
+    is_confirmed:
+    {
+        type: Boolean
+    },
+    is_banned:
+    {
+        type: Boolean
+    },
+    failed_login_count: // TODO: Integrate this such that failed logins would require user to recreate their password.
+    {
+        type: Number,
+    },
+    is_private:
+    {
+        type: Boolean,
+        default: false
+    }
 },
     {
         timestamps: true
@@ -41,6 +88,22 @@ const createUser = async ({ email, name, surname, password_hash, password_salt, 
         password_iter: password_iter,
         tokens: tokens
     })
+    // After profile branch merged, add here
+    ```
+    const createPersonalInfo = async () => {
+        var user = new User({
+            email: email,
+            name: name,
+            surname: surname,
+            password_hash: password_hash,
+            password_salt: password_salt,
+            password_iter: password_iter,
+            tokens: tokens
+        })
+        const PersonalInfoModel = require("../../models/personalInfo/personalInfo.model");
+        const personalInfo = (await PersonalInfoModel.createPersonalInfo());
+        user.personal_info = personalInfo._id
+    ```
     const res = await user.save()
     return res
 }
