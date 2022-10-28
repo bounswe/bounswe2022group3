@@ -10,22 +10,22 @@ courseRouter.post(
   "/",
   validate("createCourse"),
   handleValidation,
-  // authorization,
+  authorization,
   CourseController.createCourse
 );
 
 courseRouter.get(
   "/getCourses/:keyword?",
-  // validate("getCourses"),
-  // handleValidation,
+  validate("getCourses"),
+  handleValidation,
   authorization,
   CourseController.getCourses
 );
 
 courseRouter.get(
   "/:id",
-  // validate("getCourseDetail"),
-  // handleValidation,
+  validate("getCourseDetail"),
+  handleValidation,
   authorization,
   CourseController.getCourseDetail
 );
