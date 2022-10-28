@@ -52,7 +52,7 @@ Widget homepageView() => ViewModelBuilder<HomeViewModel>.reactive(
                               SingleChildScrollView(
                                 scrollDirection: Axis.horizontal,
                                 child: Row(children: [
-                                  ...courseService.courses('Basics of Google').map((Course c) => courseTile(c))
+                                  ...courseService.courses('Basics of Google').map((Course c) => courseTile(c, context))
                                 ]),
                               ),
                               const SizedBox(height: 20),
@@ -65,7 +65,7 @@ Widget homepageView() => ViewModelBuilder<HomeViewModel>.reactive(
                                 scrollDirection: Axis.horizontal,
                                 child: Row(
                                   children: [
-                                    ...courseService.courses('Machine Learning').map((Course c) => courseTile(c))
+                                    ...courseService.courses('Machine Learning').map((Course c) => courseTile(c, context))
                                   ],
                                 ),
                               ),
@@ -86,7 +86,7 @@ Widget homepageView() => ViewModelBuilder<HomeViewModel>.reactive(
                                   children: [
                                     ...courseService
                                         .courses('Introduction to Programming with C')
-                                        .map((Course c) => courseTile(c))
+                                        .map((Course c) => courseTile(c, context))
                                   ],
                                 ),
                               ),
@@ -102,7 +102,7 @@ Widget homepageView() => ViewModelBuilder<HomeViewModel>.reactive(
                                   children: [
                                     ...courseService
                                         .courses('Painting Techniques for beginners')
-                                        .map((Course c) => courseTile(c))
+                                        .map((Course c) => courseTile(c, context))
                                   ],
                                 ),
                               ),
