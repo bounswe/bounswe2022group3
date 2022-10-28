@@ -2,6 +2,7 @@
 
 import 'package:bucademy/classes/user/login.dart';
 import 'package:bucademy/classes/user/refresh.dart';
+import 'package:bucademy/classes/user/user.dart';
 import 'package:bucademy/services/locator.dart';
 import 'package:bucademy/services/persistence_service.dart';
 import 'package:dio/dio.dart';
@@ -9,6 +10,7 @@ import 'package:injectable/injectable.dart';
 
 @lazySingleton
 class UserService {
+  User? user;
   Future<void> login({required String email, required String password}) async {
     try {
       Response res = await dioService.dio.post(
@@ -22,6 +24,8 @@ class UserService {
         persistenceService.set(PersistenceKeys.email, login.email),
         persistenceService.set(PersistenceKeys.accessToken, login.access_token),
         persistenceService.set(PersistenceKeys.refreshToken, login.refresh_token),
+        persistenceService.set(PersistenceKeys.name, login.name),
+        persistenceService.set(PersistenceKeys.surname, login.surname),
       ]);
       print('Logged inn, ${await persistenceService.get(PersistenceKeys.refreshToken)}');
     } catch (e) {
@@ -42,6 +46,8 @@ class UserService {
         persistenceService.set(PersistenceKeys.email, login.email),
         persistenceService.set(PersistenceKeys.accessToken, login.access_token),
         persistenceService.set(PersistenceKeys.refreshToken, login.refresh_token),
+        persistenceService.set(PersistenceKeys.name, login.name),
+        persistenceService.set(PersistenceKeys.surname, login.surname),
       ]);
     } catch (e) {
       print(e);
@@ -86,6 +92,12 @@ class UserService {
         persistenceService.set(PersistenceKeys.accessToken, refresh.access_token),
         persistenceService.set(PersistenceKeys.refreshToken, refresh.refresh_token),
       ]);
+      user = User(
+        await persistenceService.get(PersistenceKeys.name),
+        await persistenceService.get(PersistenceKeys.surname),
+        email,
+        "",
+      );
     } catch (e) {
       print(e);
     }

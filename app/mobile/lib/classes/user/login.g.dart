@@ -11,6 +11,8 @@ Login _$LoginFromJson(Map<String, dynamic> json) => Login(
       json['email'] as String,
       json['access_token'] as String,
       json['refresh_token'] as String,
+      json['name'] as String,
+      json['surname'] as String,
     );
 
 Map<String, dynamic> _$LoginToJson(Login instance) => <String, dynamic>{
@@ -18,4 +20,6 @@ Map<String, dynamic> _$LoginToJson(Login instance) => <String, dynamic>{
       'email': instance.email,
       'access_token': instance.access_token,
       'refresh_token': instance.refresh_token,
+      'name': instance.name,
+      'surname': instance.surname,
     };

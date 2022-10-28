@@ -1,6 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-enum PersistenceKeys { accessToken, refreshToken, email }
+enum PersistenceKeys { accessToken, refreshToken, email, name, surname }
 
 extension PersistenceKeysExtension on PersistenceKeys {
   String get name {
@@ -11,6 +11,10 @@ extension PersistenceKeysExtension on PersistenceKeys {
         return 'refresh_token';
       case PersistenceKeys.email:
         return 'email';
+      case PersistenceKeys.name:
+        return 'name';
+      case PersistenceKeys.surname:
+        return 'surname';
     }
   }
 }
