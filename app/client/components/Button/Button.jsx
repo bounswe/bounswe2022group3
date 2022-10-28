@@ -1,8 +1,8 @@
 import styles from './Button.module.scss'
 
-function Button({type="button", children}) {
+function Button({children, ...props}) {
   return (
-    <button type={type} className={styles.button}>
+    <button type="button" {...props} className={styles.button + ((" " + props.className) || "")}>
         {children}
     </button>
   )
