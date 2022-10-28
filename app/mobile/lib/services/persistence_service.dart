@@ -32,4 +32,8 @@ class PersistenceService {
         throw "Unsupported type for persistence service";
     }
   }
+
+  Future<void> clear() async {
+    await (await _instance()).clear();
+  }
 }

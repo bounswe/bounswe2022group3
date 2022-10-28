@@ -7,14 +7,13 @@ import 'package:injectable/injectable.dart';
 class ApiInterceptors extends Interceptor {
   @override
   Future<void> onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
-    print('requesting');
     String token = await persistenceService.get(PersistenceKeys.accessToken);
-
-    options.headers.addAll({"Authorization": "Bearer $token"});
-    // do something befor e request is sent
+    if ((await persistenceService.get(PersistenceKeys.accessToken) as String).isNotEmpty) {
+      options.headers.addAll({"Authorization": "Bearer $token"});
+    }
     print(
         "${options.method} | ${options.baseUrl}  | ${options.headers} | ${options.path} | ${options.uri} | ${options.data}");
-    super.onRequest(options, handler); //add this line
+    super.onRequest(options, handler);
   }
 }
 
