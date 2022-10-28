@@ -1,19 +1,20 @@
-import 'package:bucademy/resources/colors.dart';
+import 'package:bucademy/resources/custom_colors.dart';
 import 'package:bucademy/resources/constants.dart';
 import 'package:bucademy/resources/text_styles.dart';
 import 'package:bucademy/services/course_service.dart';
 import 'package:bucademy/services/locator.dart';
-import 'package:bucademy/view/home/searchBar.dart';
-import 'package:bucademy/view/widgets/profile_picture.dart';
+import 'package:bucademy/view/home/appbar.dart';
+import 'package:bucademy/view/home/course_tile.dart';
+import 'package:bucademy/view/home/search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 Widget homepageView() => ViewModelBuilder<HomeViewModel>.reactive(
       viewModelBuilder: () => HomeViewModel(),
       builder: (context, viewModel, child) => Scaffold(
-          // backgroundColor: Colors.amber,
           appBar: appBar(),
           body: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8) + const EdgeInsets.only(bottom: 12),
@@ -23,83 +24,119 @@ Widget homepageView() => ViewModelBuilder<HomeViewModel>.reactive(
                       bottomLeft: Radius.circular(Constants.borderRadius),
                       bottomRight: Radius.circular(Constants.borderRadius),
                     )),
-                child: searchBar(),
+                child: searchBar(viewModel.search),
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 12.0, top: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'My Courses',
-                      style: TextStyles.subtitle,
-                    ),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          ...courseService.courses().map(
-                                (Course c) => Container(
-                                  width: 160,
-                                  padding: const EdgeInsets.only(right: 12.0),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Image.network(
-                                        c.image ??
-                                            'https://cdn.educba.com/academy/wp-content/uploads/2019/03/Introduction-To-Data-Science.jpg.webp',
-                                        height: 120,
-                                        fit: BoxFit.cover,
-                                      ),
-                                      Text(
-                                        c.title,
-                                        maxLines: 2,
-                                        textAlign: TextAlign.center,
-                                      )
-                                    ],
-                                  ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 12.0, top: 10),
+                  child: viewModel.isSearchScreen
+                      ? viewModel.isLoading
+                          ? const Center(child: CircularProgressIndicator())
+                          : SingleChildScrollView(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ...viewModel.searchResults.map((Course c) => searchCourseTile(c)),
+                                ],
+                              ),
+                            )
+                      : SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Enrolled Courses',
+                                style: TextStyles.subtitle,
+                              ),
+                              const SizedBox(height: 12),
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(children: [
+                                  ...courseService.courses('Basics of Google').map((Course c) => courseTile(c))
+                                ]),
+                              ),
+                              const SizedBox(height: 20),
+                              const Text(
+                                'Top Courses',
+                                style: TextStyles.subtitle,
+                              ),
+                              const SizedBox(height: 12),
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children: [
+                                    ...courseService.courses('Machine Learning').map((Course c) => courseTile(c))
+                                  ],
                                 ),
                               ),
-                        ],
-                      ),
-                    )
-                  ],
+                              const SizedBox(height: 20),
+                              Text(
+                                'Browse',
+                                style: TextStyles.pageTitle.copyWith(color: Colors.black),
+                              ),
+                              const SizedBox(height: 20),
+                              const Text(
+                                'Computer Sciences',
+                                style: TextStyles.subtitle,
+                              ),
+                              const SizedBox(height: 12),
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children: [
+                                    ...courseService
+                                        .courses('Introduction to Programming with C')
+                                        .map((Course c) => courseTile(c))
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                              const Text(
+                                'Art',
+                                style: TextStyles.subtitle,
+                              ),
+                              const SizedBox(height: 12),
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children: [
+                                    ...courseService
+                                        .courses('Painting Techniques for beginners')
+                                        .map((Course c) => courseTile(c))
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                            ],
+                          ),
+                        ),
                 ),
               ),
             ],
           )),
     );
 
-AppBar appBar() {
-  return AppBar(
-    elevation: 0,
-    backgroundColor: CustomColors.main,
-    shadowColor: CustomColors.main,
-    foregroundColor: CustomColors.main,
-    leading: GestureDetector(
-      child: const Icon(
-        Icons.menu,
-        color: Colors.white,
-      ),
-      onTap: () {},
-    ),
-    title: const Text(
-      "Hello, Can!",
-      style: TextStyles.pageTitle,
-    ),
-    centerTitle: false,
-    actions: [
-      Padding(
-        padding: const EdgeInsets.only(right: 20),
-        child: profilePicture(imagePath: 'https://randomuser.me/api/portraits/men/40.jpg'),
-      )
-    ],
-  );
-}
-
 // ViewModel
 class HomeViewModel extends ChangeNotifier {
+  List<Course> searchResults = [];
   String? title;
   bool isLoading = false;
+  bool isSearchScreen = false;
+
+  Future<void> search(String keyword) async {
+    bool newState = keyword.isNotEmpty;
+    if (newState != isSearchScreen) {
+      isSearchScreen = newState;
+      notifyListeners();
+    }
+
+    if (keyword.length <= 3) return;
+
+    isLoading = true;
+    notifyListeners();
+
+    searchResults = await courseService.searchCourse(keyword);
+    isLoading = false;
+    notifyListeners();
+  }
 }

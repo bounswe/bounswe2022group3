@@ -22,4 +22,17 @@ class TextStyles {
     fontStyle: FontStyle.normal,
     // fontSize: 16.0,
   );
+
+  static TextStyle bodyWhite = const TextStyle(
+    color: Colors.white,
+  );
+
+  static TextStyle bodyBlack = const TextStyle(
+    color: Colors.black,
+  );
+
+  static TextStyle infoGrey = const TextStyle(
+    color: Colors.grey,
+    fontSize: 12,
+  );
 }

@@ -41,7 +41,13 @@ const authorization = async (req, res, next) => {
                     message: "This token is deprecated, user has been logged-out or has a new token now!",
                 });
             }
-            req.auth = user
+            req.auth = {
+                id: user._id,
+                email: user.email,
+                name: user.name,
+                surname: user.surname,
+                createdAt: user.createdAt
+            }
         }
         else {
             return res.status(400).json({
