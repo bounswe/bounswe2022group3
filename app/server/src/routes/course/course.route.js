@@ -16,16 +16,12 @@ courseRouter.post(
 
 courseRouter.get(
   "/getCourses/:keyword?",
-  validate("getCourses"),
-  handleValidation,
   authorization,
   CourseController.getCourses
 );
 
 courseRouter.get(
   "/:id",
-  validate("getCourseDetail"),
-  handleValidation,
   authorization,
   CourseController.getCourseDetail
 );
