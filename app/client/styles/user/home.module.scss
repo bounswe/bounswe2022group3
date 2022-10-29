@@ -1,0 +1,13 @@
+@import "../variables.scss";
+
+.courseListContainer {
+    display: flex;
+    flex-direction: row;
+    padding: 40px;
+    flex-wrap: wrap;
+    justify-content: center;
+    background-color: #d2d9f2;
+    height: 100%;
+    width: 100%;
+}
+

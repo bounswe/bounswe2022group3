@@ -4,11 +4,11 @@ import 'package:bucademy/view/intro/intro.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
-void main() {
+Future<void> main() async {
   configureDependencies();
   navigatorService.controller = PersistentTabController(initialIndex: 0);
   WidgetsFlutterBinding.ensureInitialized();
-
+  await userService.login(email: "your_email", password: "your_password");
   runApp(const MyApp());
 }
 

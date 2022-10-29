@@ -1,20 +1,20 @@
-import 'package:bucademy/classes/user/user.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-part 'content.g.dart';
+part 'chapter.g.dart';
 
 @JsonSerializable()
 class Chapter {
-  final String chapter_name;
+  @JsonKey(name: 'chapter_name')
+  final String name;
+
   @JsonKey(name: '_id')
-  final String chapter_id;
-  final List<String> chapter_badge;
-  final List<String> content;
-  // final DateTime createdAt;
+  final String id;
 
-  Course(this.name, this.id, this.info, this.tags, this.badges, this.image, this.lecturer);
+  @JsonKey(name: 'content')
+  final List<String> cwontentIds;
 
-  factory Course.fromJson(Map<String, dynamic> json) => _$ContentFromJson(json);
+  Chapter(this.name, this.id, this.cwontentIds);
+  factory Chapter.fromJson(Map<String, dynamic> json) => _$ChapterFromJson(json);
 
-  Map<String, dynamic> toJson() => _$ContentToJson(this);
+  Map<String, dynamic> toJson() => _$ChapterToJson(this);
 }
