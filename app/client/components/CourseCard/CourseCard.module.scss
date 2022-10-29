@@ -1,0 +1,76 @@
+.courseCard{
+    width: 400px;
+    height: 300px;
+    border-radius: 10px;
+    border: 1px solid #889bdd;
+    margin-left: 30px;
+    margin-top: 20px;
+    background: #FFFFFF;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.courseCard:hover {
+    box-shadow: 2px 4px  #889bdd;
+}
+
+.courseCardInfo {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 50%;
+    justify-content: space-around;
+    align-items: flex-start;
+    padding: 0px 10px 20px;
+}
+
+.courseCardInfo > * {
+    text-align: start;
+}
+
+.courseCardTitle {
+    font-size: 20px;
+}
+
+.courseCardInfoLastLine {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+
+
+.ratings {
+    position: relative;
+    vertical-align: middle;
+    display: inline-block;
+    color: #b1b1b1;
+    overflow: hidden;
+}
+
+.fullStars {
+    position: absolute;
+    left: 0;
+    top: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    color: #fde16d;
+}
+.emptyStars:before, .fullStars:before {
+    content:"\2605\2605\2605\2605\2605";
+    font-size: 14pt;
+}
+.emptyStars:before {
+    -webkit-text-stroke: 1px #848484;
+}
+.fullStars:before {
+    -webkit-text-stroke: 1px orange;
+}
+/* Webkit-text-stroke is not supported on firefox or IE */
+
+/* Firefox */
+ @-moz-document url-prefix() {
+    .full-stars {
+        color: #ECBE24;
+    }
+}
