@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:bucademy/classes/user/user.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -13,6 +15,8 @@ class Course {
   final List<String> badges;
   final String image;
   final User lecturer;
+  final double rating = Random().nextInt(20) / 10 + 3;
+  final int numberOfEnrolled = Random().nextInt(2000) + 100;
   // final DateTime createdAt;
 
   Course(this.name, this.id, this.info, this.tags, this.badges, this.image, this.lecturer);

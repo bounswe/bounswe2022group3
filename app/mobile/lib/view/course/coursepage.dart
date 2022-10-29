@@ -1,5 +1,6 @@
 import 'package:bucademy/resources/constants.dart';
 import 'package:bucademy/classes/course/course.dart';
+import 'package:bucademy/resources/custom_colors.dart';
 import 'package:bucademy/services/locator.dart';
 import 'package:bucademy/view/course/content_tile.dart';
 import 'package:flutter/material.dart';
@@ -41,22 +42,25 @@ Widget coursePageView(Course c) =>
             ),
             const Text("Discussion Will Be Here"),
           ];
-          Widget courseImage = ClipRRect(
-            borderRadius:
-                const BorderRadius.all(Radius.circular(Constants.borderRadius)),
-            child: Image.network(
-              'https://cdn.schoolofrock.com/img/hero-large-750w/guitar-lessons1527266771.jpg', //'https://docs.flutter.dev/assets/images/dash/dash-fainting.gif',
-              fit: BoxFit.contain,
+          Widget courseImage = ConstrainedBox(
+            constraints: const BoxConstraints(maxHeight: 200),
+            child: ClipRRect(
+              borderRadius:
+                  const BorderRadius.all(Radius.circular(Constants.borderRadius)),
+              child: Image.network(
+                c.image, //'https://docs.flutter.dev/assets/images/dash/dash-fainting.gif',
+                fit: BoxFit.cover,
+              ),
             ),
           );
           Widget courseInfo = Container(
               padding: const EdgeInsets.symmetric(vertical: 10),
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: const [
+                  children: [
                     // Text(c.title),
-                    Text('★'),//${c.rating}
-                    Text('👤45,131'),
+                    Text('★ ${c.rating}'),//${c.rating}
+                    Text('👤 ${c.numberOfEnrolled}'),
                   ]));
           Widget courseDescription = Container(
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -140,7 +144,9 @@ Widget coursePageView(Course c) =>
                               "Discussion",
                               style: TextStyle(color: Colors.black),
                             )),
-                      ]),
+                      ],
+                      indicatorColor: CustomColors.main,
+                    ),
                     ),
                     // SliverPersistentHeader(
                     //   delegate: _SliverAppBarDelegate(
