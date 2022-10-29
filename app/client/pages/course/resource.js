@@ -5,16 +5,11 @@ import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import Grid from '@mui/material/Grid';
-import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import Container from '@mui/material/Container';
-import Button from '@mui/material/Button';
-import styles from '../../styles/course/courseSummary.module.scss'
-import { useRouter } from 'next/router'
-import { API_URL } from "../../next.config";
-import { useEffect, useState } from "react";
-
+import { IconContext } from "react-icons";
+import { AiOutlineFilePdf } from "react-icons/ai";
+import { HiOutlineDocumentText } from "react-icons/hi";
+import { IoMdImage } from "react-icons/io";
 const chapters = [
     {
         'id': '634cde32693cd0c82806e64c',
@@ -54,7 +49,51 @@ const chapters = [
     },
 ]
 export default function resource() {
+    function Other(desc) {
+        return (
+            <a href="" download="link">
+                <Grid style={{
+                    width: '100%', display: 'flex',
+                    flexWrap: 'wrap', margin: 12
+                }}>
+                    <IconContext.Provider value={{ color: "#4d77eb" }}>
+                        <HiOutlineDocumentText size={20} />
+                    </IconContext.Provider>
+                    <h4> {desc}</h4>
+                </Grid>
+            </a>);
+    }
+    function Image(desc) {
+        return (
+            <a href="" download="image">
+                <Grid style={{
+                    width: '100%', display: 'flex',
+                    flexWrap: 'wrap', margin: 12
+                }}>
+                    <IconContext.Provider value={{ color: "#3cbd5a" }}>
+                        <IoMdImage size={20} />
+                    </IconContext.Provider>
+                    <h4> {desc}</h4>
+                </Grid>
+            </a>
+        );
+    }
+    function Pdf(desc) {
+        return (
+            <a href="" download="file">
+                <Grid style={{
+                    width: '100%', display: 'flex',
+                    flexWrap: 'wrap', margin: 12
+                }}>
+                    <IconContext.Provider value={{ color: "red" }}>
+                        <AiOutlineFilePdf size={20} />
+                    </IconContext.Provider>
+                    <h4> {desc}</h4>
+                </Grid>
+            </a>
 
+        );
+    }
 
     return (
 
@@ -63,7 +102,7 @@ export default function resource() {
             <Grid item sx={{ width: '80%' }}>
                 <Table sx={{ minWidth: 250 }} >
                     <TableRow>
-                        <TableCell><h3> Sections </h3></TableCell>
+                        <TableCell><h2> Sections </h2></TableCell>
                     </TableRow>
                     <TableBody>
                         {chapters.map((chapter, index) => {
@@ -71,14 +110,12 @@ export default function resource() {
                                 <TableRow key={index} >
                                     <TableCell>
                                         <Box>
-                                            <h4 > {chapter.chapter_name}</h4>
-                                            &nbsp;
-                                            <h5>some text </h5>
-                                            &nbsp;
-                                            <h5 >  link 1</h5>
-                                            <a href="/images/myw3schoolsimage.jpg" download="w3logo">
-                                                <img src="/images/myw3schoolsimage.jpg"  width="104" height="142"/>
-                                            </a>
+                                            <h3 > {chapter.chapter_name}</h3>
+
+                                            {Other("for other")}
+                                            {Image("for image ")}
+                                            {Pdf("for pdf")}
+                                            {Pdf("for pdf")}
                                         </Box>
                                     </TableCell>
                                 </TableRow>
