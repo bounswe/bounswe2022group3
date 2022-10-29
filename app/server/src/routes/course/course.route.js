@@ -16,7 +16,6 @@ courseRouter.post(
 
 courseRouter.get(
   "/getCourses/:keyword?",
-  authorization,
   CourseController.getCourses
 );
 
