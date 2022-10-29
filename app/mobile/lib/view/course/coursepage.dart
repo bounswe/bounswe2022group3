@@ -1,6 +1,5 @@
 import 'package:bucademy/resources/constants.dart';
-import 'package:bucademy/resources/custom_colors.dart';
-import 'package:bucademy/services/course_service.dart';
+import 'package:bucademy/classes/course/course.dart';
 import 'package:bucademy/services/locator.dart';
 import 'package:bucademy/view/course/content_tile.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +14,7 @@ Widget coursePageView(Course c) =>
           List<Widget> tabContent = [
             ListView(
               shrinkWrap: true,
-              padding: EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(10.0),
               children: [
                 ...contentService
                     .contents('Course Content')
@@ -24,7 +23,7 @@ Widget coursePageView(Course c) =>
             ),
             ListView(
               shrinkWrap: true,
-              padding: EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(10.0),
               children: [
                 ...contentService
                     .contents('Event')
@@ -54,10 +53,10 @@ Widget coursePageView(Course c) =>
               padding: const EdgeInsets.symmetric(vertical: 10),
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
+                  children: const [
                     // Text(c.title),
-                    Text('★${c.rating}'),
-                    const Text('👤45,131'),
+                    Text('★'),//${c.rating}
+                    Text('👤45,131'),
                   ]));
           Widget courseDescription = Container(
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -65,7 +64,7 @@ Widget coursePageView(Course c) =>
               borderRadius:
                   BorderRadius.all(Radius.circular(Constants.borderRadius)),
             ),
-            child: Text(c.body, maxLines: 2),
+            child: Text(c.info, maxLines: 3),
             // child:Text('Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',maxLines: 4,)
           );
 
@@ -77,7 +76,7 @@ Widget coursePageView(Course c) =>
                     (BuildContext context, bool innerBoxIsScrolled) {
                   return <Widget>[
                     SliverAppBar(
-                      title:  Text(c.title),
+                      title:  Text(c.name),
                       pinned: true,
                       flexibleSpace: FlexibleSpaceBar(
                         background: Container(
