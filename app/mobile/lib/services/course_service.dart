@@ -17,7 +17,7 @@ List<Course> mockCourses = [];
 
 @lazySingleton
 class CourseService {
-  courses(String title) {
+  getMockCourses(String title) {
     List<Course> temp = [
       for (var i = 0; i < 100; ++i)
         Course.fromJson({
@@ -28,10 +28,10 @@ class CourseService {
           "badges": [],
           "image": "https://cdn-icons-png.flaticon.com/512/2991/2991148.png",
           "lecturer": {
-            "name":"Andrew",
-            "surname":"Mg",
-            "email":"andrew.mg@bucademy.com",
-            "_id":"63595b4aebf6c659ff926310"
+            "name": "Andrew",
+            "surname": "Mg",
+            "email": "andrew.mg@bucademy.com",
+            "_id": "63595b4aebf6c659ff926310"
           },
         })
       // Course('$title - ${i.toString()}',
@@ -39,6 +39,22 @@ class CourseService {
     ];
     mockCourses.addAll(temp);
     return temp;
+  }
+
+  Future<List<Course>> getCourses() async {
+    try {
+      Response response = await dioService.dio.get('/course/getCourses');
+      if (response.statusCode != 200) {
+        return [];
+      }
+      Map json = response.data;
+      List<Course> t = json['courses'].map<Course>((e) => Course.fromJson(e)).toList();
+
+      return t;
+    } catch (e) {
+      print(e);
+    }
+    return [];
   }
 
   Future<List<Course>> searchCourse(String keyword) async {
@@ -55,5 +71,11 @@ class CourseService {
       print(e);
     }
     return [];
+  }
+
+  Future<CourseDetailed?> getCourseDetails({required String id}) async {
+    Response response = await dioService.dio.get('/course/$id');
+    if (response.statusCode != 200) return null;
+    return CourseDetailed.fromJson(response.data['data']['course']);
   }
 }
