@@ -4,9 +4,11 @@ const EnrollmentModel = require("../../models/enrollment/enrollment.model");
 const CourseController = {
   createCourse: async function (req, res) {
     try {
+      const user = req.auth;
       const { name, info, chapters, tags, image } = req.body;
       const course = await CourseModel.createCourse(
         name,
+        user,
         info,
         chapters,
         tags,
