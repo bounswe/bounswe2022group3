@@ -21,7 +21,6 @@ courseRouter.get(
 
 courseRouter.get(
   "/:id",
-  authorization,
   CourseController.getCourseDetail
 );
 
