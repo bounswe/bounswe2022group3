@@ -46,6 +46,12 @@ const CourseController = {
       const id = req.params.id;
       const course = await CourseModel.Course.findById(id)
         .populate("name info rating lecturer tags chapters image")
+        .populate({
+          path: 'chapters',
+          populate: {
+            path: 'chapter_badge',
+          }
+        })
         .exec();
       const user = req.auth;
 
