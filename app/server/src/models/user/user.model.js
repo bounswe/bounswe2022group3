@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const PersonalInfoModel = require("../../models/personalInfo/personalInfo.model");
 
 const userSchema = new mongoose.Schema({
     email: {
@@ -24,6 +25,53 @@ const userSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Tokens"
     },
+    personal_info:
+    {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "personal_info"
+    },
+    enrollments:
+    [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Enrollment"
+    }],
+    created_courses:
+    [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Course"
+    }],
+    followed_users:
+    [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    }],
+    follower_users:
+    [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    }],
+    blocked_users:
+    [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    }],
+    is_confirmed:
+    {
+        type: Boolean
+    },
+    is_banned:
+    {
+        type: Boolean
+    },
+    failed_login_count: // TODO: Integrate this such that failed logins would require user to recreate their password.
+    {
+        type: Number,
+    },
+    is_private:
+    {
+        type: Boolean,
+        default: false
+    }
 },
     {
         timestamps: true
@@ -40,7 +88,11 @@ const createUser = async ({ email, name, surname, password_hash, password_salt, 
         password_salt: password_salt,
         password_iter: password_iter,
         tokens: tokens
-    })
+    });
+    // After profile branch merged, add here
+
+    const personalInfo = (await PersonalInfoModel.createPersonalInfo());
+    user.personal_info = personalInfo._id
     const res = await user.save()
     return res
 }
@@ -65,5 +117,14 @@ const getPopulatedTokens = async (user_id) => {
     return User.findById(user_id)
         .populate("tokens").exec()
 }
+const getPopulatedPersonalInfo = async (user_id) => {
+    return User.findById(user_id)
+        .populate({
+            path: 'personal_info',
+            populate: {
+              path: 'badges',
+            }
+          }).exec()
+}
 
-module.exports = { User, createUser, deleteUser, getUserByEmail, getUserByID, getPopulatedTokens };
+module.exports = { User, createUser, deleteUser, getUserByEmail, getUserByID, getPopulatedTokens, getPopulatedPersonalInfo };

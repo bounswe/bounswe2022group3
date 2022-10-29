@@ -1,5 +1,6 @@
 import 'package:bucademy/resources/custom_colors.dart';
 import 'package:bucademy/resources/text_styles.dart';
+import 'package:bucademy/services/locator.dart';
 import 'package:bucademy/view/widgets/profile_picture.dart';
 import 'package:flutter/material.dart';
 
@@ -16,8 +17,8 @@ AppBar appBar() {
       ),
       onTap: () {},
     ),
-    title: const Text(
-      "Hello, Can!",
+    title: Text(
+      userService.user != null ? "Hello ${userService.user?.name}!" : "Welcome!",
       style: TextStyles.pageTitle,
     ),
     centerTitle: false,

@@ -12,7 +12,7 @@ export default function login() {
     const router = useRouter();
 
     const LoginSchema = Yup.object().shape({
-        username: Yup.string().email("Invalid email").required("Required"),
+        email: Yup.string().email("Invalid email").required("Required"),
         password: Yup.string()
             .required("No password provided")
             .min(8, "Password is too short - should be 8 chars minimum")
@@ -23,11 +23,22 @@ export default function login() {
     });
 
     const handleSubmit = async (values) => {
-        // make request to login endpoint in backend
-        // use axios to make request, 
-        // API_URL is base url of server,
-        // use router.push("some_route") to redirect user.
-        console.log(values)
+        const payload = { grant_type: "password", ...values };
+        try {
+            const response = (
+                await axios.post(API_URL + "/user/login", payload, {
+                    auth: payload,
+                })
+            )?.data;
+
+            localStorage.setItem("email", values.email);
+            localStorage.setItem("access_token", response.access_token);
+            localStorage.setItem("refresh_token", response.refresh_token);
+
+            router.push('/my/courses')
+        } catch (err) {
+            console.log(err);
+        }
     };
 
     return (
@@ -35,7 +46,7 @@ export default function login() {
             <h1>Welcome Back!</h1>
             <Formik
                 initialValues={{
-                    username: "",
+                    email: "",
                     password: "",
                 }}
                 validationSchema={LoginSchema}
@@ -44,15 +55,15 @@ export default function login() {
                 {({ errors, touched }) => (
                     <Form className={styles.form}>
                         <Field
-                            id="username"
-                            name="username"
+                            id="email"
+                            name="email"
                             type="email"
                             placeholder="Email"
                             className={styles.input}
                         ></Field>
-                        {errors.username && touched.username && (
+                        {errors.email && touched.email && (
                             <div className={styles.error}>
-                                {errors.username}
+                                {errors.email}
                             </div>
                         )}
                         <Field
