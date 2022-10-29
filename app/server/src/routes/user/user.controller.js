@@ -138,6 +138,8 @@ const UserController = {
                 user.tokens = response
                 return res.status(200).json({
                     id: user._id,
+                    name: user.name,
+                    surname: user.surname,
                     email: email,
                     access_token: access_token,
                     refresh_token: refresh_token
@@ -247,6 +249,8 @@ const UserController = {
             tokens.save()
             return res.status(200).json({
                 id: user._id,
+                name: user.name,
+                surname: user.surname,
                 email: email,
                 access_token: new_access_token,
                 refresh_token: new_refresh_token,

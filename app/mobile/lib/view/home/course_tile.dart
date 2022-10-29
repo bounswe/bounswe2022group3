@@ -1,7 +1,7 @@
+import 'package:bucademy/classes/course/course.dart';
 import 'package:bucademy/resources/custom_colors.dart';
 import 'package:bucademy/resources/constants.dart';
 import 'package:bucademy/resources/text_styles.dart';
-import 'package:bucademy/services/course_service.dart';
 import 'package:flutter/material.dart';
 
 Container courseTile(Course c) {
@@ -19,15 +19,14 @@ Container courseTile(Course c) {
         Row(
           children: [
             Image.network(
-              c.image ??
-                  'https://cdn.educba.com/academy/wp-content/uploads/2019/03/Introduction-To-Data-Science.jpg.webp',
+              c.image,
               width: 20,
               fit: BoxFit.cover,
             ),
             const SizedBox(width: 10),
             Flexible(
               child: Text(
-                c.title,
+                c.name,
                 maxLines: 2,
                 textAlign: TextAlign.start,
                 style: TextStyles.bodyWhite.copyWith(fontWeight: FontWeight.bold),
@@ -58,10 +57,10 @@ Widget searchCourseTile(Course c) {
         ClipRRect(
           borderRadius: BorderRadius.circular(8),
           child: Image.network(
-            'https://cdn.educba.com/academy/wp-content/uploads/2019/03/Introduction-To-Data-Science.jpg.webp',
+            c.image,
             fit: BoxFit.fitHeight,
-            height: 120,
-            width: 160,
+            height: 108,
+            width: 144,
           ),
         ),
         const SizedBox(width: 8),
@@ -69,7 +68,7 @@ Widget searchCourseTile(Course c) {
           child: Column(
             children: [
               Text(
-                c.title,
+                c.name,
                 maxLines: 2,
                 textAlign: TextAlign.start,
                 overflow: TextOverflow.clip,
@@ -79,6 +78,7 @@ Widget searchCourseTile(Course c) {
               Row(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -115,7 +115,7 @@ Widget searchCourseTile(Course c) {
                           ),
                           child: Center(
                             child: Text(
-                              'Enroll',
+                              'Join',
                               style: TextStyles.bodyWhite.copyWith(fontWeight: FontWeight.bold),
                             ),
                           ),

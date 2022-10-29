@@ -4,10 +4,11 @@ const EnrollmentModel = require("../../models/enrollment/enrollment.model");
 const CourseController = {
   createCourse: async function (req, res) {
     try {
-      const { name, lecturer_id, info, chapters, tags, image } = req.body;
+      const user = req.auth;
+      const { name, info, chapters, tags, image } = req.body;
       const course = await CourseModel.createCourse(
         name,
-        lecturer_id,
+        user,
         info,
         chapters,
         tags,
@@ -45,6 +46,12 @@ const CourseController = {
       const id = req.params.id;
       const course = await CourseModel.Course.findById(id)
         .populate("name info rating lecturer tags chapters image")
+        .populate({
+          path: 'chapters',
+          populate: {
+            path: 'chapter_badge',
+          }
+        })
         .exec();
       const user = req.auth;
 
