@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:bucademy/classes/chapter/chapter.dart';
 import 'package:bucademy/classes/user/user.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -24,4 +25,17 @@ class Course {
   factory Course.fromJson(Map<String, dynamic> json) => _$CourseFromJson(json);
 
   Map<String, dynamic> toJson() => _$CourseToJson(this);
+}
+
+@JsonSerializable()
+class CourseDetailed extends Course {
+  List<Chapter> chapters = [];
+
+  CourseDetailed(
+      super.name, super.id, super.info, super.tags, super.badges, super.image, super.lecturer, this.chapters);
+
+  factory CourseDetailed.fromJson(Map<String, dynamic> json) => _$CourseDetailedFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$CourseDetailedToJson(this);
 }
