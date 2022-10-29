@@ -64,7 +64,7 @@ Widget coursePageView(Course c) =>
               borderRadius:
                   BorderRadius.all(Radius.circular(Constants.borderRadius)),
             ),
-            child: Text(c.info, maxLines: 3),
+            child: Text(c.info, maxLines: 5),
             // child:Text('Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',maxLines: 4,)
           );
 
@@ -79,6 +79,7 @@ Widget coursePageView(Course c) =>
                       title:  Text(c.name),
                       pinned: true,
                       flexibleSpace: FlexibleSpaceBar(
+                        collapseMode: CollapseMode.pin,
                         background: Container(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           decoration: const BoxDecoration(
