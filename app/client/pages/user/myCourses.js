@@ -1,99 +1,80 @@
-import { Field, Form, Formik } from "formik";
-import * as Yup from "yup";
-import Link from "next/link";
-import Button from "../../components/Button/Button";
 import CourseCard from "../../components/CourseCard/CourseCard"
-import AuthLayout from "../../layouts/auth/AuthLayout";
+import UserLayout from "../../layouts/user-layout/UserLayout";
 import styles from "../../styles/user/home.module.scss";
 import axios from "axios";
 import { API_URL } from "../../next.config";
+import { Search } from '@mui/icons-material';
+import { IconButton } from "@mui/material";
+import React, { useState, useEffect, useCallback } from 'react'
+import debounce from "lodash/debounce";
 
 
-export default function home() {
+export default function courses() {
 
-    /*API CALL HERE*/
+    const onSearchbarChange = async (e) => {
+        const { value } = e.target;
+        debounceSearch(value)
+    }
 
-    let courseList = [
-        {
-            id:"634cdaead5643175d5196efc",
-            title: "Introduction to Data Science",
-            course_info:"Interested in learning more about data science, but don’t know where to start?",
-            rating: 4.7,
-            courseImage: "/math.jpeg"
-        },
+    const debounceSearch = useCallback(
+        debounce((value) => getCourses(value), 500),
+        []
+      );
 
-        {
-            id:"634cdaead5643175d5196efa",
-            title: "Math101",
-            course_info:"Interested in learning more about MATH, but don’t know where to start?",
-            rating: 4.7,
-            courseImage: "/math.jpeg"
-        },
 
-        {
-            id:"634cdaead5643175d5196efb",
-            title: "Knitting",
-            course_info:"Interested in learning more about knitting, but don’t know where to start?",
-            rating: 4.7,
-            courseImage: "/math.jpeg"
-        },
+    const [courseList, setCourseList] = useState([])
 
-        {
-            id:"634cdaead5643175d5196efd",
-            title: "Introduction to Next.js",
-            course_info:"Interested in learning more about next.js, but don’t know where to start?",
-            rating: 4.7,
-            courseImage: "/math.jpeg"
-        },
-        {
-            id:"634cdaead5643175d5196ef4",
-            title: "Introduction to Data Science",
-            course_info:"Interested in learning more about data science, but don’t know where to start?",
-            rating: 4.7,
-            courseImage: "/math.jpeg"
-        },
 
-        {
-            id:"634cdaead5643175d5196ef3",
-            title: "Math101",
-            course_info:"Interested in learning more about MATH, but don’t know where to start?",
-            rating: 4.7,
-            courseImage: "/math.jpeg"
-        },
+    async function getCourses(courseKey) {
+        console.log(courseKey)
+        const data = (await axios.get(API_URL + "/course/getCourses/" + courseKey)).data
+        setCourseList(data.courses)
 
-        {
-            id:"634cdaead5643175d5196ef2",
-            title: "Knitting",
-            course_info:"Interested in learning more about knitting, but don’t know where to start?",
-            rating: 4.7,
-            courseImage: "/math.jpeg"
-        },
+    }
 
-        {
-            id:"634cdaead5643175d5196ef1",
-            title: "Introduction to Next.js",
-            course_info:"Interested in learning more about next.js, but don’t know where to start?",
-            rating: 4.7,
-            courseImage: "/math.jpeg"
-        }
-    ]
+    useEffect(() => {
+        getCourses("");
+    }, []);
+
 
     return (
         <>
-            <div className={styles.courseListContainer}>
-                {
-                    courseList.map(course => 
-                        <CourseCard courseInfo={course.course_info} courseTitle={course.title} courseRating={course.rating} courseImage={course.courseImage} key={course.id}></CourseCard>
-                    )
-                }
-                
+            <div className={styles.courseHomePage}>
+                <div className={styles.searchBar}>
+                    <input
+                        className={styles.input}
+                        onChange={onSearchbarChange}
+                        type="search"
+                        placeholder="Search for a course.." />
+                    <IconButton >
+                        <Search fontSize="small" className={styles.navbarProfileLogo} />
+                    </IconButton>
+                </div>
+                <div className={styles.courseListContainer}>
+
+                    {
+                        courseList.map(course =>
+                            <a href={'course/' + course.id}>
+                                <CourseCard
+                                    courseId={course._id}
+                                    courseInfo={course.info}
+                                    courseTitle={course.name}
+                                    courseInstructor={course.lecturer.name}
+                                    courseRating={5}
+                                    courseImage={course.image}>
+                                </CourseCard>
+                            </a>
+
+                        )
+                    }
+
+                </div>
             </div>
+
         </>
     );
 }
 
-/*
-register.getLayout = function getLayout(page) {
-    return <AuthLayout>{page}</AuthLayout>;
+courses.getLayout = function getLayout(page) {
+    return <UserLayout>{page}</UserLayout>;
 };
-*/
