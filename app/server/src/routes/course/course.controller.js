@@ -53,11 +53,15 @@ const CourseController = {
           }
         })
         .exec();
+        
       const user = req.auth;
 
       let data = {
         course,
       };
+      if(!user){
+        return res.status(200).json({ data });
+      }
       const enrollingInfo = await EnrollmentModel.Enrollment.find({
         course_id: id,
         user_id: user._id,
