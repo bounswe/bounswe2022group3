@@ -11,6 +11,7 @@ import 'package:stacked/stacked.dart';
 
 Widget homepageView() => ViewModelBuilder<HomeViewModel>.reactive(
       viewModelBuilder: () => HomeViewModel(),
+      onModelReady: (model) => model.getCourses(),
       builder: (context, viewModel, child) => Scaffold(
           appBar: appBar(),
           body: Column(
@@ -36,7 +37,7 @@ Widget homepageView() => ViewModelBuilder<HomeViewModel>.reactive(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  ...viewModel.searchResults.map((Course c) => searchCourseTile(c)),
+                                  ...viewModel.searchResults.map((Course c) => searchCourseTile(c, context)),
                                 ],
                               ),
                             )
@@ -49,26 +50,27 @@ Widget homepageView() => ViewModelBuilder<HomeViewModel>.reactive(
                                 style: TextStyles.subtitle,
                               ),
                               const SizedBox(height: 12),
-                              SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Row(children: [
-                                  ...courseService.courses('Basics of Google').map((Course c) => courseTile(c))
-                                ]),
-                              ),
+                              viewModel.isLoading
+                                  ? loadingIndicator()
+                                  : SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: Row(
+                                          children: [...viewModel.courses.map((Course c) => courseTile(c, context))]),
+                                    ),
                               const SizedBox(height: 20),
                               const Text(
                                 'Top Courses',
                                 style: TextStyles.subtitle,
                               ),
                               const SizedBox(height: 12),
-                              SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Row(
-                                  children: [
-                                    ...courseService.courses('Machine Learning').map((Course c) => courseTile(c))
-                                  ],
-                                ),
-                              ),
+                              viewModel.isLoading
+                                  ? loadingIndicator()
+                                  : SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: Row(
+                                        children: [...viewModel.courses.map((Course c) => courseTile(c, context))],
+                                      ),
+                                    ),
                               const SizedBox(height: 20),
                               Text(
                                 'Browse',
@@ -85,8 +87,8 @@ Widget homepageView() => ViewModelBuilder<HomeViewModel>.reactive(
                                 child: Row(
                                   children: [
                                     ...courseService
-                                        .courses('Introduction to Programming with C')
-                                        .map((Course c) => courseTile(c))
+                                        .getMockCourses('Introduction to Programming with C')
+                                        .map((Course c) => courseTile(c, context, isClickable: false))
                                   ],
                                 ),
                               ),
@@ -101,8 +103,8 @@ Widget homepageView() => ViewModelBuilder<HomeViewModel>.reactive(
                                 child: Row(
                                   children: [
                                     ...courseService
-                                        .courses('Painting Techniques for beginners')
-                                        .map((Course c) => courseTile(c))
+                                        .getMockCourses('Painting Techniques for beginners')
+                                        .map((Course c) => courseTile(c, context, isClickable: false))
                                   ],
                                 ),
                               ),
@@ -118,10 +120,20 @@ Widget homepageView() => ViewModelBuilder<HomeViewModel>.reactive(
 
 // ViewModel
 class HomeViewModel extends ChangeNotifier {
+  List<Course> courses = [];
   List<Course> searchResults = [];
   String? title;
   bool isLoading = false;
   bool isSearchScreen = false;
+
+  Future<void> getCourses() async {
+    isLoading = true;
+    notifyListeners();
+
+    courses = await courseService.getCourses();
+    isLoading = false;
+    notifyListeners();
+  }
 
   Future<void> search(String keyword) async {
     bool newState = keyword.isNotEmpty;
@@ -140,3 +152,8 @@ class HomeViewModel extends ChangeNotifier {
     notifyListeners();
   }
 }
+
+Widget loadingIndicator() => const Padding(
+      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+      child: CircularProgressIndicator(),
+    );
