@@ -38,6 +38,6 @@ Then, you can follow instructions provided in `README.md` files in those directo
     GOREST_TOKEN=
     ```
     After adding the .env file, you can run `docker-compose up --build -d` in `server/src` folder.
-3. Similarly, edit the `next.config.js` folder in `client` folder and update the `API_URl`. Yo do not need any other modifications, just run `docker-compose up --build -d` in `client` folder.\
+3. Similarly, edit the `next.config.js` folder in `client` folder and update the `API_URL`. Yo do not need any other modifications, just run `docker-compose up --build -d` in `client` folder.\
 PS: Note that both server and client docker-compose files server port 80 since we are serving from two EC2 instances. If you are running both of them on the same machine, change at least one of them.\
 4. That is all!
