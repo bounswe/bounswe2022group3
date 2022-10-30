@@ -20,3 +20,12 @@ a {
     box-sizing: border-box;
     margin: 0;
 }
+
+.w-md-editor {
+    border-radius: 0.5rem !important;
+    overflow: hidden;
+}
+
+button[data-name=checked-list] {
+    display: none;
+}

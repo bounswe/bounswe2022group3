@@ -5,7 +5,7 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    router.push("/user/login");
+    router.push("/user/home");
   }, [])
 
   return <div></div>

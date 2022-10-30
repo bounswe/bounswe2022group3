@@ -1,0 +1,33 @@
+.comment_container {
+    display: flex;
+}
+
+.comment {
+    width: calc(100% - 40px - 1rem); 
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    margin-left: 1rem;
+}
+
+.comment_icon {
+    margin-top: 0.5rem;
+}
+
+.comment_button {
+    width: fit-content; 
+    float: left;
+    padding: 0px 20px;
+}
+
+.container {
+    h1 {
+        font-size: 3rem;
+        margin-bottom: 1.5rem;
+    }
+
+    h2 {
+        font-size: 1.2rem;
+        margin-left: 2.5px;
+        font-weight: 600;
+    }
+}

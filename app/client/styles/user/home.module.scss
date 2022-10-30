@@ -1,0 +1,44 @@
+@import "../variables.scss";
+
+.courseHomePage {
+    background-color: #d2d9f2;
+    height: 100%;
+    width: 100%;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+}
+
+.courseHomePage > div:first-of-type {
+
+    align-self: flex-end;
+}
+
+.courseListContainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+}
+
+.courseLink {
+}
+
+.searchBar {
+    height: 40px;
+    width: 200px;
+    background-color: white;
+    border-radius: 20px;
+    border: 1px solid #8C8298;
+    display: flex;
+    flex-direction: row;
+    padding: 0 15px;
+}
+
+.searchBar input {
+    padding: 0;
+    border: 0;
+}
+

@@ -48,6 +48,12 @@ const CourseController = {
       const id = req.params.id;
       const course = await CourseModel.Course.findById(id)
         .populate("name info rating lecturer tags chapters image")
+        .populate({
+          path: 'chapters',
+          populate: {
+            path: 'chapter_badge',
+          }
+        })
         .exec();
       const user_id = req.auth.id;
       const user = UserModel.User.findById(user_id);
@@ -55,6 +61,9 @@ const CourseController = {
       let data = {
         course,
       };
+      if(!user){
+        return res.status(200).json({ data });
+      }
       const enrollingInfo = await EnrollmentModel.Enrollment.find({
         course_id: id,
         user_id,
