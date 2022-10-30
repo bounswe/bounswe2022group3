@@ -1,0 +1,114 @@
+@import "../../styles/variables.scss";
+
+.icon {
+    padding: 1rem;
+}
+
+.main {
+    display: flex;
+}
+
+.navbar {
+    background-color: #fff;
+    min-height: 100vh;
+    box-shadow: -1px 0 25px #ccc;
+    clip-path: inset(0px -45px 0px 0px);
+    position: fixed;
+
+    nav {
+        img {
+            transition: 0.5s;
+            filter: invert(59%) sepia(4%) saturate(0%) hue-rotate(338deg)
+                brightness(89%) contrast(94%);
+        }
+
+        div {
+            cursor: pointer;
+        }
+
+        div:hover {
+            img {
+                filter: invert(57%) sepia(15%) saturate(1695%)
+                    hue-rotate(191deg) brightness(103%) contrast(91%);
+            }
+        }
+    }
+
+    @media screen and (max-width: 500px) {
+        display: none
+    }
+}
+
+.selected {
+    border-left: 3px solid $base-color;
+    pointer-events: none;
+
+    span img {
+        filter: invert(24%) sepia(57%) saturate(4291%) hue-rotate(237deg)
+            brightness(101%) contrast(96%);
+    }
+
+    &:hover {
+        cursor: initial;
+        span img {
+            filter: invert(24%) sepia(57%) saturate(4291%) hue-rotate(237deg)
+                brightness(101%) contrast(96%) !important;
+        }
+    }
+}
+
+.body {
+    background-color: $bg-color;
+    min-height: 100vh;
+    margin-left: calc(50px + 2rem);
+    padding: 2rem;
+    width: calc(100% - 50px - 2rem);
+
+    @media screen and (max-width: 500px) {
+        margin-left: 0;
+        width: 100%;
+        padding-bottom: 100px;
+    }
+}
+
+.nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100%;
+    text-align: center;
+
+    div {
+        margin: 2rem 0;
+    }
+}
+
+.exit {
+    position: fixed;
+    bottom: 0;
+    margin: calc(1rem + 9px);
+    cursor: pointer;
+}
+
+.mobile_nav {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    background-color: #fff;
+    z-index: 100;
+
+    div {
+        padding: 1rem 0.5rem;
+    }
+
+    .selected {
+        border-left: none;
+        border-bottom: 3px solid $base-color;
+    }
+
+    @media screen and (min-width: 500px) {
+        display: none
+    }
+}

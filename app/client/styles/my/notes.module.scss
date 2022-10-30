@@ -1,0 +1,21 @@
+@import "../variables.scss";
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    grid-gap: 2rem;
+    align-items: start;
+}
+
+.container {
+    h1 {
+        font-size: 3rem;
+        margin-bottom: 1.5rem;
+    }
+
+    h2 {
+        font-size: 1.2rem;
+        margin-left: 2.5px;
+        font-weight: 600;
+    }
+}

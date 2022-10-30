@@ -79,7 +79,7 @@ export default function login() {
                                 {errors.password}
                             </div>
                         )}
-                        <Button type="submit">Sign up</Button>
+                        <Button type="submit">log in</Button>
                         <div>
                             <p>Don't have an account?</p>{" "}
                             <Link href="/user/register">Click here</Link>
