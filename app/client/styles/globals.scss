@@ -21,6 +21,11 @@ a {
     margin: 0;
 }
 
-h1, h2, h3 {
-    font-family: 'Merriweather';
+.w-md-editor {
+    border-radius: 0.5rem !important;
+    overflow: hidden;
+}
+
+button[data-name=checked-list] {
+    display: none;
 }
