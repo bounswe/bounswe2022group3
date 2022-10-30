@@ -6,7 +6,7 @@ const CourseController = {
   createCourse: async function (req, res) {
     try {
       const user_id = req.auth.id;
-      const user = UserModel.User.findById(user_id);
+      const user = await UserModel.User.findById(user_id);
       const { name, info, chapters, tags, image } = req.body;
       const course = await CourseModel.createCourse(
         name,
@@ -56,7 +56,7 @@ const CourseController = {
         })
         .exec();
       const user_id = req.auth.id;
-      const user = UserModel.User.findById(user_id);
+      const user = await UserModel.User.findById(user_id);
 
       let data = {
         course,
