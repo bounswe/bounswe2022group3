@@ -13,7 +13,7 @@ function CourseCard({ courseId, courseTitle, courseInfo, courseRating, courseIma
                 layout="responsive"
             />
             <div className={styles.courseCardInfo}>
-                <p className={styles.courseCardTitle}>{courseTitle}</p>
+                <h3 className={styles.courseCardTitle}>{courseTitle}</h3>
                 <p>{courseInfo}</p>
                 <div className={styles.courseCardInfoLastLine}>
                     <p>{courseInstructor}</p>

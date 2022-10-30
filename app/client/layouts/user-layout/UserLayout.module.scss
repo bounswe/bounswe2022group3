@@ -1,0 +1,41 @@
+.pageContainer {
+    width: 100%;
+    height: 100vh;
+}
+
+.navbar {
+    height: 100px;
+    width: 100%;
+    background-color: white;
+    position: sticky;
+    justify-content: space-between;
+    top: 0;
+    display: flex;
+    z-index: 1000;
+    padding: 20px;
+    box-shadow: 1px 1px   #889bdd;
+}
+
+.navbar > div {
+    display: flex;
+    flex-direction: row;
+}
+
+.navbarLogo {
+    width: 40px;
+    height: 40px;
+}
+
+.navbarProfileLogo {
+    height: 40px;
+}
+
+.navbarIconContainer {
+    display: flex;
+    flex-direction: column;
+    margin-left: 50px;
+}
+
+.navbarProfileIconContainer {
+    justify-self: end;
+}
