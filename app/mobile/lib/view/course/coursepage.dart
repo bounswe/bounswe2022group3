@@ -84,6 +84,7 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                       foregroundColor: Colors.black,
                       backgroundColor: const Color.fromARGB(255, 242, 241, 248),
                       bottom: const TabBar(
+                        isScrollable: true,
                         tabs: [
                           Tab(
                               icon: Icon(
