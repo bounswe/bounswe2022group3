@@ -5,9 +5,10 @@ const EnrollmentController = {
   createEnrollment: async function (req, res) {
 
     try {
-      const { user_id, course_id } = req.body;
+      const course_id = req.body.course_id;
+      const user = req.auth;
       const enrollment = await EnrollmentModel.createEnrollment(
-        user_id,
+        user._id,
         course_id
       );
       res.status(201).send({ enrollment });

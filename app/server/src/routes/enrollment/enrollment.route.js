@@ -8,16 +8,14 @@ const enrollmentRouter = express.Router();
 
 enrollmentRouter.post(
   "/",
-  // validate("createEnrollment"),
-  // handleValidation,
+  validate("createEnrollment"),
+  handleValidation,
   authorization,
   EnrollmentController.createEnrollment
 );
 
 enrollmentRouter.get(
   "/getEnrolledCourses",
-  //validate("getEnrolledCourses"),
-  //handleValidation,
   authorization,
   EnrollmentController.getEnrolledCourses
 );
