@@ -6,9 +6,9 @@ const EnrollmentController = {
 
     try {
       const course_id = req.body.course_id;
-      const user = req.auth;
+      const user_id = req.auth.id;
       const enrollment = await EnrollmentModel.createEnrollment(
-        user._id,
+        user_id,
         course_id
       );
       res.status(201).send({ enrollment });
@@ -21,11 +21,18 @@ const EnrollmentController = {
   getEnrolledCourses: async function (req, res) {
 
     try {
-      const user = req.auth;
-      const enrolled_courses = await EnrollmentModel.Enrollment.find({ user_id: user._id });
+      const user_id = req.auth.id;
+      const enrolled_courses = await EnrollmentModel.Enrollment.find({ user_id });
       var data = [];
       for (var enrolled_course of enrolled_courses) {
         var course = await CourseModel.Course.findById(enrolled_course.course_id)
+        .populate("name info rating lecturer tags chapters image")
+        .populate({
+          path: 'chapters',
+          populate: {
+            path: 'chapter_badge',
+          }
+        }).exec();
         data.push(course);
       }
       return res.status(200).json({ data });

@@ -29,7 +29,7 @@ const UserController = {
             // Proceeding with signup
             // Hash the password
             passwd_data = auth.hashPassword(password)
-            const confirmationToken = await auth.generateToken(email, jwt_conf_secret, confirmation_token_expiry) 
+            const confirmationToken = await auth.generateToken(email, jwt_conf_secret, confirmation_token_expiry)
 
             token_data = {
                 email: email,
@@ -80,7 +80,7 @@ const UserController = {
 
                 return res.status(201).json({
                     created_at: response.createdAt,
-                    message: `Created the user with ${email}, confirmation mail send to ${email}.`,
+                    message: `Confirmation mail send to ${email}.`,
                 })
             } else {
                 return res.status(400).json({
@@ -121,7 +121,7 @@ const UserController = {
             } else if (tokens.confirmation_token != "confirmed") {
                 return res
                     .status(403)
-                    .json({ message: "The user has not confirmed their email registered." });
+                    .json({ message: "Please confirm your email to login to your account." });
             }
 
             const access_token = await auth.generateToken(email, jwt_ac_secret, access_jwtExpiry)
@@ -218,14 +218,30 @@ const UserController = {
     },
 
     confirmEmail: async function (req, res) {
-        const { email, code } = req.body;
+        const { code } = req.body;
         try {
 
-            const user = await UserModel.getUserByEmail(email);
-            if (!user) {
+            // JWT Validation, also checks expiry
+            jwt.verify(code, jwt_conf_secret, (err, decoded) => {
+                tokenError = err;
+                decrytedData = decoded;
+            });
+
+            if (tokenError) {
+                return res.status(400).json({
+                    message: tokenError.toString(),
+                });
+            }
+            // Acquire email from decrypted token
+            const email = decrytedData.email;
+
+            // Return user data
+            const user = await UserModel.getUserByEmail(email);   
+            
+            if(!user){
                 return res
-                    .status(403)
-                    .json({ message: "The user does not exist." });
+                    .status(400)
+                    .json({ message: "There is not any registered user with this email!" });
             }
 
             const tokens = await TokensModel.getTokensByEmail(email);
@@ -258,7 +274,7 @@ const UserController = {
 
         } catch (error) {
             return res.status(400).json({
-                message: "Failed to logout!",
+                message: "Failed to confirm email!",
                 error: error.toString()
             });
         }
