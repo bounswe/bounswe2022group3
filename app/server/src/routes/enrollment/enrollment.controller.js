@@ -26,6 +26,13 @@ const EnrollmentController = {
       var data = [];
       for (var enrolled_course of enrolled_courses) {
         var course = await CourseModel.Course.findById(enrolled_course.course_id)
+        .populate("name info rating lecturer tags chapters image")
+        .populate({
+          path: 'chapters',
+          populate: {
+            path: 'chapter_badge',
+          }
+        }).exec();
         data.push(course);
       }
       return res.status(200).json({ data });
