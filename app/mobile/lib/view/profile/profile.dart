@@ -1,6 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:bucademy/resources/constants.dart';
+import 'package:bucademy/services/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'dart:math';
@@ -63,7 +64,12 @@ Widget profileView() => ViewModelBuilder<ProfileView>.reactive(
                             ])),
                       ),
                       elevation: 0,
-                      leading: const BackButton(color: Colors.white),
+                      leading: GestureDetector(
+                        child: const Icon(Icons.arrow_back_ios,color: Colors.white,),
+                        onTap: () {
+                        navigatorService.controller.jumpToTab(0);
+                        },
+                      ),
                       actions: [
                         IconButton(
                             onPressed: () {},
@@ -97,7 +103,8 @@ Widget profileView() => ViewModelBuilder<ProfileView>.reactive(
                           "Notes",
                           style: TextStyle(color: Colors.white),
                         )),
-                      ]),
+                      ],
+                      isScrollable: true,),
                     ),
                   ];
                 },
@@ -224,13 +231,16 @@ Widget tag(tag_name, color_name) {
 }
 
 Widget seperator(context) {
-  return Container(
-    height: 2,
-    width: MediaQuery.of(context).size.width,
-    decoration: BoxDecoration(
-        color: Colors.grey[400],
-        borderRadius:
-            const BorderRadius.all(Radius.circular(Constants.borderRadius))),
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 6.0),
+    child: Container(
+      height: 2,
+      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+          color: Colors.grey[400],
+          borderRadius:
+              const BorderRadius.all(Radius.circular(Constants.borderRadius))),
+    ),
   );
 }
 
