@@ -34,8 +34,9 @@ export default function login() {
             localStorage.setItem("email", values.email);
             localStorage.setItem("access_token", response.access_token);
             localStorage.setItem("refresh_token", response.refresh_token);
+            localStorage.setItem("user_id", response.id);
 
-            router.push('/my/courses')
+            router.push('/user/my_spaces')
         } catch (err) {
             console.log(err);
         }
