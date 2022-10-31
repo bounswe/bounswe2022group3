@@ -126,7 +126,7 @@ export default function courseSummary() {
               </Grid>
               <Grid item sx={{ width: '100%' }}>
                 <p>
-                  {post?.course?.course_info}
+                  {post?.course?.info}
 
                 </p>
                 <Grid item style={{
@@ -157,7 +157,7 @@ export default function courseSummary() {
                 <Table sx={{ minWidth: 250 }} >
                   <TableHead>
                     <TableRow>
-                      <TableCell><h3> Sections </h3></TableCell>
+                      <TableCell><h3> Topics </h3></TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>

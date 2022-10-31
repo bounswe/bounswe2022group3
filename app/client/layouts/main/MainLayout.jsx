@@ -61,7 +61,9 @@ function MainLayout({ children }) {
         <main className={styles.main}>
             <div className={styles.navbar}>
                 <div className={styles.icon}>
-                    <Image src="/education.png" width="50px" height="50px" />
+                    <Link href="/user/home">
+                        <img src="/education.png" width="50px" height="50px" style={{cursor: 'pointer'}} />
+                    </Link>
                 </div>
                 <nav className={styles.nav}>
                     <Link href={`/my/spaces/${spaceId}/resources`}>

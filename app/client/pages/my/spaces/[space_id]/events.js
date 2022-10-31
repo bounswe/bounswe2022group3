@@ -4,8 +4,10 @@ import styles from "../../../../styles/my/resources.module.scss";
 export default function events() {
     return (
         <section className={styles.container}>
-            <h2>Learning Guitar</h2>
+            <h2>Acoustic Guitar Ed for Beginners</h2>
             <h1>Events</h1>
+
+            <p>No events</p>
         </section>
     );
 }
