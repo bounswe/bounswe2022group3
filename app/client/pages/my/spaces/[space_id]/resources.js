@@ -9,8 +9,8 @@ import styles from "../../../../styles/my/resources.module.scss";
 const chapters = [
     {
         'id': '634cde32693cd0c82806e64c',
-        'chapter_name': 'Getting started',
-        'resources': ['plating first song', 'Chords', 'About guitars']
+        'chapter_name': 'Guitar chords',
+        'resources': ['playing first song', 'Chords', 'About guitars']
     },
     {
         'id': '634cde8a9dbd91c3a2c97324',
@@ -73,7 +73,7 @@ export default function resources() {
 
     return (
         <section className={styles.container}>
-            <h2>Learning Guitar</h2>
+            <h2>Acoustic Guitar Ed for Beginners</h2>
             <h1>Resources</h1>
             <Grid container spacing={2} style={{ marginBottom: 12 }}>
                 <Grid item sx={{ width: '80%', paddingLeft: "4px !important", paddingTop: "4px !important" }}>
