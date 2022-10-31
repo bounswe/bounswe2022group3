@@ -24,7 +24,6 @@ exports.validate = (method) => {
         }
         case "confirm-email": {
             return [
-                body("email", "email does not exist").exists().isEmail(),
                 body("code", "code does not exist").exists().isJWT(),
             ];
         }
