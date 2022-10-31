@@ -4,6 +4,7 @@ import 'package:bucademy/classes/course/course.dart';
 import 'package:bucademy/resources/custom_colors.dart';
 import 'package:bucademy/services/locator.dart';
 import 'package:bucademy/view/course/content_tile.dart';
+import 'package:bucademy/view/course/mock_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:bucademy/services/content_service.dart';
@@ -16,7 +17,7 @@ Widget coursePageView(Course c) => ViewModelBuilder<
        ? const Center(child: CircularProgressIndicator())
        : viewModel.course != null 
         ? DefaultTabController(
-            length: 4,
+            length: 5,
             child: Scaffold(
               body: NestedScrollView(
                 headerSliverBuilder:
@@ -92,7 +93,7 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                                 color: Colors.black,
                               ),
                               child: Text(
-                                "Chapters",
+                                "Contents",
                                 style: TextStyle(color: Colors.black),
                               )),
                           Tab(
@@ -102,6 +103,15 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                               ),
                               child: Text(
                                 "Events",
+                                style: TextStyle(color: Colors.black),
+                              )),
+                          Tab(
+                              icon: Icon(
+                                Icons.note_alt_outlined,
+                                color: Colors.black,
+                              ),
+                              child: Text(
+                                "Notes",
                                 style: TextStyle(color: Colors.black),
                               )),
                           Tab(
@@ -138,10 +148,34 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                             .map((Chapter e) => chapterTile(e))
                       ],
                     ),
-                    const Center(child: Text("Events will be implemented")),
-                    const Center(child: Text("Quizzses will be implemented")),
-                    const Center(
-                        child: Text("Discussions will be implemented")),
+                    ListView(
+                      shrinkWrap: true,
+                      padding: const EdgeInsets.all(10.0),
+                      children: [
+                        ...contentService.contents("Event").map((MockContent m) => mockTile(m))
+                      ],
+                    ),
+                    ListView(
+                      shrinkWrap: true,
+                      padding: const EdgeInsets.all(10.0),
+                      children: [
+                        ...contentService.contents("Note").map((MockContent m) => mockTile(m))
+                      ],
+                    ),                    
+                    ListView(
+                      shrinkWrap: true,
+                      padding: const EdgeInsets.all(10.0),
+                      children: [
+                        ...contentService.contents("Quiz").map((MockContent m) => mockTile(m))
+                      ],
+                    ),
+                    ListView(
+                      shrinkWrap: true,
+                      padding: const EdgeInsets.all(10.0),
+                      children: [
+                        ...contentService.contents("Discussion").map((MockContent m) => mockTile(m))
+                      ],
+                    ),
                   ],
                 ),
               ),
