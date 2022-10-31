@@ -25,7 +25,7 @@ function UserLayout({ children }) {
             <div className={styles.pageContainer}>
                 <div id="navbar" className={styles.navbar}>
                     <div className={styles.icon}>
-                        <Image src="/education.png" width="50px" height="50px" />
+                        <img src="/education.png" width="50px" height="50px" />
                         <h2>BUcademy</h2>
                     </div>
                     <div>
