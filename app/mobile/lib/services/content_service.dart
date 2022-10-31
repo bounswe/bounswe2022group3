@@ -1,21 +1,21 @@
 import 'package:injectable/injectable.dart';
 
-class Content {
-  String title;
+class MockContent {
+  String name;
   String body;
   String? course;
 
-  Content(this.title, this.body, {this.course});
+  MockContent(this.name, this.body, {this.course});
 }
 
-List<Content> mockContents = [];
+List<MockContent> mockContents = [];
 
 @lazySingleton
-class ContentService {
+class MockContentService {
   contents(String title) {
-    List<Content> temp = [
+    List<MockContent> temp = [
       for (var i = 0; i < 100; ++i)
-        Content('$title - ${i.toString()}',
+        MockContent('$title - ${i.toString()}',
             "Interested in learning more about data science, but don’t know where to start?" * 10)
     ];
     mockContents.addAll(temp);
