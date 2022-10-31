@@ -1,10 +1,38 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:bucademy/resources/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
+import 'dart:math';
 
 import '../../resources/colors.dart';
 import '../../resources/text_styles.dart';
+import '../../services/profile_service.dart';
 import '../widgets/profile_picture.dart';
+
+Profile p = Profile(
+    'ii', "Şule", "Erkul", 'https://randomuser.me/api/portraits/men/40.jpg',
+    followers: 1,
+    followed: 1,
+    rating: 4.0,
+    bio: 'Engineer, \nGraphic Design is my passion \nWannabe a bee',
+    interests: [
+      'Cuisine',
+      'Tutting',
+      'Flutter'
+    ],
+    knowledge: [
+      'Watercolor',
+      'Python',
+      'Classic Guitar',
+      'C#'
+    ],
+    activities: [
+      'Xtra Person followed you!',
+      'You have joined Python Space',
+      'Welcome to BUcademy'
+    ],
+    achievements: []);
 
 Widget profileView() => ViewModelBuilder<ProfileView>.reactive(
     viewModelBuilder: () => ProfileView(),
@@ -27,11 +55,11 @@ Widget profileView() => ViewModelBuilder<ProfileView>.reactive(
                                 const EdgeInsets.symmetric(horizontal: 10) +
                                     const EdgeInsets.only(top: 40),
                             decoration: const BoxDecoration(
-                              color: CustomColors.main,
+                              color: Color.fromARGB(255, 136, 197, 238),
                             ),
                             child: Column(children: [
-                              profileHeader(context),
-                              aboutMe(context, 'hello!', '', '')
+                              profileHeader(context, p.image),
+                              aboutMe(context, p.bio, p.interests, p.knowledge)
                             ])),
                       ),
                       elevation: 0,
@@ -79,21 +107,19 @@ Widget profileView() => ViewModelBuilder<ProfileView>.reactive(
 
 class ProfileView extends ChangeNotifier {}
 
-Widget profileHeader(context) {
+Widget profileHeader(context, String image_path) {
   return Container(
       //height: MediaQuery.of(context).size.height * 0.15,
       width: MediaQuery.of(context).size.width,
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10) +
           const EdgeInsets.only(top: 10),
       decoration: const BoxDecoration(
-          color: CustomColors.main,
           borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(Constants.borderRadius),
-            bottomRight: Radius.circular(Constants.borderRadius),
-          )),
+        bottomLeft: Radius.circular(Constants.borderRadius),
+        bottomRight: Radius.circular(Constants.borderRadius),
+      )),
       child: Column(children: [
-        profilePicture(
-            imagePath: '../../demo/Person.svg', height: 40, widht: 40),
+        profilePicture(imagePath: image_path, height: 40, widht: 40),
         const SizedBox(
           height: 20,
         ),
@@ -101,6 +127,37 @@ Widget profileHeader(context) {
           'Şule Erkul',
           style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
         ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Container(
+              margin: const EdgeInsets.all(2),
+              decoration: const BoxDecoration(color: Colors.transparent),
+              child: Row(children: [
+                const Text('Followers'),
+                const SizedBox(
+                  width: 10,
+                  height: 3,
+                ),
+                const Icon(Icons.person, size: 30),
+                Text(p.followers == null ? '0' : p.followers.toString()),
+              ]),
+            ),
+            Container(
+              margin: const EdgeInsets.all(2),
+              decoration: const BoxDecoration(color: Colors.transparent),
+              child: Row(children: [
+                const Text('Following'),
+                const SizedBox(
+                  width: 10,
+                  height: 3,
+                ),
+                const Icon(Icons.person, size: 30),
+                Text(p.followed == null ? '0' : p.followed.toString()),
+              ]),
+            )
+          ],
+        )
       ]));
 }
 
@@ -108,7 +165,7 @@ Widget aboutMe(context, bio, interest, knowledge) {
   return Container(
       //height: 400,
       width: MediaQuery.of(context).size.width,
-      padding: const EdgeInsets.symmetric(horizontal: 20) +
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8) +
           const EdgeInsets.only(top: 4),
       decoration: const BoxDecoration(
           color: Color.fromARGB(255, 255, 238, 238),
@@ -125,19 +182,45 @@ Widget aboutMe(context, bio, interest, knowledge) {
             ),
             seperator(context),
             Text(bio),
+            const SizedBox(height: 2),
             const Text(
               'Interests',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             seperator(context),
-            Text(interest),
+            Row(children: [
+              ...p.interests!.map((s) => tag(
+                  s,
+                  Color((Random().nextDouble() * 0xFFFFFF).toInt())
+                      .withOpacity(1.0)))
+            ]),
+            const SizedBox(height: 2),
             const Text(
               'Knowledge',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             seperator(context),
-            Text(knowledge),
+            Row(children: [
+              ...p.knowledge!.map((s) => tag(
+                  s,
+                  Color((Random().nextDouble() * 0xFFFFFF).toInt())
+                      .withOpacity(1.0)))
+            ]),
           ]));
+}
+
+Widget tag(tag_name, color_name) {
+  return Container(
+    margin: const EdgeInsets.all(2),
+    padding: const EdgeInsets.all(2),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius:
+          const BorderRadius.all(Radius.circular(Constants.borderRadius)),
+      border: Border.all(color: color_name),
+    ),
+    child: Text(tag_name),
+  );
 }
 
 Widget seperator(context) {
@@ -145,7 +228,7 @@ Widget seperator(context) {
     height: 2,
     width: MediaQuery.of(context).size.width,
     decoration: BoxDecoration(
-        color: Colors.grey[700],
+        color: Colors.grey[400],
         borderRadius:
             const BorderRadius.all(Radius.circular(Constants.borderRadius))),
   );
