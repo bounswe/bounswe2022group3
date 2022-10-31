@@ -64,7 +64,7 @@ const CourseController = {
       if(!user){
         return res.status(200).json({ data });
       }
-      const enrollingInfo = await EnrollmentModel.Enrollment.find({
+      const enrollingInfo = await EnrollmentModel.Enrollment.findOne({
         course_id: id,
         user_id,
       });

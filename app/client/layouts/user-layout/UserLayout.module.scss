@@ -1,3 +1,5 @@
+@import "../../styles/variables.scss";
+
 .pageContainer {
     width: 100%;
     height: 100vh;
@@ -38,4 +40,17 @@
 
 .navbarProfileIconContainer {
     justify-self: end;
+}
+
+.icon {
+    display: flex;
+    align-items: center;
+    padding: 30px;
+
+    h2 {
+        font-family: "Merriweather", sans-serif;
+        color: $secondary;
+        margin-left: 15px;
+        margin-top: -8px;
+    }
 }

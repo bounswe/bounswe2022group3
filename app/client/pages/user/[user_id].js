@@ -17,6 +17,7 @@ import { API_URL } from "../../next.config";
 import axios from 'axios';
 import { useEffect, useState } from "react";
 import { useRouter } from 'next/router'
+import UserLayout from '../../layouts/user-layout/UserLayout';
 
 
 const post = { //getpersonalınfo request adding backend then this will be deleted 
@@ -47,23 +48,27 @@ export default function profile(props) {
     name: '',
     surname: ''
   });
+
   const get_user = async () => {
-    let payload = { user_id: { user_id } };
-    try {
-      const res = (
-        await axios.get(`${API_URL}/userProfile/getProfile`, payload)
-      )?.data
-      console.log(res)
-      if (res) {
-        setValues(res.profile);
+    if (user_id) {
+      try {
+        const res = (
+          await axios.get(`${API_URL}/userProfile/getProfile/${user_id}`)
+        )?.data
+        console.log(res)
+        if (res) {
+          setValues(res.profile);
+        }
+      } catch (e) {
+        console.log(e);
       }
-    } catch (e) {
-      console.log(e);
     }
+
   }
+
   useEffect(() => {
     get_user();
-  }, []);
+  }, [router.query]);
 
   const handleChange = (event) => {
     setValues({
@@ -75,12 +80,12 @@ export default function profile(props) {
   return (
     <>
       <Box
-        min-height="100vh"
+        style={{minHeight: "100vh"}}
         component="main"
         sx={{
           flexGrow: 1,
           py: 2,
-          backgroundColor: '#889bdd'
+          backgroundColor: '#F2F1F8'
         }}
       >
         <Container maxWidth="lg">
@@ -93,7 +98,7 @@ export default function profile(props) {
               lg={4}
               md={6}
               xs={12}
-              sx={{ 'background-color': '#889bdd' }}
+              sx={{ 'background-color': '#F2F1F8' }}
             >
               <Card {...props} >
                 <CardContent>
@@ -117,7 +122,7 @@ export default function profile(props) {
                       gutterBottom
                       variant="h5"
                     >
-                      {values.name}
+                      {values.name} {values.surname}
                     </Typography>
                     <Typography
                       color="textSecondary"
@@ -273,3 +278,6 @@ export default function profile(props) {
   );
 }
 
+profile.getLayout = function getLayout(page) {
+  return <UserLayout>{page}</UserLayout>;
+};
