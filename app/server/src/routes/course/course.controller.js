@@ -30,11 +30,11 @@ const CourseController = {
         courses = await CourseModel.Course.find({
           name: { $regex: keyword, $options: "i" },
         })
-          .populate("name rating image lecturer")
+          .populate("lecturer")
           .exec();
       } else {
         courses = await CourseModel.Course.find({})
-          .populate("name rating image lecturer")
+          .populate("lecturer")
           .exec();
       }
       return res.status(200).json({ courses });
@@ -47,7 +47,7 @@ const CourseController = {
     try {
       const id = req.params.id;
       const course = await CourseModel.Course.findById(id)
-        .populate("name info rating lecturer tags chapters image")
+        .populate("lecturer chapters")
         .populate({
           path: 'chapters',
           populate: {
