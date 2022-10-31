@@ -1,7 +1,6 @@
 import { IconButton } from "@mui/material";
-import Image from "next/image";
 import styles from "./UserLayout.module.scss";
-import Icon from '@mui/material/Icon';
+import LogoutIcon from '@mui/icons-material/Logout';
 import { Home, School, AccountCircle } from '@mui/icons-material';
 import { useEffect, useState } from "react";
 import Button from "../../components/Button/Button";
@@ -18,6 +17,20 @@ function UserLayout({ children }) {
             setLoggedIn(true)
         }
     }, [])
+
+    async function logout() {
+        try {
+            await axios.post(API_URL + "/user/logout", {})
+        } catch (err) {
+            console.log(err);
+        }
+
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("refresh_token");
+        localStorage.removeItem("email");
+        localStorage.removeItem("user_id");
+        router.push("/user/login");
+    }
 
 
     return (
@@ -51,7 +64,7 @@ function UserLayout({ children }) {
                         {loggedIn && router.pathname != "/user/[user_id]" && <Link href={`/user/${localStorage.getItem("user_id")}`}>
                             <div className={styles.navbarIconContainer}>
                                 <IconButton >
-                                    <AccountCircle/>
+                                    <AccountCircle />
                                 </IconButton>
                                 My profile
                             </div>
@@ -60,6 +73,13 @@ function UserLayout({ children }) {
                         {!loggedIn && <div><Button style={{ marginTop: "6px" }} onClick={() => router.push("/user/register")}>
                             Login/Register
                         </Button></div>}
+
+                        {loggedIn && <div className={styles.navbarIconContainer} onClick={logout}>
+                            <IconButton>
+                                <LogoutIcon />
+                            </IconButton>
+                            Log out
+                        </div>}
                     </div>
                 </div>
                 {children}

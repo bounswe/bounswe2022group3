@@ -43,20 +43,6 @@ function MainLayout({ children }) {
         }
     }, [router.query])
 
-
-    async function logout() {
-        try {
-            await axios.post(API_URL + "/user/logout", {})
-        } catch (err) {
-            console.log(err);
-        }
-
-        localStorage.removeItem("access_token");
-        localStorage.removeItem("refresh_token");
-        localStorage.removeItem("email");
-        router.push("/user/login");
-    }
-
     return (
         <main className={styles.main}>
             <div className={styles.navbar}>
@@ -112,7 +98,7 @@ function MainLayout({ children }) {
                         </div>
                     </Link>
                 </nav>
-                <div className={styles.exit} onClick={logout}>
+                <div className={styles.exit} onClick={() => router.push("/user/home")}>
                     <LogoutIcon />
                 </div>
             </div>
@@ -163,7 +149,7 @@ function MainLayout({ children }) {
                         <NoteAltIcon />
                     </div>
                 </Link>
-                <div onClick={logout}>
+                <div onClick={() => router.push("/user/home")}>
                     <LogoutIcon />
                 </div>
             </nav>
