@@ -1,4 +1,4 @@
-import 'package:bucademy/view/profile/profile.dart';
+import 'package:bucademy/view/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 

@@ -1,0 +1,92 @@
+@import "../variables.scss";
+
+
+.description {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    height: 250px;
+    background-color: $bg-color;
+    margin: 0 ;
+    display: 'block';
+    padding: 0 20px;
+    @media screen and (max-width: 65rem) {
+        height: auto;
+        padding: 0;
+    }
+    h1 {
+        font-family: "Merriweather", sans-serif;
+    }
+}
+
+.left {
+    width: 48%;
+    height: 100%;
+    float: right;
+    grid-gap: 20px;
+    padding: 25px;
+    max-width: 500px;
+    @media screen and (max-width: 65rem) {
+        background-color: $bg-color;
+        margin-bottom: 2.5rem;
+        width: 100%;
+    }
+}
+
+.descriptionImage {
+    display: block;
+    height: 100%;
+    width: auto;
+    object-fit: contain;
+    max-height: 250px;
+    @media screen and (max-width: 65rem) {
+        max-height: auto;
+        width: 100%;
+        height: auto;
+    }
+}
+
+.right {
+    width: 32%;
+    height: 100%;
+    float: right;
+    @media screen and (max-width: 65rem) {
+        margin-top: 2.5rem;
+        margin-bottom: 2.5rem;
+        width: 100%;
+    }
+}
+.details {
+    margin-top: 5rem;
+    p {
+        font-family: "Montserrat", sans-serif;
+        font-size: 1.1rem;
+    }
+}
+.fullStars {
+    position: absolute;
+    left: 0;
+    top: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    color: #fde16d;
+}
+.emptyStars:before, .fullStars:before {
+    content:"\2605\2605\2605\2605\2605";
+    font-size: 15pt;
+}
+.emptyStars:before {
+    -webkit-text-stroke: 1px #848484;
+}
+.fullStars:before {
+    -webkit-text-stroke: 1px orange;
+}
+/* Webkit-text-stroke is not supported on firefox or IE */
+
+/* Firefox */
+ @-moz-document url-prefix() {
+    .full-stars {
+        color: #ECBE24;
+    }
+}
