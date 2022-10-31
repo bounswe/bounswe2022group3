@@ -53,8 +53,14 @@ const getPersonalInfo = async (id) => {
     return res
 }
 
-const updateBio = async (id, bio) => {
-    const res = await PersonalInfo.findByIdAndUpdate(id, {"bio": bio})
+const updateBio = async (id, data) => {
+    const profile = await PersonalInfo.findByIdAndUpdate(id, 
+        {
+            "bio": data.bio,
+            "interests": data.interests,
+            "knowledge": data.knowledge
+        })
+    const res = await profile.save()
     return res
 }
 
