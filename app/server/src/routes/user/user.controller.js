@@ -29,7 +29,7 @@ const UserController = {
             // Proceeding with signup
             // Hash the password
             passwd_data = auth.hashPassword(password)
-            const confirmationToken = await auth.generateToken(email, jwt_conf_secret, confirmation_token_expiry) 
+            const confirmationToken = await auth.generateToken(email, jwt_conf_secret, confirmation_token_expiry)
 
             token_data = {
                 email: email,
