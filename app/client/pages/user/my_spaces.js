@@ -28,7 +28,7 @@ export default function home() {
 
                     {
                         courseList.map(course =>
-                            <a className={styles.courseLink} href={'/course/' + course._id}>
+                            <a className={styles.courseLink} href={'/space/' + course._id}>
                                 <CourseCard
                                     courseId={course._id}
                                     courseInfo={course.info}

@@ -19,13 +19,13 @@ import UserLayout from "../../layouts/user-layout/UserLayout";
 export default function courseSummary() {
   const [post, setPost] = useState({});
   const router = useRouter();
-  let course_id = router.query;;
+  let space_id = router.query;;
 
 
   async function fetchContent() {
     try {
       const response = (
-        await axios.get(API_URL + "/course/" + course_id.course_id)
+        await axios.get(API_URL + "/course/" + space_id.space_id)
       )?.data;
       setPost(response.data);
     } catch (err) {
@@ -34,13 +34,12 @@ export default function courseSummary() {
   }
 
   useEffect(() => {
-    course_id = router.query;
-    console.log(course_id)
-    if(!course_id) {
+    space_id = router.query;
+    if(!space_id) {
       return;
     }
     fetchContent();
-  }, [course_id]);
+  }, [space_id]);
 
   function handleSubmit() {
     const token = localStorage.getItem("access_token");
