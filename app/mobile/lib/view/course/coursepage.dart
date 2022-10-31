@@ -116,7 +116,7 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                               )),
                           Tab(
                               icon: Icon(
-                                Icons.quiz,
+                                Icons.quiz_outlined,
                                 color: Colors.black,
                               ),
                               child: Text(
@@ -125,7 +125,7 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                               )),
                           Tab(
                               icon: Icon(
-                                Icons.group,
+                                Icons.group_outlined,
                                 color: Colors.black,
                               ),
                               child: Text(
