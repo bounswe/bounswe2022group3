@@ -47,9 +47,9 @@ export default function courseSummary() {
     async function enroll() {
       try {
         const response = (
-          await axios.post(API_URL + "/enrollment", {course_id: course_id.course_id, user_id: user_id} )
+          await axios.post(API_URL + "/enrollment", {course_id: space_id.space_id, user_id: user_id} )
         )?.data;
-        router.push(`/my/spaces/` + course_id.course_id + '/resources');
+        router.push(`/my/spaces/` + space_id.space_id + '/resources');
       } catch (err) {
         console.log(err);
       }
@@ -59,7 +59,7 @@ export default function courseSummary() {
       router.push(`/user/login`);
     }
     if (post.enrolled) {
-      router.push(`/my/spaces/` + course_id.course_id + '/resources');
+      router.push(`/my/spaces/` + space_id.space_id + '/resources');
     } else {
       enroll();   //if user not enrolled, enroll first
     }
