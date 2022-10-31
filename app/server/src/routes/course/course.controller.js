@@ -1,10 +1,12 @@
 const CourseModel = require("../../models/course/course.model");
 const EnrollmentModel = require("../../models/enrollment/enrollment.model");
+const UserModel = require("../../models/user/user.model");
 
 const CourseController = {
   createCourse: async function (req, res) {
     try {
-      const user = req.auth;
+      const user_id = req.auth.id;
+      const user = await UserModel.User.findById(user_id);
       const { name, info, chapters, tags, image } = req.body;
       const course = await CourseModel.createCourse(
         name,
@@ -53,8 +55,8 @@ const CourseController = {
           }
         })
         .exec();
-        
-      const user = req.auth;
+      const user_id = req.auth.id;
+      const user = await UserModel.User.findById(user_id);
 
       let data = {
         course,
@@ -64,7 +66,7 @@ const CourseController = {
       }
       const enrollingInfo = await EnrollmentModel.Enrollment.find({
         course_id: id,
-        user_id: user._id,
+        user_id,
       });
       if (enrollingInfo) {
         data.enrolled = true;

@@ -8,7 +8,6 @@ void main() {
   configureDependencies();
   navigatorService.controller = PersistentTabController(initialIndex: 0);
   WidgetsFlutterBinding.ensureInitialized();
-
   runApp(const MyApp());
 }
 

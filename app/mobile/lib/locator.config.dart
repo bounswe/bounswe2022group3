@@ -1,4 +1,5 @@
 import 'package:bucademy/services/course_service.dart';
+import 'package:bucademy/services/content_service.dart';
 import 'package:bucademy/services/dio_service.dart';
 import 'package:bucademy/services/navigator_service.dart';
 import 'package:bucademy/services/persistence_service.dart';
@@ -17,6 +18,6 @@ GetIt $initGetIt(
   gh.lazySingleton<PersistenceService>((() => PersistenceService()));
   gh.lazySingleton<DioService>((() => DioService()));
   gh.lazySingleton<UserService>((() => UserService()));
-
+  gh.lazySingleton<ContentService>((() => ContentService()));
   return get;
 }
