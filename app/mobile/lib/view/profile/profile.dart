@@ -54,11 +54,12 @@ Widget profileView() => ViewModelBuilder<ProfileView>.reactive(
                         background: Container(
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 10) +
-                                    const EdgeInsets.only(top: 40),
+                                    const EdgeInsets.only(top: 60),
                             decoration: const BoxDecoration(
                               color: CustomColors.main,
                             ),
                             child: Column(children: [
+                              SizedBox(height: 20),
                               profileHeader(context, p.image),
                               aboutMe(context, p.bio, p.interests, p.knowledge)
                             ])),
