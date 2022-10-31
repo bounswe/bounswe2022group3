@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'dart:math';
 
-import '../../resources/colors.dart';
+import 'package:bucademy/resources/custom_colors.dart';
 import '../../resources/text_styles.dart';
 import '../../services/profile_service.dart';
 import '../widgets/profile_picture.dart';
