@@ -55,7 +55,7 @@ Widget profileView() => ViewModelBuilder<ProfileView>.reactive(
                                 const EdgeInsets.symmetric(horizontal: 10) +
                                     const EdgeInsets.only(top: 40),
                             decoration: const BoxDecoration(
-                              color: Color.fromARGB(255, 136, 197, 238),
+                              color: CustomColors.main,
                             ),
                             child: Column(children: [
                               profileHeader(context, p.image),
@@ -212,7 +212,7 @@ Widget aboutMe(context, bio, interest, knowledge) {
 Widget tag(tag_name, color_name) {
   return Container(
     margin: const EdgeInsets.all(2),
-    padding: const EdgeInsets.all(2),
+    padding: const EdgeInsets.all(5),
     decoration: BoxDecoration(
       color: Colors.white,
       borderRadius:
@@ -234,28 +234,48 @@ Widget seperator(context) {
   );
 }
 
+List<Widget> list_open(List<String> list_name) {
+  List<Widget> tmp = [];
+  if (list_name.isEmpty) {
+    tmp.add(Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: const [
+        SizedBox(width: 30),
+        Icon(Icons.circle, size: 10),
+        SizedBox(width: 10),
+        Text('Wow! Such Empty'),
+      ],
+    ));
+  }
+  for (var e in list_name) {
+    tmp.add(Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        const SizedBox(width: 30),
+        const Icon(Icons.circle, size: 10),
+        const SizedBox(width: 10),
+        Text(e),
+      ],
+    ));
+  }
+  return tmp;
+}
+
 List<Widget> tabContent = [
   ListView(
-    shrinkWrap: true,
-    padding: const EdgeInsets.all(10.0),
-    children: [
-      Text('Activities'),
-      //...profileService
-    ],
-  ),
+      shrinkWrap: true,
+      padding: const EdgeInsets.all(10.0),
+      children: list_open(p.activities!)),
   ListView(
     shrinkWrap: true,
-    padding: EdgeInsets.all(10.0),
-    children: [
-      Text('Achievements'),
-      //...profileService
-    ],
+    padding: const EdgeInsets.all(10.0),
+    children: list_open(p.achievements!),
   ),
   ListView(
     shrinkWrap: true,
     padding: const EdgeInsets.all(10.0),
     children: [
-      Text('Spaces'),
+      const Text('Spaces'),
       //...profileService
     ],
   ),
@@ -263,7 +283,7 @@ List<Widget> tabContent = [
     shrinkWrap: true,
     padding: const EdgeInsets.all(10.0),
     children: [
-      Text('Notes'),
+      const Text('Notes'),
       //...profileService
     ],
   ),
