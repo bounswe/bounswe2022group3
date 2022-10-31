@@ -54,7 +54,7 @@ export default function courses() {
 
                     {
                         courseList.map(course =>
-                            <a href={course._id}>
+                            <a href={'/space/' + course._id}>
                                 <CourseCard
                                     courseId={course._id}
                                     courseInfo={course.info}
