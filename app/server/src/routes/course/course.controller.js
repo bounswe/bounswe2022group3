@@ -60,23 +60,29 @@ const CourseController = {
 					.status(404)
 					.json({ message: "The course does not exits!" });// The token exists but email mismatch.
 			}
-			const user_id = req.auth.id;
-			const user = await UserModel.User.findById(user_id);
-
 			let data = {
 				course,
 			};
-			if (!user) {
-				return res.status(200).json({ data });
+			// if user logged-in
+			if (req.auth){
+				const user_id = req.auth.id;
+				const user = await UserModel.User.findById(user_id);
+
+				if (!user) {
+					return res.status(200).json({ data });
+				}
+				const enrollingInfo = await EnrollmentModel.Enrollment.findOne({
+					course_id: id,
+					user_id,
+				});
+				if (enrollingInfo) {
+					data.enrolled = true;
+				} else {
+					data.enrolled = false;
+				}
 			}
-			const enrollingInfo = await EnrollmentModel.Enrollment.findOne({
-				course_id: id,
-				user_id,
-			});
-			if (enrollingInfo) {
-				data.enrolled = true;
-			} else {
-				data.enrolled = false;
+			else{
+				data.enrolled = false // no
 			}
 			return res.status(200).json({ data });
 		} catch (e) {
