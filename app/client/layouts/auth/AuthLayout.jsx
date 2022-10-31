@@ -10,15 +10,6 @@ function AuthLayout({ children }) {
             </div>
             <div className={styles.container}>
                 <div className={styles.loginFormContainer}>{children}</div>
-                <div className={styles.loginImageContainer}>
-                    <Image
-                        priority
-                        src="/login.png"
-                        width="100%"
-                        height="100%"
-                        layout="responsive"
-                    />
-                </div>
             </div>
         </>
     );
