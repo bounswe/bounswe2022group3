@@ -2,7 +2,7 @@ const express = require("express");
 const CourseController = require("./course.controller");
 const { validate } = require("./course.validate");
 const { handleValidation } = require("../../services/validate");
-const { authorization } = require("../../services/auth");
+const { authorization, authorization_conditional } = require("../../services/auth");
 
 const courseRouter = express.Router();
 
@@ -21,7 +21,7 @@ courseRouter.get(
 
 courseRouter.get(
   "/:id",
-  authorization,
+  authorization_conditional,
   CourseController.getCourseDetail
 );
 
