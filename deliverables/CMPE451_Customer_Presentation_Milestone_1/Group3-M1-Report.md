@@ -596,7 +596,7 @@ Then, edit or delete those notes by respectively clicking:
 - **Responsibilities**: I have been assigned to design and implement the login and registration pages.
 - **Main contributions**: 
   - Implemented the login and registration views. 
-- **Code-related significant issues**: [#307](https://github.com/bounswe/bounswe2022group3/pull/307)
+- **Code-related significant issues**: [#339](https://github.com/bounswe/bounswe2022group3/pull/339)
 - **Management-related significant issues**:  [#259](https://github.com/bounswe/bounswe2022group3/issue/259)
 - **Pull requests**: [#307](https://github.com/bounswe/bounswe2022group3/pull/307)
 - **Additional information**: I have reviewed the PRs of my team members.
