@@ -2,6 +2,7 @@ import 'package:bucademy/classes/chapter/chapter.dart';
 import 'package:bucademy/resources/constants.dart';
 import 'package:bucademy/classes/course/course.dart';
 import 'package:bucademy/resources/custom_colors.dart';
+import 'package:bucademy/resources/text_styles.dart';
 import 'package:bucademy/services/locator.dart';
 import 'package:bucademy/view/course/content_tile.dart';
 import 'package:bucademy/view/course/mock_tile.dart';
@@ -9,8 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:bucademy/services/content_service.dart';
 
-Widget coursePageView(Course c) => ViewModelBuilder<
-        CoursePageViewModel>.reactive(
+Widget coursePageView(Course c) => ViewModelBuilder<CoursePageViewModel>.reactive(
     viewModelBuilder: () => CoursePageViewModel(c.id),
     builder: (context, viewModel, child) {
       return viewModel.contentsLoading 
@@ -77,8 +77,32 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                                       Text(viewModel.course!.info, maxLines: 5),
                                   // child:Text('Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',maxLines: 4,)
                                 ),
+                                                                      if (!courseService.enrolledIds.contains(c.id))
+                                        GestureDetector(
+                                          onTap: () async {
+                                            await courseService.enrollToCourse(courseId: c.id);
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                                SnackBar(content: Text('Successfully Joined To The Space!')));
+                                            viewModel.notifyListeners();
+                                          },
+                                          child: Container(
+                                            padding: const EdgeInsets.symmetric(vertical: 8),
+                                            margin: const EdgeInsets.symmetric(vertical: 8),
+                                            width: 120,
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(Constants.borderRadius),
+                                              color: CustomColors.main,
+                                            ),
+                                            child: Center(
+                                                child: Text(
+                                              "Join",
+                                              style: TextStyles.bodyWhite,
+                                            )),
+                                          ),
+                                        ),
                               ]),
                         ),
+                        
                       ),
                       expandedHeight: 450,
                       forceElevated: innerBoxIsScrolled,
