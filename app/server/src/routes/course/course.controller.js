@@ -29,12 +29,12 @@ const CourseController = {
       if (keyword) {
         courses = await CourseModel.Course.find({
           name: { $regex: keyword, $options: "i" },
-        })
-          .populate("lecturer")
+        }, 'name lecturer info rating tags image')
+          .populate("lecturer", 'name surname')
           .exec();
       } else {
-        courses = await CourseModel.Course.find({})
-          .populate("lecturer")
+        courses = await CourseModel.Course.find({}, 'name lecturer info rating tags image')
+          .populate("lecturer", 'name surname')
           .exec();
       }
       return res.status(200).json({ courses });
@@ -46,8 +46,8 @@ const CourseController = {
   getCourseDetail: async function (req, res) {
     try {
       const id = req.params.id;
-      const course = await CourseModel.Course.findById(id)
-        .populate("lecturer chapters")
+      const course = await CourseModel.Course.findById(id, '-enrollments')
+        .populate("lecturer", 'name surname')
         .populate({
           path: 'chapters',
           populate: {
