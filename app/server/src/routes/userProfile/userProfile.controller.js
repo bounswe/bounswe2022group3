@@ -7,10 +7,15 @@ const UserProfileController = {
     updatePersonalInfo: async function (req, res) {
 
         try {
-            const { id, bio } = req.body
+            const { id, bio, interests, knowledge } = req.body
             const profile = await userModel.getUserByID(id)
             const personalInfoId = profile.personal_info
-            personalInfoModel.updateBio(personalInfoId, bio)
+            let data = {
+                bio: bio,
+                interests: interests,
+                knowledge: knowledge
+            }
+            personalInfoModel.updateBio(personalInfoId, data)
             res.status(201).send({ "message": "Updated bio successfully" })
 
         }
