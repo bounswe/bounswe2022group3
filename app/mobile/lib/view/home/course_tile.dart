@@ -10,8 +10,7 @@ import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 GestureDetector courseTile(Course c, BuildContext context, {bool isClickable = true}) {
   return GestureDetector(
     child: Container(
-      decoration: BoxDecoration(
-          color: CustomColors.getRandomColor(), borderRadius: BorderRadius.circular(Constants.borderRadius)),
+      decoration: BoxDecoration(color: c.color, borderRadius: BorderRadius.circular(Constants.borderRadius)),
       width: 240,
       height: 120,
       padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),

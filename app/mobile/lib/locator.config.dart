@@ -18,6 +18,6 @@ GetIt $initGetIt(
   gh.lazySingleton<PersistenceService>((() => PersistenceService()));
   gh.lazySingleton<DioService>((() => DioService()));
   gh.lazySingleton<UserService>((() => UserService()));
-  gh.lazySingleton<ContentService>((() => ContentService()));
+  gh.lazySingleton<MockContentService>((() => MockContentService()));
   return get;
 }
