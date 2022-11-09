@@ -1,9 +1,11 @@
 db = connect('mongodb://localhost/db1');
 
+var ids_d = {'badge': [ObjectId()]}; // creating an ID for the first badge
 db.badge.insertMany([
     {
-        title: '',
-        description: ''
+        _id: ids_d.badge[0], // using the generated ID as the first badge's ID
+        title: 'Enrolled in a course!',
+        description: 'You have been given this badge because you enrolled in a course.'
     }
 ]);
 db.chapter.insertMany([
