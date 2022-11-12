@@ -22,43 +22,45 @@ const CourseController = {
 		}
 	},
 
-	getCourses: async function (req, res) {
-		try {
-			const keyword = req.params.keyword;
-			var courses;
-			if (keyword) {
-				courses = await CourseModel.Course.find({
-					name: { $regex: keyword, $options: "i" },
-				})
-					.populate("name rating image lecturer")
-					.exec();
-			} else {
-				courses = await CourseModel.Course.find({})
-					.populate("name rating image lecturer")
-					.exec();
-			}
-			return res.status(200).json({ courses });
-		} catch (error) {
-			res.status(400).send({ error: error.toString() });
-		}
-	},
+  getCourses: async function (req, res) {
+    try {
+      const keyword = req.params.keyword;
+      var courses;
+      if (keyword) {
+        courses = await CourseModel.Course.find({
+          name: { $regex: keyword, $options: "i" },
+        }, 'name lecturer info rating tags image')
+          .populate("lecturer", 'name surname')
+          .exec();
+      } else {
+        courses = await CourseModel.Course.find({}, 'name lecturer info rating tags image')
+          .populate("lecturer", 'name surname')
+          .exec();
+      }
+      return res.status(200).json({ courses });
+    } catch (error) {
+      res.status(400).send({ error: error.toString() });
+    }
+  },
 
-	getCourseDetail: async function (req, res) {
-		try {
-			const id = req.params.id;
-			const course = await CourseModel.Course.findById(id)
-				.populate("name info rating lecturer tags chapters image")
-				.populate({
-					path: 'chapters',
-					populate: {
-						path: 'chapter_badge',
-					}
-				})
-				.exec();
+  getCourseDetail: async function (req, res) {
+    try {
+      const id = req.params.id;
+      const course = await CourseModel.Course.findById(id, '-enrollments')
+        .populate("lecturer", 'name surname')
+        .populate({
+          path: 'chapters',
+          populate: {
+            path: 'chapter_badge',
+          }
+        })
+        .exec();
+      
+
 			if (!course) {
 				return res
 					.status(404)
-					.json({ message: "The course does not exits!" });// The token exists but email mismatch.
+					.json({ message: "The course does not exist!" }); // The token exists but email mismatch.
 			}
 			let data = {
 				course,
@@ -67,7 +69,6 @@ const CourseController = {
 			if (req.auth){
 				const user_id = req.auth.id;
 				const user = await UserModel.User.findById(user_id);
-
 				if (!user) {
 					return res.status(200).json({ data });
 				}
