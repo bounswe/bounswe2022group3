@@ -61,7 +61,7 @@ const createSpace = async (name, info, tags, image) => {
     name,
     info,
     tags,
-    image
+    image,
   });
   const res = await space.save();
   return res;

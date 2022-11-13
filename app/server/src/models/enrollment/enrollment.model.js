@@ -5,12 +5,9 @@ const enrollmentSchema = new mongoose.Schema(
     user_id: {
       type: String,
     },
-    course: {
+    space: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Course",
-    },
-    course_id: {
-      type: String,
+      ref: "Space",
     },
     is_active: {
       type: Boolean,
@@ -30,8 +27,8 @@ const enrollmentSchema = new mongoose.Schema(
 
 const Enrollment = mongoose.model("Enrollment", enrollmentSchema);
 
-const createEnrollment = async (user_id, course_id) => {
-  var enrollment = new Enrollment({ user_id, course_id });
+const createEnrollment = async (user_id, space_id) => {
+  var enrollment = new Enrollment({ user_id, space_id });
   const res = await enrollment.save();
   return res;
 };
