@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const spaceSchema = new mongoose.Schema({
   name: {
     type: String,
+    required: True,
   },
   creator: {
     type: mongoose.Schema.Types.ObjectId,
