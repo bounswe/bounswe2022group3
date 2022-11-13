@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const spaceSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: True,
+    required: true,
   },
   creator: {
     type: mongoose.Schema.Types.ObjectId,
@@ -57,10 +57,10 @@ const spaceSchema = new mongoose.Schema({
 
 const Space = mongoose.model("Space", spaceSchema);
 
-const createSpace = async (name, user, info, tags, image) => {
+const createSpace = async (name, creator, info, tags, image) => {
   var space = new Space({
     name,
-    user,
+    creator,
     info,
     tags,
     image,

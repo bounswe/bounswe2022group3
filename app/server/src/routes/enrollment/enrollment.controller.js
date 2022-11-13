@@ -20,20 +20,21 @@ const EnrollmentController = {
     try {
       const user_id = req.auth.id;
       const enrolled_spaces = await EnrollmentModel.Enrollment.find({
-        user_id,
+        user: user_id,
       });
       var data = [];
       for (var enrolled_space of enrolled_spaces) {
-        var space = await SpaceModel.Space.findById(enrolled_space.space_id)
+        var space = await SpaceModel.Space.findById(enrolled_space.space)
           .populate("creator", "name surname")
           .populate({
             path: "topics",
             populate: {
               path: "topic_badge",
             },
-          })
-          .exec();
-        data.push(space);
+          });
+        if (space) {
+          data.push(space);
+        }
       }
       return res.status(200).json({ data });
     } catch (e) {

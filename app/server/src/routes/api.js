@@ -10,7 +10,7 @@ const commentRouter = require("./comment/comment.route");
 const badgeRouter = require("./badge/badge.route");
 const contentRouter = require("./content/content.route");
 const userRouter = require("./user/user.route");
-const courseRouter = require("./course/course.route");
+const spaceRouter = require("./space/space.route");
 const enrollmentRouter = require("./enrollment/enrollment.route");
 
 
@@ -22,7 +22,7 @@ api.use("/comment", commentRouter);
 api.use("/badge", badgeRouter);
 api.use("/content", contentRouter);
 api.use("/user", userRouter);
-api.use("/course", courseRouter);
+api.use("/space", spaceRouter);
 api.use("/enrollment", enrollmentRouter);
 
 module.exports = {

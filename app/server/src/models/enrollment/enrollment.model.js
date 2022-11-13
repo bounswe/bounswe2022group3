@@ -5,12 +5,12 @@ const enrollmentSchema = new mongoose.Schema(
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: True,
+      required: true,
     },
     space: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Space",
-      required: True,
+      required: true,
     },
     is_active: {
       type: Boolean,
