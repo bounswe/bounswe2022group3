@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
 
-const courseSchema = new mongoose.Schema({
+const spaceSchema = new mongoose.Schema({
   name: {
     type: String,
   },
-  lecturer: {
+  creator: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true,
@@ -15,9 +15,9 @@ const courseSchema = new mongoose.Schema({
   rating: {
     type: Number,
   },
-  chapters: {
+  topics: {
     type: [mongoose.Schema.Types.ObjectId],
-    ref: "Chapter",
+    ref: "Topic",
   },
   tags: {
     type: [String],
@@ -54,24 +54,22 @@ const courseSchema = new mongoose.Schema({
   },
 });
 
-const Course = mongoose.model("Course", courseSchema);
+const Space = mongoose.model("Space", spaceSchema);
 
-const createCourse = async (name, lecturer, info, chapters, tags, image) => {
-  var course = new Course({
+const createSpace = async (name, info, tags, image) => {
+  var space = new Space({
     name,
-    lecturer,
     info,
-    chapters,
     tags,
     image
   });
-  const res = await course.save();
+  const res = await space.save();
   return res;
 };
 
-const deleteCourse = async (_id) => {
-  const res = await Course.findOneAndDelete({ _id });
+const deleteSpace = async (_id) => {
+  const res = await Space.findOneAndDelete({ _id });
   return res;
 };
 
-module.exports = { Course, createCourse, deleteCourse };
+module.exports = { Space, createSpace, deleteSpace };
