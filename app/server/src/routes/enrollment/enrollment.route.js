@@ -15,9 +15,9 @@ enrollmentRouter.post(
 );
 
 enrollmentRouter.get(
-  "/getEnrolledCourses",
+  "/getEnrolledSpaces",
   authorization,
-  EnrollmentController.getEnrolledCourses
+  EnrollmentController.getEnrolledSpaces
 );
 
 module.exports = enrollmentRouter;

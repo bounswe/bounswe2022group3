@@ -1,15 +1,15 @@
-const CourseModel = require("../../models/course/course.model");
+const SpaceModel = require("../../models/space/space.model");
 const EnrollmentModel = require("../../models/enrollment/enrollment.model");
 
 const EnrollmentController = {
   createEnrollment: async function (req, res) {
 
     try {
-      const course_id = req.body.course_id;
+      const space_id = req.body.space_id;
       const user_id = req.auth.id;
       const enrollment = await EnrollmentModel.createEnrollment(
         user_id,
-        course_id
+        space_id
       );
       res.status(201).send({ enrollment });
     }
@@ -18,22 +18,22 @@ const EnrollmentController = {
     }
   },
 
-  getEnrolledCourses: async function (req, res) {
+  getEnrolledSpaces: async function (req, res) {
 
     try {
       const user_id = req.auth.id;
-      const enrolled_courses = await EnrollmentModel.Enrollment.find({ user_id });
+      const enrolled_spaces = await EnrollmentModel.Enrollment.find({ user_id });
       var data = [];
-      for (var enrolled_course of enrolled_courses) {
-        var course = await CourseModel.Course.findById(enrolled_course.course_id)
-        .populate("lecturer", 'name surname')
+      for (var enrolled_space of enrolled_spaces) {
+        var space = await SpaceModel.Space.findById(enrolled_space.space_id)
+        .populate("creator", 'name surname')
         .populate({
-          path: 'chapters',
+          path: 'topics',
           populate: {
-            path: 'chapter_badge',
+            path: 'topic_badge',
           }
         }).exec();
-        data.push(course);
+        data.push(space);
       }
       return res.status(200).json({ data });
     }

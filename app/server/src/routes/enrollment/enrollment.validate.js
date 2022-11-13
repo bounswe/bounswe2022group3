@@ -4,7 +4,7 @@ exports.validate = (method) => {
   switch (method) {
     case "createEnrollment": {
       return [
-        body("course_id", "course_id does not exist").exists(),
+        body("space_id", "space_id does not exist").exists(),
       ];
     }
   }

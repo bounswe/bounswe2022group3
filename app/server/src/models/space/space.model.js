@@ -56,9 +56,10 @@ const spaceSchema = new mongoose.Schema({
 
 const Space = mongoose.model("Space", spaceSchema);
 
-const createSpace = async (name, info, tags, image) => {
+const createSpace = async (name, user, info, tags, image) => {
   var space = new Space({
     name,
+    user,
     info,
     tags,
     image,
