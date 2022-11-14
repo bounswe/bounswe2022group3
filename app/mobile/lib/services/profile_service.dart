@@ -1,4 +1,8 @@
+// ignore_for_file: non_constant_identifier_names
+
+import 'package:bucademy/classes/profile/profile.dart';
 import 'package:bucademy/services/locator.dart';
+import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 
 class Badge {
@@ -8,34 +12,24 @@ class Badge {
   Badge(this.title, this.def);
 }
 
-class Profile {
-  String id;
-  String name;
-  String surname;
-  String image;
-  int? followers;
-  int? followed;
-  double? rating;
-  String? bio;
-  List<String>? interests;
-  List<String>? knowledge;
-  List<String>? activities;
-  List<Badge>? badges;
-  List<String>? achievements;
-
-  Profile(this.id, this.name, this.surname, this.image,
-      {this.followers,
-      this.followed,
-      this.rating,
-      this.bio,
-      this.interests,
-      this.knowledge,
-      this.activities,
-      this.achievements,
-      this.badges});
-}
-
 @lazySingleton
 class ProfileService {
-  getActivities() {}
+  Future<Profile?> getProfileInfo(String user_id) async {
+    print("in getInfo");
+    try {
+      Response response =
+          await dioService.dio.get('/userProfile/getProfile/$user_id');
+      if (response.statusCode != 200) {
+        print(response.statusCode);
+        return null;
+      }
+      Map json = response.data;
+      Profile p =
+          json['profile'].map<Profile>((e) => Profile.fromJson(e)).toList();
+      return p;
+    } catch (e) {
+      print(e);
+    }
+    return null;
+  }
 }

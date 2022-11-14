@@ -1,4 +1,3 @@
-
 import 'package:bucademy/view/profile/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
@@ -16,7 +15,10 @@ class DashboardView extends StatelessWidget {
     return PersistentTabView(
       context,
       controller: navigatorService.controller,
-      screens: [homepageView(), profileView()],
+      screens: [
+        homepageView(),
+        profileView("635810d762350ca67046d6c6")
+      ], //userService.user?.id ?? ''
       items: [
         PersistentBottomNavBarItem(
           icon: const Icon(Icons.home),

@@ -1,5 +1,8 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'dart:io';
+
+import 'package:bucademy/classes/profile/profile.dart';
 import 'package:bucademy/resources/constants.dart';
 import 'package:bucademy/services/locator.dart';
 import 'package:flutter/material.dart';
@@ -11,109 +14,112 @@ import '../../resources/text_styles.dart';
 import '../../services/profile_service.dart';
 import '../widgets/profile_picture.dart';
 
-Profile p = Profile(
-    'ii', "Şule", "Erkul", 'https://randomuser.me/api/portraits/men/40.jpg',
-    followers: 1,
-    followed: 1,
-    rating: 4.0,
-    bio: 'Engineer, \nGraphic Design is my passion \nWannabe a bee',
-    interests: [
-      'Cuisine',
-      'Tutting',
-      'Flutter'
-    ],
-    knowledge: [
-      'Watercolor',
-      'Python',
-      'Classic Guitar',
-      'C#'
-    ],
-    activities: [
-      'Xtra Person followed you!',
-      'You have joined Python Space',
-      'Welcome to BUcademy'
-    ],
-    achievements: []);
-
-Widget profileView() => ViewModelBuilder<ProfileView>.reactive(
+Widget profileView(String p_id) => ViewModelBuilder<ProfileView>.reactive(
     viewModelBuilder: () => ProfileView(),
+    onModelReady: (model) => model.getProfileInfo(p_id),
     builder: (context, viewModel, child) => DefaultTabController(
         length: 4,
         child: Scaffold(
-            body: NestedScrollView(
-                headerSliverBuilder:
-                    (BuildContext context, innerBoxIsScrolled) {
-                  return <Widget>[
-                    SliverAppBar(
-                      title: const Text(
-                        'My Profile',
-                        style: TextStyles.pageTitle,
-                      ),
-                      pinned: true,
-                      flexibleSpace: FlexibleSpaceBar(
-                        background: Container(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 10) +
-                                    const EdgeInsets.only(top: 60),
-                            decoration: const BoxDecoration(
-                              color: CustomColors.main,
+            body: p_id.length < 3
+                ? const Text("Please Login First")
+                : p == null
+                    ? const Center(child: CircularProgressIndicator())
+                    : NestedScrollView(
+                        headerSliverBuilder:
+                            (BuildContext context, innerBoxIsScrolled) {
+                          return <Widget>[
+                            SliverAppBar(
+                              title: const Text(
+                                'My Profile',
+                                style: TextStyles.pageTitle,
+                              ),
+                              pinned: true,
+                              flexibleSpace: FlexibleSpaceBar(
+                                background: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                            horizontal: 10) +
+                                        const EdgeInsets.only(top: 60),
+                                    decoration: const BoxDecoration(
+                                      color: CustomColors.main,
+                                    ),
+                                    child: Column(children: [
+                                      const SizedBox(height: 20),
+                                      viewModel.isInfoLoading
+                                          ? const Center(
+                                              child:
+                                                  CircularProgressIndicator())
+                                          : profileHeader(context, ''),
+                                      aboutMe(context, 'aa', [], [])
+                                    ])),
+                              ),
+                              elevation: 0,
+                              leading: GestureDetector(
+                                child: const Icon(
+                                  Icons.arrow_back_ios,
+                                  color: Colors.white,
+                                ),
+                                onTap: () {
+                                  navigatorService.controller.jumpToTab(0);
+                                },
+                              ),
+                              actions: [
+                                IconButton(
+                                    onPressed: () {},
+                                    icon: const Icon(
+                                      Icons.settings,
+                                      color: Colors.white,
+                                    ))
+                              ],
+                              expandedHeight:
+                                  MediaQuery.of(context).size.height * 0.65,
+                              forceElevated: innerBoxIsScrolled,
+                              foregroundColor: Colors.black,
+                              backgroundColor: CustomColors.main,
+                              bottom: const TabBar(
+                                tabs: [
+                                  Tab(
+                                      child: Text(
+                                    "Activities",
+                                    style: TextStyle(color: Colors.white),
+                                  )),
+                                  Tab(
+                                      child: Text(
+                                    "Achievements",
+                                    style: TextStyle(color: Colors.white),
+                                  )),
+                                  Tab(
+                                      child: Text(
+                                    "Spaces",
+                                    style: TextStyle(color: Colors.white),
+                                  )),
+                                  Tab(
+                                      child: Text(
+                                    "Notes",
+                                    style: TextStyle(color: Colors.white),
+                                  )),
+                                ],
+                                isScrollable: true,
+                              ),
                             ),
-                            child: Column(children: [
-                              SizedBox(height: 20),
-                              profileHeader(context, p.image),
-                              aboutMe(context, p.bio, p.interests, p.knowledge)
-                            ])),
-                      ),
-                      elevation: 0,
-                      leading: GestureDetector(
-                        child: const Icon(Icons.arrow_back_ios,color: Colors.white,),
-                        onTap: () {
-                        navigatorService.controller.jumpToTab(0);
+                          ];
                         },
-                      ),
-                      actions: [
-                        IconButton(
-                            onPressed: () {},
-                            icon: const Icon(
-                              Icons.settings,
-                              color: Colors.white,
-                            ))
-                      ],
-                      expandedHeight: MediaQuery.of(context).size.height * 0.65,
-                      forceElevated: innerBoxIsScrolled,
-                      foregroundColor: Colors.black,
-                      backgroundColor: CustomColors.main,
-                      bottom: const TabBar(tabs: [
-                        Tab(
-                            child: Text(
-                          "Activities",
-                          style: TextStyle(color: Colors.white),
-                        )),
-                        Tab(
-                            child: Text(
-                          "Achievements",
-                          style: TextStyle(color: Colors.white),
-                        )),
-                        Tab(
-                            child: Text(
-                          "Spaces",
-                          style: TextStyle(color: Colors.white),
-                        )),
-                        Tab(
-                            child: Text(
-                          "Notes",
-                          style: TextStyle(color: Colors.white),
-                        )),
-                      ],
-                      isScrollable: true,),
-                    ),
-                  ];
-                },
-                body: TabBarView(
-                  children: tabContent,
-                )))));
+                        body: TabBarView(
+                          children: tabContent,
+                        )))));
+Profile? p;
 
-class ProfileView extends ChangeNotifier {}
+class ProfileView extends ChangeNotifier {
+  bool isInfoLoading = false;
+
+  Future<void> getProfileInfo(p_id) async {
+    isInfoLoading = true;
+    notifyListeners();
+
+    p = await profileService.getProfileInfo(p_id);
+    isInfoLoading = false;
+    notifyListeners();
+  }
+}
 
 Widget profileHeader(context, String image_path) {
   return Container(
@@ -131,8 +137,8 @@ Widget profileHeader(context, String image_path) {
         const SizedBox(
           height: 20,
         ),
-        const Text(
-          'Şule Erkul',
+        Text(
+          p!.name ?? '',
           style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
         ),
         Row(
@@ -148,7 +154,7 @@ Widget profileHeader(context, String image_path) {
                   height: 3,
                 ),
                 const Icon(Icons.person, size: 30),
-                Text(p.followers == null ? '0' : p.followers.toString()),
+                //Text(p.followers == null ? '0' : p.followers.toString()),
               ]),
             ),
             Container(
@@ -161,7 +167,7 @@ Widget profileHeader(context, String image_path) {
                   height: 3,
                 ),
                 const Icon(Icons.person, size: 30),
-                Text(p.followed == null ? '0' : p.followed.toString()),
+                //Text(p.followed == null ? '0' : p.followed.toString()),
               ]),
             )
           ],
@@ -197,10 +203,10 @@ Widget aboutMe(context, bio, interest, knowledge) {
             ),
             seperator(context),
             Row(children: [
-              ...p.interests!.map((s) => tag(
-                  s,
-                  Color((Random().nextDouble() * 0xFFFFFF).toInt())
-                      .withOpacity(1.0)))
+              ///...p.interests!.map((s) => tag(
+              // s,
+              //Color((Random().nextDouble() * 0xFFFFFF).toInt())
+              //  .withOpacity(1.0)))
             ]),
             const SizedBox(height: 2),
             const Text(
@@ -209,10 +215,10 @@ Widget aboutMe(context, bio, interest, knowledge) {
             ),
             seperator(context),
             Row(children: [
-              ...p.knowledge!.map((s) => tag(
-                  s,
-                  Color((Random().nextDouble() * 0xFFFFFF).toInt())
-                      .withOpacity(1.0)))
+              //...p.knowledge!.map((s) => tag(
+              //  s,
+              //Color((Random().nextDouble() * 0xFFFFFF).toInt())
+              //  .withOpacity(1.0)))
             ]),
           ]));
 }
@@ -274,13 +280,14 @@ List<Widget> list_open(List<String> list_name) {
 
 List<Widget> tabContent = [
   ListView(
-      shrinkWrap: true,
-      padding: const EdgeInsets.all(10.0),
-      children: list_open(p.activities!)),
+    shrinkWrap: true,
+    padding: const EdgeInsets.all(10.0),
+    //children: list_open(p.activities!)
+  ),
   ListView(
     shrinkWrap: true,
     padding: const EdgeInsets.all(10.0),
-    children: list_open(p.achievements!),
+    //children: list_open(p..achievements!),
   ),
   ListView(
     shrinkWrap: true,
