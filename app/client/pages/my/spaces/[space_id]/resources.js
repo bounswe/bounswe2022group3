@@ -5,6 +5,11 @@ import { HiOutlineDocumentText } from "react-icons/hi";
 import { IoMdImage } from "react-icons/io";
 import MainLayout from "../../../../layouts/main/MainLayout";
 import styles from "../../../../styles/my/resources.module.scss";
+import { IconButton } from "@mui/material";
+import { Add } from '@mui/icons-material';
+import { useRouter } from 'next/router'
+import Link from "next/link";
+
 
 const chapters = [
     {
@@ -25,6 +30,9 @@ const chapters = [
 ]
 
 export default function resources() {
+    const router = useRouter();
+    let space_id = router.query;
+
     function Other(desc) {
         return (
             <a>
@@ -90,6 +98,12 @@ export default function resources() {
                                                 {Image(chapter.resources[1])}
                                                 {Pdf(chapter.resources[2])}
                                             </Box>
+                                            <Link href={`/my/spaces/${space_id.space_id}/${chapter.id}?isCreate=true`}>
+                                                <IconButton>
+                                                    <Add />
+                                                </IconButton>
+                                            </Link>
+
                                         </TableCell>
                                     </TableRow>
                                 );
