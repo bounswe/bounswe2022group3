@@ -11,13 +11,13 @@ import 'package:injectable/injectable.dart';
 @lazySingleton
 class UserService {
   User? user;
-  Future<void> login({required String email, required String password}) async {
+  Future<bool> login({required String email, required String password}) async {
     try {
       Response res = await dioService.dio.post(
         '/user/login',
         data: {"email": email, "password": password},
       );
-      if (res.statusCode != 200) return;
+      if (res.statusCode != 200) return false;
 
       Login login = Login.fromJson(res.data);
       await Future.wait([
@@ -28,8 +28,10 @@ class UserService {
         persistenceService.set(PersistenceKeys.surname, login.surname),
       ]);
       print('Logged inn, ${await persistenceService.get(PersistenceKeys.refreshToken)}');
+      return true;
     } catch (e) {
       print(e);
+      return false;
     }
   }
 
@@ -54,9 +56,10 @@ class UserService {
     }
   }
 
-  Future<void> register(
-      {required String name, required String surname, required String email, required String password}) async {
+  Future<bool> register(
+      {required String name, required String surname, required String email, required String password, required bool checked}) async {
     try {
+      if (!checked) return false;
       Response res = await dioService.dio.post(
         '/user/register',
         data: {
@@ -66,11 +69,13 @@ class UserService {
           "password": password,
         },
       );
-      if (res.statusCode != 200) return;
+      if (res.statusCode == 200) return false;
 
       print(res.data['message']);
+      return true;
     } catch (e) {
       print(e);
+      return false;
     }
   }
 
