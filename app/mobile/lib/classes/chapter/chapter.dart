@@ -11,9 +11,9 @@ class Chapter {
   final String id;
 
   @JsonKey(name: 'content')
-  final List<String> cwontentIds;
+  final List<String> contentIds;
 
-  Chapter(this.name, this.id, this.cwontentIds);
+  Chapter(this.name, this.id, this.contentIds);
   factory Chapter.fromJson(Map<String, dynamic> json) => _$ChapterFromJson(json);
 
   Map<String, dynamic> toJson() => _$ChapterToJson(this);

@@ -15,5 +15,5 @@ Chapter _$ChapterFromJson(Map<String, dynamic> json) => Chapter(
 Map<String, dynamic> _$ChapterToJson(Chapter instance) => <String, dynamic>{
       'chapter_name': instance.name,
       '_id': instance.id,
-      'content': instance.cwontentIds,
+      'content': instance.contentIds,
     };
