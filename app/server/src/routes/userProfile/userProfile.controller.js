@@ -30,7 +30,7 @@ const UserProfileController = {
             const id = req.params.id
             // Need a new function in user model that returns populated versions of personal info and badges
             const profile = await userModel.getPopulatedPersonalInfo(id)
-            res.status(201).json({ profile })
+            res.status(200).json({ profile })
 
         }
         catch (e) {
