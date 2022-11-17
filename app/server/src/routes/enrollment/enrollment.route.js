@@ -14,8 +14,22 @@ enrollmentRouter.post(
   EnrollmentController.createEnrollment
 );
 
+enrollmentRouter.post(
+  "/delete",
+  validate("deleteEnrollment"),
+  handleValidation,
+  authorization,
+  EnrollmentController.deleteEnrollment
+);
+
 enrollmentRouter.get(
-  "/getEnrolledCourses",
+  "/getEnrollment:course_id",
+  authorization,
+  EnrollmentController.getEnrollment
+);
+
+enrollmentRouter.get(
+  "/getEnrolledCourses:keyword?",
   authorization,
   EnrollmentController.getEnrolledCourses
 );

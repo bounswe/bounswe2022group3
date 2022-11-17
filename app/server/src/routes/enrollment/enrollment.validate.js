@@ -7,5 +7,10 @@ exports.validate = (method) => {
         body("course_id", "course_id does not exist").exists(),
       ];
     }
+    case "deleteEnrollment": {
+      return [
+        body("course_id", "course_id does not exist").exists(),
+      ];
+    }
   }
 };

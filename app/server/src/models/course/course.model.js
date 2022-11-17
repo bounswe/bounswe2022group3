@@ -74,4 +74,10 @@ const deleteCourse = async (_id) => {
   return res;
 };
 
-module.exports = { Course, createCourse, deleteCourse };
+const getCourseByID = async (course_id) => {
+
+  const result = await Course.findById(course_id).exec();
+  return result;
+}
+
+module.exports = { Course, createCourse, deleteCourse, getCourseByID };

@@ -9,7 +9,10 @@ const enrollmentSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Course",
     },
-    course_id: {
+    course_id: {// This is probably not necessary, delete and clean up controller from it!!!
+      type: String,
+    },
+    course_name: {
       type: String,
     },
     is_active: {
@@ -30,15 +33,24 @@ const enrollmentSchema = new mongoose.Schema(
 
 const Enrollment = mongoose.model("Enrollment", enrollmentSchema);
 
-const createEnrollment = async (user_id, course_id) => {
+const createEnrollment = async (user_id, course_id, course_name) => {
   var enrollment = new Enrollment({ user_id, course_id });
+  enrollment.is_active = true;
+  enrollment.course_name = course_name;
   const res = await enrollment.save();
   return res;
 };
 
-const deleteEnrollment = async (_id) => {
-  const res = await Enrollment.findOneAndDelete({ _id });
+const deleteEnrollment = async (user_id, course_id) => {
+  const enrollment = await Enrollment.findOne({ user_id, course_id  });
+  enrollment.is_active = false
   return res;
 };
 
-module.exports = { Enrollment, createEnrollment, deleteEnrollment };
+const getEnrollment = async (user_id, course_id) => {
+
+  const result = await Enrollment.findOne({user_id, course_id}).exec();
+  return result;
+}
+
+module.exports = { Enrollment, createEnrollment, deleteEnrollment, getEnrollment };
