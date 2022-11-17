@@ -2,21 +2,22 @@ import 'package:bucademy/classes/chapter/chapter.dart';
 import 'package:bucademy/resources/constants.dart';
 import 'package:bucademy/classes/course/course.dart';
 import 'package:bucademy/resources/custom_colors.dart';
+import 'package:bucademy/resources/text_styles.dart';
 import 'package:bucademy/services/locator.dart';
 import 'package:bucademy/view/course/content_tile.dart';
+import 'package:bucademy/view/course/mock_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:bucademy/services/content_service.dart';
 
-Widget coursePageView(Course c) => ViewModelBuilder<
-        CoursePageViewModel>.reactive(
+Widget coursePageView(Course c) => ViewModelBuilder<CoursePageViewModel>.reactive(
     viewModelBuilder: () => CoursePageViewModel(c.id),
     builder: (context, viewModel, child) {
       return viewModel.contentsLoading 
        ? const Center(child: CircularProgressIndicator())
        : viewModel.course != null 
         ? DefaultTabController(
-            length: 4,
+            length: 5,
             child: Scaffold(
               body: NestedScrollView(
                 headerSliverBuilder:
@@ -76,8 +77,32 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                                       Text(viewModel.course!.info, maxLines: 5),
                                   // child:Text('Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',maxLines: 4,)
                                 ),
+                                                                      if (!courseService.enrolledIds.contains(c.id))
+                                        GestureDetector(
+                                          onTap: () async {
+                                            await courseService.enrollToCourse(courseId: c.id);
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                                SnackBar(content: Text('Successfully Joined To The Space!')));
+                                            viewModel.notifyListeners();
+                                          },
+                                          child: Container(
+                                            padding: const EdgeInsets.symmetric(vertical: 8),
+                                            margin: const EdgeInsets.symmetric(vertical: 8),
+                                            width: 120,
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(Constants.borderRadius),
+                                              color: CustomColors.main,
+                                            ),
+                                            child: Center(
+                                                child: Text(
+                                              "Join",
+                                              style: TextStyles.bodyWhite,
+                                            )),
+                                          ),
+                                        ),
                               ]),
                         ),
+                        
                       ),
                       expandedHeight: 450,
                       forceElevated: innerBoxIsScrolled,
@@ -92,7 +117,7 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                                 color: Colors.black,
                               ),
                               child: Text(
-                                "Chapters",
+                                "Contents",
                                 style: TextStyle(color: Colors.black),
                               )),
                           Tab(
@@ -106,7 +131,16 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                               )),
                           Tab(
                               icon: Icon(
-                                Icons.quiz,
+                                Icons.note_alt_outlined,
+                                color: Colors.black,
+                              ),
+                              child: Text(
+                                "Notes",
+                                style: TextStyle(color: Colors.black),
+                              )),
+                          Tab(
+                              icon: Icon(
+                                Icons.quiz_outlined,
                                 color: Colors.black,
                               ),
                               child: Text(
@@ -115,7 +149,7 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                               )),
                           Tab(
                               icon: Icon(
-                                Icons.group,
+                                Icons.group_outlined,
                                 color: Colors.black,
                               ),
                               child: Text(
@@ -138,10 +172,34 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                             .map((Chapter e) => chapterTile(e))
                       ],
                     ),
-                    const Center(child: Text("Events will be implemented")),
-                    const Center(child: Text("Quizzses will be implemented")),
-                    const Center(
-                        child: Text("Discussions will be implemented")),
+                    ListView(
+                      shrinkWrap: true,
+                      padding: const EdgeInsets.all(10.0),
+                      children: [
+                        ...contentService.contents("Event").map((MockContent m) => mockTile(m))
+                      ],
+                    ),
+                    ListView(
+                      shrinkWrap: true,
+                      padding: const EdgeInsets.all(10.0),
+                      children: [
+                        ...contentService.contents("Note").map((MockContent m) => mockTile(m))
+                      ],
+                    ),                    
+                    ListView(
+                      shrinkWrap: true,
+                      padding: const EdgeInsets.all(10.0),
+                      children: [
+                        ...contentService.contents("Quiz").map((MockContent m) => mockTile(m))
+                      ],
+                    ),
+                    ListView(
+                      shrinkWrap: true,
+                      padding: const EdgeInsets.all(10.0),
+                      children: [
+                        ...contentService.contents("Discussion").map((MockContent m) => mockTile(m))
+                      ],
+                    ),
                   ],
                 ),
               ),

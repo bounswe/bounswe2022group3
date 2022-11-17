@@ -20,7 +20,7 @@ Future<void> resetGetIt() async {
 }
 
 CourseService get courseService => GetIt.I<CourseService>();
-ContentService get contentService => GetIt.I<ContentService>();
+MockContentService get contentService => GetIt.I<MockContentService>();
 NavigatorService get navigatorService => GetIt.I<NavigatorService>();
 PersistenceService get persistenceService => GetIt.I<PersistenceService>();
 DioService get dioService => GetIt.I<DioService>();

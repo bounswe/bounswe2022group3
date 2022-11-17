@@ -80,7 +80,7 @@ const UserController = {
 
                 return res.status(201).json({
                     created_at: response.createdAt,
-                    message: `Created the user with ${email}, confirmation mail send to ${email}.`,
+                    message: `Confirmation mail send to ${email}.`,
                 })
             } else {
                 return res.status(400).json({

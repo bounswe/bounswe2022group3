@@ -15,18 +15,24 @@ const MDEditor = dynamic(
 );
 
 export default function discussions() {
-    const [value, setValue] = useState("**Hello world!!!**");
+    const [value, setValue] = useState("");
     const [previousComments, setPreviousComments] = useState([
         {
-            "value": "**Hello world!!!** <br> hh",
+            "value": `**Hi guys!** 
+            
+Can you please share more resources?`,
             "image": "https://xsgames.co/randomusers/avatar.php?g=male"
         },
         {
-            "value": "**Hello world!!!**  1",
+            "value": `**Hello!** 
+            
+Thanks for sharing great resources`,
             "image": "https://xsgames.co/randomusers/avatar.php?g=female"
         },
         {
-            "value": "**Hello world!!!**  2",
+            "value": `**Hi!** 
+            
+Shall we organize an event?`,
             "image": "https://xsgames.co/randomusers/avatar.php?g=male"
         },
     ])
@@ -35,7 +41,7 @@ export default function discussions() {
 
     return (
         <section className={styles.container}>
-            <h2>Learning Guitar</h2>
+            <h2>Acoustic Guitar Ed for Beginners</h2>
             <h1>General Discussion</h1>
             {
                 previousComments.map(previousComment => {
