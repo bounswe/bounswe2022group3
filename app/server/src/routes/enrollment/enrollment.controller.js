@@ -14,11 +14,18 @@ const EnrollmentController = {
 			}
 			const user_id = req.auth.id;
 			// check if enrollment already exist? or create enrollment doesn't operate if enrollment exists?
-			const enrollment = await EnrollmentModel.createEnrollment(
-				user_id,
-				course_id,
-				course.name
-			);
+			let enrollment;
+			enrollment = await EnrollmentModel.getEnrollment(user_id, course_id);
+			if (enrollment) {
+				enrollment.is_active = true;
+				const res = await enrollment.save();
+			}else{
+				const enrollment = await EnrollmentModel.createEnrollment(
+					user_id,
+					course_id,
+					course.name
+				);
+			}
 			res.status(201).send({ enrollment });
 		}
 		catch (e) {
@@ -41,7 +48,7 @@ const EnrollmentController = {
 			res.status(200).send(response);
 		}
 		catch (e) {
-			res.status(400).send({ "error": e })
+			res.status(400).send({ "error": e.toString() })
 		}
 	},
 
@@ -74,21 +81,38 @@ const EnrollmentController = {
 		//TODO: needs debugging after PR merge of @Furkan and @Kadir
 		// I have deleted chapter population of courses, Do we need chapter data on get enrolled courses endpoint?
 		try {
+			const keyword = req.params.keyword;
 			const user_id = req.auth.id;
 			var enrollments;
 			if (keyword) {
-				enrolled_courses = await EnrollmentModel.Enrollment.find({
+				enrollments = await EnrollmentModel.Enrollment.find({
 					course_name: { $regex: keyword, $options: "i" },
+					is_active: true,
 				}, 'user_id course course_id course_name is_active')
-				  .populate("course", 'name lecturer rating tags')
-				  .populate("lecturer", 'name surname')
-				  .exec();
-			  } else {
-				courses = await CourseModel.Course.find({},	'user_id course course_id course_name is_active')
-				  .populate("course", 'name lecturer rating tags')
-				  .populate("lecturer", 'name surname')
-				  .exec(); 
-			  }
+					.populate({
+						path: 'course',
+						select: 'name lecturer rating tags',
+						populate: {
+							path: 'lecturer',
+							select: 'name surname',
+						}
+					})
+					.exec();
+			} else {
+				enrollments = await EnrollmentModel.Enrollment.find({
+					user_id : user_id, 
+					is_active: true 
+				}, 'user_id course course_id course_name is_active')
+					.populate({
+						path: 'course',
+						select: 'name lecturer rating tags',
+						populate: {
+							path: 'lecturer',
+							select: 'name surname',
+						}
+					})
+					.exec();
+			}
 			return res.status(200).json({ enrollments });
 		}
 		catch (e) {

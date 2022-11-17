@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const CourseModel = require("../../models/course/course.model");
 
 const enrollmentSchema = new mongoose.Schema(
   {
@@ -35,6 +36,8 @@ const Enrollment = mongoose.model("Enrollment", enrollmentSchema);
 
 const createEnrollment = async (user_id, course_id, course_name) => {
   var enrollment = new Enrollment({ user_id, course_id });
+  //const course = await CourseModel.getCourseByID(course_id);
+  enrollment.course = course_id;
   enrollment.is_active = true;
   enrollment.course_name = course_name;
   const res = await enrollment.save();
@@ -44,6 +47,7 @@ const createEnrollment = async (user_id, course_id, course_name) => {
 const deleteEnrollment = async (user_id, course_id) => {
   const enrollment = await Enrollment.findOne({ user_id, course_id  });
   enrollment.is_active = false
+  const res = await enrollment.save();
   return res;
 };
 

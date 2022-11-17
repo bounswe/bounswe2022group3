@@ -23,13 +23,15 @@ enrollmentRouter.post(
 );
 
 enrollmentRouter.get(
-  "/getEnrollment:course_id",
+  "/:course_id",
+  validate("getEnrollment"),
+  handleValidation,
   authorization,
   EnrollmentController.getEnrollment
 );
 
 enrollmentRouter.get(
-  "/getEnrolledCourses:keyword?",
+  "/getEnrolledCourses/:keyword?",
   authorization,
   EnrollmentController.getEnrolledCourses
 );
