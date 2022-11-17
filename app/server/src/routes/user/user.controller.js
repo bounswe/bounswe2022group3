@@ -16,8 +16,13 @@ const confirmation_token_expiry = '1d'
 
 const UserController = {
     register: async function (req, res) {
-        const { email, name, surname, password } = req.body;
+        const { email, name, surname, password, agreement } = req.body;
         try {
+            if(!agreement){
+                return res
+                    .status(400)
+                    .json({ message: "You must agree to the Terms of Use and Privacy Policy ." });
+            }
             // Check if user already exists
             const user = await UserModel.getUserByEmail(email);
             if (user) {
