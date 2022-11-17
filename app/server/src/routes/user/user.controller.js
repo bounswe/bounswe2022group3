@@ -126,8 +126,8 @@ const UserController = {
                 confirmation_token: "confirmed",
             };
             const response = (await TokensModel.createToken(token_data));
+            const user = await UserModel.getUserByEmail(email);
             if (response.createdAt) {
-                user.tokens = response
                 return res.status(200).json({
                     id: user._id,
                     name: user.name,
