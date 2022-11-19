@@ -302,7 +302,7 @@ const UserController = {
             }
         } catch (error) {
             return res.status(400).json({
-                message: "Failed to logout!",
+                message: "Failed to resend confirmation mail!",
                 error: error.toString()
             });
         }
