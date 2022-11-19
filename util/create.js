@@ -1,4 +1,6 @@
-db = connect('mongodb://localhost/db1');
+require("dotenv").config();
+const DB = process.env.DB;
+db = connect(DB);
 
 var ids_d = {'badge': [ObjectId()]}; // creating an ID for the first badge
 db.badge.insertMany([
