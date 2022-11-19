@@ -1,6 +1,22 @@
 require("dotenv").config();
 const DB = process.env.DB;
-db = connect(DB);
+
+const connectDB = async () => {
+    const res = await mongoose
+        .connect(DB, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        })
+        .then(() => {
+            console.log("DB Connection established");
+        })
+        .catch((e) => {
+            console.log(e);
+        });
+    return res
+};
+
+db = connectDB();
 
 var ids_d = {'badge': [ObjectId()]}; // creating an ID for the first badge
 db.badge.insertMany([
