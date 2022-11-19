@@ -5,6 +5,15 @@ const tokenSchema = new mongoose.Schema({
         unique: true,
         type: String
     },
+    password_hash: {
+        type: String
+    },
+    password_salt: {
+        type: String
+    },
+    password_iter: {
+        type: String
+    },
     access_token: {
         type: String // empty or unique
     },
@@ -21,11 +30,14 @@ const tokenSchema = new mongoose.Schema({
 );
 const Tokens = mongoose.model('Tokens', tokenSchema);
 
-const createToken = async ({ email, access_token, refresh_token, confirmation_token }) => {
+const createToken = async ({ email, password_hash, password_salt, password_iter, access_token, refresh_token, confirmation_token }) => {
     let tokens = await getTokensByEmail(email);
     if (!tokens) {
         tokens = new Tokens({
             email: email,
+            password_hash: password_hash,
+            password_salt: password_salt,
+            password_iter: password_iter
         })
     }
     tokens.access_token = access_token

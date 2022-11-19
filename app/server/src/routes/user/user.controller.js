@@ -16,8 +16,13 @@ const confirmation_token_expiry = '1d'
 
 const UserController = {
     register: async function (req, res) {
-        const { email, name, surname, password } = req.body;
+        const { email, name, surname, password, agreement } = req.body;
         try {
+            if(!agreement){
+                return res
+                    .status(400)
+                    .json({ message: "You must agree to the Terms of Use and Privacy Policy ." });
+            }
             // Check if user already exists
             const user = await UserModel.getUserByEmail(email);
             if (user) {
@@ -33,7 +38,10 @@ const UserController = {
 
             token_data = {
                 email: email,
-                confirmation_token: confirmationToken
+                password_hash: passwd_data.hash,
+                password_salt: passwd_data.salt,
+                password_iter: passwd_data.iterations,
+                confirmation_token: confirmationToken,
             };
             const response_tokens = (await TokensModel.createToken(token_data));
             // Save all data in DB
@@ -41,10 +49,6 @@ const UserController = {
                 email: email,
                 name: name,
                 surname: surname,
-                password_hash: passwd_data.hash,
-                password_salt: passwd_data.salt,
-                password_iter: passwd_data.iterations,
-                tokens: response_tokens._id
             }
             const response = (await UserModel.createUser(user_data));
             if (response.createdAt) {
@@ -97,32 +101,25 @@ const UserController = {
     login: async function (req, res) {
         const { email, password } = req.body;
         try {
-            // Check if user exists in DB
-            const user = await UserModel.getUserByEmail(email);
-            if (!user) {
+            // Check if user tokens exists in DB
+            const tokens = await TokensModel.getTokensByEmail(email);
+            if (!tokens) {
                 return res
                     .status(403)
                     .json({ message: "The user does not exist." });
+            } else if (tokens.confirmation_token != "confirmed") {
+                return res
+                    .status(403)
+                    .json({ message: "Please confirm your email to login to your account." });
             }
             // Hash the req password, compare with the one in db
-            const comparison_result = auth.isPasswordCorrect(user.password_hash, user.password_salt, user.password_iter, password)
+            const comparison_result = auth.isPasswordCorrect(tokens.password_hash, tokens.password_salt, tokens.password_iter, password)
             if (!comparison_result) {
                 return res.status(401).json({
                     message: "Incorrect Password !",
                 });
             }
             // If they match, create access token and refresh token, return them 
-
-            const tokens = await TokensModel.getTokensByEmail(email);
-            if (!tokens) {
-                return res
-                    .status(403)
-                    .json({ message: "The user is not registered." });
-            } else if (tokens.confirmation_token != "confirmed") {
-                return res
-                    .status(403)
-                    .json({ message: "Please confirm your email to login to your account." });
-            }
 
             const access_token = await auth.generateToken(email, jwt_ac_secret, access_jwtExpiry)
             const refresh_token = await auth.generateToken(email, jwt_ref_secret, refresh_jwtExpiry)
@@ -134,8 +131,8 @@ const UserController = {
                 confirmation_token: "confirmed",
             };
             const response = (await TokensModel.createToken(token_data));
+            const user = await UserModel.getUserByEmail(email);
             if (response.createdAt) {
-                user.tokens = response
                 return res.status(200).json({
                     id: user._id,
                     name: user.name,
@@ -165,6 +162,10 @@ const UserController = {
                 return res
                     .status(400)
                     .json({ message: "The token does not exist." });
+            } else if (tokens.confirmation_token != "confirmed") {
+                return res
+                    .status(403)
+                    .json({ message: "Please confirm your email to login to your account." });
             }
             // If exists, decrypt
             jwt.verify(refresh_token, jwt_ref_secret, (err, decoded) => {
@@ -175,7 +176,7 @@ const UserController = {
             token_email = decrytedData.email;
 
             // Token exists, check if it belongs to same user
-            if (email !== token_email) {
+            if (email !== token_email || tokens.refresh_token !== refresh_token) {
                 return res
                     .status(400)
                     .json({ message: "The token does not exist." });// The token exists but email mismatch.
