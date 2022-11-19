@@ -16,7 +16,7 @@ const connectDB = async () => {
     return res
 };
 
-db = connectDB();
+const db = connectDB();
 
 var ids_d = {'badge': [ObjectId()]}; // creating an ID for the first badge
 db.badge.insertMany([
