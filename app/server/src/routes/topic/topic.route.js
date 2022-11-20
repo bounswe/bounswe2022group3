@@ -5,17 +5,16 @@ const { validate } = require("./topic.validate");
 
 const topicRouter = express.Router();
 
-
 topicRouter.post(
-    "/",
-    validate("create-topic"),
-    handleValidation,
-    TopicController.createTopic
+  "/",
+  validate("create-topic"),
+  handleValidation,
+  TopicController.createTopic
 );
 topicRouter.get(
-    "/:id",
-    // validate("call"),
-    // handleValidation,
-    TopicController.getPopulatedTopic
+  "/:id",
+  // validate("call"),
+  // handleValidation,
+  TopicController.getPopulatedTopic
 );
 module.exports = topicRouter;

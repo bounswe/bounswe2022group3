@@ -31,15 +31,15 @@ const UserController = {
       );
 
       token_data = {
-        email: email,
+        email,
         confirmation_token: confirmationToken,
       };
       const response_tokens = await TokensModel.createToken(token_data);
       // Save all data in DB
       user_data = {
-        email: email,
-        name: name,
-        surname: surname,
+        email,
+        name,
+        surname,
         password_hash: passwd_data.hash,
         password_salt: passwd_data.salt,
         password_iter: passwd_data.iterations,
@@ -115,11 +115,9 @@ const UserController = {
       if (!tokens) {
         return res.status(403).json({ message: "The user is not registered." });
       } else if (tokens.confirmation_token != "confirmed") {
-        return res
-          .status(403)
-          .json({
-            message: "Please confirm your email to login to your account.",
-          });
+        return res.status(403).json({
+          message: "Please confirm your email to login to your account.",
+        });
       }
 
       const access_token = await auth.generateToken(
@@ -248,11 +246,9 @@ const UserController = {
       const user = await UserModel.getUserByEmail(email);
 
       if (!user) {
-        return res
-          .status(400)
-          .json({
-            message: "There is not any registered user with this email!",
-          });
+        return res.status(400).json({
+          message: "There is not any registered user with this email!",
+        });
       }
 
       const tokens = await TokensModel.getTokensByEmail(email);

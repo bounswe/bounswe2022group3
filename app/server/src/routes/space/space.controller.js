@@ -8,7 +8,13 @@ const SpaceController = {
       const user_id = req.auth.id;
       const creator = await UserModel.User.findById(user_id);
       const { name, info, tags, image } = req.body;
-      var space = await SpaceModel.createSpace(name, creator, info, tags, image);
+      var space = await SpaceModel.createSpace(
+        name,
+        creator,
+        info,
+        tags,
+        image
+      );
       res.status(201).send({ space });
     } catch (error) {
       res.status(400).send({ error: error.toString() });

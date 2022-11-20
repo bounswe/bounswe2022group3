@@ -4,12 +4,9 @@ const EnrollmentModel = require("../../models/enrollment/enrollment.model");
 const EnrollmentController = {
   createEnrollment: async function (req, res) {
     try {
-      const space_id = req.body.space_id;
-      const user_id = req.auth.id;
-      const enrollment = await EnrollmentModel.createEnrollment(
-        user_id,
-        space_id
-      );
+      const space = req.body.space_id;
+      const user = req.auth.id;
+      const enrollment = await EnrollmentModel.createEnrollment(user, space);
       res.status(201).send({ enrollment });
     } catch (e) {
       res.status(400).send({ error: e });
@@ -18,9 +15,9 @@ const EnrollmentController = {
 
   getEnrolledSpaces: async function (req, res) {
     try {
-      const user_id = req.auth.id;
+      const user = req.auth.id;
       const enrolled_spaces = await EnrollmentModel.Enrollment.find({
-        user: user_id,
+        user,
       });
       var data = [];
       for (var enrolled_space of enrolled_spaces) {
