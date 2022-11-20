@@ -1,4 +1,4 @@
-const BadgeModel = require("../../models/badges/badges.model");
+const BadgeModel = require("../../models/badge/badge.model");
 
 const BadgeController = {
     createBadge: async function (req, res) {

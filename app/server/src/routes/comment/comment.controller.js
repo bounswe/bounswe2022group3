@@ -1,11 +1,11 @@
-const CommentModel = require("../../models/comments/comments.model");
+const CommentModel = require("../../models/comment/comment.model");
 
 const CommentController = {
   createComment: async function (req, res) {
     try {
-      const { user_id, body, files } = req.body;
+      const { user, body, files } = req.body;
 
-      const comment = await CommentModel.createComment(user_id, body, files);
+      const comment = await CommentModel.createComment(user, body, files);
       res.status(201).json({ message: comment });
     } catch (e) {
       console.log("Error on getCreate:", e);
