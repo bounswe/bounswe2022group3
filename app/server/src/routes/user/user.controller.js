@@ -62,10 +62,11 @@ const UserController = {
                     last_name: surname,
                     token: confirmationToken,
                 };
-                const {response, message} = await send_confirmation_email(payload);
-                if(!response){
+                const conf_response = await send_confirmation_email(email, payload);
+                console.log(conf_response.message)
+                if (!(conf_response.res)) {
                     return res.status(400).json({
-                        message: message,
+                        message: conf_response.message,
                     });
                 }
                 return res.status(201).json({
@@ -275,22 +276,25 @@ const UserController = {
                 return res
                     .status(400)
                     .json({ message: "The user does not exist." });
-            } else {
+            }
+            else {
                 const user = await UserModel.getUserByEmail(email);
                 const conf = tokens.confirmation_token
                 if (conf !== 'confirmed') {
                     // resend conf mail
                     const confirmationToken = await auth.generateToken(email, jwt_conf_secret, confirmation_token_expiry)
+                    tokens.confirmation_token = confirmationToken
+                    tokens.save()
                     payload = {
                         first_name: user.name,
                         last_name: user.surname,
                         token: confirmationToken,
                     };
-                    const {response, message} = await send_confirmation_email(payload);
-                    if(!response){
-                        return res
-                        .status(400)
-                        .json({ message: message });
+                    const conf_response = await send_confirmation_email(email, payload);
+                    if (!(conf_response.res)) {
+                        return res.status(400).json({
+                            message: conf_response.message,
+                        });
                     }
                     return res.status(200).json({
                         message:
@@ -299,10 +303,10 @@ const UserController = {
                             ". The link will be expired after one day.",
                     });
                 }
-                else{
+                else {
                     return res
-                    .status(200)
-                    .json({ message: "User is already confirmed. Proceed to login." });
+                        .status(200)
+                        .json({ message: "User is already confirmed. Proceed to login." });
                 }
             }
         } catch (error) {

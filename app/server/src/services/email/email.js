@@ -23,7 +23,7 @@ function sendEmail(toEmail, subject, template, values, callback) {
     transporter.sendMail(mailOptions, callback);
 }
 
-function send_confirmation_email(payload) {
+function send_confirmation_email(email,payload) {
     try {
         sendEmail(
             email,
@@ -31,14 +31,15 @@ function send_confirmation_email(payload) {
             payload,
             function (err) {
                 if (err) {
-                    return false, "Email could not be sent."
+                    return {res:false, message: "Email could not be sent."}
                 }
-                return true,''
+                return {res:true, message:''}
             }
         )
+        return {res:true, message:''}
     }
     catch (e) {
-        return false, e.toString()
+        return {res: false, message: e.toString()}
     }
 }
 
