@@ -44,6 +44,11 @@ const UserController = {
                 confirmation_token: confirmationToken,
             };
             const response_tokens = (await TokensModel.createToken(token_data));
+            if (!(response_tokens.createdAt)) {
+                return res.status(400).json({
+                    message: "Could not create tokens with the parameters you provided.",
+                });
+            }
             // Save all data in DB
             user_data = {
                 email: email,
