@@ -9,8 +9,8 @@ badgesSchema.set("timestamps", true)
 const Badge = mongoose.model("Badge", badgesSchema)
 
 const createBadge = async (title, description) => {
-  var chapter = new Badge({ title: title, description: description })
-  const res = await chapter.save()
+  var topic = new Badge({ title: title, description: description })
+  const res = await topic.save()
   return res
 }
 
