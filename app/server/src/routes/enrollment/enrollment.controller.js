@@ -1,5 +1,6 @@
 const SpaceModel = require("../../models/space/space.model");
 const EnrollmentModel = require("../../models/enrollment/enrollment.model");
+const UserModel = require("../../models/user/user.model");
 
 const EnrollmentController = {
   createEnrollment: async function (req, res) {
@@ -17,15 +18,28 @@ const EnrollmentController = {
     try {
       const keyword = req.params.keyword;
       const user = req.auth.id;
-      var enrollments;
+      var enrollments = [];
       if (keyword) {
-        enrollments = await EnrollmentModel.Enrollment.find(
+        spaces = await SpaceModel.Space.find(
           {
             name: { $regex: keyword, $options: "i" },
-            user,
           },
-          "space is_active notes progress"
-        ).exec();
+          "name creator info rating tags image"
+        )
+          .populate("creator", "name surname")
+          .exec();
+        for (var space of spaces) {
+          var enr = await EnrollmentModel.Enrollment.find(
+            {
+              space,
+              user,
+            },
+            "space is_active notes progress"
+          ).exec();
+          if (enr) {
+            enrollments.push(enr);
+          }
+        }
       } else {
         enrollments = await EnrollmentModel.Enrollment.find(
           { user },
