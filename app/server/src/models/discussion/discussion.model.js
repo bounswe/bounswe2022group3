@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 
 const discussionSchema = new mongoose.Schema({
-  user_id: String,
-  space_id: String,
+  user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  space: { type: mongoose.Schema.Types.ObjectId, ref: "Space" },
   comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
   body: String,
   date: Date,
@@ -12,10 +12,10 @@ const discussionSchema = new mongoose.Schema({
 discussionSchema.set("timestamps", true);
 const Discussion = mongoose.model("Discussion", discussionSchema);
 
-const createDiscussion = async (user_id, space_id, comments, body, files) => {
+const createDiscussion = async (user, space, comments, body, files) => {
   var discussion = new Discussion({
-    user_id,
-    space_id,
+    user,
+    space,
     comments,
     body,
     files,
