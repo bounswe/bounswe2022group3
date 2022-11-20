@@ -3,14 +3,14 @@ const DiscussionModel = require("../../models/discussions/discussions.model");
 const DiscussionController = {
     createDiscussion: async function (req, res) {
         try {
-            const { user_id, course_id, comment_id_list, discussion_body, discussion_files } = req.body
+            const { user_id, space_id, comment_id_list, body, files } = req.body
 
             const discussion = await DiscussionModel.createDiscussion(
                 user_id,
-                course_id,
+                space_id,
                 comment_id_list,
-                discussion_body,
-                discussion_files,
+                body,
+                files,
             )
             res.status(201).send({ "message": discussion })
         }

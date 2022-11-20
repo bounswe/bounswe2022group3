@@ -35,10 +35,10 @@ const userSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Enrollment"
     }],
-    created_courses:
+    created_spaces:
     [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Course"
+        ref: "Space"
     }],
     followed_users:
     [{
