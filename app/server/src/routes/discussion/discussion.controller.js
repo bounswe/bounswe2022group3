@@ -1,14 +1,14 @@
-const DiscussionModel = require("../../models/discussions/discussions.model");
+const DiscussionModel = require("../../models/discussion/discussion.model");
 
 const DiscussionController = {
     createDiscussion: async function (req, res) {
         try {
-            const { user_id, space_id, comment_id_list, body, files } = req.body
+            const { user, space, comments, body, files } = req.body
 
             const discussion = await DiscussionModel.createDiscussion(
-                user_id,
-                space_id,
-                comment_id_list,
+                user,
+                space,
+                comments,
                 body,
                 files,
             )
@@ -20,8 +20,8 @@ const DiscussionController = {
     },
     getDiscussion: async function (req, res) {
         try {
-            const content = await DiscussionModel.getPopulatedDiscussion(req.params.id)
-            res.status(200).json({ "message": content })
+            const resource = await DiscussionModel.getPopulatedDiscussion(req.params.id)
+            res.status(200).json({ "message": resource })
         }
         catch (e) {
             res.status(400).send({ "error": e })
