@@ -21,7 +21,7 @@ const SpaceController = {
     }
   },
 
-  getSpaces: async function (req, res) {
+  searchSpaces: async function (req, res) {
     try {
       const keyword = req.params.keyword;
       var spaces;
@@ -50,13 +50,13 @@ const SpaceController = {
 
   getSpaceDetail: async function (req, res) {
     try {
-      const id = req.params.id;
-      const space = await SpaceModel.Space.findById(id, "-enrollments")
+      var space = req.params.id;
+      space = await SpaceModel.Space.findById(space, "-enrollments")
         .populate("creator", "name surname")
         .populate({
           path: "topics",
           populate: {
-            path: "topic_badge",
+            path: "badge",
           },
         })
         .exec();
@@ -67,14 +67,14 @@ const SpaceController = {
       let data = { space };
       // if user logged-in
       if (req.auth) {
-        const user_id = req.auth.id;
-        const user = await UserModel.User.findById(user_id);
+        var user = req.auth.id;
+        user = await UserModel.User.findById(user);
         if (!user) {
           return res.status(200).json({ data });
         }
         const enrollingInfo = await EnrollmentModel.Enrollment.findOne({
-          space_id: id,
-          user_id,
+          space,
+          user,
         });
         if (enrollingInfo) {
           data.enrolled = true;

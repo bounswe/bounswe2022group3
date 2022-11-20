@@ -13,6 +13,31 @@ const EnrollmentController = {
     }
   },
 
+  searchEnrollments: async function (req, res) {
+    try {
+      const keyword = req.params.keyword;
+      const user = req.auth.id;
+      var enrollments;
+      if (keyword) {
+        enrollments = await EnrollmentModel.Enrollment.find(
+          {
+            name: { $regex: keyword, $options: "i" },
+            user,
+          },
+          "space is_active notes progress"
+        ).exec();
+      } else {
+        enrollments = await EnrollmentModel.Enrollment.find(
+          { user },
+          "space is_active notes progress"
+        ).exec();
+      }
+      return res.status(200).json({ enrollments });
+    } catch (error) {
+      res.status(400).send({ error: error.toString() });
+    }
+  },
+
   getEnrolledSpaces: async function (req, res) {
     try {
       const user = req.auth.id;
@@ -26,7 +51,7 @@ const EnrollmentController = {
           .populate({
             path: "topics",
             populate: {
-              path: "topic_badge",
+              path: "badge",
             },
           });
         if (space) {

@@ -17,7 +17,7 @@ spaceRouter.post(
   SpaceController.createSpace
 );
 
-spaceRouter.get("/getSpaces/:keyword?", SpaceController.getSpaces);
+spaceRouter.get("/searchSpaces/:keyword?", SpaceController.searchSpaces);
 
 spaceRouter.get(
   "/:id",
