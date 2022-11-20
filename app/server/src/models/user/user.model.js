@@ -13,19 +13,6 @@ const userSchema = new mongoose.Schema(
     surname: {
       type: String,
     },
-    password_hash: {
-      type: String,
-    },
-    password_salt: {
-      type: String,
-    },
-    password_iter: {
-      type: String,
-    },
-    tokens: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Tokens",
-    },
     personal_info: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "personal_info",
@@ -60,9 +47,6 @@ const userSchema = new mongoose.Schema(
         ref: "User",
       },
     ],
-    is_confirmed: {
-      type: Boolean,
-    },
     is_banned: {
       type: Boolean,
     },
@@ -81,23 +65,11 @@ const userSchema = new mongoose.Schema(
 );
 const User = mongoose.model("User", userSchema);
 
-const createUser = async ({
-  email,
-  name,
-  surname,
-  password_hash,
-  password_salt,
-  password_iter,
-  tokens,
-}) => {
+const createUser = async ({ email, name, surname }) => {
   var user = new User({
     email,
     name,
     surname,
-    password_hash,
-    password_salt,
-    password_iter,
-    tokens,
   });
   // After profile branch merged, add here
 
@@ -121,9 +93,10 @@ const deleteUser = async (email) => {
   return res;
 };
 
-const getPopulatedTokens = async (user_id) => {
-  return User.findById(user_id).populate("tokens").exec();
-};
+// const getPopulatedTokens = async (user_id) => {
+//     return User.findById(user_id)
+//         .populate("tokens").exec()
+// }
 const getPopulatedPersonalInfo = async (user_id) => {
   return User.findById(user_id)
     .populate({
@@ -141,6 +114,5 @@ module.exports = {
   deleteUser,
   getUserByEmail,
   getUserByID,
-  getPopulatedTokens,
   getPopulatedPersonalInfo,
 };

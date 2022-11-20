@@ -33,8 +33,9 @@ const authorization = async (req, res, next) => {
     const user = await UserModel.getUserByEmail(email);
     if (user) {
       // Populating user token and checking if the request token is deprecated.
-      token_populated_user = await UserModel.getPopulatedTokens(user._id);
-      if (token_populated_user.tokens.access_token !== token) {
+      //token_populated_user = await UserModel.getPopulatedTokens(user._id)
+      const tokens = await TokensModel.getTokensByEmail(user.email);
+      if (tokens.access_token !== token) {
         return res.status(400).json({
           message:
             "This token is deprecated, user has been logged-out or has a new token now!",
@@ -84,8 +85,9 @@ const authorization_conditional = async (req, res, next) => {
     const user = await UserModel.getUserByEmail(email);
     if (user) {
       // Populating user token and checking if the request token is deprecated.
-      token_populated_user = await UserModel.getPopulatedTokens(user._id);
-      if (token_populated_user.tokens.access_token !== token) {
+      //token_populated_user = await UserModel.getPopulatedTokens(user._id)
+      const tokens = await TokensModel.getTokensByEmail(user.email);
+      if (tokens.access_token !== token) {
         return res.status(400).json({
           message:
             "This token is deprecated, user has been logged-out or has a new token now!",
@@ -119,9 +121,9 @@ function hashPassword(password) {
       .pbkdf2Sync(password, salt, iterations, (keylen = 512), "sha256")
       .toString("hex");
     return {
-      salt: salt,
-      hash: hash,
-      iterations: iterations,
+      salt,
+      hash,
+      iterations,
     };
   } catch (error) {
     return {
@@ -158,7 +160,7 @@ async function generateToken(email, secret, expiry) {
   try {
     // Generate ACT
     const payload = {
-      email: email,
+      email,
     };
     const options = {
       algorithm: "HS256",
