@@ -16,40 +16,56 @@ const spaceSchema = new mongoose.Schema({
   rating: {
     type: Number,
   },
-  topics: {
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: "Topic",
-  },
-  tags: {
-    type: [String],
-  },
-  badges: {
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: "Badge",
-  },
-  feedback: {
-    // type: [mongoose.Schema.Types.ObjectId],
-    // ref: "Feedback",
-    type: String,
-  },
-  event_list: {
-    // type: [mongoose.Schema.Types.ObjectId],
-    // ref: "Event",
-    type: String,
-  },
-  discussion_list: {
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: "Discussion",
-  },
-  poll_list: {
-    // type: [mongoose.Schema.Types.ObjectId],
-    // ref: "Poll",
-    type: String,
-  },
-  enrollments: {
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: "Enrollment",
-  },
+  topics: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Topic",
+    },
+  ],
+  tags: [
+    {
+      type: String,
+    },
+  ],
+  badges: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Badge",
+    },
+  ],
+  feedbacks: [
+    {
+      // type: mongoose.Schema.Types.ObjectId,
+      // ref: "Feedback",
+      type: String,
+    },
+  ],
+  events: [
+    {
+      // type: mongoose.Schema.Types.ObjectId,
+      // ref: "Event",
+      type: String,
+    },
+  ],
+  discussions: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Discussion",
+    },
+  ],
+  polls: [
+    {
+      // type: mongoose.Schema.Types.ObjectId,
+      // ref: "Poll",
+      type: String,
+    },
+  ],
+  enrollments: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Enrollment",
+    },
+  ],
   image: {
     type: String,
   },

@@ -1,18 +1,33 @@
 const mongoose = require("mongoose");
 
 const topicSchema = new mongoose.Schema({
-  name: String,
-  badge: { type: mongoose.Schema.Types.ObjectId, ref: "Badge" },
-  resources: [{ type: mongoose.Schema.Types.ObjectId, ref: "Resource" }],
+  name: {
+    type: String,
+    required: true,
+  },
+  space: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Space",
+    required: true,
+  },
+  badge: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Badge",
+  },
+  resources: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Resource",
+    },
+  ],
 });
 
 const Topic = mongoose.model("Topic", topicSchema);
 
-const createTopic = async (name, badge, resources) => {
+const createTopic = async (space, name) => {
   var topic = new Topic({
+    space,
     name,
-    badge,
-    resources,
   });
   const res = await topic.save();
   return res;

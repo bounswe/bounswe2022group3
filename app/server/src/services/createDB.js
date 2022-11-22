@@ -26,23 +26,23 @@ db.badge.insertMany([
         description: 'You have been given this badge because you enrolled in a course.'
     }
 ]);
-db.chapter.insertMany([
+db.topic.insertMany([
     {
-        chapter_name: '',
-        chapter_id: '',
-        chapter_badge: '', // badge ref
-        content: [''], // content ref
+        _id: '',
+        name: '',
+        badge: '', // badge ref
+        resources: [''], // resource ref
     }
 ]);
 db.comment.insertMany([
     {
         user: '', // user ref
-        comment_body: '',
-        comment_date: '',
-        comment_files: ['']
+        body: '',
+        date: '',
+        files: ['']
     }
 ]);
-db.content.insertMany([
+db.resource.insertMany([
     {
         name: '',
         body: '',
@@ -51,19 +51,19 @@ db.content.insertMany([
         video: ''
     }
 ]);
-db.course.insertMany([
+db.space.insertMany([
     {
         name: '',
-        lecturer: '', // user ref
+        creator: '', // user ref
         info: '',
         rating: 0,
-        chapters: [''], // chapter ref
+        topics: [''], // topic ref
         tags: [''],
         badges: [''], // badge ref
-        feedback: [''], // feedback ref
-        event_list: [''], // event ref
-        discussion_list: [''], // discussion ref
-        poll_list: [''], // poll ref
+        feedbacks: [''], // feedback ref
+        events: [''], // event ref
+        discussions: [''], // discussion ref
+        polls: [''], // poll ref
         enrollments: [''], // enrollment ref
         image: '',
     }
@@ -71,17 +71,17 @@ db.course.insertMany([
 db.discussion.insertMany([
     {
         user: '', // user ref
-        course: '', // course ref
+        space: '', // space ref
         comments: [''], // comment ref
-        discussion_body: '',
-        discussion_date: '',
-        discussion_files: ['']
+        body: '',
+        date: '',
+        files: ['']
     }
 ]);
 db.enrollment.insertMany([
     {
         user: '', // user ref
-        course: '', // course ref
+        space: '', // space ref
         is_active: true,
         notes: '', // note ref
         progress: '' // bool map
@@ -102,6 +102,9 @@ db.personalinfo.insertMany([
 db.token.insertMany([
     {
         email: '',
+        password_hash: '',
+        password_salt: '',
+        password_iter: '',
         access_token: '',
         refresh_token: '',
         confirmation_token: ''
@@ -112,10 +115,6 @@ db.user.insertMany([
         email: 'furkan.akkurt@boun.edu.tr',
         name: 'Furkan',
         surname: 'Akkurt',
-        password_hash: '',
-        password_salt: '',
-        password_iter: '',
-        tokens: '', // token ref
         personal_info: '', // personal info ref
         enrollments: [''], // enrollment ref
         created_courses: [''], // course ref

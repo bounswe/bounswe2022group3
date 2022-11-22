@@ -1,12 +1,27 @@
 const mongoose = require("mongoose");
 
 const discussionSchema = new mongoose.Schema({
-  user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-  space: { type: mongoose.Schema.Types.ObjectId, ref: "Space" },
-  comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
+  space: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Space",
+  },
+  comments: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Comment",
+    },
+  ],
   body: String,
   date: Date,
-  files: [{ type: String }],
+  files: [
+    {
+      type: String,
+    },
+  ],
 });
 
 discussionSchema.set("timestamps", true);
