@@ -1,11 +1,11 @@
 import 'package:bucademy/resources/custom_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:markdown_editable_textinput/format_markdown.dart';
 import 'package:markdown_editable_textinput/markdown_text_input.dart';
 import 'package:stacked/stacked.dart';
 
-Widget markdownInput(Function onChange, String text) =>
+Widget markdownInput(Function onChange, String text, void Function()? onSend,
+        {bool loading = false}) =>
     ViewModelBuilder<MarkdownInputViewModel>.reactive(
       viewModelBuilder: () => MarkdownInputViewModel(),
       builder: (context, viewModel, child) => Theme(
@@ -20,42 +20,59 @@ Widget markdownInput(Function onChange, String text) =>
           child: Column(
             children: [
               Container(
-                decoration: BoxDecoration(
-                    color: CustomColors.main.withOpacity(0.5),
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(10),
-                      topRight: Radius.circular(10),
-                    )),
+                decoration: const BoxDecoration(
+                  color: CustomColors.main,
+                ),
                 child: Row(
                   children: [
-                    const SizedBox(width: 20),
                     ChangeViewButton(
+                      icon: Icons.edit,
                       text: 'Edit',
                       onTap: () => viewModel.updateScreen(isPreview: false),
                       isActive: viewModel.preview == false,
                     ),
                     const SizedBox(width: 10),
                     ChangeViewButton(
+                      icon: Icons.preview,
                       text: 'Preview',
                       onTap: () => viewModel.updateScreen(isPreview: true),
                       isActive: viewModel.preview == true,
                     ),
+                    const Spacer(),
+                    InkWell(
+                      onTap: (() {
+                        if (onSend != null) onSend();
+                        viewModel.updateScreen();
+                      }),
+                      child: Row(
+                        children: const [
+                          Icon(Icons.send_outlined, color: Colors.white),
+                          SizedBox(width: 5),
+                          Text('Send', style: TextStyle(color: Colors.white)),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 15),
                   ],
                 ),
               ),
-              viewModel.preview
-                  ? Container(
+              loading
+                  ? const SizedBox(
                       height: 160,
-                      color: Theme.of(context).cardColor,
-                      child: Markdown(data: text, shrinkWrap: true),
-                    )
-                  : MarkdownTextInput(
-                      onChange,
-                      text,
-                      label: 'Write here',
-                      maxLines: 5,
-                      // actions: MarkdownType.values // can be customized
-                    ),
+                      child: Center(child: CircularProgressIndicator()))
+                  : viewModel.preview
+                      ? Container(
+                          height: 160,
+                          color: Theme.of(context).cardColor,
+                          child: Markdown(data: text, shrinkWrap: true),
+                        )
+                      : MarkdownTextInput(
+                          onChange,
+                          text,
+                          label: 'Write here',
+                          maxLines: 5,
+                          // actions: MarkdownType.values // can be customized
+                        ),
             ],
           ),
         ),
@@ -64,6 +81,7 @@ Widget markdownInput(Function onChange, String text) =>
 
 class ChangeViewButton extends StatelessWidget {
   final String text;
+  final IconData icon;
   final void Function() onTap;
   final bool isActive;
   const ChangeViewButton({
@@ -71,6 +89,7 @@ class ChangeViewButton extends StatelessWidget {
     required this.text,
     required this.onTap,
     required this.isActive,
+    required this.icon,
   }) : super(key: key);
 
   @override
@@ -78,13 +97,19 @@ class ChangeViewButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 6),
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
         color: isActive
-            ? CustomColors.main.withOpacity(0.6)
-            : CustomColors.main.withOpacity(0.1),
-        child: Text(
-          text,
-          style: const TextStyle(color: Colors.white),
+            ? const Color.fromARGB(255, 61, 48, 154)
+            : CustomColors.main.withOpacity(0.0),
+        child: Row(
+          children: [
+            Icon(icon, color: Colors.white, size: 18),
+            const SizedBox(width: 5),
+            Text(
+              text,
+              style: const TextStyle(color: Colors.white),
+            ),
+          ],
         ),
       ),
     );
