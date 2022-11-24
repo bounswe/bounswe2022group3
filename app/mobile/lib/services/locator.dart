@@ -1,6 +1,7 @@
 import 'package:bucademy/services/course_service.dart';
 import 'package:bucademy/services/content_service.dart';
 import 'package:bucademy/services/dio_service.dart';
+import 'package:bucademy/services/discussion_service.dart';
 import 'package:bucademy/services/navigator_service.dart';
 import 'package:bucademy/services/persistence_service.dart';
 import 'package:bucademy/services/user_service.dart';
@@ -24,3 +25,4 @@ NavigatorService get navigatorService => GetIt.I<NavigatorService>();
 PersistenceService get persistenceService => GetIt.I<PersistenceService>();
 DioService get dioService => GetIt.I<DioService>();
 UserService get userService => GetIt.I<UserService>();
+DiscussionService get discussionService => GetIt.I<DiscussionService>();
