@@ -11,7 +11,7 @@ const badgesSchema = new mongoose.Schema(
 const Badge = mongoose.model("Badge", badgesSchema);
 
 const createBadge = async (title, description) => {
-  var topic = new Badge({ title: title, description: description });
+  var topic = new Badge({ title, description });
   const res = await topic.save();
   return res;
 };
