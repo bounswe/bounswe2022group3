@@ -1,5 +1,5 @@
 import 'package:bucademy/services/locator.dart';
-import 'package:bucademy/view/login/login.dart';
+import 'package:bucademy/view/intro/intro.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
           fontFamily: 'Lato',
         ),
         home: Scaffold(
-          body: SafeArea(child: loginView()),
+          body: SafeArea(child: introView()),
           //appBar: AppBar(toolbarHeight: 0, elevation: 0, backgroundColor: CustomColors.main),
         ),
       );
