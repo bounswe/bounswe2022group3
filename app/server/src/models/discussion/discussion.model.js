@@ -16,7 +16,12 @@ const discussionSchema = new mongoose.Schema(
         ref: "Comment",
       },
     ],
-    body: String,
+    title: {
+      type: String,
+    },
+    body: {
+      type: String,
+    },
     files: [
       {
         type: String,
@@ -28,10 +33,11 @@ const discussionSchema = new mongoose.Schema(
 
 const Discussion = mongoose.model("Discussion", discussionSchema);
 
-const createDiscussion = async (user, space, comments, body, files) => {
+const createDiscussion = async (user, space, title, body, files) => {
   var discussion = new Discussion({
     user,
     space,
+    title,
     body,
     files,
   });

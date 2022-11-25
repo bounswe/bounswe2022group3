@@ -3,11 +3,12 @@ const DiscussionModel = require("../../models/discussion/discussion.model");
 const DiscussionController = {
   createDiscussion: async function (req, res) {
     try {
-      const { user, space, body, files } = req.body;
+      const { user, space, title, body, files } = req.body;
 
       const discussion = await DiscussionModel.createDiscussion(
         user,
         space,
+        title,
         body,
         files
       );
