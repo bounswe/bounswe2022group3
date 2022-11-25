@@ -14,6 +14,7 @@ TextFormField surnameBar(TextEditingController controller) {
       if (value == null || value.trim().isEmpty || !RegExp(r'^[a-z A-Z]+$').hasMatch(value)) {
         return "Provide a surname.";
       }
+      return null;
     },
   );
 }

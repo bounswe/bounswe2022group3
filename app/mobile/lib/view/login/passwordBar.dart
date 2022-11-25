@@ -18,6 +18,7 @@ TextFormField passwordBar(TextEditingController controller) {
       if (value == null || value.trim().length < 8) {
         return "Your password must be at least 8 characters long.";
       }
+      return null;
     }
   );
 }
