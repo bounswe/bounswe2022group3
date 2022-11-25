@@ -1,29 +1,49 @@
 const mongoose = require("mongoose");
 
-const discussionSchema = new mongoose.Schema({
-  user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-  space: { type: mongoose.Schema.Types.ObjectId, ref: "Space" },
-  comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
-  body: String,
-  date: Date,
-  files: [{ type: String }],
-});
+const discussionSchema = new mongoose.Schema(
+  {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+    space: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Space",
+    },
+    comments: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Comment",
+      },
+    ],
+    title: {
+      type: String,
+    },
+    body: {
+      type: String,
+    },
+    files: [
+      {
+        type: String,
+      },
+    ],
+  },
+  { timestamps: true }
+);
 
-discussionSchema.set("timestamps", true);
 const Discussion = mongoose.model("Discussion", discussionSchema);
 
-const createDiscussion = async (user, space, comments, body, files) => {
+const createDiscussion = async (user, space, title, body, files) => {
   var discussion = new Discussion({
     user,
     space,
-    comments,
+    title,
     body,
     files,
   });
 
   // Just to set the creation time...
   const discussionTemp = await discussion.save();
-  discussionTemp.date = discussionTemp.createdAt;
   const res = await discussionTemp.save();
   return res;
 };

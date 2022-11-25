@@ -29,6 +29,7 @@ const tokenSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
 const Tokens = mongoose.model("Tokens", tokenSchema);
 
 const createToken = async ({

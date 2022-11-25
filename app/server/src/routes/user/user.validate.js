@@ -36,33 +36,7 @@ exports.validate = (method) => {
       ];
     }
     case "refresh_tokens": {
-      return [
-        body("email", "Invalid email").exists().isEmail(),
-        body("refresh_token", "Invalid email").exists().isJWT(),
-      ];
-    }
-    case "confirm-email": {
-      return [body("code", "code does not exist").exists().isJWT()];
-    }
-    case "login": {
-      return [
-        body("email", "Invalid email").exists().isEmail(),
-        body(
-          "password",
-          "Password must contain at least 8 characters, one uppercase, one lowercase, one number and one special case character"
-        )
-          .exists()
-          .isLength({ min: 8 })
-          .matches(
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/
-          ),
-      ];
-    }
-    case "refresh_tokens": {
-      return [
-        body("email", "Invalid email").exists().isEmail(),
-        body("refresh_token", "Invalid email").exists().isJWT(),
-      ];
+      return [body("email", "Invalid email").exists().isEmail()];
     }
     case "confirm-email": {
       return [body("code", "code does not exist").exists().isJWT()];

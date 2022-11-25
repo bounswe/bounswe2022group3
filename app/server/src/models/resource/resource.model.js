@@ -1,21 +1,32 @@
 const mongoose = require("mongoose");
 
-const resourceSchema = new mongoose.Schema({
-  name: String,
-  body: String,
-  media: [String],
-  discussion: { type: mongoose.Schema.Types.ObjectId, ref: "Discussion" },
-  video: String,
-});
+const resourceSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+    },
+    body: {
+      type: String,
+    },
+    topic: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Topic",
+    },
+    discussion: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Discussion",
+    },
+  },
+  { timestamps: true }
+);
+
 const Resource = mongoose.model("Resource", resourceSchema);
 
-const createResource = async (name, body, media, discussion, video_link) => {
+const createResource = async (name, body, topic) => {
   var resource = new Resource({
     name,
     body,
-    media,
-    discussion,
-    video: video_link,
+    topic,
   });
   const res = await resource.save();
   return res;

@@ -3,8 +3,8 @@ const TopicModel = require("../../models/topic/topic.model");
 const TopicController = {
   createTopic: async function (req, res) {
     try {
-      const { name, badge, resources } = req.body;
-      const topic = await TopicModel.createTopic(name, badge, resources);
+      const { space_id, name } = req.body;
+      const topic = await TopicModel.createTopic(space_id, name);
       res.status(201).json({ message: topic });
     } catch (e) {
       res.status(400).send({ error: e });

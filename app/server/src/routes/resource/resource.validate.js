@@ -6,8 +6,7 @@ exports.validate = (method) => {
       return [
         body("name", "name doesn't exist").exists(),
         body("body", "body doesn't exist").exists(),
-        body("discussion", "discussion doesn't exist").exists(),
-        body("media", "media doesn't exist").exists().isArray(),
+        body("topic_id", "topic_id doesn't exist").exists(),
       ];
   }
 };
