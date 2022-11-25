@@ -41,14 +41,5 @@ exports.validate = (method) => {
     case "confirm-email": {
       return [body("code", "code does not exist").exists().isJWT()];
     }
-    case "refresh_tokens": {
-      return [
-        body("email", "Invalid email").exists().isEmail(),
-        body("refresh_token", "Invalid email").exists().isJWT(),
-      ];
-    }
-    case "confirm-email": {
-      return [body("code", "code does not exist").exists().isJWT()];
-    }
   }
 };
