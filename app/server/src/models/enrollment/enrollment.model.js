@@ -15,11 +15,13 @@ const enrollmentSchema = new mongoose.Schema(
     is_active: {
       type: Boolean,
     },
-    notes: [{
-      // type: mongoose.Schema.Types.ObjectId,
-      // ref: "Note",
-      type: String,
-    }],
+    notes: [
+      {
+        // type: mongoose.Schema.Types.ObjectId,
+        // ref: "Note",
+        type: String,
+      },
+    ],
     progress: {
       type: Map,
       of: Boolean,

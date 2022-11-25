@@ -1,13 +1,14 @@
 const mongoose = require("mongoose");
 
-const commentSchema = new mongoose.Schema({
-  user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-  body: String,
-  date: Date,
-  files: [String],
-});
+const commentSchema = new mongoose.Schema(
+  {
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    body: String,
+    files: [String],
+  },
+  { timestamps: true }
+);
 
-commentSchema.set("timestamps", true);
 const Comment = mongoose.model("Comment", commentSchema);
 
 const createComment = async (user, body, files) => {
@@ -18,7 +19,6 @@ const createComment = async (user, body, files) => {
   });
 
   const commentTemp = await comment.save();
-  commentTemp.comment_date = commentTemp.createdAt;
   const res = await commentTemp.save();
   return res;
 };
