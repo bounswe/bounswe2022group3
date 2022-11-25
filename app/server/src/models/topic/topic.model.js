@@ -1,26 +1,29 @@
 const mongoose = require("mongoose");
 
-const topicSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  space: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Space",
-    required: true,
-  },
-  badge: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Badge",
-  },
-  resources: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Resource",
+const topicSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
     },
-  ],
-});
+    space: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Space",
+      required: true,
+    },
+    badge: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Badge",
+    },
+    resources: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Resource",
+      },
+    ],
+  },
+  { timestamps: true }
+);
 
 const Topic = mongoose.model("Topic", topicSchema);
 
