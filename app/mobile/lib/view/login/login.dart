@@ -38,44 +38,6 @@ class LoginFormState extends State<LoginForm> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  Form loginForm() {
-    return Form(
-        key: _formKey,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-                alignment: Alignment.center,
-                height: 200,
-                child: Image.network('https://raw.githubusercontent.com/bounswe/bounswe2022group3/master/app/client/public/education.png')
-            ),
-            const Padding(padding: EdgeInsets.only(bottom: 20.0)),
-            emailBar(_emailController),
-            passwordBar(_passwordController),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: ElevatedButton(
-                onPressed: () async {
-                  // Validate returns true if the form is valid, or false otherwise.
-                  if (_formKey.currentState!.validate()) {
-                    bool loggedIn = await userService.login(email: _emailController.text, password: _passwordController.text);
-                    if (loggedIn) {
-                      Navigator.of(context).pop();
-                      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => introView()), (route) => false);
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Login failed.')),
-                      );
-                    }
-                  }
-                },
-                child: const Text('Submit'),
-              ),
-            ),
-          ],
-        ));
-    }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,7 +50,41 @@ class LoginFormState extends State<LoginForm> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 30),
-                loginForm(),
+            Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                        alignment: Alignment.center,
+                        height: 200,
+                        child: Image.network('https://raw.githubusercontent.com/bounswe/bounswe2022group3/master/app/client/public/education.png')
+                    ),
+                    const Padding(padding: EdgeInsets.only(bottom: 20.0)),
+                    emailBar(_emailController),
+                    passwordBar(_passwordController),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          // Validate returns true if the form is valid, or false otherwise.
+                          if (_formKey.currentState!.validate()) {
+                            bool loggedIn = await userService.login(email: _emailController.text, password: _passwordController.text);
+                            if (loggedIn) {
+                              Navigator.of(context).pop();
+                              Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => introView()), (route) => false);
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Login failed.')),
+                              );
+                            }
+                          }
+                        },
+                        child: const Text('Submit'),
+                      ),
+                    ),
+                  ],
+                )),
                 GestureDetector(
                   child: Container(
                     alignment: Alignment.center,
