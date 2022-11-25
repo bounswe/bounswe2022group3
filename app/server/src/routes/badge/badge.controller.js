@@ -13,7 +13,7 @@ const BadgeController = {
   getBadge: async function (req, res) {
     try {
       const badge = await BadgeModel.getBadge(req.params.id);
-      res.status(200).json({ status: "ok", message: badge });
+      res.status(200).json({ message: badge });
     } catch (e) {
       res.status(400).send({ error: e });
     }
