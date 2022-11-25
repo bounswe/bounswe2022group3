@@ -18,7 +18,7 @@ const createComment = async (user, body, files) => {
     files,
   });
 
-  const res = await commentTemp.save();
+  const res = await comment.save();
   return res;
 };
 
