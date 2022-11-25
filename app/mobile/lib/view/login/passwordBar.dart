@@ -14,10 +14,10 @@ TextFormField passwordBar(TextEditingController controller) {
       //filled: true,
       isDense: true,
     ),
-    /*validator: (value) {
+    validator: (value) {
       if (value == null || value.trim().length < 8) {
-        return "The password must be at least 8 characters long.";
+        return "Your password must be at least 8 characters long.";
       }
-    }*/
+    }
   );
 }

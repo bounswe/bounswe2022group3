@@ -16,10 +16,10 @@ TextFormField emailBar(TextEditingController controller) {
       filled: true,
       isDense: true,
     ),
-    /*validator: (value) {
+    validator: (value) {
       if (value == null || !RegExp(r'^(\w+)@(\w+)\.(\w+)$').hasMatch(value)) {
         return "Please enter a valid email.";
       }
-    },*/
+    },
   );
 }

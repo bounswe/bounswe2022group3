@@ -10,10 +10,10 @@ TextFormField nameBar(TextEditingController controller) {
       border: const OutlineInputBorder(),
       hintStyle: TextStyles.helperText,
     ),
-    /*validator: (value) {
+    validator: (value) {
       if (value == null || value.trim().isEmpty || !RegExp(r'^[a-z A-Z]+$').hasMatch(value)) {
         return "Provide a name.";
       }
-    },*/
+    },
   );
 }
