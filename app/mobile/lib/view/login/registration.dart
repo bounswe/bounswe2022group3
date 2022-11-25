@@ -1,4 +1,3 @@
-import 'package:bucademy/resources/custom_colors.dart';
 import 'package:bucademy/view/home/homepage.dart';
 import 'package:bucademy/view/login/surnameBar.dart';
 import 'package:flutter/material.dart';
@@ -36,90 +35,87 @@ class RegistrationFormState extends State<RegistrationForm> {
   final _passwordController = TextEditingController();
   bool _checked = false;
 
-  Form registrationForm() {
-    return Form(
-        key: _formKey,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            nameBar(_nameController),
-            surnameBar(_surnameController),
-            emailBar(_emailController),
-            passwordBar(_passwordController),
-            Row(
-              children: [
-              Checkbox(
-                value: _checked,
-                onChanged: (bool? value) {
-                  _checked = value!;
-                },
-              ),
-              const Text('I have read and accepted the GDPR.'),]
-            ),
-
-
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: ElevatedButton(
-                onPressed: () async {
-                  // Validate returns true if the form is valid, or false otherwise.
-                  if (_formKey.currentState!.validate()) {
-                    bool registered = await userService.register(name: _nameController.text, surname: _surnameController.text, email: _emailController.text, password: _passwordController.text, checked: _checked);
-                    if (registered) {
-                      _viewModel.navigateToLogin(context);
-                      Navigator.of(context)
-                        .pushAndRemoveUntil(MaterialPageRoute(builder: (context) => LoginFormState().build(context)), (route) => false);
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Registration failed.')),
-                      );
-                  }
-                  }
-                },
-                child: const Text('Register'),
-              ),
-            ),
-          ],
-        ));
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Container(
-        color: Colors.white,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Padding(padding: EdgeInsets.only(bottom: 80.0)),
-            GestureDetector(
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
-                child: Text(
-                  style: TextStyle(
-                      fontSize: 17,
-                      foreground: Paint()
-                        ..strokeWidth = 6
-                        ..color = CustomColors.main
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: SingleChildScrollView( // thanks to https://stackoverflow.com/questions/51774252/bottom-overloaded-by-213-pixels-in-flutter
+        child: Container(
+            color: Colors.white,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Padding(padding: EdgeInsets.only(bottom: 80.0)),
+                Container(
+                    alignment: Alignment.center,
+                    height: 200,
+                    child: Image.network('https://raw.githubusercontent.com/bounswe/bounswe2022group3/master/app/client/public/education.png')
+                ),
+                const Padding(padding: EdgeInsets.only(bottom: 20.0)),
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      nameBar(_nameController),
+                      surnameBar(_surnameController),
+                      emailBar(_emailController),
+                      passwordBar(_passwordController),
+                      Row(
+                          children: [
+                            Checkbox(
+                              value: _checked,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  _checked = value!;
+                                });
+                              },
+                            ),
+                            const Text('I agree to the Terms of Use and Privacy Policy.'),]
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 16.0),
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            // Validate returns true if the form is valid, or false otherwise.
+                            if (_formKey.currentState!.validate()) {
+                              bool registered = await userService.register(
+                                name:
+                                _nameController.text,
+                                surname: _surnameController.text,
+                                email: _emailController.text,
+                                password: _passwordController.text,
+                                agreement: _checked,
+                                context: context);
+                              if (registered) {
+                                _viewModel.navigateToLogin(context);
+                              } /*else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text( 'Registration failed.')),
+                                );
+                              }*/
+                            }
+                          },
+                          child: const Text('Register'),
+                        ),
+                      ),
+                    ],
+                  )
+                ),
+                GestureDetector(
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: const Text(
+                      'Already have an account? Log in',
+                    ),
                   ),
-                  'Back home',
-                  textAlign: TextAlign.left,
+                  onTap: () => _viewModel.navigateToLogin(context),
                 ),
-              ),
-              onTap: () => _viewModel.navigateToHomepage(context),
-            ),
-            registrationForm(),
-            GestureDetector(
-              child: Container(
-                alignment: Alignment.center,
-                child: const Text(
-                  'Already have an account? Login',
-                ),
-              ),
-              onTap: () => _viewModel.navigateToLogin(context),
-            ),
-          ],
-        )
+              ],
+            )
+        ),
+      )
     );
   }
 }
@@ -129,13 +125,13 @@ class RegistrationViewModel extends ChangeNotifier {
   String? title;
   bool isLoading = false;
 
-  Future<String> register({required String email, required String password}) async {
-    await Future.delayed(const Duration(microseconds: 600));
-    return "Registration Successful";
-  }
-
   void navigateToLogin(BuildContext context) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginForm()));
+    Navigator.of(context)
+        .pushAndRemoveUntil(
+        MaterialPageRoute(
+            builder: (context) => LoginFormState().build(context)),
+            (route) => false
+    );
   }
 
   void navigateToHomepage(BuildContext context) {
