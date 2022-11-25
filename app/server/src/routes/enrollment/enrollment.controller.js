@@ -1,44 +1,80 @@
-const CourseModel = require("../../models/course/course.model");
+const SpaceModel = require("../../models/space/space.model");
 const EnrollmentModel = require("../../models/enrollment/enrollment.model");
+const UserModel = require("../../models/user/user.model");
 
 const EnrollmentController = {
   createEnrollment: async function (req, res) {
-
     try {
-      const course_id = req.body.course_id;
-      const user_id = req.auth.id;
-      const enrollment = await EnrollmentModel.createEnrollment(
-        user_id,
-        course_id
-      );
+      const space = req.body.space_id;
+      const user = req.auth.id;
+      const enrollment = await EnrollmentModel.createEnrollment(user, space);
       res.status(201).send({ enrollment });
-    }
-    catch (e) {
-      res.status(400).send({ "error": e })
+    } catch (e) {
+      res.status(400).send({ error: e });
     }
   },
 
-  getEnrolledCourses: async function (req, res) {
-
+  searchEnrollments: async function (req, res) {
     try {
-      const user_id = req.auth.id;
-      const enrolled_courses = await EnrollmentModel.Enrollment.find({ user_id });
-      var data = [];
-      for (var enrolled_course of enrolled_courses) {
-        var course = await CourseModel.Course.findById(enrolled_course.course_id)
-        .populate("lecturer", 'name surname')
-        .populate({
-          path: 'chapters',
-          populate: {
-            path: 'chapter_badge',
+      const keyword = req.params.keyword;
+      const user = req.auth.id;
+      var enrollments = [];
+      if (keyword) {
+        spaces = await SpaceModel.Space.find(
+          {
+            name: { $regex: keyword, $options: "i" },
+          },
+          "name creator info rating tags image"
+        )
+          .populate("creator", "name surname")
+          .exec();
+        for (var space of spaces) {
+          var enr = await EnrollmentModel.Enrollment.find(
+            {
+              space,
+              user,
+            },
+            "space is_active notes progress"
+          ).exec();
+          if (enr) {
+            enrollments.push(enr);
           }
-        }).exec();
-        data.push(course);
+        }
+      } else {
+        enrollments = await EnrollmentModel.Enrollment.find(
+          { user },
+          "space is_active notes progress"
+        ).exec();
+      }
+      return res.status(200).json({ enrollments });
+    } catch (error) {
+      res.status(400).send({ error: error.toString() });
+    }
+  },
+
+  getEnrolledSpaces: async function (req, res) {
+    try {
+      const user = req.auth.id;
+      const enrolled_spaces = await EnrollmentModel.Enrollment.find({
+        user,
+      });
+      var data = [];
+      for (var enrolled_space of enrolled_spaces) {
+        var space = await SpaceModel.Space.findById(enrolled_space.space)
+          .populate("creator", "name surname")
+          .populate({
+            path: "topics",
+            populate: {
+              path: "badge",
+            },
+          });
+        if (space) {
+          data.push(space);
+        }
       }
       return res.status(200).json({ data });
-    }
-    catch (e) {
-      res.status(400).send({ "error": e.toString() })
+    } catch (e) {
+      res.status(400).send({ error: e.toString() });
     }
   },
 };

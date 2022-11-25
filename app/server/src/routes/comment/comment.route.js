@@ -6,17 +6,17 @@ const { validate } = require("./comment.validate");
 const commentRouter = express.Router();
 
 commentRouter.post(
-    "/",
-    validate("create-comment"),
-    handleValidation,
-    CommnetController.createComment
+  "/",
+  validate("create-comment"),
+  handleValidation,
+  CommnetController.createComment
 );
 
 commentRouter.get(
-    "/:id",
-    // validate("call"),
-    // handleValidation,
-    CommnetController.getComment
+  "/:id",
+  // validate("call"),
+  // handleValidation,
+  CommnetController.getComment
 );
 
 module.exports = commentRouter;

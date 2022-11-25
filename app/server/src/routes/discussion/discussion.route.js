@@ -5,20 +5,18 @@ const { validate } = require("./discussion.validate");
 
 const discussionRouter = express.Router();
 
-
 discussionRouter.post(
-    "/",
-    validate("create-discussion"),
-    handleValidation,
-    DiscussionController.createDiscussion
+  "/",
+  validate("create-discussion"),
+  handleValidation,
+  DiscussionController.createDiscussion
 );
 
 discussionRouter.get(
-    "/:id",
-    // validate("call"),
-    // handleValidation,
-    DiscussionController.getDiscussion
+  "/:id",
+  // validate("call"),
+  // handleValidation,
+  DiscussionController.getDiscussion
 );
-
 
 module.exports = discussionRouter;

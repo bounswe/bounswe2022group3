@@ -1,32 +1,32 @@
-const DiscussionModel = require("../../models/discussions/discussions.model");
+const DiscussionModel = require("../../models/discussion/discussion.model");
 
 const DiscussionController = {
-    createDiscussion: async function (req, res) {
-        try {
-            const { user_id, course_id, comment_id_list, discussion_body, discussion_files } = req.body
+  createDiscussion: async function (req, res) {
+    try {
+      const { user, space, title, body, files } = req.body;
 
-            const discussion = await DiscussionModel.createDiscussion(
-                user_id,
-                course_id,
-                comment_id_list,
-                discussion_body,
-                discussion_files,
-            )
-            res.status(201).send({ "message": discussion })
-        }
-        catch (e) {
-            res.status(400).send({ "error": e })
-        }
-    },
-    getDiscussion: async function (req, res) {
-        try {
-            const content = await DiscussionModel.getPopulatedDiscussion(req.params.id)
-            res.status(200).json({ "message": content })
-        }
-        catch (e) {
-            res.status(400).send({ "error": e })
-        }
-    },
+      const discussion = await DiscussionModel.createDiscussion(
+        user,
+        space,
+        title,
+        body,
+        files
+      );
+      res.status(201).send({ message: discussion });
+    } catch (e) {
+      res.status(400).send({ error: e });
+    }
+  },
+  getDiscussion: async function (req, res) {
+    try {
+      const discussion = await DiscussionModel.getPopulatedDiscussion(
+        req.params.id
+      );
+      res.status(200).json({ message: discussion });
+    } catch (e) {
+      res.status(400).send({ error: e });
+    }
+  },
 };
 
 module.exports = DiscussionController;
