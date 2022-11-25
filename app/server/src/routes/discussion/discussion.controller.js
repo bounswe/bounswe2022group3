@@ -19,10 +19,10 @@ const DiscussionController = {
   },
   getDiscussion: async function (req, res) {
     try {
-      const resource = await DiscussionModel.getPopulatedDiscussion(
+      const discussion = await DiscussionModel.getPopulatedDiscussion(
         req.params.id
       );
-      res.status(200).json({ message: resource });
+      res.status(200).json({ message: discussion });
     } catch (e) {
       res.status(400).send({ error: e });
     }
