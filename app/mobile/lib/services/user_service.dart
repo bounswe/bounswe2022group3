@@ -6,6 +6,7 @@ import 'package:bucademy/classes/user/user.dart';
 import 'package:bucademy/services/locator.dart';
 import 'package:bucademy/services/persistence_service.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 
 @lazySingleton
@@ -27,7 +28,7 @@ class UserService {
         persistenceService.set(PersistenceKeys.name, login.name),
         persistenceService.set(PersistenceKeys.surname, login.surname),
       ]);
-      print('Logged inn, ${await persistenceService.get(PersistenceKeys.refreshToken)}');
+      print('Logged in, ${await persistenceService.get(PersistenceKeys.refreshToken)}');
       return true;
     } catch (e) {
       print(e);
@@ -57,9 +58,13 @@ class UserService {
   }
 
   Future<bool> register(
-      {required String name, required String surname, required String email, required String password, required bool checked}) async {
+      {required String name, required String surname, required String email, required String password, required bool agreement, required BuildContext context}) async {
+    var messages = {
+      '200': "A verification email has been sent to $email. The link will be expired after one day.",
+      '400': "You must agree to the Terms of Use and Privacy Policy.",
+      '409': "The user already exists.",
+    };
     try {
-      if (!checked) return false;
       Response res = await dioService.dio.post(
         '/user/register',
         data: {
@@ -67,14 +72,23 @@ class UserService {
           "surname": surname,
           "email": email,
           "password": password,
+          "agreement": agreement,
         },
       );
-      if (res.statusCode == 200) return false;
-
-      print(res.data['message']);
-      return true;
+      var snack = messages["${res.statusCode}"] ?? 'Registration failed.';
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(snack)),
+      );
+      return res.statusCode == 201;
     } catch (e) {
-      print(e);
+
+      var firstLine = e.toString().split('\n')[0].split(' ');
+      var bracketedCode = firstLine[firstLine.length - 1];
+      var code = bracketedCode.substring(1, bracketedCode.length - 1);
+      var snack = messages[code] ?? 'Registration failed.';
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(snack)),
+      );
       return false;
     }
   }
