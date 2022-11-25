@@ -36,6 +36,11 @@ class UserService {
     }
   }
 
+  Future<bool> isLoggedIn() async {
+    var accessToken = await persistenceService.get(PersistenceKeys.accessToken);
+    return accessToken != "";
+  }
+
   Future<void> confirmMail({required String email, required String code}) async {
     try {
       Response res = await dioService.dio.post(
