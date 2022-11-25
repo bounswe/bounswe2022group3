@@ -78,9 +78,38 @@ const UserController = {
                   ". The link will be expired after one day.",
               });
             }
-          );
-        } catch (e) {
-          res.status(400).send({ error: e });
+            // If they match, create access token and refresh token, return them 
+
+            const access_token = await auth.generateToken(email, jwt_ac_secret, access_jwtExpiry)
+            const refresh_token = await auth.generateToken(email, jwt_ref_secret, refresh_jwtExpiry)
+            // Save them to DB
+            token_data = {
+                email: email,
+                access_token: access_token,
+                refresh_token: refresh_token,
+                confirmation_token: "confirmed",// since we already checked confirmation token, we can set it to confirmed, nothing changes. We have to set it to something, otherwise it will be null. 
+            };
+            const response = (await TokensModel.createToken(token_data));
+            const user = await UserModel.getUserByEmail(email);
+            if (response.createdAt) {
+                return res.status(200).json({
+                    id: user._id,
+                    name: user.name,
+                    surname: user.surname,
+                    email: email,
+                    access_token: access_token,
+                    refresh_token: refresh_token
+                })
+            } else {
+                return res.status(400).json({
+                    message: "Could not login with the parameters you provided.",
+                });
+            }
+        } catch (error) {
+            return res.status(400).json({
+                message: "Failed to login!",
+                error: error.toString()
+            });
         }
 
         return res.status(201).json({
