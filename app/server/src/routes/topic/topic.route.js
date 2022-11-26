@@ -19,4 +19,10 @@ topicRouter.get(
   handleValidation,
   TopicController.getPopulatedTopic
 );
+topicRouter.get(
+  "/mini/:id",
+  validate("get-topic-mini"),
+  handleValidation,
+  TopicController.getTopicMini
+);
 module.exports = topicRouter;

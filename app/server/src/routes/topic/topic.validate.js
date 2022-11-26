@@ -11,5 +11,9 @@ exports.validate = (method) => {
       return [
         body("id", "id doesn't exist").exists(),
       ];
+    case "get-mini-topic":
+      return [
+        body("topic_id", "topic_id doesn't exist").exists(),
+      ];
   }
 };
