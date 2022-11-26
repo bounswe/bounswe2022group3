@@ -8,6 +8,10 @@ exports.validate = (method) => {
         body("body", "body doesn't exist").exists(),
         body("topic_id", "topic_id doesn't exist").exists(),
       ];
+    case "delete-resource":
+      return [
+        body("resource_id", "resource_id doesn't exist").exists(),
+      ];
     case "get-resource":
       return [
         body("id", "id doesn't exist").exists(),

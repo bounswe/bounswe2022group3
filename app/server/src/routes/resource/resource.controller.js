@@ -16,6 +16,21 @@ const ResourceController = {
       res.status(400).send({ error: e.toString() });
     }
   },
+  deleteResource: async function (req, res) {
+    try {
+      const { resource_id } = req.body;
+      const user = req.auth.id;
+      const resource = await ResourceModel.Resource.findById(resource_id);
+      if (resource.creator != user) {
+        res.status(400).send({ error: "User not creator of resource" });
+      } else {
+        resource.remove();
+      }
+      res.status(201).json({ message: "" });
+    } catch (e) {
+      res.status(400).send({ error: e.toString() });
+    }
+  },
   getResource: async function (req, res) {
     try {
       const resource = await ResourceModel.getPopulatedResource(req.params.id);
@@ -60,7 +75,7 @@ const ResourceController = {
       } else {
         resource.ratings[user] = rating;
         var total_rating = average_rating * rate_count + rating;
-        resource.average_rating = new_total_rating / (rate_count+1);
+        resource.average_rating = new_total_rating / (rate_count + 1);
       }
       resource.save();
       res.status(200).json({ message: resource.average_rating });

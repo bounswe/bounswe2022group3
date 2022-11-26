@@ -14,6 +14,14 @@ resourceRouter.post(
   ResourceController.createResource
 );
 
+resourceRouter.delete(
+  "/delete",
+  validate("delete-resource"),
+  handleValidation,
+  authorization,
+  ResourceController.deleteResource
+);
+
 resourceRouter.get(
   "/:id",
   validate("get-resource"),
