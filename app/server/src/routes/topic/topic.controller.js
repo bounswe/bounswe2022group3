@@ -4,7 +4,8 @@ const TopicController = {
   createTopic: async function (req, res) {
     try {
       const { space_id, name } = req.body;
-      const topic = await TopicModel.createTopic(space_id, name);
+      const user= req.auth.id;
+      const topic = await TopicModel.createTopic(name, space_id, user);
       res.status(201).json({ message: topic });
     } catch (e) {
       res.status(400).send({ error: e });

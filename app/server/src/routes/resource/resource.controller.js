@@ -4,7 +4,8 @@ const ResourceController = {
   createResource: async function (req, res) {
     try {
       const { name, body, topic_id } = req.body;
-      const resource = await ResourceModel.createResource(name, body, topic_id);
+      const user = req.auth.id;
+      const resource = await ResourceModel.createResource(name, body, topic_id, user);
       res.status(201).json({ message: resource });
     } catch (e) {
       res.status(400).send({ error: e });

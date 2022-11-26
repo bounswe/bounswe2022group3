@@ -2,9 +2,7 @@ const express = require("express");
 const { handleValidation } = require("../../services/validate");
 const TopicController = require("./topic.controller");
 const { validate } = require("./topic.validate");
-const {
-  authorization,
-} = require("../../services/auth");
+const { authorization } = require("../../services/auth");
 
 const topicRouter = express.Router();
 

@@ -12,6 +12,11 @@ const resourceSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Topic",
     },
+    creator: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
     discussion: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Discussion",
@@ -27,6 +32,7 @@ const createResource = async (name, body, topic) => {
     name,
     body,
     topic,
+    creator,
   });
   const res = await resource.save();
   return res;

@@ -11,6 +11,11 @@ const topicSchema = new mongoose.Schema(
       ref: "Space",
       required: true,
     },
+    creator: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
     badge: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Badge",
@@ -27,10 +32,11 @@ const topicSchema = new mongoose.Schema(
 
 const Topic = mongoose.model("Topic", topicSchema);
 
-const createTopic = async (space, name) => {
+const createTopic = async (name, space, creator) => {
   var topic = new Topic({
-    space,
     name,
+    space,
+    creator,
   });
   const res = await topic.save();
   return res;
