@@ -17,6 +17,13 @@ const resourceSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    average_rating: {
+      type: Number,
+    },
+    ratings: {
+      type: Map,
+      of: Number,
+    },
     discussion: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Discussion",
@@ -46,7 +53,7 @@ const getResource = async (id) => {
 const getPopulatedResource = async (id) => {
   return Resource.findById(id)
     .populate("discussion")
-    .populate('creator', 'name surname')
+    .populate("creator", "name surname")
     .exec();
 };
 

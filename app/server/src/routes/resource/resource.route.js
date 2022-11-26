@@ -29,4 +29,12 @@ resourceRouter.put(
   ResourceController.updateResource
 );
 
+resourceRouter.post(
+  "/rate",
+  validate("rate-resource"),
+  handleValidation,
+  authorization,
+  ResourceController.rateResource
+);
+
 module.exports = resourceRouter;
