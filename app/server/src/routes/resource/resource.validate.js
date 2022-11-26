@@ -12,10 +12,6 @@ exports.validate = (method) => {
       return [
         body("resource_id", "resource_id doesn't exist").exists(),
       ];
-    case "get-resource":
-      return [
-        body("id", "id doesn't exist").exists(),
-      ];
     case "update-resource":
       return [
         body("resource_id", "resource_id doesn't exist").exists(),

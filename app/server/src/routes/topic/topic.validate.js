@@ -7,13 +7,5 @@ exports.validate = (method) => {
         body("name", "name doesn't exist").exists(),
         body("space_id", "space_id doesn't exist").exists(),
       ];
-    case "get-topic":
-      return [
-        body("id", "id doesn't exist").exists(),
-      ];
-    case "get-mini-topic":
-      return [
-        body("topic_id", "topic_id doesn't exist").exists(),
-      ];
   }
 };

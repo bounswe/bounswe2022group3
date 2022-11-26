@@ -17,7 +17,8 @@ const TopicController = {
   },
   getPopulatedTopic: async function (req, res) {
     try {
-      const topic = await TopicModel.getPopulatedTopic(req.params.id);
+      const topic_id = req.params.id;
+      const topic = await TopicModel.getPopulatedTopic(topic_id);
       res.status(200).json({ message: topic });
     } catch (e) {
       res.status(400).send({ error: e });
@@ -25,7 +26,7 @@ const TopicController = {
   },
   getTopicMini: async function (req, res) {
     try {
-      const { topic_id } = req.body;
+      const topic_id = req.params.id;
       const topic = await TopicModel.Topic.findById(topic_id, 'resources')
         .populate('resources', 'title');
       res.status(200).json({ message: topic });
