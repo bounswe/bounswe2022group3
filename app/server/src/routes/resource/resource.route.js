@@ -21,4 +21,12 @@ resourceRouter.get(
   ResourceController.getResource
 );
 
+resourceRouter.put(
+  "/update",
+  validate("update-resource"),
+  handleValidation,
+  authorization,
+  ResourceController.updateResource
+);
+
 module.exports = resourceRouter;
