@@ -11,6 +11,9 @@ const ResourceController = {
         topic_id,
         user
       );
+      var topic = await SpaceModel.Space.findById(topic_id);
+      topic.resources.push(resource);
+      topic.save();
       res.status(201).json({ message: resource });
     } catch (e) {
       res.status(400).send({ error: e.toString() });

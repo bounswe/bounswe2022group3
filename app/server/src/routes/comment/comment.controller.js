@@ -14,8 +14,9 @@ const CommentController = {
   },
   getComment: async function (req, res) {
     try {
-      const resource = await CommentModel.getComment(req.params.id);
-      res.status(200).json({ message: resource });
+      const comment_id = req.params.id;
+      const comment = await CommentModel.Comment.findById(comment_id);
+      res.status(200).json({ message: comment });
     } catch (e) {
       res.status(400).send({ error: e });
     }
