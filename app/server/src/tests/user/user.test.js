@@ -1,14 +1,14 @@
 const supertest = require("supertest");
-const { MongoMemoryServer } = require("mongodb-memory-server-core");
-const mongoose = require("mongoose");
 const { User, createUser } = require("../../models/user/user.model");
 const { getTokensByEmail, createToken } = require("../../models/tokens/tokens.model");
 const { dbConnect, dbDisconnect } = require("../utils/db");
 var MockDate = require('mockdate');
 const auth = require("../../services/auth");
-const { authenticate } = require("passport");
+const jwt = require("jsonwebtoken")
+
 let spy;
 let spy2;
+let spy3;
 let app;
 /** To mock authorization middleware
  * const AuthService = require("../../services/auth");
@@ -145,19 +145,19 @@ describe("User", () => {
                 // Mocking date to be able to test the createdAt response
                 MockDate.set(1434319925275); // sets the date to a constant, doesn't change until reset
                 const { body, statusCode } = await supertest(app)
-                .post("/user/register")
-                .send({
-                    name: "kadir",
-                    surname: "ersoy",
+                    .post("/user/register")
+                    .send({
+                        name: "kadir",
+                        surname: "ersoy",
                         email: "kadir@gmail.com",
                         password: "Password*11",
                         agreement: true,
                     });
-                    expect(statusCode).toBe(201);
-                    expect(body).toEqual({
-                        created_at: `${Date(1434319925275).toISOString()}`,
-                        message: `Confirmation mail send to kadir@gmail.com.`,
-                    });
+                expect(statusCode).toBe(201);
+                expect(body).toEqual({
+                    created_at: `${Date(1434319925275).toISOString()}`,
+                    message: `Confirmation mail send to kadir@gmail.com.`,
+                });
                 // reset to native Date()
                 MockDate.reset();
             });
@@ -296,7 +296,7 @@ describe("User", () => {
         describe("given correct body was provided, but email is not confirmed", () => {
             it("should return a 403", async () => {
                 // Creating a user in DB with unconfirmed email
-                const user = await createUser({ 
+                const user = await createUser({
                     email: "batu@gmail.com",
                     name: "batu",
                     surname: "ersoy",
@@ -316,7 +316,6 @@ describe("User", () => {
                         email: "batu@gmail.com",
                         password: "Password*11",
                     });
-                console.log(body)
                 expect(statusCode).toBe(403);
                 expect(body).toEqual({
                     message: "Please confirm your email to login to your account.",
@@ -353,6 +352,121 @@ describe("User", () => {
                 expect(statusCode).toBe(200);
                 expect(body).toEqual({
                     message: "Logout is successful!",
+                });
+            });
+        });
+    });
+    describe("refresh_tokens route", () => {
+        describe("given user is not confirmed", () => {
+            it("should return a 400", async () => {
+                const { body, statusCode } = await supertest(app)
+                    .post("/user/refresh_tokens")
+                    .send({
+                        email: "batu@gmail.com",
+                        refresh_token: "wrong",
+                    });
+                expect(statusCode).toBe(403);
+                expect(body).toEqual({
+                    message: "Please confirm your email to refresh your tokens.",
+                });
+            });
+        });
+        describe("given correct refresh token was provided", () => {
+            it("should return a 200", async () => {
+                const tokens = await getTokensByEmail('kadir@gmail.com');
+                tokens.access_token = "mockedToken";
+                tokens.refresh_token = "mockedToken";
+                await tokens.save();
+                spy3 = jest.spyOn(jwt, "verify").mockImplementation( (r,s) => {
+                    decoded = {
+                        email : "kadir@gmail.com",
+                    }
+                    return {decoded};
+                });
+                spy2 = jest.spyOn(auth, "generateToken").mockReturnValue("newMockedToken");
+                const { body, statusCode } = await supertest(app)
+                    .post("/user/refresh_tokens")
+                    .send({
+                        email: "kadir@gmail.com",
+                        refresh_token: "mockedToken",
+                    });
+                expect(spy3).toHaveBeenCalledTimes(1);
+                expect(statusCode).toBe(200);
+                expect(body).toEqual({
+                    access_token: "newMockedToken",
+                    refresh_token: "newMockedToken",
+                });
+            });
+        });
+    });
+    describe("confirm_email route", () => {
+        describe("given no user with given email", () => {
+            it("should return a 400", async () => {
+                const confirmationToken = await auth.generateToken("stranger@gmail.com", "jwt_conf_secret", "1d")
+                spy3 = jest.spyOn(jwt, "verify").mockImplementation( (r,s) => {
+                    decoded = {
+                        email : "stranger@gmail.com",
+                    }
+                    return {decoded};
+                });
+                const { body, statusCode } = await supertest(app)
+                    .post("/user/confirm-email")
+                    .send({
+                        code: confirmationToken,
+                    });
+                expect(statusCode).toBe(400);
+                expect(body).toEqual({
+                    message: "There is not any registered user with this email!",
+                });
+            });
+        });
+        describe("given token and user doesn't match", () => {
+            it("should return a 400", async () => {
+                const confirmationToken = await auth.generateToken("stranger@gmail.com", "jwt_conf_secret", "1d")
+                spy3 = jest.spyOn(jwt, "verify").mockImplementation( (r,s) => {
+                    decoded = {
+                        email : "kadir@gmail.com",
+                    }
+                    return {decoded};
+                });
+                const { body, statusCode } = await supertest(app)
+                    .post("/user/confirm-email")
+                    .send({
+                        code: confirmationToken,
+                    });
+                expect(statusCode).toBe(400);
+                expect(body).toEqual({
+                    message: "Confirmation token does not match.",
+                });
+            });
+        });
+        describe("given token is valid and user matches", () => {
+            it("should return a 200", async () => {
+                const confirmationToken = await auth.generateToken("kadir@gmail.com", "jwt_conf_secret", "1d")
+                const tokens = await getTokensByEmail('kadir@gmail.com');
+                tokens.confirmation_token = confirmationToken;
+                await tokens.save();
+                const user = await User.findOne({ email: "kadir@gmail.com" });
+                spy3 = jest.spyOn(jwt, "verify").mockImplementation( (r,s) => {
+                    decoded = {
+                        email : "kadir@gmail.com",
+                    }
+                    return {decoded};
+                });
+                spy2 = jest.spyOn(auth, "generateToken").mockReturnValue("newMockedToken");
+                const { body, statusCode } = await supertest(app)
+                    .post("/user/confirm-email")
+                    .send({
+                        code: confirmationToken,
+                    });
+                expect(statusCode).toBe(200);
+                expect(body).toEqual({
+                    id: user._id.toString(),
+                    name: user.name,
+                    surname: user.surname,
+                    email: user.email,
+                    access_token: tokens.access_token,
+                    refresh_token: tokens.refresh_token,
                 });
             });
         });
