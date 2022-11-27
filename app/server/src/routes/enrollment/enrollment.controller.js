@@ -1,44 +1,94 @@
-const CourseModel = require("../../models/course/course.model");
+const SpaceModel = require("../../models/space/space.model");
 const EnrollmentModel = require("../../models/enrollment/enrollment.model");
+const UserModel = require("../../models/user/user.model");
 
 const EnrollmentController = {
   createEnrollment: async function (req, res) {
-
     try {
-      const course_id = req.body.course_id;
-      const user_id = req.auth.id;
-      const enrollment = await EnrollmentModel.createEnrollment(
-        user_id,
-        course_id
-      );
-      res.status(201).send({ enrollment });
-    }
-    catch (e) {
-      res.status(400).send({ "error": e })
+      const space_id = req.body.space_id;
+      const user = req.auth.id;
+      const space = await SpaceModel.Space.findById(space_id);
+      if(!space){
+        return res.status(400).json({ error: "Space does not exist!" });
+      }
+      const enrolled_space = await EnrollmentModel.Enrollment.find({
+        user,
+        space: space_id,
+      });
+      console.log(enrolled_space)
+      if(enrolled_space.length > 0){
+        return res.status(400).json({ error: "User already enrolled!" });
+      }
+      const enrollment = await EnrollmentModel.createEnrollment(user, space_id);
+      space.enrollments.push(enrollment); 
+      space.save();
+      return res.status(201).send({ enrollment });
+    } catch (e) {
+      return res.status(400).send({ error: e.toString() });
     }
   },
 
-  getEnrolledCourses: async function (req, res) {
-
+  searchEnrollments: async function (req, res) {
     try {
-      const user_id = req.auth.id;
-      const enrolled_courses = await EnrollmentModel.Enrollment.find({ user_id });
-      var data = [];
-      for (var enrolled_course of enrolled_courses) {
-        var course = await CourseModel.Course.findById(enrolled_course.course_id)
-        .populate("lecturer", 'name surname')
-        .populate({
-          path: 'chapters',
-          populate: {
-            path: 'chapter_badge',
+      const keyword = req.params.keyword;
+      const user = req.auth.id;
+      var enrollments = [];
+      if (keyword) {
+        spaces = await SpaceModel.Space.find(
+          {
+            name: { $regex: keyword, $options: "i" },
+          },
+          "name creator info rating tags image"
+        )
+          .populate("creator", "name surname")
+          .exec();
+        for (var space of spaces) {
+          var enr = await EnrollmentModel.Enrollment.find(
+            {
+              space,
+              user,
+            },
+            "space is_active notes progress"
+          ).exec();
+          if (enr) {
+            enrollments.push(enr);
           }
-        }).exec();
-        data.push(course);
+        }
+      } else {
+        enrollments = await EnrollmentModel.Enrollment.find(
+          { user },
+          "space is_active notes progress"
+        ).exec();
       }
-      return res.status(200).json({ data });
+      return res.status(200).json({ enrollments });
+    } catch (error) {
+      return res.status(400).send({ error: error.toString() });
     }
-    catch (e) {
-      res.status(400).send({ "error": e.toString() })
+  },
+
+  getEnrolledSpaces: async function (req, res) {
+    try {
+      const user = req.auth.id;
+      const enrolled_spaces = await EnrollmentModel.Enrollment.find({
+        user,
+      });
+      var spaces = [];
+      for (var enrolled_space of enrolled_spaces) {
+        var space = await SpaceModel.Space.findById(enrolled_space.space)
+          .populate("creator", "name surname")
+          .populate({
+            path: "topics",
+            populate: {
+              path: "badge",
+            },
+          });
+        if (space) {
+          spaces.push(space);
+        }
+      }
+      return res.status(200).json({ spaces });
+    } catch (e) {
+      return res.status(400).send({ error: e.toString() });
     }
   },
 };

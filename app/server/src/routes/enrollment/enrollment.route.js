@@ -2,7 +2,7 @@ const express = require("express");
 const EnrollmentController = require("./enrollment.controller");
 const { validate } = require("./enrollment.validate");
 const { handleValidation } = require("../../services/validate");
-const { authorization } = require("../../services/auth")
+const { authorization } = require("../../services/auth");
 
 const enrollmentRouter = express.Router();
 
@@ -15,9 +15,15 @@ enrollmentRouter.post(
 );
 
 enrollmentRouter.get(
-  "/getEnrolledCourses",
+  "/searchEnrollments/:keyword?",
   authorization,
-  EnrollmentController.getEnrolledCourses
+  EnrollmentController.searchEnrollments
+);
+
+enrollmentRouter.get(
+  "/getEnrolledSpaces",
+  authorization,
+  EnrollmentController.getEnrolledSpaces
 );
 
 module.exports = enrollmentRouter;

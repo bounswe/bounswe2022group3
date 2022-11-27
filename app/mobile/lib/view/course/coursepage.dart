@@ -86,12 +86,9 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                                           .contains(c.id))
                                         GestureDetector(
                                           onTap: () async {
-                                            await courseService.enrollToCourse(
-                                                courseId: c.id);
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(const SnackBar(
-                                                    content: Text(
-                                                        'Successfully Joined To The Space!')));
+                                            await courseService.enrollToSpace(spaceId: c.id);
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                                SnackBar(content: Text('Successfully Joined To The Space!')));
                                             viewModel.notifyListeners();
                                           },
                                           child: Container(
@@ -181,7 +178,7 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                             shrinkWrap: true,
                             padding: const EdgeInsets.all(10.0),
                             children: [
-                              ...viewModel.course!.chapters
+                              ...viewModel.course!.topics
                                   .map((Chapter e) => chapterTile(e))
                             ],
                           ),
