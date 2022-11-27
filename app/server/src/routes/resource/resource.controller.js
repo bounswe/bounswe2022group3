@@ -63,7 +63,7 @@ const ResourceController = {
         .send({ error: "User not the creator of the resource!" });
       }
       const body_keys = Object.keys(req.body);
-      if ((!body_keys.includes('name')) || (!body_keys.includes('body'))) {
+      if ((!body_keys.includes('name')) && (!body_keys.includes('body'))) {
         return res
         .status(400)
         .send({ error: "name or body not provided." });
