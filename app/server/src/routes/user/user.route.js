@@ -32,5 +32,11 @@ userRouter.post(
   handleValidation,
   UserController.confirmEmail
 );
+userRouter.post(
+    "/resend_confirmation",
+    validate("resend_confirmation"),
+    handleValidation,
+    UserController.resend_confirmation
+);
 
 module.exports = userRouter;

@@ -56,7 +56,7 @@ const SpaceController = {
         .populate({
           path: "topics",
           populate: {
-            path: "badge",
+            path: "badge resources",
           },
         })
         .exec();
