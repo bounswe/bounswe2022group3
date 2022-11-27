@@ -23,4 +23,24 @@ function sendEmail(toEmail, subject, template, values, callback) {
   transporter.sendMail(mailOptions, callback);
 }
 
-module.exports = { sendEmail };
+function send_confirmation_email(email,payload) {
+    try {
+        sendEmail(
+            email,
+            "Confirmation Email for Bucademy",
+            payload,
+            function (err) {
+                if (err) {
+                    return {res:false, message: "Email could not be sent."}
+                }
+                return {res:true, message:''}
+            }
+        )
+        return {res:true, message:''}
+    }
+    catch (e) {
+        return {res: false, message: e.toString()}
+    }
+}
+
+module.exports = { sendEmail, send_confirmation_email };
