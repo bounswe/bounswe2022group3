@@ -1,67 +1,71 @@
 const mongoose = require("mongoose");
 
-
 const personalInfoSchema = new mongoose.Schema({
-    bio:
+  bio: {
+    type: String,
+  },
+  personal_achievements: [
     {
-        type: String
+      type: String,
     },
-    personal_achievements:
-    [{
-        type: String
-    }],
-    interest_badges_selected:
-    [{
-        type: String
-    }],
-    personal_activities:
-    [{
-        type: String
-    }],
-    knowledge:
-    [{
-        type: String
-    }],
-    personal_rating:
+  ],
+  interest_badges_selected: [
     {
-        type: mongoose.Types.Decimal128
+      type: String,
     },
-    bio:
+  ],
+  personal_activities: [
     {
-        type: String
+      type: String,
     },
-    interests:
-    [{
-        type: String
-    }],
-    badges:
-    [{
-        type: mongoose.Schema.Types.ObjectId, ref: "Badge"
-    }]
+  ],
+  knowledge: [
+    {
+      type: String,
+    },
+  ],
+  personal_rating: {
+    type: mongoose.Types.Decimal128,
+  },
+  interests: [
+    {
+      type: String,
+    },
+  ],
+  badges: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Badge",
+    },
+  ],
 });
 
-const PersonalInfo = mongoose.model('personal_info', personalInfoSchema);
+const PersonalInfo = mongoose.model("personal_info", personalInfoSchema);
 
 const createPersonalInfo = async () => {
-    var info = new PersonalInfo()
-    const res = await info.save()
-    return res
-}
+  var info = new PersonalInfo();
+  const res = await info.save();
+  return res;
+};
 
 const getPersonalInfo = async (id) => {
-    const res = await PersonalInfo.findById(id)
-    return res
-}
+  const res = await PersonalInfo.findById(id);
+  return res;
+};
 
 const updateBio = async (id, data) => {
-    const profile = await PersonalInfo.findByIdAndUpdate(id, 
-        {
-            "bio": data.bio,
-            "interests": data.interests,
-            "knowledge": data.knowledge
-        })
-    const res = await profile.save()
-    return res
-}
+  const profile = await PersonalInfo.findByIdAndUpdate(id, {
+    bio: data.bio,
+    interests: data.interests,
+    knowledge: data.knowledge,
+  });
+  const res = await profile.save();
+  return res;
+};
 
-module.exports = { PersonalInfo, createPersonalInfo, getPersonalInfo, updateBio };
+module.exports = {
+  PersonalInfo,
+  createPersonalInfo,
+  getPersonalInfo,
+  updateBio,
+};

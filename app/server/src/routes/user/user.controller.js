@@ -115,7 +115,7 @@ const UserController = {
                 email: email,
                 access_token: access_token,
                 refresh_token: refresh_token,
-                confirmation_token: "confirmed",
+                confirmation_token: "confirmed",// since we already checked confirmation token, we can set it to confirmed, nothing changes. We have to set it to something, otherwise it will be null. 
             };
             const response = (await TokensModel.createToken(token_data));
             const user = await UserModel.getUserByEmail(email);
