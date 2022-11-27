@@ -34,13 +34,15 @@ const resourceSchema = new mongoose.Schema(
 
 const Resource = mongoose.model("Resource", resourceSchema);
 
-const createResource = async (name, body, topic) => {
+const createResource = async (name, body, topic, creator) => {
   var resource = new Resource({
     name,
     body,
     topic,
     creator,
   });
+  resource.average_rating = 0;
+  resource.ratings = new Map();
   const res = await resource.save();
   return res;
 };

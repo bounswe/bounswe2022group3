@@ -6,7 +6,7 @@ const discussionSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
-    space: {
+    space_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Space",
     },
@@ -19,27 +19,17 @@ const discussionSchema = new mongoose.Schema(
     title: {
       type: String,
     },
-    body: {
-      type: String,
-    },
-    files: [
-      {
-        type: String,
-      },
-    ],
   },
   { timestamps: true }
 );
 
 const Discussion = mongoose.model("Discussion", discussionSchema);
 
-const createDiscussion = async (user, space, title, body, files) => {
+const createDiscussion = async (user, space_id, title) => {
   var discussion = new Discussion({
     user,
-    space,
+    space_id,
     title,
-    body,
-    files,
   });
 
   // Just to set the creation time...
@@ -49,8 +39,16 @@ const createDiscussion = async (user, space, title, body, files) => {
 };
 
 const getPopulatedDiscussion = async (id) => {
-  return Discussion.findById(id).populate("comments").exec();
-};
+  return Discussion.findById(id).populate("comments").populate(
+    {
+      path: "comments",
+      populate: {
+        path: "user",
+        select: { _id: 1, name: 1, surname: 1, image: 1 }
+      }
+    }).exec();
+}
+
 
 const getDiscussion = async (id) => {
   return Discussion.findById(id);

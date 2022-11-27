@@ -3,19 +3,21 @@ const mongoose = require("mongoose");
 const commentSchema = new mongoose.Schema(
   {
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    body: String,
-    files: [String],
+    discussion_id: { type: mongoose.Schema.Types.ObjectId, ref: "Discussion" },
+    comment: String,
+    rating: Number,
   },
   { timestamps: true }
 );
 
 const Comment = mongoose.model("Comment", commentSchema);
 
-const createComment = async (user, body, files) => {
+const createComment = async (user, discussion_id, comment) => {
   var comment = new Comment({
     user,
-    body,
-    files,
+    discussion_id,
+    comment,
+    rating: 0,
   });
 
   const res = await comment.save();
