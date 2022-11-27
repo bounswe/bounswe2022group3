@@ -12,6 +12,18 @@ const resourceSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Topic",
     },
+    creator: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    average_rating: {
+      type: Number,
+    },
+    ratings: {
+      type: Map,
+      of: Number,
+    },
     discussion: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Discussion",
@@ -27,6 +39,7 @@ const createResource = async (name, body, topic) => {
     name,
     body,
     topic,
+    creator,
   });
   const res = await resource.save();
   return res;
@@ -38,7 +51,10 @@ const getResource = async (id) => {
 };
 
 const getPopulatedResource = async (id) => {
-  return Resource.findById(id).populate("discussion").exec();
+  return Resource.findById(id)
+    .populate("discussion")
+    .populate("creator", "name surname")
+    .exec();
 };
 
 module.exports = {
