@@ -10,7 +10,7 @@ const CommentController = {
       var discussion = await DiscussionModel.Discussion.findById(discussion_id).exec();
       discussion.comments.push(commentCreated);
       discussion.save();
-      res.status(201).json({ message: commentCreated });
+      res.status(201).json({ comment: commentCreated });
     } catch (e) {
       console.log("Error on createComment:", e);
       res.status(400).send({ error: e });
@@ -20,7 +20,7 @@ const CommentController = {
     try {
       const comment_id = req.params.id;
       const comment = await CommentModel.Comment.findById(comment_id);
-      res.status(200).json({ message: comment });
+      res.status(200).json({ comment });
     } catch (e) {
       res.status(400).send({ error: e });
     }

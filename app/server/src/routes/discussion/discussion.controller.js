@@ -17,7 +17,7 @@ const DiscussionController = {
       space.discussions.push(discussion);
       space.save();
 
-      res.status(201).send({ message: discussion });
+      res.status(201).send({ discussion });
     } catch (e) {
       res.status(400).send({ error: e });
     }
@@ -27,7 +27,7 @@ const DiscussionController = {
       const discussion = await DiscussionModel.getPopulatedDiscussion(
         req.params.id
       );
-      res.status(200).json({ message: discussion });
+      res.status(200).json({ discussion });
     } catch (e) {
       res.status(400).send({ error: e });
     }
