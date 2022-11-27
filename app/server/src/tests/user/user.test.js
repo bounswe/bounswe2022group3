@@ -359,11 +359,12 @@ describe("User", () => {
     describe("refresh_tokens route", () => {
         describe("given user is not confirmed", () => {
             it("should return a 400", async () => {
+                const confirmationToken = await auth.generateToken("batu@gmail.com", "jwt_conf_secret", "1d")
                 const { body, statusCode } = await supertest(app)
                     .post("/user/refresh_tokens")
                     .send({
                         email: "batu@gmail.com",
-                        refresh_token: "wrong",
+                        refresh_token: confirmationToken,
                     });
                 expect(statusCode).toBe(403);
                 expect(body).toEqual({
@@ -467,6 +468,28 @@ describe("User", () => {
                     email: user.email,
                     access_token: tokens.access_token,
                     refresh_token: tokens.refresh_token,
+                });
+            });
+        });
+    });
+    describe("resend_confirmation route", () => {
+        describe("given user is already confirmed", () => {
+            it("should return a 200", async () => {
+                // const confirmationToken = await auth.generateToken("stranger@gmail.com", "jwt_conf_secret", "1d")
+                // spy3 = jest.spyOn(jwt, "verify").mockImplementation( (r,s) => {
+                //     decoded = {
+                //         email : "kadir@gmail.com",
+                //     }
+                //     return {decoded};
+                // });
+                const { body, statusCode } = await supertest(app)
+                    .post("/user/resend_confirmation")
+                    .send({
+                        email: 'kadir@gmail.com',
+                    });
+                expect(statusCode).toBe(200);
+                expect(body).toEqual({
+                    message: "User is already confirmed. Proceed to login.",
                 });
             });
         });
