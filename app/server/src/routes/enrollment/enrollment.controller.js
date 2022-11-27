@@ -39,7 +39,7 @@ const EnrollmentController = {
           {
             name: { $regex: keyword, $options: "i" },
           },
-          "name creator info rating tags image"
+          "name creator info rating tags image enrolledUsersCount"
         )
           .populate("creator", "name surname")
           .exec();
@@ -77,7 +77,7 @@ const EnrollmentController = {
           {
             name: { $regex: keyword, $options: "i" },
           },
-          "name creator info rating tags image"
+          "name creator info rating tags image enrolledUsersCount"
         )
           .populate("creator", "name surname")
           .exec();
@@ -102,7 +102,7 @@ const EnrollmentController = {
           var space = await SpaceModel.Space.find({
             _id: enrolled_space.space
           },
-          "name creator info rating tags image"
+          "name creator info rating tags image enrolledUsersCount"
           ).populate("creator", "name surname");
           if (space) {
             enrollments.push(space[0]);
