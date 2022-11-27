@@ -53,6 +53,7 @@ const SpaceController = {
       var space = req.params.id;
       space = await SpaceModel.Space.findById(space, "-enrollments")
         .populate("creator", "name surname")
+        .populate("discussions")
         .populate({
           path: "topics",
           populate: {
