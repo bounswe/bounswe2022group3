@@ -5,12 +5,26 @@ const UserModel = require("../../models/user/user.model");
 const EnrollmentController = {
   createEnrollment: async function (req, res) {
     try {
-      const space = req.body.space_id;
+      const space_id = req.body.space_id;
       const user = req.auth.id;
-      const enrollment = await EnrollmentModel.createEnrollment(user, space);
-      res.status(201).send({ enrollment });
+      const space = await SpaceModel.Space.findById(space_id);
+      if(!space){
+        return res.status(400).json({ error: "Space does not exist!" });
+      }
+      const enrolled_space = await EnrollmentModel.Enrollment.find({
+        user,
+        space: space_id,
+      });
+      console.log(enrolled_space)
+      if(enrolled_space.length > 0){
+        return res.status(400).json({ error: "User already enrolled!" });
+      }
+      const enrollment = await EnrollmentModel.createEnrollment(user, space_id);
+      space.enrollments.push(enrollment); 
+      space.save();
+      return res.status(201).send({ enrollment });
     } catch (e) {
-      res.status(400).send({ error: e });
+      return res.status(400).send({ error: e.toString() });
     }
   },
 
@@ -48,7 +62,7 @@ const EnrollmentController = {
       }
       return res.status(200).json({ enrollments });
     } catch (error) {
-      res.status(400).send({ error: error.toString() });
+      return res.status(400).send({ error: error.toString() });
     }
   },
 
@@ -58,7 +72,7 @@ const EnrollmentController = {
       const enrolled_spaces = await EnrollmentModel.Enrollment.find({
         user,
       });
-      var data = [];
+      var spaces = [];
       for (var enrolled_space of enrolled_spaces) {
         var space = await SpaceModel.Space.findById(enrolled_space.space)
           .populate("creator", "name surname")
@@ -69,12 +83,12 @@ const EnrollmentController = {
             },
           });
         if (space) {
-          data.push(space);
+          spaces.push(space);
         }
       }
-      return res.status(200).json({ data });
+      return res.status(200).json({ spaces });
     } catch (e) {
-      res.status(400).send({ error: e.toString() });
+      return res.status(400).send({ error: e.toString() });
     }
   },
 };
