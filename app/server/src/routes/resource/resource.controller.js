@@ -51,7 +51,7 @@ const ResourceController = {
   },
   updateResource: async function (req, res) {
     try {
-      const { resource_id, name, body } = req.body;
+      const { resource_id } = req.body;
       const user = req.auth.id;
       var resource = await ResourceModel.Resource.findById(resource_id);
       if(!resource){
@@ -59,11 +59,21 @@ const ResourceController = {
       }
       if (resource.creator.toString() !== user.toString()) {
         return res
-          .status(400)
-          .send({ error: "User not the creator of the resource!" });
+        .status(400)
+        .send({ error: "User not the creator of the resource!" });
       }
-      resource.name = name;
-      resource.body = body;
+      const body_keys = Object.keys(req.body);
+      if ((!body_keys.includes('name')) || (!body_keys.includes('body'))) {
+        return res
+        .status(400)
+        .send({ error: "name or body not provided." });
+      }
+      if (body_keys.includes('name')) {
+        resource.name = req.body.name;
+      }
+      if (body_keys.includes('body')) {
+        resource.body = req.body.body;
+      }
       await resource.save();
       return res.status(200).json({ resource });
     } catch (e) {

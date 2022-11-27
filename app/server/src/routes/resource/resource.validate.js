@@ -15,8 +15,6 @@ exports.validate = (method) => {
     case "update-resource":
       return [
         body("resource_id", "resource_id doesn't exist or broken").exists().isMongoId(),
-        body("name", "name doesn't exist").exists(),
-        body("body", "body doesn't exist").exists(),
       ];
     case "rate-resource":
       return [
