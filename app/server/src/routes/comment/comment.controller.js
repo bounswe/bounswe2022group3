@@ -6,7 +6,8 @@ const CommentController = {
     try {
       const { discussion_id, comment } = req.body;
       const user = req.auth.id;
-      const commentCreated = await CommentModel.createComment(user, discussion_id, comment);
+      const commentCreated = await CommentModel.createComment(user, discussion_id, comment)
+      .populate('user', 'name surname');
       var discussion = await DiscussionModel.Discussion.findById(discussion_id).exec();
       discussion.comments.push(commentCreated);
       discussion.save();
