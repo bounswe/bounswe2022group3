@@ -6,12 +6,12 @@ const CommentController = {
     try {
       const { discussion_id, comment } = req.body;
       const user = req.auth.id;
-      const commentCreated = await CommentModel.createComment(user, discussion_id, comment);
+      const commentCreated = await CommentModel.createComment(user, discussion_id, comment)
+      const commentPopulated = await commentCreated.populate('user', 'name surname');
       var discussion = await DiscussionModel.Discussion.findById(discussion_id).exec();
       discussion.comments.push(commentCreated);
       discussion.save();
-      commentCreated = commentCreated.populate('user', 'name surname');
-      res.status(201).json({ comment: commentCreated });
+      res.status(201).json({ comment: commentPopulated });
     } catch (e) {
       console.log("Error on createComment:", e);
       res.status(400).send({ error: e });
