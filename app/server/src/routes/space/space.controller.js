@@ -30,14 +30,14 @@ const SpaceController = {
           {
             name: { $regex: keyword, $options: "i" },
           },
-          "name creator info rating tags image"
+          "name creator info rating tags image enrolledUsersCount"
         )
           .populate("creator", "name surname")
           .exec();
       } else {
         spaces = await SpaceModel.Space.find(
           {},
-          "name creator info rating tags image"
+          "name creator info rating tags image enrolledUsersCount"
         )
           .populate("creator", "name surname")
           .exec();

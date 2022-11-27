@@ -21,6 +21,7 @@ const EnrollmentController = {
       }
       const enrollment = await EnrollmentModel.createEnrollment(user, space_id);
       space.enrollments.push(enrollment);
+      space.enrolledUsersCount += 1;
       space.save();
       return res.status(201).send({ enrollment });
     } catch (e) {
