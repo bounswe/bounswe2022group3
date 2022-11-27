@@ -1,15 +1,46 @@
-import 'package:bucademy/classes/course/course.dart';
+import 'package:bucademy/classes/discussion/comment.dart';
+import 'package:bucademy/classes/discussion/discussion.dart';
 import 'package:bucademy/services/locator.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 
 @lazySingleton
 class DiscussionService {
-  Future postDiscussion({
+  Future<Comment?> postComment({
+    required String discussionId,
     required String body,
   }) async {
-    await Future.delayed(const Duration(seconds: 1));
-    return true;
+    try {
+      Response response = await dioService.dio.post(
+        '/comment',
+        data: {"discussion_id": discussionId, "comment": body},
+      );
+
+      Map json = response.data;
+
+      Comment comment = Comment.fromJson(json['comment']);
+      return comment;
+    } catch (e) {
+      print(e);
+    }
+    return null;
+  }
+
+  Future<Discussion?> getDiscussion({
+    required String discussionId,
+  }) async {
+    try {
+      Response response = await dioService.dio.get('/discussion/$discussionId');
+      if (response.statusCode != 200) {
+        return null;
+      }
+      Map json = response.data;
+      Discussion discussion = Discussion.fromJson(json['discussion']);
+
+      return discussion;
+    } catch (e) {
+      print(e);
+    }
+    return null;
   }
 }

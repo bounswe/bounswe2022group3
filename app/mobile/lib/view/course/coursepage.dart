@@ -1,4 +1,5 @@
 import 'package:bucademy/classes/chapter/chapter.dart';
+import 'package:bucademy/classes/discussion/discussion.dart';
 import 'package:bucademy/resources/constants.dart';
 import 'package:bucademy/classes/course/course.dart';
 import 'package:bucademy/resources/custom_colors.dart';
@@ -188,7 +189,7 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                             children: [
                               ...contentService
                                   .contents("Event")
-                                  .map((MockContent m) => mockTile(m))
+                                  .map((MockContent m) => mockTile(m.name))
                             ],
                           ),
                           ListView(
@@ -197,7 +198,7 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                             children: [
                               ...contentService
                                   .contents("Note")
-                                  .map((MockContent m) => mockTile(m))
+                                  .map((MockContent m) => mockTile(m.name))
                             ],
                           ),
                           ListView(
@@ -206,22 +207,30 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                             children: [
                               ...contentService
                                   .contents("Quiz")
-                                  .map((MockContent m) => mockTile(m))
+                                  .map((MockContent m) => mockTile(m.name))
                             ],
                           ),
                           ListView(
                             shrinkWrap: true,
                             padding: const EdgeInsets.all(10.0),
                             children: [
+                              ...viewModel.course!.discussions.map((DiscussionShortened m) => GestureDetector(
+                                        child: mockTile(m.title),
+                                        onTap: () => PersistentNavBarNavigator
+                                            .pushNewScreen(context,
+                                                screen: discussionView(discussionId: m.id),
+                                                withNavBar: false),
+                                      )),
                               ...contentService
                                   .contents("Discussion")
                                   .map((MockContent m) => GestureDetector(
-                                        child: mockTile(m),
+                                        child: mockTile(m.name),
                                         onTap: () => PersistentNavBarNavigator
                                             .pushNewScreen(context,
-                                                screen: discussionView(),
+                                                screen: discussionView(discussionId: m.name),
                                                 withNavBar: false),
-                                      ))
+                                  ),
+                                ),
                             ],
                           ),
                         ],
