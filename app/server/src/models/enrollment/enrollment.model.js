@@ -2,24 +2,26 @@ const mongoose = require("mongoose");
 
 const enrollmentSchema = new mongoose.Schema(
   {
-    user_id: {
-      type: String,
-    },
-    course: {
+    user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Course",
+      ref: "User",
+      required: true,
     },
-    course_id: {
-      type: String,
+    space: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Space",
+      required: true,
     },
     is_active: {
       type: Boolean,
     },
-    notes: {
-      // type: [mongoose.Schema.Types.ObjectId],
-      // ref: "Note",
-      type: String,
-    },
+    notes: [
+      {
+        // type: mongoose.Schema.Types.ObjectId,
+        // ref: "Note",
+        type: String,
+      },
+    ],
     progress: {
       type: Map,
       of: Boolean,
@@ -27,11 +29,12 @@ const enrollmentSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+enrollmentSchema.index({ user: 1, space: 1 }, { unique: true });
 
 const Enrollment = mongoose.model("Enrollment", enrollmentSchema);
 
-const createEnrollment = async (user_id, course_id) => {
-  var enrollment = new Enrollment({ user_id, course_id });
+const createEnrollment = async (user, space) => {
+  var enrollment = new Enrollment({ user, space });
   const res = await enrollment.save();
   return res;
 };
