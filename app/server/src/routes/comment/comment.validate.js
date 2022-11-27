@@ -4,8 +4,8 @@ exports.validate = (method) => {
   switch (method) {
     case "create-comment":
       return [
-        body("body", "body doesn't exist").exists(),
-        body("files", "files don't exist").exists().isArray(),
+        body("comment", "comment doesn't exist").exists(),
+        body("discussion_id", "discussion_id don't exist").exists(),
       ];
   }
 };

@@ -25,4 +25,10 @@ spaceRouter.get(
   SpaceController.getSpaceDetail
 );
 
+spaceRouter.get(
+  "/getAllDiscussions/:id",
+  authorization_conditional,
+  SpaceController.getAllDiscussions
+);
+
 module.exports = spaceRouter;

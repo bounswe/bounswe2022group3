@@ -7,6 +7,9 @@ const userSchema = new mongoose.Schema(
       unique: true,
       type: String,
     },
+    image: {
+      type: String,
+    },
     name: {
       type: String,
     },
