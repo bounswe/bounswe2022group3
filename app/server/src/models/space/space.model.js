@@ -88,9 +88,14 @@ const createSpace = async (name, creator, info, tags, image) => {
   return res;
 };
 
+const getSpaceByID = async (space_id) => {
+  const result = await Space.findById(space_id).exec();
+  return result;
+};
+
 const deleteSpace = async (_id) => {
   const res = await Space.findOneAndDelete({ _id });
   return res;
 };
 
-module.exports = { Space, createSpace, deleteSpace };
+module.exports = { Space, createSpace, getSpaceByID, deleteSpace };
