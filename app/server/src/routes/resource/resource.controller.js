@@ -26,7 +26,7 @@ const ResourceController = {
       } else {
         resource.remove();
       }
-      res.status(201).json({ message: "" });
+      res.status(201).json({ message: "Resource deleted successfully!" });
     } catch (e) {
       res.status(400).send({ error: e.toString() });
     }
