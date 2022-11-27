@@ -1,22 +1,43 @@
 const supertest = require("supertest");
 const { MongoMemoryServer } = require("mongodb-memory-server-core");
 const mongoose = require("mongoose");
-const app = require("../../app");
-const axios = require("axios");
-const {User} = require("../../models/user/user.model");
+const { User, createUser } = require("../../models/user/user.model");
+const { getTokensByEmail, createToken } = require("../../models/tokens/tokens.model");
 const { dbConnect, dbDisconnect } = require("../utils/db");
-jest.mock("axios");
 var MockDate = require('mockdate');
+const auth = require("../../services/auth");
+const { authenticate } = require("passport");
+let spy;
+let spy2;
+let app;
+/** To mock authorization middleware
+ * const AuthService = require("../../services/auth");
+ * spy = jest.spyOn(AuthService, "authorization");
+ * spy.mockImplementation(async (req, _, next) => {
+ *     req.auth = user;
+ *     return next();
+ * });
+ */
+
+// const auth = require('../../services/auth');
+// spyAuth = jest.spyOn(auth, 'authorization');
+// auth.authorization.mockImplementation(() => { return 'user' });
 
 describe("User", () => {
-    beforeAll(async () => dbConnect());
+    beforeAll(async () => {
+        dbConnect();
+
+        const AuthService = require("../../services/auth");
+        spy = jest.spyOn(AuthService, "authorization");
+        app = require("../../app");
+    });
     afterAll(async () => dbDisconnect());
     describe("register route", () => {
         describe("given no body was provided", () => {
             it("should return a 400", async () => {
                 await supertest(app)
-                .post("/user/register")
-                .expect(400);
+                    .post("/user/register")
+                    .expect(400);
             });
         });
         describe("given no first_name was provided", () => {
@@ -73,35 +94,35 @@ describe("User", () => {
         });
         describe("given incorrect email was provided", () => {
             it("should return a 400", async () => {
-                wrong_emails = ["ahmet","ahmet@","ahmet@gmail","ahmet@gmail.","ahmet@.com","@gmail.com","ahmet.com"]
+                wrong_emails = ["ahmet", "ahmet@", "ahmet@gmail", "ahmet@gmail.", "ahmet@.com", "@gmail.com", "ahmet.com"]
                 for (const wEmail in wrong_emails) {
                     await supertest(app)
-                    .post("/user/register")
-                    .send({
-                        name: "ersoy",
-                        surname: "ersoy",
-                        email: wrong_emails[wEmail],
-                        password: "Password*11",
-                        agreement: true,
-                    })
-                    .expect(400);
+                        .post("/user/register")
+                        .send({
+                            name: "ersoy",
+                            surname: "ersoy",
+                            email: wrong_emails[wEmail],
+                            password: "Password*11",
+                            agreement: true,
+                        })
+                        .expect(400);
                 }
             });
         });
         describe("given incorrect password was provided", () => {
             it("should return a 400", async () => {
-                wrong_passwords = ["password","Password","password*","password*12","Password11","Password*"]
+                wrong_passwords = ["password", "Password", "password*", "password*12", "Password11", "Password*"]
                 for (const i in wrong_passwords) {
                     await supertest(app)
-                    .post("/user/register")
-                    .send({
-                        name: "ersoy",
-                        surname: "ersoy",
-                        email: "kadir@gmail.com",
-                        password: wrong_passwords[i],
-                        agreement: true,
-                    })
-                    .expect(400);
+                        .post("/user/register")
+                        .send({
+                            name: "ersoy",
+                            surname: "ersoy",
+                            email: "kadir@gmail.com",
+                            password: wrong_passwords[i],
+                            agreement: true,
+                        })
+                        .expect(400);
                 }
             });
         });
@@ -121,30 +142,28 @@ describe("User", () => {
         });
         describe("given correct body was provided", () => {
             it("should return a 201 with correct response", async () => {
-                MockDate.set(1434319925275);
-                // test code here
-                // reset to native Date()
+                // Mocking date to be able to test the createdAt response
+                MockDate.set(1434319925275); // sets the date to a constant, doesn't change until reset
                 const { body, statusCode } = await supertest(app)
-                    .post("/user/register")
-                    .send({
-                        name: "kadir",
-                        surname: "ersoy",
+                .post("/user/register")
+                .send({
+                    name: "kadir",
+                    surname: "ersoy",
                         email: "kadir@gmail.com",
                         password: "Password*11",
                         agreement: true,
                     });
-                console.log(body);
-                expect(statusCode).toBe(201);
-                expect(body).toEqual({
-                    created_at: `${Date(1434319925275).toISOString()}`,
-                    message: `Confirmation mail send to kadir@gmail.com.`,
-                });
+                    expect(statusCode).toBe(201);
+                    expect(body).toEqual({
+                        created_at: `${Date(1434319925275).toISOString()}`,
+                        message: `Confirmation mail send to kadir@gmail.com.`,
+                    });
+                // reset to native Date()
                 MockDate.reset();
             });
         });
         describe("given already existing user was provided", () => {
             it("should return a 409", async () => {
-                
                 const { body, statusCode } = await supertest(app)
                     .post("/user/register")
                     .send({
@@ -153,10 +172,187 @@ describe("User", () => {
                         email: "kadir@gmail.com",
                         password: "Password*11",
                         agreement: true,
-                });
+                    });
                 expect(statusCode).toBe(409);
                 expect(body).toEqual({
                     message: "The user already exists.",
+                });
+            });
+        });
+    });
+    describe("login route", () => {
+        describe("given no body was provided", () => {
+            it("should return a 400", async () => {
+                await supertest(app)
+                    .post("/user/login")
+                    .expect(400);
+            });
+        });
+        describe("given no email was provided", () => {
+            it("should return a 400", async () => {
+                await supertest(app)
+                    .post("/user/login")
+                    .send({
+                        password: "Password*11",
+                    })
+                    .expect(400);
+            });
+        });
+        describe("given no password was provided", () => {
+            it("should return a 400", async () => {
+                await supertest(app)
+                    .post("/user/login")
+                    .send({
+                        email: "kadir@gmail.com",
+                    })
+                    .expect(400);
+            });
+        });
+        describe("given incorrect email was provided", () => {
+            it("should return a 400", async () => {
+                wrong_emails = ["ahmet", "ahmet@", "ahmet@gmail", "ahmet@gmail.", "ahmet@.com", "@gmail.com", "ahmet.com"]
+                for (const wEmail in wrong_emails) {
+                    await supertest(app)
+                        .post("/user/login")
+                        .send({
+                            email: wrong_emails[wEmail],
+                            password: "Password*11",
+                        })
+                        .expect(400);
+                }
+            });
+        });
+        describe("given incorrect password was provided", () => {
+            it("should return a 400", async () => {
+                wrong_passwords = ["password", "Password", "password*", "password*12", "Password11", "Password*"]
+                for (const i in wrong_passwords) {
+                    await supertest(app)
+                        .post("/user/login")
+                        .send({
+                            email: "kadir@gmail.com",
+                            password: wrong_passwords[i],
+                        })
+                        .expect(400);
+                }
+            });
+        });
+        describe("given correct body was provided and email exists", () => {
+            it("should return a 200 with correct response", async () => {
+                // Mocking generate token function
+                spy2 = jest.spyOn(auth, "generateToken").mockReturnValue("mockedToken");
+                // Assuming user confirmed their mail
+                const user = await User.findOne({ email: "kadir@gmail.com" });
+                const tokens = await getTokensByEmail('kadir@gmail.com');
+                tokens.confirmation_token = 'confirmed';
+                await tokens.save();
+
+                const { body, statusCode } = await supertest(app)
+                    .post("/user/login")
+                    .send({
+                        email: "kadir@gmail.com",
+                        password: "Password*11",
+                    });
+
+                expect(spy2).toHaveBeenCalledTimes(2);
+                expect(statusCode).toBe(200);
+                expect(body).toEqual({
+                    id: user._id.toString(),
+                    name: user.name,
+                    surname: user.surname,
+                    email: user.email,
+                    access_token: 'mockedToken',
+                    refresh_token: 'mockedToken'
+                });
+            });
+        });
+        describe("given correct body was provided, but email does not exist in db", () => {
+            it("should return a 403", async () => {
+                const { body, statusCode } = await supertest(app)
+                    .post("/user/login")
+                    .send({
+                        email: "batu@gmail.com",
+                        password: "Password*11",
+                    });
+                expect(statusCode).toBe(403);
+                expect(body).toEqual({
+                    message: "The user does not exist.",
+                });
+            });
+        });
+        describe("given correct body was provided, but password does not match the one in db", () => {
+            it("should return a 401", async () => {
+                const { body, statusCode } = await supertest(app)
+                    .post("/user/login")
+                    .send({
+                        email: "kadir@gmail.com",
+                        password: "Passswwword*11",
+                    });
+                expect(statusCode).toBe(401);
+                expect(body).toEqual({
+                    message: "Incorrect Password !",
+                });
+            });
+        });
+        describe("given correct body was provided, but email is not confirmed", () => {
+            it("should return a 403", async () => {
+                // Creating a user in DB with unconfirmed email
+                const user = await createUser({ 
+                    email: "batu@gmail.com",
+                    name: "batu",
+                    surname: "ersoy",
+                });
+                const tokens = await createToken({
+                    email: "batu@gmail.com",
+                    password_hash: "passwd_data.hash",
+                    password_salt: "passwd_data.salt",
+                    password_iter: "passwd_data.iterations",
+                    confirmation_token: "confirmationToken",
+                });
+                await user.save();
+                await tokens.save();
+                const { body, statusCode } = await supertest(app)
+                    .post("/user/login")
+                    .send({
+                        email: "batu@gmail.com",
+                        password: "Password*11",
+                    });
+                console.log(body)
+                expect(statusCode).toBe(403);
+                expect(body).toEqual({
+                    message: "Please confirm your email to login to your account.",
+                });
+            });
+        });
+    });
+    describe("logout route", () => {
+        describe("given no auth token was provided", () => {
+            it("should return a 400", async () => {
+                spy.mockImplementation(async (req, res, next) => {
+                    return auth.authorization(req, res, next);
+                });
+                const { body, statusCode } = await supertest(app)
+                    .post("/user/logout")
+                    .send({
+                        email: "kadir@gmail.com",
+                    });
+                expect(statusCode).toBe(400);
+                expect(body).toEqual({
+                    message: "Authorization token missing !",
+                });
+            });
+        });
+        describe("given auth token was provided", () => {
+            it("should return a 200 with correct response", async () => {
+                const user = await User.findOne({ email: "kadir@gmail.com" });
+                spy.mockImplementation(async (req, _, next) => {
+                    req.auth = user;
+                    return next();
+                });
+                const { body, statusCode } = await supertest(app)
+                    .post("/user/logout")
+                expect(statusCode).toBe(200);
+                expect(body).toEqual({
+                    message: "Logout is successful!",
                 });
             });
         });
