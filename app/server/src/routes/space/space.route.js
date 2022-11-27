@@ -21,6 +21,8 @@ spaceRouter.get("/searchSpaces/:keyword?", SpaceController.searchSpaces);
 
 spaceRouter.get(
   "/:id",
+  validate("getSpaceDetail"),
+  handleValidation,
   authorization_conditional,
   SpaceController.getSpaceDetail
 );

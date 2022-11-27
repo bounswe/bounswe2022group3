@@ -1,4 +1,4 @@
-const { body } = require("express-validator");
+const { body, param } = require("express-validator");
 
 exports.validate = (method) => {
   switch (method) {
@@ -8,6 +8,11 @@ exports.validate = (method) => {
         body("info", "info does not exist").exists(),
         body("tags", "tags do not exist").exists(),
         body("image", "image does not exist").exists(),
+      ];
+    }
+    case "getSpaceDetail": {
+      return [
+        param("id", "id does not exist").exists(),
       ];
     }
   }
