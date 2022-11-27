@@ -44,7 +44,7 @@ const ResourceController = {
       const { resource_id, name, body } = req.body;
       const user = req.auth.id;
       var resource = await ResourceModel.Resource.findById(resource_id);
-      if (resource.user != user) {
+      if (resource.creator != user) {
         res
           .status(400)
           .send({ error: "User not the creator of the resource!" });
