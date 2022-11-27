@@ -89,6 +89,33 @@ const SpaceController = {
       res.status(400).send({ error: e.toString() });
     }
   },
+
+  getAllDiscussions: async function (req, res) {
+    try {
+      var space = req.params.id;
+      space = await SpaceModel.Space.findById(space).populate({path: "discussions", populate: {path:"title _id"}}).exec();
+      if (!space) {
+        return res.status(404).json({ message: "The space does not exist!" }); // The token exists but email mismatch.
+      }
+      var discussions = [];
+
+      for (var discussion of space.discussions) {
+        discussions.push({
+          title: discussion.title,
+          discussion_id: discussion._id
+        })
+
+        console.log({
+          title: discussion.title,
+          discussion_id: discussion._id
+        })
+      }
+      return res.status(200).json({ discussions });
+
+    } catch (e) {
+      res.status(400).send({ error: e.toString() });
+    }
+  },
 };
 
 module.exports = SpaceController;
