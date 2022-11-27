@@ -11,17 +11,13 @@ let spy2;
 let spy3;
 let app;
 /** To mock authorization middleware
- * const AuthService = require("../../services/auth");
- * spy = jest.spyOn(AuthService, "authorization");
  * spy.mockImplementation(async (req, _, next) => {
  *     req.auth = user;
  *     return next();
  * });
  */
 
-// const auth = require('../../services/auth');
-// spyAuth = jest.spyOn(auth, 'authorization');
-// auth.authorization.mockImplementation(() => { return 'user' });
+
 
 describe("User", () => {
     beforeAll(async () => {
