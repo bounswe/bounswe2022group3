@@ -6,11 +6,11 @@ const CommentController = {
     try {
       const { discussion_id, comment } = req.body;
       const user = req.auth.id;
-      const commentCreated = await CommentModel.createComment(user, discussion_id, comment)
-      .populate('user', 'name surname');
+      const commentCreated = await CommentModel.createComment(user, discussion_id, comment);
       var discussion = await DiscussionModel.Discussion.findById(discussion_id).exec();
       discussion.comments.push(commentCreated);
       discussion.save();
+      commentCreated = commentCreated.populate('user', 'name surname');
       res.status(201).json({ comment: commentCreated });
     } catch (e) {
       console.log("Error on createComment:", e);
