@@ -94,11 +94,19 @@ export default function resources() {
                                             <Box>
                                                 <h3 > {chapter.chapter_name}</h3>
 
-                                                {Other(chapter.resources[0])}
-                                                {Image(chapter.resources[1])}
-                                                {Pdf(chapter.resources[2])}
+                                                <Link href={`/my/spaces/${space_id.space_id}/2312`}>
+                                                    {Other(chapter.resources[0])}
+                                                </Link>
+                                                <Link href={`/my/spaces/${space_id.space_id}/2312`}>
+                                                    {Image(chapter.resources[1])}
+                                                </Link>
+                                                <Link href={`/my/spaces/${space_id.space_id}/2312`}>
+                                                    {Pdf(chapter.resources[2])}
+                                                </Link>
                                             </Box>
-                                            <Link href={`/my/spaces/${space_id.space_id}/${chapter.id}?isCreate=true`}>
+                                            <Link href={{
+                                                    pathname: `/my/spaces/${space_id.space_id}/createResource`,
+                                                    }}>
                                                 <IconButton>
                                                     <Add />
                                                 </IconButton>

@@ -9,8 +9,8 @@ import rehypeSanitize from "rehype-sanitize";
 import MainLayout from "../../../../layouts/main/MainLayout";
 import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
+import * as Yup from "yup";
 import { Avatar } from "@mui/material";
-import Rating from "../../../../components/Rating/Rating"
 import Button from "../../../../components/Button/Button";
 import { Field, Form, Formik } from "formik";
 
@@ -22,15 +22,27 @@ const MDEditor = dynamic(
 
 export default function resource() {
     const [post, setPost] = useState({});
-    const [editModeActive, setEditModeActive] = useState(false);
-    const [isCreate, setIsCreateActive] = useState(false);
     const [resourceValue, setResourceValue] = useState("");
     const router = useRouter();
     let space_id = router.query;
 
+    const SignupSchema = Yup.object().shape({
+        name: Yup.string()
+    });
+
+    const handleSubmit = async (values) => {
+        const { password2, ...payload } = values;
+        try {
+            await axios.post(API_URL + "/user/register", payload);
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
     function onEditButtonClicked() {
 
-        setEditModeActive(!editModeActive);
+        //setEditModeActive(false);
+
     }
 
     async function fetchContent() {
@@ -48,34 +60,9 @@ export default function resource() {
     useEffect(() => {
         space_id = router.query;
 
-        setIsCreateActive(space_id.isCreate)
-        setResourceValue(post.resource)
 
         if (!space_id) {
             return;
-        }
-        if(!isCreate && isCreate != undefined) {
-            //fetchContent();
-
-            setPost(
-                {
-                    title: "Strumming Patterns",
-                    resource: '**Date**: 09.11.2022 \
-                    **Location**: Discord \
-                    **Time**: 21:00 - 21:00 \
-                    **Note Taker**:  Berke Özdemir',
-                    rating: 4.4,
-                    creator: {
-                        name: "Berke",
-                        surname: "Özdemir",
-                        user_id: "",
-                        image: "base-64 or url"
-                    },
-                    date_added: 'unix_timestamp (utc)',
-                    discussion_id: "1222223feerrff"
-                }
-            )
-            
         }
     }, [space_id, router.query]);
 
@@ -90,25 +77,13 @@ export default function resource() {
                 <h2>Acoustic Guitar Ed for Beginners</h2>
                 <div className={styles.resourceDetailHeader}>
 
-                    {(!isCreate) &&
+                    <Formik
+                    initialValues={{
+                        name: "",
 
-                        <div className={styles.titleCard}>
-                            <h2>{post.title}</h2>
-                            <div className={styles.titleCreator}>
-                                <Avatar alt="Agnes Walker" src={post.creator?.image} />
-                                <span> {post.creator?.name} </span>
-                                <span>{post.creator?.surname}</span>
-                            </div>
-
-                            <Rating rating={post.rating}></Rating>
-                            <span>{post.date_added}</span>
-
-                        </div>
-                    }
-
-
-                    {(isCreate) &&
-                        <Formik>
+                    }}
+                    validationSchema={SignupSchema}
+                    onSubmit={handleSubmit}>
                             <Form className={styles.form}>
                                 <Field
                                     className={styles.input}
@@ -119,11 +94,8 @@ export default function resource() {
                             </Form>
                         </Formik>
 
-                    }
 
-
-                    {(!editModeActive && !isCreate) && <Button onClick={onEditButtonClicked} className={styles.resourceDetailHeaderButton}>Edit</Button>}
-                    {(editModeActive || isCreate) && <Button onClick={onEditButtonClicked} className={styles.resourceDetailHeaderButton}>Save</Button>}
+                    <Button onClick={onEditButtonClicked} className={styles.resourceDetailHeaderButton}>Save</Button>
 
 
                 </div>
@@ -132,8 +104,8 @@ export default function resource() {
                     <MDEditor
                         value={resourceValue}
                         onChange={setResourceValue}
-                        preview={editModeActive || isCreate ? "edit" : "preview"}
-                        hideToolbar={!editModeActive && !isCreate}
+                        preview={"edit"}
+                        hideToolbar={false}
                         previewOptions={{
                             rehypePlugins: [[rehypeSanitize]],
                         }}
