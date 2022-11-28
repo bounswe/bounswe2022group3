@@ -81,7 +81,7 @@ Widget coursePageView(Course c) => ViewModelBuilder<CoursePageViewModel>.reactiv
                                                                       if (!courseService.enrolledIds.contains(c.id))
                                         GestureDetector(
                                           onTap: () async {
-                                            await courseService.enrollToCourse(courseId: c.id);
+                                            await courseService.enrollToSpace(spaceId: c.id);
                                             ScaffoldMessenger.of(context).showSnackBar(
                                                 SnackBar(content: Text('Successfully Joined To The Space!')));
                                             viewModel.notifyListeners();

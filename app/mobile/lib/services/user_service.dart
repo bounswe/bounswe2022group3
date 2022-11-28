@@ -95,7 +95,6 @@ class UserService {
       user = User(
         await persistenceService.get(PersistenceKeys.name),
         await persistenceService.get(PersistenceKeys.surname),
-        email,
         "",
       );
     } catch (e) {
