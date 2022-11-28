@@ -1,4 +1,5 @@
 import 'package:bucademy/classes/chapter/chapter.dart';
+import 'package:bucademy/classes/topic/topic.dart';
 import 'package:bucademy/resources/constants.dart';
 import 'package:bucademy/classes/course/course.dart';
 import 'package:bucademy/resources/custom_colors.dart';
@@ -164,13 +165,31 @@ Widget coursePageView(Course c) => ViewModelBuilder<CoursePageViewModel>.reactiv
                 },
                 body: TabBarView(
                   children: [
-                    ListView(
-                      shrinkWrap: true,
-                      padding: const EdgeInsets.all(10.0),
+                    Stack(
                       children: [
-                        ...viewModel.course!.chapters
-                            .map((Chapter e) => chapterTile(e))
-                      ],
+                        ListView(
+                          shrinkWrap: true,
+                          padding: const EdgeInsets.all(10.0),
+                          children: [
+                            ...viewModel.course!.chapters
+                                .map((Chapter t) => topicTile(t, context))
+                          ],
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(10),
+                          child: OverflowBox(
+                            alignment: Alignment.bottomRight,
+                            child: Container(
+                              margin: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 242, 241, 248),
+                                borderRadius: BorderRadiusDirectional.circular(10)
+                              ),
+                              child: Icon(Icons.edit_outlined, color: Colors.black,),
+                            )
+                          ),
+                        ),
+                      ]
                     ),
                     ListView(
                       shrinkWrap: true,
@@ -260,7 +279,7 @@ class CoursePageViewModel extends ChangeNotifier {
     contentsLoading = true;
     notifyListeners();
 
-    title = await contentService.contents('Chapter');
+    title = await contentService.contents('Topic');
     contentsLoading = false;
     notifyListeners();
   }
