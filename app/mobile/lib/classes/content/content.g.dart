@@ -7,16 +7,16 @@ part of 'content.dart';
 // **************************************************************************
 
 Content _$ContentFromJson(Map<String, dynamic> json) => Content(
-      json['content_name'] as String,
+      json['name'] as String,
       json['_id'] as String,
       json['body'] as String,
       (json['media'] as List<dynamic>).map((e) => e as String).toList(),
-      json['discussion'] as String,
+      json['discussion'] as Map<String, dynamic>,
       json['video'] as String,
     );
 
 Map<String, dynamic> _$ContentToJson(Content instance) => <String, dynamic>{
-      'content_name': instance.name,
+      'name': instance.name,
       '_id': instance.id,
       'body': instance.body,
       'media': instance.media,

@@ -4,7 +4,7 @@ part 'content.g.dart';
 
 @JsonSerializable()
 class Content {
-  @JsonKey(name: 'content_name')
+  @JsonKey(name: 'name')
   final String name;
 
   @JsonKey(name: '_id')
@@ -12,7 +12,7 @@ class Content {
 
   final String body;
   final List<String> media;
-  final String discussion;
+  final Map<String, dynamic> discussion;
   final String video;
 
   Content(this.name, this.id, this.body, this.media, this.discussion, this.video);
