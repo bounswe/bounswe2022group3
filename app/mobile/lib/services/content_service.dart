@@ -1,3 +1,6 @@
+import 'package:bucademy/classes/topic/topic.dart';
+import 'package:bucademy/services/locator.dart';
+import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 
 class MockContent {
@@ -35,5 +38,20 @@ class MockContentService {
       ];
     }
     return temp;
+  }
+
+ //FIXME: change the url to get content. 
+  Future<TopicDetailed?> getTopicDetails({required String topicId}) async{ 
+    try {
+      Response response = await dioService.dio.get('/chapter/$topicId');
+      if (response.statusCode != 200) {
+        return null;
+      }
+      TopicDetailed t =  TopicDetailed.fromJson(response.data["message"]); //FIXME: change the url to get content. 
+      return t;
+    } catch (e) {
+      print(e);
+    }
+    return null;
   }
 }
