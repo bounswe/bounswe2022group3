@@ -171,7 +171,7 @@ Widget coursePageView(Course c) => ViewModelBuilder<CoursePageViewModel>.reactiv
                           shrinkWrap: true,
                           padding: const EdgeInsets.all(10.0),
                           children: [
-                            ...viewModel.course!.chapters
+                            ...viewModel.course!.topics
                                 .map((Chapter t) => topicTile(t, context))
                           ],
                         ),
