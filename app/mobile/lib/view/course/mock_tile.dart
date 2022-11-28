@@ -1,4 +1,3 @@
-import 'package:bucademy/classes/chapter/chapter.dart';
 import 'package:bucademy/resources/constants.dart';
 import 'package:bucademy/resources/custom_colors.dart';
 import 'package:bucademy/services/content_service.dart';
