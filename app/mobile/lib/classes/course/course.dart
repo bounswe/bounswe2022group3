@@ -15,15 +15,14 @@ class Course {
   final String id;
   final String info;
   final List<String> tags;
-  final List<String> badges;
   final String image;
-  final User lecturer;
+  final User creator;
   final double rating = Random().nextInt(20) / 10 + 3;
   final int numberOfEnrolled = Random().nextInt(2000) + 100;
   final Color color = CustomColors.getRandomColor();
   // final DateTime createdAt;
 
-  Course(this.name, this.id, this.info, this.tags, this.badges, this.image, this.lecturer);
+  Course(this.name, this.id, this.info, this.tags, this.image, this.creator);
 
   factory Course.fromJson(Map<String, dynamic> json) => _$CourseFromJson(json);
 
@@ -32,10 +31,10 @@ class Course {
 
 @JsonSerializable()
 class CourseDetailed extends Course {
-  List<Chapter> chapters = [];
+  List<Chapter> topics = [];
+  List<String> badges = [];
 
-  CourseDetailed(
-      super.name, super.id, super.info, super.tags, super.badges, super.image, super.lecturer, this.chapters);
+  CourseDetailed(super.name, super.id, super.info, super.tags, super.image, super.creator, this.topics, this.badges);
 
   factory CourseDetailed.fromJson(Map<String, dynamic> json) => _$CourseDetailedFromJson(json);
 
