@@ -11,26 +11,36 @@ import '../../resources/text_styles.dart';
 import '../../services/profile_service.dart';
 import '../widgets/profile_picture.dart';
 
-Profile p = Profile(
-    'ii', "Şule", "Erkul", 'https://randomuser.me/api/portraits/men/40.jpg',
-    followers: 1,
-    followed: 1,
+Profile p = Profile('ii', "Salim Kemal", "Tirit",
+    'https://instagram.fesb7-1.fna.fbcdn.net/v/t51.2885-19/204203846_2586884191616458_5148649632004010930_n.jpg?stp=dst-jpg_s150x150&_nc_ht=instagram.fesb7-1.fna.fbcdn.net&_nc_cat=110&_nc_ohc=caFmGBHRmjQAX9V9Qr-&edm=ACWDqb8BAAAA&ccb=7-5&oh=00_AfCw24KUAJE3KD0qArfnbdjLMQoo1sVygKAjOPhYi0-9Tg&oe=6364F5F6&_nc_sid=1527a3',
+    followers: 5,
+    followed: 4,
     rating: 4.0,
-    bio: 'Engineer, \nGraphic Design is my passion \nWannabe a bee',
+    bio:
+        'Computer Engineer \nRock Climbing is my passion \nHave Hope For The Future',
     interests: [
-      'Cuisine',
-      'Tutting',
+      'Rock Climbing',
+      'Skating',
       'Flutter'
     ],
     knowledge: [
       'Watercolor',
       'Python',
-      'Classic Guitar',
-      'C#'
+      'Camping',
+      'C++',
+      'Bouldering'
     ],
     activities: [
-      'Xtra Person followed you!',
-      'You have joined Python Space',
+      'Muhammet Şen followed you!',
+      'You Followed Muhammet Şen',
+      'You Followed Şule Erkul',
+      'You have joined Painting Space',
+      'Şule Erkul followed you!',
+      'Bilal Aytekin followed you!',
+      'You Followed Bilal Aytekin',
+      'You Followed Berke Özdemir',
+      'Berke Özdemir followed you!',
+      'Furkan Akkurt followed you!',
       'Welcome to BUcademy'
     ],
     achievements: []);
@@ -51,6 +61,7 @@ Widget profileView() => ViewModelBuilder<ProfileView>.reactive(
                       ),
                       pinned: true,
                       flexibleSpace: FlexibleSpaceBar(
+                        collapseMode: CollapseMode.pin,
                         background: Container(
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 10) +
@@ -66,9 +77,12 @@ Widget profileView() => ViewModelBuilder<ProfileView>.reactive(
                       ),
                       elevation: 0,
                       leading: GestureDetector(
-                        child: const Icon(Icons.arrow_back_ios,color: Colors.white,),
+                        child: const Icon(
+                          Icons.arrow_back_ios,
+                          color: Colors.white,
+                        ),
                         onTap: () {
-                        navigatorService.controller.jumpToTab(0);
+                          navigatorService.controller.jumpToTab(0);
                         },
                       ),
                       actions: [
@@ -83,29 +97,31 @@ Widget profileView() => ViewModelBuilder<ProfileView>.reactive(
                       forceElevated: innerBoxIsScrolled,
                       foregroundColor: Colors.black,
                       backgroundColor: CustomColors.main,
-                      bottom: const TabBar(tabs: [
-                        Tab(
-                            child: Text(
-                          "Activities",
-                          style: TextStyle(color: Colors.white),
-                        )),
-                        Tab(
-                            child: Text(
-                          "Achievements",
-                          style: TextStyle(color: Colors.white),
-                        )),
-                        Tab(
-                            child: Text(
-                          "Spaces",
-                          style: TextStyle(color: Colors.white),
-                        )),
-                        Tab(
-                            child: Text(
-                          "Notes",
-                          style: TextStyle(color: Colors.white),
-                        )),
-                      ],
-                      isScrollable: true,),
+                      bottom: const TabBar(
+                        tabs: [
+                          Tab(
+                              child: Text(
+                            "Activities",
+                            style: TextStyle(color: Colors.white),
+                          )),
+                          Tab(
+                              child: Text(
+                            "Achievements",
+                            style: TextStyle(color: Colors.white),
+                          )),
+                          Tab(
+                              child: Text(
+                            "Spaces",
+                            style: TextStyle(color: Colors.white),
+                          )),
+                          Tab(
+                              child: Text(
+                            "Notes",
+                            style: TextStyle(color: Colors.white),
+                          )),
+                        ],
+                        isScrollable: true,
+                      ),
                     ),
                   ];
                 },
@@ -132,7 +148,7 @@ Widget profileHeader(context, String image_path) {
           height: 20,
         ),
         const Text(
-          'Şule Erkul',
+          'Salim Kemal Tirit',
           style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
         ),
         Row(
