@@ -9,6 +9,7 @@ const app = express();
 
 // enable files upload
 app.use(fileUpload({
+    limits: { fileSize: 5 * 1024 * 1024 },
     createParentPath: true
 }));
 app.use('/user',express.static('uploads'));

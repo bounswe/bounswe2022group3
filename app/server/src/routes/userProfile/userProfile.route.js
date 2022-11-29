@@ -10,6 +10,7 @@ userProfileRouter.post(
   "/updatePersonalInfo",
   validate("updatePersonalInfo"),
   handleValidation,
+  authorization,
   UserProfileController.updatePersonalInfo
 );
 
