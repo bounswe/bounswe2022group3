@@ -45,11 +45,19 @@ const createTopic = async (name, space, creator) => {
 const getPopulatedTopic = async (id) => {
   return Topic.findById(id)
     .populate("name badge resources")
+    .populate("creator", "name surname")
     .populate({
       path: "resources",
       populate: {
         path: "discussion",
         populate: { path: "comments" },
+      },
+    })
+    .populate({
+      path: "resources",
+      populate: {
+        path: "creator",
+        select: { _id: 1, name: 1, surname: 1, image: 1 }
       },
     })
     .exec();
