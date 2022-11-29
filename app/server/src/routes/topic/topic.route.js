@@ -18,7 +18,7 @@ topicRouter.get(
   TopicController.getPopulatedTopic
 );
 topicRouter.get(
-  "/mini/:id",
-  TopicController.getTopicMini
+  "/getResources/:id",
+  TopicController.getTopicResources
 );
 module.exports = topicRouter;

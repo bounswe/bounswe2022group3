@@ -10,28 +10,29 @@ const TopicController = {
       var space = await SpaceModel.Space.findById(space_id);
       space.topics.push(topic);
       space.save();
-      res.status(201).json({ message: topic });
+      return res.status(201).json({ topic });
     } catch (e) {
-      res.status(400).send({ error: e });
+      return res.status(400).send({ error: e });
     }
   },
   getPopulatedTopic: async function (req, res) {
     try {
       const topic_id = req.params.id;
       const topic = await TopicModel.getPopulatedTopic(topic_id);
-      res.status(200).json({ message: topic });
+      return res.status(200).json({ message: topic });
     } catch (e) {
-      res.status(400).send({ error: e });
+      return res.status(400).send({ error: e });
     }
   },
-  getTopicMini: async function (req, res) {
+  getTopicResources: async function (req, res) {
     try {
       const topic_id = req.params.id;
       const topic = await TopicModel.Topic.findById(topic_id, 'resources')
-        .populate('resources', 'title');
-      res.status(200).json({ message: topic });
+        .populate('resources', 'name');
+      let resources = topic.resources
+      return res.status(200).json({ resources });
     } catch (e) {
-      res.status(400).send({ error: e });
+      return res.status(400).send({ error: e });
     }
   },
 };

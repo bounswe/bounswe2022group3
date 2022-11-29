@@ -67,6 +67,9 @@ const spaceSchema = new mongoose.Schema(
         ref: "Enrollment",
       },
     ],
+    enrolledUsersCount: {
+      type: Number,
+    },
     image: {
       type: String,
     },
@@ -84,8 +87,14 @@ const createSpace = async (name, creator, info, tags, image) => {
     tags,
     image,
   });
+  space.enrolledUsersCount = 0;
   const res = await space.save();
   return res;
+};
+
+const getSpaceByID = async (space_id) => {
+  const result = await Space.findById(space_id).exec();
+  return result;
 };
 
 const deleteSpace = async (_id) => {
@@ -93,4 +102,4 @@ const deleteSpace = async (_id) => {
   return res;
 };
 
-module.exports = { Space, createSpace, deleteSpace };
+module.exports = { Space, createSpace, getSpaceByID, deleteSpace };

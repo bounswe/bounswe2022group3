@@ -11,9 +11,8 @@ Course _$CourseFromJson(Map<String, dynamic> json) => Course(
       json['_id'] as String,
       json['info'] as String,
       (json['tags'] as List<dynamic>).map((e) => e as String).toList(),
-      (json['badges'] as List<dynamic>).map((e) => e as String).toList(),
       json['image'] as String,
-      User.fromJson(json['lecturer'] as Map<String, dynamic>),
+      User.fromJson(json['creator'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$CourseToJson(Course instance) => <String, dynamic>{
@@ -21,9 +20,8 @@ Map<String, dynamic> _$CourseToJson(Course instance) => <String, dynamic>{
       '_id': instance.id,
       'info': instance.info,
       'tags': instance.tags,
-      'badges': instance.badges,
       'image': instance.image,
-      'lecturer': instance.lecturer,
+      'creator': instance.creator,
     };
 
 CourseDetailed _$CourseDetailedFromJson(Map<String, dynamic> json) =>
@@ -32,12 +30,12 @@ CourseDetailed _$CourseDetailedFromJson(Map<String, dynamic> json) =>
       json['_id'] as String,
       json['info'] as String,
       (json['tags'] as List<dynamic>).map((e) => e as String).toList(),
-      (json['badges'] as List<dynamic>).map((e) => e as String).toList(),
       json['image'] as String,
-      User.fromJson(json['lecturer'] as Map<String, dynamic>),
-      (json['chapters'] as List<dynamic>)
+      User.fromJson(json['creator'] as Map<String, dynamic>),
+      (json['topics'] as List<dynamic>)
           .map((e) => Chapter.fromJson(e as Map<String, dynamic>))
           .toList(),
+      (json['badges'] as List<dynamic>).map((e) => e as String).toList(),
     );
 
 Map<String, dynamic> _$CourseDetailedToJson(CourseDetailed instance) =>
@@ -46,8 +44,8 @@ Map<String, dynamic> _$CourseDetailedToJson(CourseDetailed instance) =>
       '_id': instance.id,
       'info': instance.info,
       'tags': instance.tags,
-      'badges': instance.badges,
       'image': instance.image,
-      'lecturer': instance.lecturer,
-      'chapters': instance.chapters,
+      'creator': instance.creator,
+      'topics': instance.topics,
+      'badges': instance.badges,
     };
