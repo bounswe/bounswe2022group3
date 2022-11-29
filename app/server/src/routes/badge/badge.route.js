@@ -6,16 +6,16 @@ const { validate } = require("./badge.validate");
 const badgeRouter = express.Router();
 
 badgeRouter.post(
-    "/",
-    validate("create-badge"),
-    handleValidation,
-    BadgeController.createBadge
+  "/",
+  validate("create-badge"),
+  handleValidation,
+  BadgeController.createBadge
 );
 badgeRouter.get(
-    "/:id",
-    // validate("call"),
-    // handleValidation,
-    BadgeController.getBadge
+  "/:id",
+  // validate("call"),
+  // handleValidation,
+  BadgeController.getBadge
 );
 
 module.exports = badgeRouter;
