@@ -13,13 +13,14 @@
         "crypto": "^1.0.1",
         "dotenv": "^16.0.3",
         "express": "^4.18.2",
+        "express-fileupload": "^1.4.0",
         "express-validator": "^6.14.2",
         "jsonwebtoken": "^8.5.1",
         "mongoose": "^6.6.5",
         "morgan-body": "^2.6.8",
+        "nodemailer": "^6.8.0",
         "passport": "^0.6.0",
-        "watch": "^0.13.0",
-        "nodemailer": "^6.8.0"
+        "watch": "^0.13.0"
     },
     "devDependencies": {
         "jest": "^28.1.0",
