@@ -20,7 +20,7 @@ class CourseService {
   List<String> enrolledIds = [];
   getMockCourses(String title) {
     List<Course> temp = [
-      for (var i = 0; i < 100; ++i)
+      for (var i = 0; i < 0; ++i)
         Course.fromJson({
           "name": "$title - ${i.toString()}",
           "_id": "63595b4aebf6c659ff926310",
@@ -28,7 +28,7 @@ class CourseService {
           "tags": [],
           "badges": [],
           "image": "https://cdn-icons-png.flaticon.com/512/2991/2991148.png",
-          "lecturer": {
+          "creator": {
             "name": "Andrew",
             "surname": "Mg",
             "email": "andrew.mg@bucademy.com",
@@ -44,12 +44,12 @@ class CourseService {
 
   Future<List<Course>> getCourses() async {
     try {
-      Response response = await dioService.dio.get('/course/getCourses');
+      Response response = await dioService.dio.get('/space/searchSpaces');
       if (response.statusCode != 200) {
         return [];
       }
       Map json = response.data;
-      List<Course> t = json['courses'].map<Course>((e) => Course.fromJson(e)).toList();
+      List<Course> t = json['spaces'].map<Course>((e) => Course.fromJson(e)).toList();
 
       return t;
     } catch (e) {
@@ -61,12 +61,12 @@ class CourseService {
   Future<List<Course>> getEnrolledCourses() async {
     try {
       if (userService.user == null) return [];
-      Response response = await dioService.dio.get('/enrollment/getEnrolledCourses');
+      Response response = await dioService.dio.get('/enrollment/getEnrolledSpaces');
       if (response.statusCode != 200) {
         return [];
       }
       Map json = response.data;
-      List<Course> t = json['data'].map<Course>((e) => Course.fromJson(e)).toList();
+      List<Course> t = json['spaces'].map<Course>((e) => Course.fromJson(e)).toList();
       enrolledIds.addAll(t.map((e) => e.id));
 
       return t;
@@ -78,12 +78,12 @@ class CourseService {
 
   Future<List<Course>> searchCourse(String keyword) async {
     try {
-      Response response = await dioService.dio.get('/course/getCourses/$keyword');
+      Response response = await dioService.dio.get('/space/searchSpaces/$keyword');
       if (response.statusCode != 200) {
         return [];
       }
       Map json = response.data;
-      List<Course> t = json['courses'].map<Course>((e) => Course.fromJson(e)).toList();
+      List<Course> t = json['spaces'].map<Course>((e) => Course.fromJson(e)).toList();
 
       return t;
     } catch (e) {
@@ -94,18 +94,18 @@ class CourseService {
 
   Future<CourseDetailed?> getCourseDetails({required String id}) async {
     try {
-      Response response = await dioService.dio.get('/course/$id');
-      return CourseDetailed.fromJson(response.data['data']['course']);
+      Response response = await dioService.dio.get('/space/$id');
+      return CourseDetailed.fromJson(response.data['space']);
     } catch (e) {
       print(e);
       return null;
     }
   }
 
-  Future<bool> enrollToCourse({required String courseId}) async {
+  Future<bool> enrollToSpace({required String spaceId}) async {
     try {
-      Response response = await dioService.dio.post('/enrollment', data: {'course_id': courseId});
-      enrolledIds.add(courseId);
+      Response response = await dioService.dio.post('/enrollment', data: {'space_id': spaceId});
+      enrolledIds.add(spaceId);
       return true;
     } catch (e) {
       print(e);
