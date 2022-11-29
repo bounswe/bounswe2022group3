@@ -26,7 +26,7 @@ const EnrollmentController = {
       var data = [];
       for (var enrolled_course of enrolled_courses) {
         var course = await CourseModel.Course.findById(enrolled_course.course_id)
-        .populate("name info rating lecturer tags chapters image")
+        .populate("lecturer", 'name surname')
         .populate({
           path: 'chapters',
           populate: {
