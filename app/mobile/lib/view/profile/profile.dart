@@ -9,6 +9,7 @@ import 'dart:math';
 import 'package:bucademy/resources/custom_colors.dart';
 import '../../resources/text_styles.dart';
 import '../../services/profile_service.dart';
+import '../login/login.dart';
 import '../widgets/profile_picture.dart';
 
 Profile p = Profile(
@@ -73,11 +74,25 @@ Widget profileView() => ViewModelBuilder<ProfileView>.reactive(
                       ),
                       actions: [
                         IconButton(
-                            onPressed: () {},
-                            icon: const Icon(
-                              Icons.settings,
-                              color: Colors.white,
-                            ))
+                          onPressed: () {},
+                          icon: const Icon(
+                            Icons.settings,
+                            color: Colors.white,
+                          )),
+                        IconButton(
+                          onPressed: () async {
+                            await userService.logout();
+                            Navigator.of(context)
+                                .pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                    builder: (context) => LoginFormState().build(context)),
+                                    (route) => false
+                            );
+                          },
+                          icon: const Icon(
+                          Icons.logout,
+                          color: Colors.white,
+                          ))
                       ],
                       expandedHeight: MediaQuery.of(context).size.height * 0.65,
                       forceElevated: innerBoxIsScrolled,
