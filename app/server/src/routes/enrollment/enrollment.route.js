@@ -21,7 +21,7 @@ enrollmentRouter.get(
 );
 
 enrollmentRouter.get(
-  "/getEnrolledSpaces",
+  "/getEnrolledSpaces/:keyword?",
   authorization,
   EnrollmentController.getEnrolledSpaces
 );

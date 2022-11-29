@@ -67,6 +67,9 @@ const spaceSchema = new mongoose.Schema(
         ref: "Enrollment",
       },
     ],
+    enrolledUsersCount: {
+      type: Number,
+    },
     image: {
       type: String,
     },
@@ -84,6 +87,7 @@ const createSpace = async (name, creator, info, tags, image) => {
     tags,
     image,
   });
+  space.enrolledUsersCount = 0;
   const res = await space.save();
   return res;
 };
