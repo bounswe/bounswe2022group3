@@ -25,9 +25,9 @@ export default function courseSummary() {
   async function fetchContent() {
     try {
       const response = (
-        await axios.get(API_URL + "/course/" + space_id.space_id)
-      )?.data;
-      setPost(response.data);
+        await axios.get(API_URL + "/space/" + space_id.space_id)
+      );
+      setPost(response?.data);
     } catch (err) {
       console.log(err);
     }
@@ -47,7 +47,7 @@ export default function courseSummary() {
     async function enroll() {
       try {
         const response = (
-          await axios.post(API_URL + "/enrollment", {course_id: space_id.space_id, user_id: user_id} )
+          await axios.post(API_URL + "/enrollment", {space_id: space_id.space_id} )
         )?.data;
         router.push(`/my/spaces/` + space_id.space_id + '/resources');
       } catch (err) {
@@ -72,25 +72,25 @@ export default function courseSummary() {
 
           <Grid item sx={{ margin: 'auto', width: '100%' }}>
             <h1   >
-              {post?.course?.name}
+              {post?.space?.name}
             </h1>
           </Grid>
 
           <Grid item>
             <h2 >
-              {post?.course?.rating}
+              {post?.space?.rating}
             </h2>
           </Grid>
           <Grid item >
             <div style={{ position: 'relative', display: 'inline-block' }}>
               <div className={styles.emptyStars} ></div>
-              <div className={styles.fullStars} style={{ width: post?.rating * 100 / 5 + '%' }}></div>
+              <div className={styles.fullStars} style={{ width: post?.space?.rating * 100 / 5 + '%' }}></div>
             </div>
           </Grid>
           <Grid item >
             <h2 >
-              {post?.course?.lecturer?.name}
-              <span style={{'margin-left': '10px'}}>{post?.course?.lecturer?.surname}</span>
+              {post?.space?.creator?.name}
+              <span style={{'margin-left': '10px'}}>{post?.space?.creator?.surname}</span>
 
             </h2>
           </Grid>
@@ -107,7 +107,7 @@ export default function courseSummary() {
         </Grid>
 
         <Grid container variant="contained" className={styles.right}>
-          <img src={post?.course?.image} className={styles.descriptionImage} />
+          <img src={post?.space?.image} className={styles.descriptionImage} />
         </Grid>
 
 
@@ -126,14 +126,14 @@ export default function courseSummary() {
               </Grid>
               <Grid item sx={{ width: '100%' }}>
                 <p>
-                  {post?.course?.info}
+                  {post?.space?.info}
 
                 </p>
                 <Grid item style={{
                   width: '100%', display: 'flex',
                   flexWrap: 'wrap'
                 }}>
-                  {post?.course?.tags?.map((tag, index) => {
+                  {post?.space?.tags?.map((tag, index) => {
                     return (
                       <Paper variant='elevation' key={index} style={{ marginRight: 12, marginTop: 19, padding: 4 }}>
                         <h3 >
@@ -161,10 +161,10 @@ export default function courseSummary() {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {post?.course?.chapters?.map((chapter, index) => {
+                    {post?.space?.topics?.map((chapter, index) => {
                       return (
                         <TableRow key={index} >
-                          <TableCell><h4 > - {chapter.chapter_name}</h4></TableCell>
+                          <TableCell><h4 > - {chapter.name}</h4></TableCell>
                         </TableRow>
                       );
                     })}

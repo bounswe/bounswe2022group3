@@ -28,6 +28,8 @@ export default function register() {
         password2: Yup.string()
             .required("Confirm password is required")
             .oneOf([Yup.ref("password"), null], "Passwords must match"),
+        gdpr: Yup.string()
+            .required("GDPR confirmation is required")
     });
 
     const handleSubmit = async (values) => {
@@ -115,6 +117,17 @@ export default function register() {
                                 {errors.password2}
                             </div>
                         )}
+
+                        <label className={styles.checkbox}>
+                            <Field type="checkbox" name="gdpr" />
+                            <span>I have read the GDPR and accept</span>
+                        </label>
+                        {errors.gdpr && (
+                            <div className={styles.error}>
+                                {errors.gdpr}
+                            </div>
+                        )}
+
                         <Button type="submit">Sign up</Button>
                         <div>
                             <p>Already have an account?</p>{" "}

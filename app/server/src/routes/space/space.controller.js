@@ -51,17 +51,7 @@ const SpaceController = {
   getSpaceDetail: async function (req, res) {
     try {
       var space = req.params.id;
-      space = await SpaceModel.Space.findById(space, "-enrollments")
-        .populate("creator", "name surname")
-        .populate("discussions", "title")
-        .populate({
-          path: "topics",
-          populate: {
-            path: "badge resources",
-          },
-        })
-        .exec();
-
+      space = await SpaceModel.getPopulatedSpace(space);
       if (!space) {
         return res.status(404).json({ message: "The space does not exist!" }); // The token exists but email mismatch.
       }

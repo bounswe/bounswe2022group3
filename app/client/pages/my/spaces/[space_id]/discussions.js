@@ -1,82 +1,121 @@
 import MainLayout from "../../../../layouts/main/MainLayout";
-import Button from "../../../../components/Button/Button";
 import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
-import rehypeSanitize from "rehype-sanitize";
-import dynamic from "next/dynamic";
 import { useState } from "react";
-import { Avatar } from "@mui/material";
 import styles from "../../../../styles/my/discussions.module.scss";
-import { useEffect } from "react";
+import { Grid, Table, TableBody, TableHead, TableCell, TableRow } from "@mui/material";
+import TableSortLabel from '@mui/material/TableSortLabel';
+import { useRouter } from 'next/router'
+const discussions_mock = [
+    {
+        'discussion': 'General Discussion',
+        'started_by': 'Kadir Ersoy',
+        'date': '2013-05-23',
+        'replies': '1'
+    },
+    {
+        'discussion': 'Guitar chords',
+        'started_by': 'Salim',
+        'date': '2019-03-03',
+        'replies': '13000'
+    },
+    {
+        'discussion': 'Strumming',
+        'started_by': 'Nurlan',
+        'date': '2023-03-06',
+        'replies': '599'
+    },
+    {
+        'discussion': 'Beginner blues',
+        'started_by': 'Berke',
+        'date': '2023-03-04',
+        'replies': '6'
+    }
 
-const MDEditor = dynamic(
-    () => import("@uiw/react-md-editor"),
-    { ssr: false }
-);
+
+
+]
+
+
+
 
 export default function discussions() {
-    const [value, setValue] = useState("");
-    const [previousComments, setPreviousComments] = useState([
-        {
-            "value": `**Hi guys!** 
-            
-Can you please share more resources?`,
-            "image": "https://xsgames.co/randomusers/avatar.php?g=male"
-        },
-        {
-            "value": `**Hello!** 
-            
-Thanks for sharing great resources`,
-            "image": "https://xsgames.co/randomusers/avatar.php?g=female"
-        },
-        {
-            "value": `**Hi!** 
-            
-Shall we organize an event?`,
-            "image": "https://xsgames.co/randomusers/avatar.php?g=male"
-        },
-    ])
 
-    useEffect(() => {}, [previousComments])
+    const [order, setOrder] = useState('asc');
+    const [orderBy, setOrderBy] = useState('Date')
+    const router = useRouter();
+    let space_id = router.query;
 
+    function sortBy(fieldName = 'Replies') {
+        if (fieldName == 'Replies') {
+            discussions_mock.sort((a, b) => order === 'asc' ? a.replies - b.replies : -(a.replies - b.replies));
+            setOrderBy('Replies')
+        } else {
+
+            discussions_mock.sort((a, b) => order === 'asc' ? new Date(a.date) - new Date(b.date) : -(new Date(a.date) - new Date(b.date)));
+            setOrderBy('Date')
+        }
+        order === 'asc' ? setOrder('desc') : setOrder('asc');
+
+    }
     return (
         <section className={styles.container}>
             <h2>Acoustic Guitar Ed for Beginners</h2>
-            <h1>General Discussion</h1>
-            {
-                previousComments.map(previousComment => {
-                    return <div className={styles.comment_container}>
-                        <Avatar className={styles.comment_icon} alt="Agnes Walker" src={previousComment.image} />
-                        <div data-color-mode="light" className={styles.comment}>
-                            <MDEditor
-                                value={previousComment.value}
-                                onChange={() => { }}
-                                preview="preview"
-                                hideToolbar={true}
-                                height={100}
-                                previewOptions={{
-                                    rehypePlugins: [[rehypeSanitize]],
-                                }}
-                            />
-                        </div>
-                    </div>
-                })
-            }
-            <div className={styles.comment_container}>
-                <Avatar className={styles.comment_icon} alt="Agnes Walker" src="https://xsgames.co/randomusers/avatar.php?g=female" />
-                <div data-color-mode="light" className={styles.comment}>
-                    <MDEditor
-                        value={value}
-                        onChange={setValue}
-                        preview="edit"
-                        height={150}
-                        previewOptions={{
-                            rehypePlugins: [[rehypeSanitize]],
-                        }}
-                    />
-                    <Button className={styles.comment_button} onClick={() => { setPreviousComments(previousComments.concat({ value, image: "https://xsgames.co/randomusers/avatar.php?g=female" })); setValue("") }}>post</Button>
-                </div>
-            </div>
+            <h1>Discussions</h1>
+            <Grid container spacing={2} style={{ marginBottom: 12 }}>
+                <Grid item sx={{ width: '80%', paddingLeft: "4px !important", paddingTop: "4px !important" }}>
+                    <Table sx={{ minWidth: 250 }} >
+                        <TableHead>
+                            <TableRow>
+                                <TableCell ><h3>Discussion</h3></TableCell>
+                                <TableCell ><h3>Started by</h3></TableCell>
+                                <TableCell >
+                                    <TableSortLabel
+                                        active={orderBy === 'Date' ? true : false}
+                                        direction={order}
+                                        onClick={() => { sortBy('Date') }}
+                                    >
+                                        <h3>Date</h3>
+                                    </TableSortLabel>
+                                </TableCell>
+                                <TableCell >
+                                    <TableSortLabel
+                                        active={orderBy === 'Replies' ? true : false}
+                                        direction={order}
+                                        onClick={() => { sortBy('Replies') }}
+                                    >
+                                        <h3>Replies</h3>
+                                    </TableSortLabel>
+                                </TableCell>
+
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {discussions_mock.map((discussion, index) => {
+                                return (
+                                    <TableRow key={index}  className={styles.row}  onClick= {() => { router.push(`/my/spaces/`+space_id.space_id+`/discussion/1`  )}}>
+                                        <TableCell >
+                                            <h4 > {discussion.discussion}</h4>
+                                        </TableCell>
+                                        <TableCell>
+                                            <h4 > {discussion.started_by}</h4>
+                                        </TableCell>
+                                        <TableCell>
+                                            <h4 > {discussion.date}</h4>
+                                        </TableCell>
+                                        <TableCell>
+                                            <h4 > {discussion.replies}</h4>
+                                        </TableCell>
+                                    </TableRow>
+                                );
+                            })}
+
+
+
+                        </TableBody>
+                    </Table>
+                </Grid>
+            </Grid>
         </section>
     );
 }
