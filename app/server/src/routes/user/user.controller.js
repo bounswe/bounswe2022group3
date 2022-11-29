@@ -7,7 +7,7 @@ const crypto = require("crypto");
 const jwt_ac_secret = process.env.JWT_AC_KEY
 const jwt_ref_secret = process.env.JWT_REF_KEY
 const jwt_conf_secret = jwt_ref_secret
-const access_jwtExpiry = '8h'
+const access_jwtExpiry = '24h'
 const refresh_jwtExpiry = '7d'
 const confirmation_token_expiry = '1d'
 

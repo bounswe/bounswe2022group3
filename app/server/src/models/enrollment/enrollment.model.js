@@ -35,6 +35,7 @@ const Enrollment = mongoose.model("Enrollment", enrollmentSchema);
 
 const createEnrollment = async (user, space) => {
   var enrollment = new Enrollment({ user, space });
+  enrollment.is_active = true;
   const res = await enrollment.save();
   return res;
 };

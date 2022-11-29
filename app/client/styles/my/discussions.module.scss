@@ -3,7 +3,7 @@
 }
 
 .comment {
-    width: calc(100% - 40px - 1rem); 
+    width: calc(100% - 40px - 1rem);
     border-radius: 0.5rem;
     margin-bottom: 1rem;
     margin-left: 1rem;
@@ -14,7 +14,7 @@
 }
 
 .comment_button {
-    width: fit-content; 
+    width: fit-content;
     float: left;
     padding: 0px 20px;
 }
@@ -30,4 +30,12 @@
         margin-left: 2.5px;
         font-weight: 600;
     }
+}
+
+.row:hover{
+    background-color:rgba(226, 221, 229, 0.679);
+        h4 {
+           
+            color : rgb(38, 64, 192);
+        }
 }

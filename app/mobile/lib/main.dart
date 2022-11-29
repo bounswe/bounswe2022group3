@@ -12,6 +12,8 @@ void main() {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then(
     (_) => runApp(const MyApp()),
   );
+  // persistenceService.clear();
+  // userService.login(email: 'dotedi9105@probdd.com', password: "Password123*");
 }
 
 class MyApp extends StatelessWidget {

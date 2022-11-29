@@ -1,18 +1,23 @@
 const DiscussionModel = require("../../models/discussion/discussion.model");
+const SpaceModel = require("../../models/space/space.model");
 
 const DiscussionController = {
   createDiscussion: async function (req, res) {
     try {
-      const { user, space, title, body, files } = req.body;
+      const { space_id, title } = req.body;
+      const user = req.auth.id;
 
       const discussion = await DiscussionModel.createDiscussion(
         user,
-        space,
+        space_id,
         title,
-        body,
-        files
       );
-      res.status(201).send({ message: discussion });
+
+      var space = await SpaceModel.Space.findById(space_id).exec();
+      space.discussions.push(discussion);
+      space.save();
+
+      res.status(201).send({ discussion });
     } catch (e) {
       res.status(400).send({ error: e });
     }
@@ -22,11 +27,12 @@ const DiscussionController = {
       const discussion = await DiscussionModel.getPopulatedDiscussion(
         req.params.id
       );
-      res.status(200).json({ message: discussion });
+      res.status(200).json({ discussion });
     } catch (e) {
       res.status(400).send({ error: e });
     }
   },
+  
 };
 
 module.exports = DiscussionController;

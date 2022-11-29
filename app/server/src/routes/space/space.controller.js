@@ -15,9 +15,9 @@ const SpaceController = {
         tags,
         image
       );
-      res.status(201).send({ space });
+      return res.status(201).send({ space });
     } catch (error) {
-      res.status(400).send({ error: error.toString() });
+      return res.status(400).send({ error: error.toString() });
     }
   },
 
@@ -30,21 +30,21 @@ const SpaceController = {
           {
             name: { $regex: keyword, $options: "i" },
           },
-          "name creator info rating tags image"
+          "name creator info rating tags image enrolledUsersCount"
         )
           .populate("creator", "name surname")
           .exec();
       } else {
         spaces = await SpaceModel.Space.find(
           {},
-          "name creator info rating tags image"
+          "name creator info rating tags image enrolledUsersCount"
         )
           .populate("creator", "name surname")
           .exec();
       }
       return res.status(200).json({ spaces });
     } catch (error) {
-      res.status(400).send({ error: error.toString() });
+      return res.status(400).send({ error: error.toString() });
     }
   },
 
@@ -53,6 +53,7 @@ const SpaceController = {
       var space = req.params.id;
       space = await SpaceModel.Space.findById(space, "-enrollments")
         .populate("creator", "name surname")
+        .populate("discussions", "title")
         .populate({
           path: "topics",
           populate: {
@@ -64,27 +65,56 @@ const SpaceController = {
       if (!space) {
         return res.status(404).json({ message: "The space does not exist!" }); // The token exists but email mismatch.
       }
-      let data = { space };
+      //let data = { space };
+      let enrolled;
       // if user logged-in
       if (req.auth) {
         var user = req.auth.id;
         user = await UserModel.User.findById(user);
         if (!user) {
-          return res.status(200).json({ data });
+          return res.status(400).json({ message: "The user does not exist!" });
         }
         const enrollingInfo = await EnrollmentModel.Enrollment.findOne({
           space,
           user,
         });
         if (enrollingInfo) {
-          data.enrolled = true;
+          enrolled = true;
         } else {
-          data.enrolled = false;
+          enrolled = false;
         }
       } else {
-        data.enrolled = false; // no
+        return res.status(200).json({ space });
       }
-      return res.status(200).json({ data });
+      return res.status(200).json({ space, enrolled });
+    } catch (e) {
+      return res.status(400).send({ error: e.toString() });
+    }
+  },
+
+  getAllDiscussions: async function (req, res) {
+    try {
+      var space = req.params.id;
+      space = await SpaceModel.Space.findById(space)
+        .populate({ path: "discussions", populate: { path: "title _id" } })
+        .exec();
+      if (!space) {
+        return res.status(404).json({ message: "The space does not exist!" }); // The token exists but email mismatch.
+      }
+      var discussions = [];
+
+      for (var discussion of space.discussions) {
+        discussions.push({
+          title: discussion.title,
+          discussion_id: discussion._id,
+        });
+
+        console.log({
+          title: discussion.title,
+          discussion_id: discussion._id,
+        });
+      }
+      return res.status(200).json({ discussions });
     } catch (e) {
       res.status(400).send({ error: e.toString() });
     }

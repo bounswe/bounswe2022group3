@@ -1,21 +1,27 @@
 const CommentModel = require("../../models/comment/comment.model");
+const DiscussionModel = require("../../models/discussion/discussion.model");
 
 const CommentController = {
   createComment: async function (req, res) {
     try {
-      const { user, body, files } = req.body;
-
-      const comment = await CommentModel.createComment(user, body, files);
-      res.status(201).json({ message: comment });
+      const { discussion_id, comment } = req.body;
+      const user = req.auth.id;
+      const commentCreated = await CommentModel.createComment(user, discussion_id, comment)
+      const commentPopulated = await commentCreated.populate('user', 'name surname');
+      var discussion = await DiscussionModel.Discussion.findById(discussion_id).exec();
+      discussion.comments.push(commentCreated);
+      discussion.save();
+      res.status(201).json({ comment: commentPopulated });
     } catch (e) {
-      console.log("Error on getCreate:", e);
+      console.log("Error on createComment:", e);
       res.status(400).send({ error: e });
     }
   },
   getComment: async function (req, res) {
     try {
-      const resource = await CommentModel.getComment(req.params.id);
-      res.status(200).json({ message: resource });
+      const comment_id = req.params.id;
+      const comment = await CommentModel.Comment.findById(comment_id);
+      res.status(200).json({ comment });
     } catch (e) {
       res.status(400).send({ error: e });
     }

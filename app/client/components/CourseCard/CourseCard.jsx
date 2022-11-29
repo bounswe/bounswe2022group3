@@ -1,4 +1,5 @@
 import styles from './CourseCard.module.scss'
+import Rating from "../Rating/Rating"
 import Image from "next/image";
 
 
@@ -17,10 +18,7 @@ function CourseCard({ courseId, courseTitle, courseInfo, courseRating, courseIma
                 <p>{courseInfo}</p>
                 <div className={styles.courseCardInfoLastLine}>
                     <p>{courseInstructor}</p>
-                    <div className={styles.ratings}>
-                        <div className={styles.emptyStars}></div>
-                        <div className={styles.fullStars} style={{width: ratingPercent + '%'}}></div>
-                    </div>
+                    <Rating rating={courseRating}></Rating>
                 </div>
                 
             </div>
