@@ -89,7 +89,7 @@ const EnrollmentController = {
             },
             "space is_active notes progress"
           ).exec();
-          if (enr) {
+          if (enr.length > 0) {
             enrollments.push(space);
           }
         }
