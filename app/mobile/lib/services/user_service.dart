@@ -36,6 +36,11 @@ class UserService {
     }
   }
 
+  Future<void> logout() async {
+    persistenceService.clear();
+    return;
+  }
+
   Future<bool> isLoggedIn() async {
     var accessToken = await persistenceService.get(PersistenceKeys.accessToken);
     return accessToken != "";
@@ -86,7 +91,6 @@ class UserService {
       );
       return res.statusCode == 201;
     } catch (e) {
-
       var firstLine = e.toString().split('\n')[0].split(' ');
       var bracketedCode = firstLine[firstLine.length - 1];
       var code = bracketedCode.substring(1, bracketedCode.length - 1);
