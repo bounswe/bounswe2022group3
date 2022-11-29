@@ -31,10 +31,8 @@ const createDiscussion = async (user, space_id, title) => {
     space_id,
     title,
   });
-
-  // Just to set the creation time...
-  const discussionTemp = await discussion.save();
-  const res = await discussionTemp.save();
+  
+  const res = await discussion.save();
   return res;
 };
 
