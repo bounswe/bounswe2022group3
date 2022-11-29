@@ -105,6 +105,7 @@ Widget profileView(String p_id) => ViewModelBuilder<ProfileView>.reactive(
                                 delegate: _SliverPersistentHeaderDelagete(
                                     tabBar: TabBar(
                                   isScrollable: true,
+                                  physics: const ClampingScrollPhysics(),
                                   labelColor: Colors.white,
                                   tabs: tabNames
                                       .map((tabName) => Tab(
@@ -169,7 +170,8 @@ Widget profileHeader(context, String image_path) {
                   width: 10,
                   height: 3,
                 ),
-                const Icon(Icons.person, size: 30),
+                const Icon(Icons.person, size: 20),
+                const SizedBox(width: 2),
                 Text(p!.follower_users == null
                     ? '0'
                     : p!.follower_users!.length.toString()),
@@ -184,7 +186,8 @@ Widget profileHeader(context, String image_path) {
                   width: 10,
                   height: 3,
                 ),
-                const Icon(Icons.person, size: 30),
+                const Icon(Icons.person, size: 20),
+                const SizedBox(width: 2),
                 Text(p!.followed_users == null
                     ? '0'
                     : p!.followed_users!.length.toString()),

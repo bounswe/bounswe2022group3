@@ -11,7 +11,7 @@ import 'package:stacked/stacked.dart';
 
 Widget homepageView() => ViewModelBuilder<HomeViewModel>.reactive(
       viewModelBuilder: () => HomeViewModel(),
-      //onModelReady: (model) => model.getCourses(),
+      onModelReady: (model) => model.getCourses(),
       builder: (context, viewModel, child) => Scaffold(
           appBar: appBar(),
           body: RefreshIndicator(
