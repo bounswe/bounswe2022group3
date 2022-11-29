@@ -13,7 +13,7 @@ Widget discussionView({required String discussionId}) => ViewModelBuilder<Discus
       onModelReady: (model) => model.init(),
       builder: (context, viewModel, child) => Scaffold(
         appBar: AppBar(
-          title: const Text('Discussions'),
+          title: Text(viewModel.discussion?.title ?? ""),
           backgroundColor: CustomColors.main,
         ),
         body: Column(
@@ -32,8 +32,7 @@ Widget discussionView({required String discussionId}) => ViewModelBuilder<Discus
                       separatorBuilder: (BuildContext context, int index) => const Divider(thickness: 1.5),
                     ),
                   ),
-            markdownInput( viewModel.sendDiscussion, viewModel.controller,
-                loading: viewModel.sendLoading),
+            markdownInput(viewModel.sendDiscussion, viewModel.controller, loading: viewModel.sendLoading),
           ],
         ),
       ),
