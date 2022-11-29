@@ -17,7 +17,7 @@ class DashboardView extends StatelessWidget {
       controller: navigatorService.controller,
       screens: [
         homepageView(),
-        profileView("635810d762350ca67046d6c6")
+        profileView("63603cc10a14cd5cda504f15")
       ], //userService.user?.id ?? ''
       items: [
         PersistentBottomNavBarItem(

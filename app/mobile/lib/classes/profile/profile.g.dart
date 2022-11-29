@@ -49,6 +49,7 @@ Map<String, dynamic> _$ProfileToJson(Profile instance) => <String, dynamic>{
 
 PersonalInfo _$PersonalInfoFromJson(Map<String, dynamic> json) => PersonalInfo(
       json['_id'] as String,
+      json['bio'] as String?,
       personal_achievements: (json['personal_achievements'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
@@ -72,6 +73,7 @@ PersonalInfo _$PersonalInfoFromJson(Map<String, dynamic> json) => PersonalInfo(
 Map<String, dynamic> _$PersonalInfoToJson(PersonalInfo instance) =>
     <String, dynamic>{
       '_id': instance.id,
+      'bio': instance.bio,
       'personal_achievements': instance.personal_achievements,
       'interest_badges_selected': instance.interest_badges_selected,
       'personal_activities': instance.personal_activities,

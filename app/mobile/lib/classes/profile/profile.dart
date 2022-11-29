@@ -41,6 +41,7 @@ class Profile {
 class PersonalInfo {
   @JsonKey(name: '_id')
   final String id;
+  final String? bio;
   final List<String>? personal_achievements;
   final List<String>? interest_badges_selected;
   final List<String>? personal_activities;
@@ -48,7 +49,7 @@ class PersonalInfo {
   final List<String>? interests;
   final List<String>? badges;
 
-  PersonalInfo(this.id,
+  PersonalInfo(this.id, this.bio,
       {this.personal_achievements,
       this.interest_badges_selected,
       this.personal_activities,
