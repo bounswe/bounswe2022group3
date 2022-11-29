@@ -28,6 +28,7 @@ const UserProfileController = {
       //move photo to uploads directory
       avatar.mv('./uploads/' + avatar.name);
       user.image = avatar.name
+      await user.save();
       res.status(200).json({ message: "OK" });
     } catch (e) {
       res.status(400).json({ error: e.toString() });
