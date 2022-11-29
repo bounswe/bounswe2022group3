@@ -81,8 +81,7 @@ class RegistrationFormState extends State<RegistrationForm> {
                             // Validate returns true if the form is valid, or false otherwise.
                             if (_formKey.currentState!.validate()) {
                               bool registered = await userService.register(
-                                name:
-                                _nameController.text,
+                                name: _nameController.text,
                                 surname: _surnameController.text,
                                 email: _emailController.text,
                                 password: _passwordController.text,
