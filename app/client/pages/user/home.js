@@ -51,7 +51,6 @@ export default function courses() {
                     </IconButton>
                 </div>
                 <div className={styles.courseListContainer}>
-
                     {
                         courseList.map(course =>
                             <a href={'/space/' + course._id}>
@@ -67,7 +66,6 @@ export default function courses() {
 
                         )
                     }
-
                 </div>
             </div>
 

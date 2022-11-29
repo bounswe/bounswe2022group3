@@ -24,11 +24,13 @@ class UserService {
       await Future.wait([
         persistenceService.set(PersistenceKeys.email, login.email),
         persistenceService.set(PersistenceKeys.accessToken, login.access_token),
-        persistenceService.set(PersistenceKeys.refreshToken, login.refresh_token),
+        persistenceService.set(
+            PersistenceKeys.refreshToken, login.refresh_token),
         persistenceService.set(PersistenceKeys.name, login.name),
         persistenceService.set(PersistenceKeys.surname, login.surname),
       ]);
-      print('Logged in, ${await persistenceService.get(PersistenceKeys.refreshToken)}');
+      print(
+          'Logged in, ${await persistenceService.get(PersistenceKeys.refreshToken)}');
       return true;
     } catch (e) {
       print(e);
@@ -46,31 +48,40 @@ class UserService {
     return accessToken != "";
   }
 
-  Future<void> confirmMail({required String email, required String code}) async {
+  Future<bool> confirmMail({required String code}) async {
     try {
       Response res = await dioService.dio.post(
         '/user/confirm-email',
-        data: {"email": email, "code": code},
+        data: {"code": code},
       );
-      if (res.statusCode != 200) return;
+      if (res.statusCode != 200) return false;
 
       Login login = Login.fromJson(res.data);
       await Future.wait([
         persistenceService.set(PersistenceKeys.email, login.email),
         persistenceService.set(PersistenceKeys.accessToken, login.access_token),
-        persistenceService.set(PersistenceKeys.refreshToken, login.refresh_token),
+        persistenceService.set(
+            PersistenceKeys.refreshToken, login.refresh_token),
         persistenceService.set(PersistenceKeys.name, login.name),
         persistenceService.set(PersistenceKeys.surname, login.surname),
       ]);
+      return true;
     } catch (e) {
       print(e);
     }
+    return false;
   }
 
   Future<bool> register(
-      {required String name, required String surname, required String email, required String password, required bool agreement, required BuildContext context}) async {
+      {required String name,
+      required String surname,
+      required String email,
+      required String password,
+      required bool agreement,
+      required BuildContext context}) async {
     var messages = {
-      '200': "A verification email has been sent to $email. The link will be expired after one day.",
+      '200':
+          "A verification email has been sent to $email. The link will be expired after one day.",
       '400': "You must agree to the Terms of Use and Privacy Policy.",
       '409': "The user already exists.",
     };
@@ -105,7 +116,8 @@ class UserService {
   Future<void> refresh() async {
     try {
       // ignore: non_constant_identifier_names
-      String refresh_token = await persistenceService.get(PersistenceKeys.refreshToken);
+      String refresh_token =
+          await persistenceService.get(PersistenceKeys.refreshToken);
       String email = await persistenceService.get(PersistenceKeys.email);
       if (email.isEmpty || refresh_token.isEmpty) return;
 
@@ -117,13 +129,14 @@ class UserService {
 
       Refresh refresh = Refresh.fromJson(res.data);
       await Future.wait([
-        persistenceService.set(PersistenceKeys.accessToken, refresh.access_token),
-        persistenceService.set(PersistenceKeys.refreshToken, refresh.refresh_token),
+        persistenceService.set(
+            PersistenceKeys.accessToken, refresh.access_token),
+        persistenceService.set(
+            PersistenceKeys.refreshToken, refresh.refresh_token),
       ]);
       user = User(
         await persistenceService.get(PersistenceKeys.name),
         await persistenceService.get(PersistenceKeys.surname),
-        email,
         "",
       );
     } catch (e) {

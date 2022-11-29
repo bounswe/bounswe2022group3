@@ -7,6 +7,8 @@ void main() {
   configureDependencies();
   navigatorService.controller = PersistentTabController(initialIndex: 0);
   WidgetsFlutterBinding.ensureInitialized();
+  // persistenceService.clear();
+  // userService.login(email: 'dotedi9105@probdd.com', password: "Password123*");
   runApp(const MyApp());
 }
 
