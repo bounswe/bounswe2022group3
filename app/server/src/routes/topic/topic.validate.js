@@ -9,10 +9,10 @@ exports.validate = (method) => {
       ];
     }
     case "get-topic": {
-      return [param("id", "id does not exist").exists()];
+      return [param("id", "id does not exist").exists().isMongoId()];
     }
     case "get-topic-resources": {
-      return [param("id", "id does not exist").exists()];
+      return [param("id", "id does not exist").exists().isMongoId()];
     }
   }
 };
