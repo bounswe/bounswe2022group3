@@ -37,8 +37,12 @@ const createDiscussion = async (user, space_id, title) => {
 };
 
 const getPopulatedDiscussion = async (id) => {
-  return Discussion.findById(id).populate("comments").populate(
-    {
+  return Discussion.findById(id)
+  .populate({
+    path: "user",
+    select: { _id: 1, name: 1, surname: 1, image: 1 }
+  })
+  .populate({
       path: "comments",
       populate: {
         path: "user",
