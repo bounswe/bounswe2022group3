@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:bucademy/classes/chapter/chapter.dart';
+import 'package:bucademy/classes/topic/topic.dart';
 import 'package:bucademy/classes/user/user.dart';
 import 'package:bucademy/resources/custom_colors.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +31,7 @@ class Course {
 
 @JsonSerializable()
 class CourseDetailed extends Course {
-  List<Chapter> topics = [];
+  List<Topic> topics = [];
   List<String> badges = [];
 
   CourseDetailed(super.name, super.id, super.info, super.tags, super.image, super.creator, this.topics, this.badges);

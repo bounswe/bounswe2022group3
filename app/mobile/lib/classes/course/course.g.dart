@@ -33,7 +33,7 @@ CourseDetailed _$CourseDetailedFromJson(Map<String, dynamic> json) =>
       json['image'] as String,
       User.fromJson(json['creator'] as Map<String, dynamic>),
       (json['topics'] as List<dynamic>)
-          .map((e) => Chapter.fromJson(e as Map<String, dynamic>))
+          .map((e) => Topic.fromJson(e as Map<String, dynamic>))
           .toList(),
       (json['badges'] as List<dynamic>).map((e) => e as String).toList(),
     );
