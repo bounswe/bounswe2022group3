@@ -15,6 +15,12 @@ enrollmentRouter.post(
 );
 
 enrollmentRouter.get(
+  "/:id",
+  authorization,
+  EnrollmentController.getEnrollment
+);
+
+enrollmentRouter.get(
   "/searchEnrollments/:keyword?",
   authorization,
   EnrollmentController.searchEnrollments
