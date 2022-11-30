@@ -87,9 +87,12 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                                           .contains(c.id))
                                         GestureDetector(
                                           onTap: () async {
-                                            await courseService.enrollToSpace(spaceId: c.id);
-                                            ScaffoldMessenger.of(context).showSnackBar(
-                                                SnackBar(content: Text('Successfully Joined To The Space!')));
+                                            await courseService.enrollToSpace(
+                                                spaceId: c.id);
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(SnackBar(
+                                                    content: Text(
+                                                        'Successfully Joined To The Space!')));
                                             viewModel.notifyListeners();
                                           },
                                           child: Container(
@@ -214,23 +217,88 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                             shrinkWrap: true,
                             padding: const EdgeInsets.all(10.0),
                             children: [
-                              ...viewModel.course!.discussions.map((DiscussionShortened m) => GestureDetector(
+                              GestureDetector(
+                                onTap: () {
+                                  String? title;
+                                  showDialog(
+                                      context: context,
+                                      builder: ((context) => AlertDialog(
+                                            title: Text(
+                                                'Enter the title of discussion'),
+                                            content: TextField(
+                                              onChanged: (value) =>
+                                                  title = value,
+                                              decoration: InputDecoration(
+                                                  hintText: "Title"),
+                                            ),
+                                            actions: [
+                                              GestureDetector(
+                                                onTap: (title != null &&
+                                                        title!.isNotEmpty)
+                                                    ? null
+                                                    : () async {
+                                                        Discussion? d =
+                                                            await discussionService
+                                                                .createDiscussion(
+                                                                    spaceId:
+                                                                        viewModel
+                                                                            .course!
+                                                                            .id,
+                                                                    title:
+                                                                        title!);
+                                                        if (d != null) {
+                                                          viewModel
+                                                              .addNewDiscussion(
+                                                                  d);
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        }
+                                                      },
+                                                child: Container(
+                                                  color: CustomColors.main,
+                                                  child: Text('Create'),
+                                                ),
+                                              )
+                                            ],
+                                          )));
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 20),
+                                  margin: const EdgeInsets.only(bottom: 10),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(
+                                        Constants.borderRadius),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      const Icon(Icons.add,
+                                          color: Colors.green, size: 30),
+                                      SizedBox(width: 15),
+                                      Text('Create a new discussion'),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              ...viewModel.course!.discussions.map(
+                                  (DiscussionShortened m) => GestureDetector(
                                         child: mockTile(m.title),
                                         onTap: () => PersistentNavBarNavigator
                                             .pushNewScreen(context,
-                                                screen: discussionView(discussionId: m.id),
+                                                screen: discussionView(
+                                                    discussionId: m.id),
                                                 withNavBar: false),
                                       )),
-                              ...contentService
-                                  .contents("Discussion")
-                                  .map((MockContent m) => GestureDetector(
-                                        child: mockTile(m.name),
-                                        onTap: () => PersistentNavBarNavigator
-                                            .pushNewScreen(context,
-                                                screen: discussionView(discussionId: m.name),
-                                                withNavBar: false),
-                                  ),
-                                ),
+                              // ...contentService
+                              //     .contents("Discussion")
+                              //     .map((MockContent m) => GestureDetector(
+                              //           child: mockTile(m.name),
+                              //           onTap: () => PersistentNavBarNavigator
+                              //               .pushNewScreen(context,
+                              //                   screen: discussionView(discussionId: m.name),
+                              //                   withNavBar: false),
+                              //     ),
+                              //   ),
                             ],
                           ),
                         ],
@@ -284,6 +352,12 @@ class CoursePageViewModel extends ChangeNotifier {
     CourseDetailed? c = await courseService.getCourseDetails(id: courseId);
     if (c != null) course = c;
     contentsLoading = false;
+    notifyListeners();
+  }
+
+  void addNewDiscussion(Discussion d) {
+    if (course == null) return;
+    course!.discussions.add(DiscussionShortened(d.title, d.id));
     notifyListeners();
   }
 

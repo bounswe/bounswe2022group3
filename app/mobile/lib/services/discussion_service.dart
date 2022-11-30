@@ -43,4 +43,21 @@ class DiscussionService {
     }
     return null;
   }
+
+  Future<Discussion?> createDiscussion({
+    required String spaceId,
+    required String title,
+  }) async {
+    try {
+      Response response = await dioService.dio.post('/discussion', data: {'space_id': spaceId, 'title': title});
+
+      Map json = response.data;
+      Discussion discussion = Discussion.fromJson(json['discussion']);
+
+      return discussion;
+    } catch (e) {
+      print(e);
+    }
+    return null;
+  }
 }
