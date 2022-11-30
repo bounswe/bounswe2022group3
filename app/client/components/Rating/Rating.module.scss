@@ -1,0 +1,34 @@
+.ratings {
+    position: relative;
+    vertical-align: middle;
+    display: inline-block;
+    color: #b1b1b1;
+    overflow: hidden;
+}
+
+.fullStars {
+    position: absolute;
+    left: 0;
+    top: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    color: #fde16d;
+}
+.emptyStars:before, .fullStars:before {
+    content:"\2605\2605\2605\2605\2605";
+    font-size: 14pt;
+}
+.emptyStars:before {
+    -webkit-text-stroke: 1px #848484;
+}
+.fullStars:before {
+    -webkit-text-stroke: 1px orange;
+}
+/* Webkit-text-stroke is not supported on firefox or IE */
+
+/* Firefox */
+ @-moz-document url-prefix() {
+    .full-stars {
+        color: #ECBE24;
+    }
+}

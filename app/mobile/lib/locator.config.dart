@@ -4,6 +4,7 @@ import 'package:bucademy/services/dio_service.dart';
 import 'package:bucademy/services/discussion_service.dart';
 import 'package:bucademy/services/navigator_service.dart';
 import 'package:bucademy/services/persistence_service.dart';
+import 'package:bucademy/services/profile_service.dart';
 import 'package:bucademy/services/user_service.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
@@ -21,5 +22,6 @@ GetIt $initGetIt(
   gh.lazySingleton<UserService>((() => UserService()));
   gh.lazySingleton<DiscussionService>((() => DiscussionService()));
   gh.lazySingleton<MockContentService>((() => MockContentService()));
+  gh.lazySingleton<ProfileService>((() => ProfileService()));
   return get;
 }
