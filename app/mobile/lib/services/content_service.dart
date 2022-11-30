@@ -6,9 +6,9 @@ import 'package:injectable/injectable.dart';
 class MockContent {
   String name;
   String body;
-  String? course;
+  String? space;
 
-  MockContent(this.name, this.body, {this.course});
+  MockContent(this.name, this.body, {this.space});
 }
 
 List<MockContent> mockContents = [];
@@ -40,14 +40,14 @@ class MockContentService {
     return temp;
   }
 
- //FIXME: change the url to get content. 
+ //FIXME: change the url to get resource. 
   Future<TopicDetailed?> getTopicDetails({required String topicId}) async{ 
     try {
-      Response response = await dioService.dio.get('/chapter/$topicId');
+      Response response = await dioService.dio.get('/topic/$topicId');
       if (response.statusCode != 200) {
         return null;
       }
-      TopicDetailed t =  TopicDetailed.fromJson(response.data["message"]); //FIXME: change the url to get content. 
+      TopicDetailed t =  TopicDetailed.fromJson(response.data["message"]); //FIXME: change the url to get resource. 
       return t;
     } catch (e) {
       print(e);
