@@ -7,6 +7,7 @@ import 'package:bucademy/view/widgets/profile_picture.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:stacked/stacked.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 Widget discussionView({required String discussionId}) => ViewModelBuilder<DiscussionViewModel>.reactive(
       viewModelBuilder: () => DiscussionViewModel(discussionId),
@@ -47,8 +48,11 @@ Container commentTile(Comment c) => Container(
           const SizedBox(width: 10),
           Expanded(
               child: Markdown(
-            onTapLink: (text, href, title) {
-              print('href');
+            onTapLink: (text, href, title) async {
+              if (href == null) return;
+              if (!await launchUrl(Uri.parse(href))) {
+                print('Could not launch the url');
+              }
             },
             data: c.comment,
             shrinkWrap: true,
