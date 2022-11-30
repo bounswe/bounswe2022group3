@@ -152,15 +152,18 @@ const UserController = {
             } else if (tokens.confirmation_token != "confirmed") {
                 return res
                     .status(403)
-                    .json({ message: "Please confirm your email to login to your account." });
+                    .json({ message: "Please confirm your email to refresh your tokens." });
             }
             // If exists, decrypt
-            jwt.verify(refresh_token, jwt_ref_secret, (err, decoded) => {
-                tokenError = err;
-                decrytedData = decoded;
-            });
+            const {err, decoded} = jwt.verify(refresh_token, jwt_ref_secret);
+            if (err) {
+                return res.status(400).json({
+                    message: err.toString(),
+                });
+            }
+
             // Acquire email from decrypted token
-            token_email = decrytedData.email;
+            token_email = decoded.email;
 
             // Token exists, check if it belongs to same user
             if (email !== token_email || tokens.refresh_token !== refresh_token) {
@@ -210,18 +213,14 @@ const UserController = {
         try {
 
             // JWT Validation, also checks expiry
-            jwt.verify(code, jwt_conf_secret, (err, decoded) => {
-                tokenError = err;
-                decrytedData = decoded;
-            });
-
-            if (tokenError) {
+            const {err, decoded} = jwt.verify(code, jwt_conf_secret);
+            if (err) {
                 return res.status(400).json({
-                    message: tokenError.toString(),
+                    message: err.toString(),
                 });
             }
             // Acquire email from decrypted token
-            const email = decrytedData.email;
+            const email = decoded.email;
 
             // Return user data
             const user = await UserModel.getUserByEmail(email);
