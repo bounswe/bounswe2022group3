@@ -6,19 +6,33 @@ exports.validate = (method) => {
       return [
         body("name", "name doesn't exist").exists(),
         body("body", "body doesn't exist").exists(),
-        body("topic_id", "topic_id doesn't exist or broken").exists().isMongoId(),
+        body("topic_id", "topic_id doesn't exist or broken")
+          .exists()
+          .isMongoId(),
       ];
-    case "delete-resource":
+    }
+    case "delete-resource": {
       return [
-        body("resource_id", "resource_id doesn't exist or broken").exists().isMongoId(),
+        body("resource_id", "resource_id doesn't exist or broken")
+          .exists()
+          .isMongoId(),
       ];
-    case "update-resource":
+    }
+    case "get-resource": {
+      return [param("id", "id does not exist").exists().isMongoId()];
+    }
+    case "update-resource": {
       return [
-        body("resource_id", "resource_id doesn't exist or broken").exists().isMongoId(),
+        body("resource_id", "resource_id doesn't exist or broken")
+          .exists()
+          .isMongoId(),
       ];
-    case "rate-resource":
+    }
+    case "rate-resource": {
       return [
-        body("resource_id", "resource_id doesn't exist or broken").exists().isMongoId(),
+        body("resource_id", "resource_id doesn't exist or broken")
+          .exists()
+          .isMongoId(),
         body("rating", "rating doesn't exist").exists(),
       ];
     }

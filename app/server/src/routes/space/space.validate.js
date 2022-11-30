@@ -11,7 +11,7 @@ exports.validate = (method) => {
       ];
     }
     case "getSpaceDetail": {
-      return [param("id", "id does not exist").exists()];
+      return [param("id", "id does not exist").exists().isMongoId()];
     }
   }
 };
