@@ -10,7 +10,10 @@ exports.validate = (method) => {
         body("image", "image does not exist").exists(),
       ];
     }
-    case "getSpaceDetail": {
+    case "get-space-detail": {
+      return [param("id", "id does not exist").exists().isMongoId()];
+    }
+    case "get-all-discussions": {
       return [param("id", "id does not exist").exists().isMongoId()];
     }
   }
