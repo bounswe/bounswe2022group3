@@ -11,7 +11,7 @@ exports.validate = (method) => {
     case "get-topic": {
       return [param("id", "id does not exist").exists()];
     }
-    case "get-topic-mini": {
+    case "get-topic-resources": {
       return [param("id", "id does not exist").exists()];
     }
   }
