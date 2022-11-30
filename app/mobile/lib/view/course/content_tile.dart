@@ -1,4 +1,4 @@
-import 'package:bucademy/classes/chapter/chapter.dart';
+import 'package:bucademy/classes/topic/topic.dart';
 import 'package:bucademy/resources/constants.dart';
 import 'package:bucademy/resources/custom_colors.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +6,7 @@ import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 import '../topic/topicpage.dart';
 
-GestureDetector topicTile(Chapter t, BuildContext context, {bool isClickable = true}) {
+GestureDetector topicTile(Topic t, BuildContext context, {bool isClickable = true}) {
   return GestureDetector(
     child: Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
