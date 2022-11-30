@@ -1,4 +1,3 @@
-import 'package:bucademy/classes/chapter/chapter.dart';
 import 'package:bucademy/classes/topic/topic.dart';
 import 'package:bucademy/resources/constants.dart';
 import 'package:bucademy/classes/course/course.dart';
@@ -118,7 +117,7 @@ Widget coursePageView(Course c) => ViewModelBuilder<CoursePageViewModel>.reactiv
                                 color: Colors.black,
                               ),
                               child: Text(
-                                "Contents",
+                                "Topics",
                                 style: TextStyle(color: Colors.black),
                               )),
                           Tab(
@@ -172,7 +171,7 @@ Widget coursePageView(Course c) => ViewModelBuilder<CoursePageViewModel>.reactiv
                           padding: const EdgeInsets.all(10.0),
                           children: [
                             ...viewModel.course!.topics
-                                .map((Chapter t) => topicTile(t, context))
+                                .map((Topic t) => topicTile(t, context))
                           ],
                         ),
                         Padding(
