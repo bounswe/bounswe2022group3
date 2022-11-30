@@ -13,6 +13,25 @@
     }
 }
 
+.checkbox {
+    height: calc(1.8em + 1.375rem + 2px);
+    padding: 0.6875rem 0.75rem;
+    font-size: 0.9rem;
+    font-weight: 400;
+    color: inherit;
+    font-family: inherit;
+    margin-bottom: 1rem;
+    transition: 0.5s;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    span {
+        margin-left: 1rem;
+    }
+
+}
+
 .input {
     height: calc(1.8em + 1.375rem + 2px);
     padding: 0.6875rem 0.75rem;

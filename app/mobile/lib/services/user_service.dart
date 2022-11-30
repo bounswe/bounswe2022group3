@@ -33,13 +33,13 @@ class UserService {
     }
   }
 
-  Future<void> confirmMail({required String email, required String code}) async {
+  Future<bool> confirmMail({required String code}) async {
     try {
       Response res = await dioService.dio.post(
         '/user/confirm-email',
-        data: {"email": email, "code": code},
+        data: {"code": code},
       );
-      if (res.statusCode != 200) return;
+      if (res.statusCode != 200) return false;
 
       Login login = Login.fromJson(res.data);
       await Future.wait([
@@ -49,9 +49,11 @@ class UserService {
         persistenceService.set(PersistenceKeys.name, login.name),
         persistenceService.set(PersistenceKeys.surname, login.surname),
       ]);
+      return true;
     } catch (e) {
       print(e);
     }
+    return false;
   }
 
   Future<void> register(

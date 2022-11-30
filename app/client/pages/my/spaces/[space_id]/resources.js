@@ -5,26 +5,39 @@ import { HiOutlineDocumentText } from "react-icons/hi";
 import { IoMdImage } from "react-icons/io";
 import MainLayout from "../../../../layouts/main/MainLayout";
 import styles from "../../../../styles/my/resources.module.scss";
+import { IconButton } from "@mui/material";
+import { Add } from '@mui/icons-material';
+import { useRouter } from 'next/router'
+import Link from "next/link";
+import { API_URL } from "../../../../next.config";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import dynamic from "next/dynamic";
 
-const chapters = [
-    {
-        'id': '634cde32693cd0c82806e64c',
-        'chapter_name': 'Guitar chords',
-        'resources': ['playing first song', 'Chords', 'About guitars']
-    },
-    {
-        'id': '634cde8a9dbd91c3a2c97324',
-        'chapter_name': 'Strumming',
-        'resources': ['practice music', 'Strumming patterns', 'palm muting technique']
-    },
-    {
-        'id': '634cde8fc2f25e1a7694d2f6',
-        'chapter_name': 'Beginner blues',
-        'resources': ['how to apply turnaround', '12 bar blues', 'Classical vs Western acoustic guitars']
-    }
-]
 
 export default function resources() {
+    const router = useRouter();
+    let router_query = router.query;
+    const [data, setData] = useState({});
+
+    async function fetchContent() {
+        try {
+            if (router_query?.space_id !== undefined) {
+                const response = (
+                    await axios.get(API_URL + "/space/" + router_query.space_id)
+                );
+                console.log(response);
+                setData(response?.data);
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    useEffect(() => {
+        fetchContent();
+    }, [router_query]);
+
     function Other(desc) {
         return (
             <a>
@@ -73,23 +86,39 @@ export default function resources() {
 
     return (
         <section className={styles.container}>
-            <h2>Acoustic Guitar Ed for Beginners</h2>
+            <h2>{data?.space?.name}</h2>
             <h1>Resources</h1>
             <Grid container spacing={2} style={{ marginBottom: 12 }}>
                 <Grid item sx={{ width: '80%', paddingLeft: "4px !important", paddingTop: "4px !important" }}>
                     <Table sx={{ minWidth: 250 }} >
                         <TableBody>
-                            {chapters.map((chapter, index) => {
+                            {data?.space?.topics?.map((topic, index) => {
                                 return (
                                     <TableRow key={index} >
                                         <TableCell>
                                             <Box>
-                                                <h3 > {chapter.chapter_name}</h3>
+                                                <h3 > {topic.name}</h3>
 
-                                                {Other(chapter.resources[0])}
-                                                {Image(chapter.resources[1])}
-                                                {Pdf(chapter.resources[2])}
+                                                {
+                                                    topic?.resources?.map((resource, index) => {
+                                                        return (
+                                                            <Link href={`/my/spaces/${router_query.space_id}/resource/${resource._id}`}>
+                                                                {Other(resource.name)}
+                                                            </Link>
+                                                        )
+                                                    })
+                                                }
+
                                             </Box>
+                                            <Link href={{
+                                                pathname: `/my/spaces/${router_query.space_id}/resource/createResource`,
+                                                query: { topic_id: topic._id, space_name: data?.space?.name }
+                                            }}>
+                                                <IconButton>
+                                                    <Add />
+                                                </IconButton>
+                                            </Link>
+
                                         </TableCell>
                                     </TableRow>
                                 );

@@ -31,16 +31,18 @@ const createDiscussion = async (user, space_id, title) => {
     space_id,
     title,
   });
-
-  // Just to set the creation time...
-  const discussionTemp = await discussion.save();
-  const res = await discussionTemp.save();
+  
+  const res = await discussion.save();
   return res;
 };
 
 const getPopulatedDiscussion = async (id) => {
-  return Discussion.findById(id).populate("comments").populate(
-    {
+  return Discussion.findById(id)
+  .populate({
+    path: "user",
+    select: { _id: 1, name: 1, surname: 1, image: 1 }
+  })
+  .populate({
       path: "comments",
       populate: {
         path: "user",

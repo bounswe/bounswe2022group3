@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
-
+const DiscussionModel = require("../discussion/discussion.model");
+const TopicModel = require("../topic/topic.model");
 const resourceSchema = new mongoose.Schema(
   {
     name: {
@@ -43,6 +44,10 @@ const createResource = async (name, body, topic, creator) => {
   });
   resource.average_rating = 0;
   resource.ratings = new Map();
+  topic_obj = await TopicModel.getTopic(topic);
+  space_id = topic_obj.space;
+  discussion = await DiscussionModel.createDiscussion(creator,space_id,name);
+  resource.discussion = discussion;
   const res = await resource.save();
   return res;
 };
@@ -56,6 +61,14 @@ const getPopulatedResource = async (id) => {
   return Resource.findById(id)
     .populate("discussion")
     .populate("creator", "name surname")
+    .populate({
+      path: "topic",
+      populate: {
+        path: "space",
+        select: { _id: 1, name: 1 }
+      },
+      select: { _id: 1, name: 1 }
+    })
     .exec();
 };
 
