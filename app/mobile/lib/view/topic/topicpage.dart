@@ -1,5 +1,5 @@
-import 'package:bucademy/classes/chapter/chapter.dart';
 import 'package:bucademy/classes/content/content.dart';
+import 'package:bucademy/classes/resource/resource.dart';
 import 'package:bucademy/classes/topic/topic.dart';
 import 'package:bucademy/resources/custom_colors.dart';
 import 'package:bucademy/resources/text_styles.dart';
@@ -8,7 +8,7 @@ import 'package:bucademy/view/topic/content_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-Widget topicPageView(Chapter c) =>
+Widget topicPageView(Topic c) =>
     ViewModelBuilder<TopicPageViewModel>.reactive(
         viewModelBuilder: () => TopicPageViewModel(c.id),
         builder: (context, viewModel, child) {
@@ -36,8 +36,8 @@ Widget topicPageView(Chapter c) =>
                             mainAxisAlignment: MainAxisAlignment.center,
                             mainAxisSize: MainAxisSize.max,
                             children: [
-                              ...viewModel.topic!.content
-                                  .map((Content cont) => contentTile(cont))
+                              ...viewModel.topic!.resources
+                                  .map((Resource cont) => contentTile(cont))
                             ]),
                       )),
                     )
