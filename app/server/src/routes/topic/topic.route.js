@@ -21,6 +21,8 @@ topicRouter.get(
 );
 topicRouter.get(
   "/getResources/:id",
+  validate("get-topic-resources"),
+  handleValidation,
   TopicController.getTopicResources
 );
 module.exports = topicRouter;
