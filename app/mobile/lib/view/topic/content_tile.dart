@@ -1,9 +1,10 @@
 import 'package:bucademy/classes/content/content.dart';
+import 'package:bucademy/classes/resource/resource.dart';
 import 'package:bucademy/resources/constants.dart';
 import 'package:bucademy/resources/text_styles.dart';
 import 'package:flutter/material.dart';
 
-Widget contentTile(Content c) {
+Widget contentTile(Resource r) {
   return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       margin: const EdgeInsets.only(bottom: 10),
@@ -14,15 +15,15 @@ Widget contentTile(Content c) {
       child: Column(
         children: [
           Container(
-              child: Text(c.name, style: TextStyles.pageTitle),
+              child: Text(r.name, style: TextStyles.pageTitle),
               color: Colors.red),
-          Text(c.body),
-          Column(
-            children: [...c.media.map((e) => Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Image.network(e),
-            ))],
-          )
+          Text(r.body),
+          // Column(
+          //   children: [...c.media.map((e) => Padding(
+          //     padding: const EdgeInsets.all(8.0),
+          //     child: Image.network(e),
+          //   ))],
+          // )
         ],
       ));
 }
