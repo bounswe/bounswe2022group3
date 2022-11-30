@@ -218,50 +218,8 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                             padding: const EdgeInsets.all(10.0),
                             children: [
                               GestureDetector(
-                                onTap: () {
-                                  String? title;
-                                  showDialog(
-                                      context: context,
-                                      builder: ((context) => AlertDialog(
-                                            title: Text(
-                                                'Enter the title of discussion'),
-                                            content: TextField(
-                                              onChanged: (value) =>
-                                                  title = value,
-                                              decoration: InputDecoration(
-                                                  hintText: "Title"),
-                                            ),
-                                            actions: [
-                                              GestureDetector(
-                                                onTap: (title != null &&
-                                                        title!.isNotEmpty)
-                                                    ? null
-                                                    : () async {
-                                                        Discussion? d =
-                                                            await discussionService
-                                                                .createDiscussion(
-                                                                    spaceId:
-                                                                        viewModel
-                                                                            .course!
-                                                                            .id,
-                                                                    title:
-                                                                        title!);
-                                                        if (d != null) {
-                                                          viewModel
-                                                              .addNewDiscussion(
-                                                                  d);
-                                                          Navigator.of(context)
-                                                              .pop();
-                                                        }
-                                                      },
-                                                child: Container(
-                                                  color: CustomColors.main,
-                                                  child: Text('Create'),
-                                                ),
-                                              )
-                                            ],
-                                          )));
-                                },
+                                onTap: () =>
+                                    createDiscussion(context, viewModel),
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 20, vertical: 20),
@@ -271,8 +229,8 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                                         Constants.borderRadius),
                                   ),
                                   child: Row(
-                                    children: [
-                                      const Icon(Icons.add,
+                                    children: const [
+                                      Icon(Icons.add,
                                           color: Colors.green, size: 30),
                                       SizedBox(width: 15),
                                       Text('Create a new discussion'),
@@ -289,16 +247,6 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                                                     discussionId: m.id),
                                                 withNavBar: false),
                                       )),
-                              // ...contentService
-                              //     .contents("Discussion")
-                              //     .map((MockContent m) => GestureDetector(
-                              //           child: mockTile(m.name),
-                              //           onTap: () => PersistentNavBarNavigator
-                              //               .pushNewScreen(context,
-                              //                   screen: discussionView(discussionId: m.name),
-                              //                   withNavBar: false),
-                              //     ),
-                              //   ),
                             ],
                           ),
                         ],
@@ -357,7 +305,7 @@ class CoursePageViewModel extends ChangeNotifier {
 
   void addNewDiscussion(Discussion d) {
     if (course == null) return;
-    course!.discussions.add(DiscussionShortened(d.title, d.id));
+    course!.discussions.insert(0, DiscussionShortened(d.title, d.id));
     notifyListeners();
   }
 
@@ -369,4 +317,38 @@ class CoursePageViewModel extends ChangeNotifier {
     contentsLoading = false;
     notifyListeners();
   }
+}
+
+createDiscussion(BuildContext context, CoursePageViewModel viewModel) {
+  String? title;
+  showDialog(
+      context: context,
+      builder: ((context) => AlertDialog(
+            title: const Text('Enter the title of discussion'),
+            content: TextField(
+              onChanged: (value) => title = value,
+              decoration: const InputDecoration(hintText: "Title"),
+            ),
+            actions: [
+              GestureDetector(
+                onTap: (title != null && title!.isNotEmpty)
+                    ? null
+                    : () async {
+                        Discussion? d =
+                            await discussionService.createDiscussion(
+                                spaceId: viewModel.course!.id, title: title!);
+                        if (d != null) {
+                          viewModel.addNewDiscussion(d);
+                          Navigator.of(context).pop();
+                        }
+                      },
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+                  color: CustomColors.main,
+                  child: Text('Create', style: TextStyles.bodyWhite),
+                ),
+              )
+            ],
+          )));
 }
