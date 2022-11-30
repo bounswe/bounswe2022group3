@@ -20,7 +20,9 @@ Widget homepageView() => ViewModelBuilder<HomeViewModel>.reactive(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8) + const EdgeInsets.only(bottom: 12),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 8) +
+                          const EdgeInsets.only(bottom: 12),
                   decoration: const BoxDecoration(
                       color: CustomColors.main,
                       borderRadius: BorderRadius.only(
@@ -39,7 +41,8 @@ Widget homepageView() => ViewModelBuilder<HomeViewModel>.reactive(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    ...viewModel.searchResults.map((Course c) => searchCourseTile(c, context)),
+                                    ...viewModel.searchResults.map((Course c) =>
+                                        searchCourseTile(c, context)),
                                   ],
                                 ),
                               )
@@ -57,7 +60,9 @@ Widget homepageView() => ViewModelBuilder<HomeViewModel>.reactive(
                                     : SingleChildScrollView(
                                         scrollDirection: Axis.horizontal,
                                         child: Row(children: [
-                                          ...viewModel.enrolledCourses.map((Course c) => courseTile(c, context))
+                                          ...viewModel.enrolledCourses.map(
+                                              (Course c) =>
+                                                  courseTile(c, context))
                                         ]),
                                       ),
                                 const SizedBox(height: 20),
@@ -71,13 +76,18 @@ Widget homepageView() => ViewModelBuilder<HomeViewModel>.reactive(
                                     : SingleChildScrollView(
                                         scrollDirection: Axis.horizontal,
                                         child: Row(
-                                          children: [...viewModel.courses.map((Course c) => courseTile(c, context))],
+                                          children: [
+                                            ...viewModel.courses.map(
+                                                (Course c) =>
+                                                    courseTile(c, context))
+                                          ],
                                         ),
                                       ),
                                 const SizedBox(height: 20),
                                 Text(
                                   'Browse',
-                                  style: TextStyles.pageTitle.copyWith(color: Colors.black),
+                                  style: TextStyles.pageTitle
+                                      .copyWith(color: Colors.black),
                                 ),
                                 const SizedBox(height: 20),
                                 const Text(
@@ -90,8 +100,11 @@ Widget homepageView() => ViewModelBuilder<HomeViewModel>.reactive(
                                   child: Row(
                                     children: [
                                       ...courseService
-                                          .getMockCourses('Introduction to Programming with C')
-                                          .map((Course c) => courseTile(c, context, isClickable: false))
+                                          .getMockCourses(
+                                              'Introduction to Programming with C')
+                                          .map((Course c) => courseTile(
+                                              c, context,
+                                              isClickable: false))
                                     ],
                                   ),
                                 ),
@@ -106,8 +119,11 @@ Widget homepageView() => ViewModelBuilder<HomeViewModel>.reactive(
                                   child: Row(
                                     children: [
                                       ...courseService
-                                          .getMockCourses('Painting Techniques for beginners')
-                                          .map((Course c) => courseTile(c, context, isClickable: false))
+                                          .getMockCourses(
+                                              'Painting Techniques for beginners')
+                                          .map((Course c) => courseTile(
+                                              c, context,
+                                              isClickable: false))
                                     ],
                                   ),
                                 ),

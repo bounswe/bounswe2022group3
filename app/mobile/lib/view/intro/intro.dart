@@ -37,8 +37,9 @@ class IntroViewModel extends ChangeNotifier {
       Future.delayed(const Duration(seconds: 1)),
     ]);
     if (!mounted) return;
-    Navigator.of(context)
-        .pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const DashboardView()), (route) => false);
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => const DashboardView()),
+        (route) => false);
   }
 }
 
