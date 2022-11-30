@@ -2,7 +2,7 @@ const express = require("express");
 const { handleValidation } = require("../../services/validate");
 const UserController = require("./user.controller");
 const { validate } = require("./user.validate");
-const { authorization } = require("../../services/auth");
+const auth = require("../../services/auth");
 
 const userRouter = express.Router();
 
@@ -18,7 +18,7 @@ userRouter.post(
   handleValidation,
   UserController.login
 );
-userRouter.post("/logout", authorization, UserController.logout);
+userRouter.post("/logout", auth.authorization, UserController.logout);
 userRouter.post(
   "/refresh_tokens",
   validate("refresh_tokens"),
