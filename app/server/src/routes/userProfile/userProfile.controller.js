@@ -3,6 +3,7 @@ const personalInfoModel = require("../../models/personalInfo/personalInfo.model"
 const mongoose = require("mongoose");
 var crypto = require('crypto');
 
+
 const UserProfileController = {
   updatePersonalInfo: async function (req, res) {
     try {
@@ -35,7 +36,11 @@ const UserProfileController = {
       picture.mv('./uploads/' + picture_name);
       user.image = picture_name
       await user.save();
-      res.status(200).json({ message: "Profile Picture updated!" });
+      let link = process.env.API_URL + "/user/" + picture_name;
+      res.status(200).json({ 
+        message: "Profile Picture updated!",
+        link: link,
+      });
     } catch (e) {
       res.status(400).json({ error: e.toString() });
     }
