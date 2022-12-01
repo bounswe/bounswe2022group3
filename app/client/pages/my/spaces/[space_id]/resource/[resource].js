@@ -58,10 +58,11 @@ export default function resource() {
     return (
         < >
             <div className={styles.resourceDetailPage}>
+                <h2>{data?.resource?.topic?.name}</h2>
                 <div className={styles.resourceDetailHeader}>
 
                     <div className={styles.titleCard}>
-                        <h2>{data?.resource?.name}</h2>
+                        <h4>{data?.resource?.name}</h4>
                         <div className={styles.titleCreator}>
                             <Avatar alt="Agnes Walker" src={data?.resource?.creatorimage} />
                             <span> {data?.resource?.creator?.name} </span>

@@ -6,7 +6,7 @@
     align-items: flex-start;
 }
 
-.titleCard > *{
+.titleCard>* {
     margin-top: 0.5rem;
 }
 
@@ -23,7 +23,7 @@
 }
 
 .resourceDetailPage {
-    padding: 4rem;
+    padding: 1rem 2rem;
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -54,6 +54,7 @@
     border-radius: 0.5rem;
     margin-bottom: 1rem;
     transition: 0.5s;
+    width: 400px;
 
     &::placeholder {
         color: #aaa;
@@ -67,11 +68,8 @@
 
 .form {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: space-between;
     margin: 1rem 0;
-    width: 80%;
-
-    @media screen and (min-width: 48rem) {
-        width: 50%;
-    }
+    width: 100%;
 }
