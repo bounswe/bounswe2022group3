@@ -1,17 +1,16 @@
 import React from 'react';
-import styles from '../../../../styles/my/resource_detail.module.scss'
+import styles from '../../../../../styles/my/resource_detail.module.scss'
 import { useRouter } from 'next/router'
-import { API_URL } from "../../../../next.config";
+import { API_URL } from "../../../../../next.config";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import dynamic from "next/dynamic";
 import rehypeSanitize from "rehype-sanitize";
-import MainLayout from "../../../../layouts/main/MainLayout";
+import MainLayout from "../../../../../layouts/main/MainLayout";
 import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 import * as Yup from "yup";
-import { Avatar } from "@mui/material";
-import Button from "../../../../components/Button/Button";
+import Button from "../../../../../components/Button/Button";
 import { Field, Form, Formik } from "formik";
 
 
@@ -24,47 +23,27 @@ export default function resource() {
     const [post, setPost] = useState({});
     const [resourceValue, setResourceValue] = useState("");
     const router = useRouter();
-    let space_id = router.query;
+    let router_query = router.query;
 
     const SignupSchema = Yup.object().shape({
         name: Yup.string()
     });
-
+    
     const handleSubmit = async (values) => {
-        const { password2, ...payload } = values;
+        if(!resourceValue || !values.name) {
+            return;
+        }
+        const body = {
+            name: values.name,
+            body: resourceValue,
+            topic_id: router_query.topic_id
+        }
         try {
-            await axios.post(API_URL + "/user/register", payload);
+            await axios.post(API_URL + "/resource", body);
         } catch (err) {
             console.log(err);
         }
     };
-
-    function onEditButtonClicked() {
-
-        //setEditModeActive(false);
-
-    }
-
-    async function fetchContent() {
-        try {
-            // API CALL CHANGE
-            const response = (
-                await axios.get(API_URL + "/course/" + space_id.space_id)
-            )?.data;
-            setPost(response.data);
-        } catch (err) {
-            console.log(err);
-        }
-    }
-
-    useEffect(() => {
-        space_id = router.query;
-
-
-        if (!space_id) {
-            return;
-        }
-    }, [space_id, router.query]);
 
 
     useEffect(() => {
@@ -74,7 +53,7 @@ export default function resource() {
     return (
         < >
             <div className={styles.resourceDetailPage}>
-                <h2>Acoustic Guitar Ed for Beginners</h2>
+                <h2>{router_query.space_name}</h2>
                 <div className={styles.resourceDetailHeader}>
 
                     <Formik
@@ -91,12 +70,13 @@ export default function resource() {
                                     type="text"
                                     placeholder="Resource Title"
                                 ></Field>
+
+                                <Button type="submit" className={styles.resourceDetailHeaderButton}>Save</Button>
+
                             </Form>
-                        </Formik>
-
-
-                    <Button onClick={onEditButtonClicked} className={styles.resourceDetailHeaderButton}>Save</Button>
-
+                    
+                    
+                    </Formik>
 
                 </div>
 

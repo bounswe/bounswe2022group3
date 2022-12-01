@@ -18,6 +18,7 @@ function MainLayout({ children }) {
 
     useEffect(async () => {
         try {
+            /*
             const payload = {
                 email: localStorage.getItem("email"),
                 refresh_token: localStorage.getItem("refresh_token"),
@@ -28,6 +29,7 @@ function MainLayout({ children }) {
             localStorage.setItem("access_token", response.access_token);
             localStorage.setItem("refresh_token", response.refresh_token);
             setLogin(true);
+            */
         } catch (err) {
             console.log(err);
             localStorage.removeItem("access_token");

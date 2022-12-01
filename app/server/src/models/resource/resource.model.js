@@ -61,6 +61,14 @@ const getPopulatedResource = async (id) => {
   return Resource.findById(id)
     .populate("discussion")
     .populate("creator", "name surname")
+    .populate({
+      path: "topic",
+      populate: {
+        path: "space",
+        select: { _id: 1, name: 1 }
+      },
+      select: { _id: 1, name: 1 }
+    })
     .exec();
 };
 
