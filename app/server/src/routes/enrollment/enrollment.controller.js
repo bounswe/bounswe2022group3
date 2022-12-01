@@ -28,7 +28,25 @@ const EnrollmentController = {
       return res.status(400).send({ error: e.toString() });
     }
   },
-
+  
+  getEnrollment: async function (req, res) {
+    try {
+      var enrollment_id = req.params.id;
+      const user = req.auth.id;
+      var enrollment = await EnrollmentModel.getEnrollmentByID(enrollment_id);
+      if (!enrollment) {
+        return res.status(404).json({ message: "The enrollment does not exist!" }); // The token exists but email mismatch.
+      }
+      if (enrollment.user.toString() !== user.toString()) {
+        return res
+          .status(400)
+          .send({ error: "User not the creator of the enrollment!" });
+      }
+      return res.status(201).send({ enrollment });
+    } catch (e) {
+      return res.status(400).send({ error: e.toString() });
+    }
+  },
   searchEnrollments: async function (req, res) {
     try {
       const keyword = req.params.keyword;
