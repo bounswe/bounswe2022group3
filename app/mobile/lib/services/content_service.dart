@@ -40,14 +40,27 @@ class MockContentService {
     return temp;
   }
 
- //FIXME: change the url to get resource. 
   Future<TopicDetailed?> getTopicDetails({required String topicId}) async{ 
     try {
       Response response = await dioService.dio.get('/topic/$topicId');
       if (response.statusCode != 200) {
         return null;
       }
-      TopicDetailed t =  TopicDetailed.fromJson(response.data["message"]); //FIXME: change the url to get resource. 
+      TopicDetailed t =  TopicDetailed.fromJson(response.data["message"]);
+      return t;
+    } catch (e) {
+      print(e);
+    }
+    return null;
+  }
+
+  Future<TopicDetailed?> createNewTopic({required String space_id, required String name}) async{
+    try {
+      Response response = await dioService.dio.post('/space', data: {space_id, name});
+      if(response.statusCode != 200) {
+        return null;
+      }
+      TopicDetailed t = TopicDetailed.fromJson(response.data["message"]);
       return t;
     } catch (e) {
       print(e);
