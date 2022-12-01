@@ -36,6 +36,17 @@ const NoteController = {
       if (note.creator.toString() !== user.toString()) {
         return res.status(400).json({ error: "User not creator of note" });
       } else {
+        var enrollment = await EnrollmentModel.Enrollment.find(
+          {
+            user: note.creator,
+            space: note.space
+          }).exec();
+        enrollment = enrollment[0];
+        const index = enrollment.notes.indexOf(note_id);
+        if (index > -1) { // only splice array when item is found
+          enrollment.notes.splice(index, 1); // 2nd parameter means remove one item only
+        }
+        await enrollment.save();
         note.remove();
       }
       return res.status(201).json({ message: "Note deleted successfully!" });
