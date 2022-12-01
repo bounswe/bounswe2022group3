@@ -5,7 +5,7 @@ var crypto = require('crypto');
 
 
 const UserProfileController = {
-  updatePersonalInfo: async function (req, res) {
+  updateProfile: async function (req, res) {
     try {
       const { bio, interests, knowledge } = req.body;
       const user = await UserModel.getUserByID(req.auth.id);
@@ -16,7 +16,7 @@ const UserProfileController = {
         knowledge: knowledge,
       };
       personalInfoModel.updateBio(personalInfoId, data);
-      res.status(201).send({ message: "Updated bio successfully" });
+      res.status(201).send({ message: "Updated profile successfully" });
     } catch (e) {
       res.status(400).send({ error: e.toString() });
     }

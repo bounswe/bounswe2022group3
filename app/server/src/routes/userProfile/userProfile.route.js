@@ -7,11 +7,11 @@ const { authorization } = require("../../services/auth");
 const userProfileRouter = express.Router();
 
 userProfileRouter.post(
-  "/updatePersonalInfo",
-  validate("updatePersonalInfo"),
+  "/updateProfile",
+  validate("updateProfile"),
   handleValidation,
   authorization,
-  UserProfileController.updatePersonalInfo
+  UserProfileController.updateProfile
 );
 
 userProfileRouter.post(
