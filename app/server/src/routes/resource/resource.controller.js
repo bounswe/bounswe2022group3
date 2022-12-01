@@ -1,5 +1,6 @@
 const ResourceModel = require("../../models/resource/resource.model");
 const TopicModel = require("../../models/topic/topic.model");
+const DiscussionModel = require("../../models/discussion/discussion.model");
 
 const ResourceController = {
   createResource: async function (req, res) {
@@ -31,6 +32,8 @@ const ResourceController = {
       if (resource.creator.toString() !== user.toString()) {
         return res.status(400).json({ error: "User not creator of resource" });
       } else {
+        let disc = await DiscussionModel.getDiscussion(resource.discussion);
+        disc.remove();
         resource.remove();
       }
       return res.status(201).json({ message: "Resource deleted successfully!" });
