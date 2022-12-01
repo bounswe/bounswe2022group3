@@ -155,13 +155,7 @@ const UserController = {
                     .json({ message: "Please confirm your email to refresh your tokens." });
             }
             // If exists, decrypt
-            const {err, decoded} = jwt.verify(refresh_token, jwt_ref_secret);
-            if (err) {
-                return res.status(400).json({
-                    message: err.toString(),
-                });
-            }
-
+            const decoded = jwt.verify(refresh_token, jwt_ref_secret);
             // Acquire email from decrypted token
             token_email = decoded.email;
 
@@ -213,12 +207,7 @@ const UserController = {
         try {
 
             // JWT Validation, also checks expiry
-            const {err, decoded} = jwt.verify(code, jwt_conf_secret);
-            if (err) {
-                return res.status(400).json({
-                    message: err.toString(),
-                });
-            }
+            const decoded = jwt.verify(code, jwt_conf_secret);
             // Acquire email from decrypted token
             const email = decoded.email;
 
