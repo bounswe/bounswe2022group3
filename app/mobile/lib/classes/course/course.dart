@@ -18,11 +18,12 @@ class Course {
   final String image;
   final User creator;
   final double rating = Random().nextInt(20) / 10 + 3;
-  final int numberOfEnrolled = Random().nextInt(2000) + 100;
+  @JsonKey(name: 'enrolledUsersCount')
+  final int numberOfEnrolled;
   final Color color = CustomColors.getRandomColor();
   // final DateTime createdAt;
 
-  Course(this.name, this.id, this.info, this.tags, this.image, this.creator);
+  Course(this.name, this.id, this.info, this.tags, this.image, this.creator, this.numberOfEnrolled);
 
   factory Course.fromJson(Map<String, dynamic> json) => _$CourseFromJson(json);
 
@@ -34,7 +35,7 @@ class CourseDetailed extends Course {
   List<Topic> topics = [];
   List<String> badges = [];
 
-  CourseDetailed(super.name, super.id, super.info, super.tags, super.image, super.creator, this.topics, this.badges);
+  CourseDetailed(super.name, super.id, super.info, super.tags, super.image, super.creator, super.numberOfEnrolled, this.topics, this.badges);
 
   factory CourseDetailed.fromJson(Map<String, dynamic> json) => _$CourseDetailedFromJson(json);
 
