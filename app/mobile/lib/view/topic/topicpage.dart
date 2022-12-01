@@ -1,4 +1,5 @@
 import 'package:bucademy/classes/content/content.dart';
+import 'package:bucademy/view/course/add_button.dart';
 import 'package:bucademy/classes/resource/resource.dart';
 import 'package:bucademy/classes/topic/topic.dart';
 import 'package:bucademy/resources/custom_colors.dart';
@@ -30,16 +31,20 @@ Widget topicPageView(Topic c) =>
                           ),
                         ),
                       ),
-                      body: Center(
-                          child: SingleChildScrollView(
-                        child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              ...viewModel.topic!.resources
-                                  .map((Resource cont) => contentTile(cont))
-                            ]),
-                      )),
+                      body: Stack(
+                        children: [Center(
+                            child: SingleChildScrollView(
+                          child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                ...viewModel.topic!.resources
+                                    .map((Resource cont) => contentTile(cont))
+                              ]),
+                        )),
+                        addButton(c, context),
+]
+                      ),
                     )
                   : Scaffold(
                       body: Center(
