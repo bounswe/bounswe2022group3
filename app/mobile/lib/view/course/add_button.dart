@@ -1,14 +1,15 @@
 import 'package:bucademy/classes/course/course.dart';
-import 'package:bucademy/view/course/add_topic_page.dart';
+import 'package:bucademy/classes/topic/topic.dart';
+import 'package:bucademy/view/course/add_content_page.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
-GestureDetector addButton(Course c, BuildContext context,
+GestureDetector addButton(Topic c, BuildContext context,
     {bool isClickable = true}) {
   return GestureDetector(
     onTap: () async {
       if(!isClickable) return;
-      PersistentNavBarNavigator.pushNewScreen(context, screen: addTopicView(c)); 
+      PersistentNavBarNavigator.pushNewScreen(context, screen: addContentView(c)); 
     },
     child: Padding(
       padding: const EdgeInsets.all(10),
