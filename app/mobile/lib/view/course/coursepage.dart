@@ -182,7 +182,7 @@ Widget coursePageView(Course c) => ViewModelBuilder<CoursePageViewModel>.reactiv
                                     .map((Topic t) => topicTile(t, context))
                               ],
                             ),
-                            addButton(c, context)
+                            // addButton(c, context) //TODO: this needs to be changed and fixed with a similar style w Muhammet
                           ]),
                           ListView(
                             shrinkWrap: true,
