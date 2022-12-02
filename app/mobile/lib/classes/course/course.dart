@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:bucademy/classes/chapter/chapter.dart';
+import 'package:bucademy/classes/discussion/discussion.dart';
 import 'package:bucademy/classes/user/user.dart';
 import 'package:bucademy/resources/custom_colors.dart';
 import 'package:flutter/material.dart';
@@ -33,8 +34,9 @@ class Course {
 class CourseDetailed extends Course {
   List<Chapter> topics = [];
   List<String> badges = [];
+  List<DiscussionShortened> discussions = [];
 
-  CourseDetailed(super.name, super.id, super.info, super.tags, super.image, super.creator, this.topics, this.badges);
+  CourseDetailed(super.name, super.id, super.info, super.tags, super.image, super.creator, this.topics, this.badges, this.discussions);
 
   factory CourseDetailed.fromJson(Map<String, dynamic> json) => _$CourseDetailedFromJson(json);
 
