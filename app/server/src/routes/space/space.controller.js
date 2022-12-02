@@ -15,6 +15,7 @@ const SpaceController = {
         tags,
         image
       );
+
       return res.status(201).send({ space });
     } catch (error) {
       return res.status(400).send({ error: error.toString() });
@@ -32,14 +33,20 @@ const SpaceController = {
           },
           "name creator info rating tags image enrolledUsersCount"
         )
-          .populate("creator", "name surname")
+          .populate({
+            path: "creator",
+            select: { _id: 1, name: 1, surname: 1, image: 1 }
+          })
           .exec();
       } else {
         spaces = await SpaceModel.Space.find(
           {},
           "name creator info rating tags image enrolledUsersCount"
         )
-          .populate("creator", "name surname")
+          .populate({
+            path: "creator",
+            select: { _id: 1, name: 1, surname: 1, image: 1 }
+          })
           .exec();
       }
       return res.status(200).json({ spaces });
