@@ -80,7 +80,7 @@ class UserService {
       required bool agreement,
       required BuildContext context}) async {
     var messages = {
-      '200':
+      '201':
           "A verification email has been sent to $email. The link will be expired after one day.",
       '400': "You must agree to the Terms of Use and Privacy Policy.",
       '409': "The user already exists.",

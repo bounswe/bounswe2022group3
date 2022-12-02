@@ -13,7 +13,6 @@ TextFormField emailBar(TextEditingController controller) {
       hintText: 'Email',
       //hintStyle: TextStyles.helperText,
       fillColor: Colors.white,
-      filled: true,
       isDense: true,
     ),
     validator: (value) {

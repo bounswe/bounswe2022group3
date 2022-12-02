@@ -41,7 +41,6 @@ class RegistrationFormState extends State<RegistrationForm> {
       resizeToAvoidBottomInset: false,
       body: SingleChildScrollView( // thanks to https://stackoverflow.com/questions/51774252/bottom-overloaded-by-213-pixels-in-flutter
         child: Container(
-            color: Colors.white,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
