@@ -15,7 +15,6 @@ const EnrollmentController = {
         user,
         space: space_id,
       });
-      console.log(enrolled_space)
       if (enrolled_space.length > 0) {
         return res.status(400).json({ error: "User already enrolled!" });
       }
@@ -23,6 +22,9 @@ const EnrollmentController = {
       space.enrollments.push(enrollment);
       space.enrolledUsersCount += 1;
       space.save();
+      const creator = await UserModel.User.findById(user);
+      creator.enrollments.push(enrollment);
+      creator.save();
       return res.status(201).send({ enrollment });
     } catch (e) {
       return res.status(400).send({ error: e.toString() });
@@ -132,7 +134,18 @@ const EnrollmentController = {
             enrollments.push(space[0]);
           }
         }
-
+        const creator = await UserModel.User.findById(user);
+        for (var space of creator.created_spaces) {
+          var populated_space = await SpaceModel.Space.findOne({
+            _id: space
+          },
+            "name creator info rating tags image enrolledUsersCount"
+          ).populate({
+            path: "creator",
+            select: { _id: 1, name: 1, surname: 1, image: 1 }
+          });
+          enrollments.push(populated_space);
+        }
       }
       return res.status(200).json({ enrollments });
     } catch (e) {
