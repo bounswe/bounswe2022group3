@@ -218,27 +218,28 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                             shrinkWrap: true,
                             padding: const EdgeInsets.all(10.0),
                             children: [
-                              GestureDetector(
-                                onTap: () =>
-                                    createDiscussion(context, viewModel),
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 20),
-                                  margin: const EdgeInsets.only(bottom: 10),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(
-                                        Constants.borderRadius),
-                                  ),
-                                  child: Row(
-                                    children: const [
-                                      Icon(Icons.add,
-                                          color: Colors.green, size: 30),
-                                      SizedBox(width: 15),
-                                      Text('Create a new discussion'),
-                                    ],
+                              if (userService.user != null)
+                                GestureDetector(
+                                  onTap: () =>
+                                      createDiscussion(context, viewModel),
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 20, vertical: 20),
+                                    margin: const EdgeInsets.only(bottom: 10),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(
+                                          Constants.borderRadius),
+                                    ),
+                                    child: Row(
+                                      children: const [
+                                        Icon(Icons.add,
+                                            color: Colors.green, size: 30),
+                                        SizedBox(width: 15),
+                                        Text('Create a new discussion'),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
                               ...viewModel.course!.discussions.map(
                                   (DiscussionShortened m) => GestureDetector(
                                         child: mockTile(m.title),
