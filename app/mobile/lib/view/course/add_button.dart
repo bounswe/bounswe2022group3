@@ -1,6 +1,5 @@
-import 'package:bucademy/classes/course/course.dart';
 import 'package:bucademy/classes/topic/topic.dart';
-import 'package:bucademy/view/course/add_content_page.dart';
+import 'package:bucademy/view/course/add_resource_page.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
