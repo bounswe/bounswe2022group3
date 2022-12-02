@@ -4,14 +4,27 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown_editable_textinput/markdown_text_input.dart';
 import 'package:stacked/stacked.dart';
 
-Widget markdownInput(Future Function()? onSend, TextEditingController controller, {bool loading = false}) =>
+Widget markdownInput(
+  Future Function()? onSend,
+  TextEditingController controller, {
+  bool loading = false,
+  int maxLines = 5,
+  IconData sendIcon = Icons.send_outlined,
+  String sendText = 'Send',
+  bool prewiewFirst = false,
+}) =>
     ViewModelBuilder<MarkdownInputViewModel>.reactive(
       viewModelBuilder: () => MarkdownInputViewModel(),
+      onModelReady: (model) => model.updateScreen(isPreview: prewiewFirst),
       builder: (context, viewModel, child) => Theme(
         data: Theme.of(context).copyWith(
-            cardColor: Colors.white, colorScheme: Theme.of(context).colorScheme.copyWith(secondary: Colors.white)),
+            cardColor: Colors.white,
+            colorScheme: Theme.of(context)
+                .colorScheme
+                .copyWith(secondary: Colors.white)),
         child: Container(
-          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),
+          decoration: BoxDecoration(
+              color: Colors.white, borderRadius: BorderRadius.circular(10)),
           child: Column(
             children: [
               Container(
@@ -39,13 +52,14 @@ Widget markdownInput(Future Function()? onSend, TextEditingController controller
                         if (onSend != null) {
                           await onSend();
                         }
-                        viewModel.updateScreen();
+                        viewModel.updateScreen(isPreview: viewModel.preview);
                       }),
                       child: Row(
-                        children: const [
-                          Icon(Icons.send_outlined, color: Colors.white),
-                          SizedBox(width: 5),
-                          Text('Send', style: TextStyle(color: Colors.white)),
+                        children: [
+                          Icon(sendIcon, color: Colors.white),
+                          const SizedBox(width: 5),
+                          Text(sendText,
+                              style: const TextStyle(color: Colors.white)),
                         ],
                       ),
                     ),
@@ -54,18 +68,21 @@ Widget markdownInput(Future Function()? onSend, TextEditingController controller
                 ),
               ),
               loading
-                  ? const SizedBox(height: 160, child: Center(child: CircularProgressIndicator()))
+                  ? SizedBox(
+                      height: maxLines * 32,
+                      child: const Center(child: CircularProgressIndicator()))
                   : viewModel.preview
                       ? Container(
-                          height: 160,
+                          height: maxLines * 32,
                           color: Theme.of(context).cardColor,
-                          child: Markdown(data: controller.text, shrinkWrap: true),
+                          child:
+                              Markdown(data: controller.text, shrinkWrap: true),
                         )
                       : MarkdownTextInput(
                           (String x) {},
                           controller.text,
                           label: 'Write here',
-                          maxLines: 5,
+                          maxLines: maxLines,
                           controller: controller,
                           // actions: MarkdownType.values // can be customized
                         ),
@@ -94,7 +111,9 @@ class ChangeViewButton extends StatelessWidget {
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-        color: isActive ? const Color.fromARGB(255, 61, 48, 154) : CustomColors.main.withOpacity(0.0),
+        color: isActive
+            ? const Color.fromARGB(255, 61, 48, 154)
+            : CustomColors.main.withOpacity(0.0),
         child: Row(
           children: [
             Icon(icon, color: Colors.white, size: 18),

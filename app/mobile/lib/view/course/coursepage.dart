@@ -8,6 +8,7 @@ import 'package:bucademy/services/locator.dart';
 import 'package:bucademy/view/course/content_tile.dart';
 import 'package:bucademy/view/course/discussion/discussion_view.dart';
 import 'package:bucademy/view/course/mock_tile.dart';
+import 'package:bucademy/view/course/note/note_view.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:stacked/stacked.dart';
@@ -201,7 +202,13 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                             children: [
                               ...contentService
                                   .contents("Note")
-                                  .map((MockContent m) => mockTile(m.name))
+                                  .map((MockContent m) => GestureDetector(
+                                        child: mockTile(m.name),
+                                        onTap: () => PersistentNavBarNavigator
+                                            .pushNewScreen(context,
+                                                screen: noteView(noteId: ""),
+                                                withNavBar: false),
+                                      ))
                             ],
                           ),
                           ListView(
