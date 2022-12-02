@@ -5,7 +5,7 @@ import 'package:bucademy/classes/topic/topic.dart';
 import 'package:bucademy/resources/custom_colors.dart';
 import 'package:bucademy/resources/text_styles.dart';
 import 'package:bucademy/services/locator.dart';
-import 'package:bucademy/view/topic/content_tile.dart';
+import 'package:bucademy/view/topic/resource_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
@@ -39,7 +39,7 @@ Widget topicPageView(Topic c) =>
                               mainAxisSize: MainAxisSize.max,
                               children: [
                                 ...viewModel.topic!.resources
-                                    .map((Resource cont) => contentTile(cont))
+                                    .map((Resource cont) => resourceTile(cont,context))
                               ]),
                         )),
                         addButton(c, context),
