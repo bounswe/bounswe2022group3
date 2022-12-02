@@ -17,9 +17,8 @@ const enrollmentSchema = new mongoose.Schema(
     },
     notes: [
       {
-        // type: mongoose.Schema.Types.ObjectId,
-        // ref: "Note",
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Note",
       },
     ],
     progress: {
@@ -44,5 +43,23 @@ const deleteEnrollment = async (_id) => {
   const res = await Enrollment.findOneAndDelete({ _id });
   return res;
 };
+const getEnrollmentByID = async (enrollment_id) => {
+  const result = await Enrollment.findById(enrollment_id).exec();
+  return result;
+};
+const getEnrollment = async (user_id, space_id) => {
+  const result = await Enrollment.find(
+    {
+      user: user_id,
+      space: space_id
+    })
+    .populate("user", "name surname")
+    .populate({
+      path: "notes",
+      select: { _id: 1, title: 1, body: 1 }
+    })
+    .exec();
+  return result;
+};
 
-module.exports = { Enrollment, createEnrollment, deleteEnrollment };
+module.exports = { Enrollment, createEnrollment, deleteEnrollment, getEnrollment, getEnrollmentByID };

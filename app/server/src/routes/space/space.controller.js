@@ -15,6 +15,8 @@ const SpaceController = {
         tags,
         image
       );
+      creator.created_spaces.push(space);
+      await creator.save();
       return res.status(201).send({ space });
     } catch (error) {
       return res.status(400).send({ error: error.toString() });
@@ -32,14 +34,20 @@ const SpaceController = {
           },
           "name creator info rating tags image enrolledUsersCount"
         )
-          .populate("creator", "name surname")
+          .populate({
+            path: "creator",
+            select: { _id: 1, name: 1, surname: 1, image: 1 }
+          })
           .exec();
       } else {
         spaces = await SpaceModel.Space.find(
           {},
           "name creator info rating tags image enrolledUsersCount"
         )
-          .populate("creator", "name surname")
+          .populate({
+            path: "creator",
+            select: { _id: 1, name: 1, surname: 1, image: 1 }
+          })
           .exec();
       }
       return res.status(200).json({ spaces });
@@ -51,17 +59,7 @@ const SpaceController = {
   getSpaceDetail: async function (req, res) {
     try {
       var space = req.params.id;
-      space = await SpaceModel.Space.findById(space, "-enrollments")
-        .populate("creator", "name surname")
-        .populate("discussions", "title")
-        .populate({
-          path: "topics",
-          populate: {
-            path: "badge resources",
-          },
-        })
-        .exec();
-
+      space = await SpaceModel.getPopulatedSpace(space);
       if (!space) {
         return res.status(404).json({ message: "The space does not exist!" }); // The token exists but email mismatch.
       }

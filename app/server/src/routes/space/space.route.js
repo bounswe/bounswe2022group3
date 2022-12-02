@@ -21,12 +21,16 @@ spaceRouter.get("/searchSpaces/:keyword?", SpaceController.searchSpaces);
 
 spaceRouter.get(
   "/:id",
+  validate("get-space-detail"),
+  handleValidation,
   authorization_conditional,
   SpaceController.getSpaceDetail
 );
 
 spaceRouter.get(
   "/getAllDiscussions/:id",
+  validate("get-all-discussions"),
+  handleValidation,
   authorization_conditional,
   SpaceController.getAllDiscussions
 );

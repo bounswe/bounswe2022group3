@@ -5,6 +5,7 @@ import 'package:bucademy/services/locator.dart';
 import 'package:bucademy/view/dashboard_view.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
+import 'package:uni_links/uni_links.dart';
 import '../login/login.dart';
 
 Widget introView() => ViewModelBuilder<IntroViewModel>.reactive(
@@ -29,21 +30,24 @@ Widget introView() => ViewModelBuilder<IntroViewModel>.reactive(
 
 class IntroViewModel extends ChangeNotifier {
   init(BuildContext context, [bool mounted = true]) async {
-    if (await userService.isLoggedIn()) {
-      await Future.wait([
-        userService.refresh(),
-        Future.delayed(const Duration(seconds: 1)),
-      ]);
-      if (!mounted) return;
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => const DashboardView()),
-          (route) => false);
-    } else {
+    if (!await userService.isLoggedIn()) {
       if (!mounted) return;
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => const LoginForm()),
           (route) => false);
+      return;
     }
+    // Get the initial link
+    Uri? initialLink = await getInitialUri();
+    await handleInitialLink(initialLink);
+    await Future.wait([
+      userService.refresh(),
+      Future.delayed(const Duration(seconds: 1)),
+    ]);
+    if (!mounted) return;
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => const DashboardView()),
+        (route) => false);
   }
 }
 

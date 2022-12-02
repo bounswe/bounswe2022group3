@@ -4,19 +4,14 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown_editable_textinput/markdown_text_input.dart';
 import 'package:stacked/stacked.dart';
 
-Widget markdownInput(Function onChange, String text, void Function()? onSend,
-        {bool loading = false}) =>
+Widget markdownInput(Future Function()? onSend, TextEditingController controller, {bool loading = false}) =>
     ViewModelBuilder<MarkdownInputViewModel>.reactive(
       viewModelBuilder: () => MarkdownInputViewModel(),
       builder: (context, viewModel, child) => Theme(
         data: Theme.of(context).copyWith(
-            cardColor: Colors.white,
-            colorScheme: Theme.of(context)
-                .colorScheme
-                .copyWith(secondary: Colors.white)),
+            cardColor: Colors.white, colorScheme: Theme.of(context).colorScheme.copyWith(secondary: Colors.white)),
         child: Container(
-          decoration: BoxDecoration(
-              color: Colors.white, borderRadius: BorderRadius.circular(10)),
+          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),
           child: Column(
             children: [
               Container(
@@ -40,8 +35,10 @@ Widget markdownInput(Function onChange, String text, void Function()? onSend,
                     ),
                     const Spacer(),
                     InkWell(
-                      onTap: (() {
-                        if (onSend != null) onSend();
+                      onTap: (() async {
+                        if (onSend != null) {
+                          await onSend();
+                        }
                         viewModel.updateScreen();
                       }),
                       child: Row(
@@ -57,20 +54,19 @@ Widget markdownInput(Function onChange, String text, void Function()? onSend,
                 ),
               ),
               loading
-                  ? const SizedBox(
-                      height: 160,
-                      child: Center(child: CircularProgressIndicator()))
+                  ? const SizedBox(height: 160, child: Center(child: CircularProgressIndicator()))
                   : viewModel.preview
                       ? Container(
                           height: 160,
                           color: Theme.of(context).cardColor,
-                          child: Markdown(data: text, shrinkWrap: true),
+                          child: Markdown(data: controller.text, shrinkWrap: true),
                         )
                       : MarkdownTextInput(
-                          onChange,
-                          text,
+                          (String x) {},
+                          controller.text,
                           label: 'Write here',
                           maxLines: 5,
+                          controller: controller,
                           // actions: MarkdownType.values // can be customized
                         ),
             ],
@@ -98,9 +94,7 @@ class ChangeViewButton extends StatelessWidget {
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-        color: isActive
-            ? const Color.fromARGB(255, 61, 48, 154)
-            : CustomColors.main.withOpacity(0.0),
+        color: isActive ? const Color.fromARGB(255, 61, 48, 154) : CustomColors.main.withOpacity(0.0),
         child: Row(
           children: [
             Icon(icon, color: Colors.white, size: 18),

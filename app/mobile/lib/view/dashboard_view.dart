@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:bucademy/view/intro/intro.dart';
 import 'package:bucademy/view/profile/profile.dart';
 import 'package:flutter/material.dart';
@@ -46,7 +45,10 @@ class _DashboardViewState extends State<DashboardView> {
     return PersistentTabView(
       context,
       controller: navigatorService.controller,
-      screens: [homepageView(), profileView()],
+      screens: [
+        homepageView(),
+        profileView("63603cc10a14cd5cda504f15")
+      ], //userService.user?.id ?? ''
       items: [
         PersistentBottomNavBarItem(
           icon: const Icon(Icons.home),
