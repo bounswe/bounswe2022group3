@@ -37,10 +37,29 @@ Widget addContentView(Topic c) => ViewModelBuilder<HomeViewModel>.reactive(
                   child: TextFormField(
                     decoration: const InputDecoration(
                       enabledBorder: const OutlineInputBorder(
-                        borderSide: const BorderSide(color: CustomColors.main)
-                      ),
+                          borderSide:
+                              const BorderSide(color: CustomColors.main)),
                       border: OutlineInputBorder(),
-                      labelText: 'Enter Your Resource Name',
+                      labelText: 'Enter Resource Name',
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please Enter Some Text';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                  child: TextFormField(
+                    decoration: const InputDecoration(
+                      enabledBorder: const OutlineInputBorder(
+                          borderSide:
+                              const BorderSide(color: CustomColors.main)),
+                      border: OutlineInputBorder(),
+                      labelText: 'Enter Resource Body Name',
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
