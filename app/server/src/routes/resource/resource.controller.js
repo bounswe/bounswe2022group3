@@ -1,5 +1,6 @@
 const ResourceModel = require("../../models/resource/resource.model");
 const TopicModel = require("../../models/topic/topic.model");
+const DiscussionModel = require("../../models/discussion/discussion.model");
 
 const ResourceController = {
   createResource: async function (req, res) {
@@ -31,6 +32,14 @@ const ResourceController = {
       if (resource.creator.toString() !== user.toString()) {
         return res.status(400).json({ error: "User not creator of resource" });
       } else {
+        let disc = await DiscussionModel.getDiscussion(resource.discussion);
+        disc.remove();
+        var topic = await TopicModel.Topic.findById(resource.topic);
+        const index = topic.resources.indexOf(resource_id);
+        if (index > -1) { // only splice array when item is found
+          topic.resources.splice(index, 1); // 2nd parameter means remove one item only
+        }
+        await topic.save();
         resource.remove();
       }
       return res.status(201).json({ message: "Resource deleted successfully!" });

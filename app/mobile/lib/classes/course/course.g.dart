@@ -39,6 +39,9 @@ CourseDetailed _$CourseDetailedFromJson(Map<String, dynamic> json) =>
           .map((e) => Topic.fromJson(e as Map<String, dynamic>))
           .toList(),
       (json['badges'] as List<dynamic>).map((e) => e as String).toList(),
+      (json['discussions'] as List<dynamic>)
+          .map((e) => DiscussionShortened.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$CourseDetailedToJson(CourseDetailed instance) =>
@@ -52,4 +55,5 @@ Map<String, dynamic> _$CourseDetailedToJson(CourseDetailed instance) =>
       'enrolledUsersCount': instance.numberOfEnrolled,
       'topics': instance.topics,
       'badges': instance.badges,
+      'discussions': instance.discussions,
     };

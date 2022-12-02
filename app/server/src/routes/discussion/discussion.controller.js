@@ -13,9 +13,9 @@ const DiscussionController = {
         title,
       );
 
-      var space = await SpaceModel.Space.findById(space_id).exec();
-      space.discussions.push(discussion);
-      space.save();
+      // var space = await SpaceModel.Space.findById(space_id).exec();
+      // space.discussions.push(discussion);
+      // space.save();
 
       res.status(201).send({ discussion });
     } catch (e) {

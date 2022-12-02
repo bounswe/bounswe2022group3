@@ -1,4 +1,5 @@
 import 'package:bucademy/classes/topic/topic.dart';
+import 'package:bucademy/classes/discussion/discussion.dart';
 import 'package:bucademy/resources/constants.dart';
 import 'package:bucademy/classes/course/course.dart';
 import 'package:bucademy/resources/custom_colors.dart';
@@ -6,12 +7,16 @@ import 'package:bucademy/resources/text_styles.dart';
 import 'package:bucademy/services/locator.dart';
 import 'package:bucademy/view/course/add_button.dart';
 import 'package:bucademy/view/course/topic_tile.dart';
+import 'package:bucademy/view/course/discussion/create_discussion.dart';
+import 'package:bucademy/view/course/discussion/discussion_view.dart';
 import 'package:bucademy/view/course/mock_tile.dart';
 import 'package:flutter/material.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:stacked/stacked.dart';
 import 'package:bucademy/services/content_service.dart';
 
-Widget coursePageView(Course c) => ViewModelBuilder<CoursePageViewModel>.reactive(
+Widget coursePageView(Course c) => ViewModelBuilder<
+        CoursePageViewModel>.reactive(
     viewModelBuilder: () => CoursePageViewModel(c.id),
     builder: (context, viewModel, child) {
       return viewModel.contentsLoading
@@ -215,9 +220,37 @@ Widget coursePageView(Course c) => ViewModelBuilder<CoursePageViewModel>.reactiv
                             shrinkWrap: true,
                             padding: const EdgeInsets.all(10.0),
                             children: [
-                              ...contentService
-                                  .contents("Discussion")
-                                  .map((MockContent m) => mockTile(m))
+                              if (userService.user != null)
+                                GestureDetector(
+                                  onTap: () =>
+                                      createDiscussion(context, viewModel),
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 20, vertical: 20),
+                                    margin: const EdgeInsets.only(bottom: 10),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(
+                                          Constants.borderRadius),
+                                    ),
+                                    child: Row(
+                                      children: const [
+                                        Icon(Icons.add,
+                                            color: Colors.green, size: 30),
+                                        SizedBox(width: 15),
+                                        Text('Create a new discussion'),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ...viewModel.course!.discussions.map(
+                                  (DiscussionShortened m) => GestureDetector(
+                                        child: mockTile(m.title),
+                                        onTap: () => PersistentNavBarNavigator
+                                            .pushNewScreen(context,
+                                                screen: discussionView(
+                                                    discussionId: m.id),
+                                                withNavBar: false),
+                                      )),
                             ],
                           ),
                         ],
@@ -271,6 +304,12 @@ class CoursePageViewModel extends ChangeNotifier {
     CourseDetailed? c = await courseService.getCourseDetails(id: courseId);
     if (c != null) course = c;
     contentsLoading = false;
+    notifyListeners();
+  }
+
+  void addNewDiscussion(Discussion d) {
+    if (course == null) return;
+    course!.discussions.insert(0, DiscussionShortened(d.title, d.id));
     notifyListeners();
   }
 

@@ -24,6 +24,8 @@ resourceRouter.delete(
 
 resourceRouter.get(
   "/:id",
+  validate("get-resource"),
+  handleValidation,
   ResourceController.getResource
 );
 

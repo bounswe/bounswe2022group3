@@ -15,7 +15,7 @@ const UserProfileController = {
         interests: interests,
         knowledge: knowledge,
       };
-      personalInfoModel.updateBio(personalInfoId, data);
+      await personalInfoModel.updateBio(personalInfoId, data);
       res.status(201).send({ message: "Updated bio successfully" });
     } catch (e) {
       res.status(400).send({ error: e.toString() });

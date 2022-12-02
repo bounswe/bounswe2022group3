@@ -15,10 +15,14 @@ topicRouter.post(
 );
 topicRouter.get(
   "/:id",
+  validate("get-topic"),
+  handleValidation,
   TopicController.getPopulatedTopic
 );
 topicRouter.get(
   "/getResources/:id",
+  validate("get-topic-resources"),
+  handleValidation,
   TopicController.getTopicResources
 );
 module.exports = topicRouter;
