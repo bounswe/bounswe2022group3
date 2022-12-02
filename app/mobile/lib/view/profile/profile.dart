@@ -3,13 +3,13 @@
 import 'package:bucademy/resources/constants.dart';
 import 'package:bucademy/services/locator.dart';
 import 'package:flutter/material.dart';
+import 'package:restart_app/restart_app.dart';
 import 'package:stacked/stacked.dart';
 import 'dart:math';
 
 import 'package:bucademy/resources/custom_colors.dart';
 import '../../resources/text_styles.dart';
 import '../../services/profile_service.dart';
-import '../login/login.dart';
 import '../widgets/profile_picture.dart';
 
 Profile p = Profile(
@@ -82,12 +82,7 @@ Widget profileView() => ViewModelBuilder<ProfileView>.reactive(
                         IconButton(
                           onPressed: () async {
                             await userService.logout();
-                            Navigator.of(context)
-                                .pushAndRemoveUntil(
-                                MaterialPageRoute(
-                                    builder: (context) => LoginFormState().build(context)),
-                                    (route) => false
-                            );
+                            Restart.restartApp();
                           },
                           icon: const Icon(
                           Icons.logout,
