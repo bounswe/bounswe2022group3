@@ -13,6 +13,10 @@ const noteSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Space",
     },
+    resource:{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Resource",
+    },
     creator: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -24,13 +28,16 @@ const noteSchema = new mongoose.Schema(
 
 const Note = mongoose.model("Note", noteSchema);
 
-const createNote = async (title, body, space, creator) => {
+const createNote = async (title, body, creator, resource, space) => {
   var note = new Note({
     title,
     body,
-    space,
     creator,
+    resource, 
+    space
   });
+  // if necessary add note.space from resource
+
   const res = await note.save();
   return res;
 };
@@ -42,9 +49,13 @@ const getNote = async (id) => {
 
 const getPopulatedNote = async (id) => {
   return Note.findById(id)
-    .populate("creator", "name surname")
+    .populate("creator", "name surname image")
     .populate({
       path: "space",
+      select: { _id: 1, name: 1 }
+    })
+    .populate({
+      path: "resource",
       select: { _id: 1, name: 1 }
     })
     .exec();
