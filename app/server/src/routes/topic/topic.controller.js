@@ -10,9 +10,10 @@ const TopicController = {
       var space = await SpaceModel.Space.findById(space_id);
       space.topics.push(topic);
       space.save();
-      return res.status(201).json({ topic });
+      let populated_topic = await TopicModel.getPopulatedTopic(topic);
+      return res.status(201).json({ topic: populated_topic });
     } catch (e) {
-      return res.status(400).send({ error: e });
+      return res.status(400).send({ error: e.toString() });
     }
   },
   getPopulatedTopic: async function (req, res) {

@@ -45,7 +45,7 @@ const createTopic = async (name, space, creator) => {
 const getPopulatedTopic = async (id) => {
   return Topic.findById(id)
     .populate("name badge resources")
-    .populate("creator", "name surname")
+    .populate("creator", "name surname image")
     .populate({
       path: "resources",
       populate: {
