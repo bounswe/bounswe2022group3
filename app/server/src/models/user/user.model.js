@@ -111,6 +111,14 @@ const getPopulatedPersonalInfo = async (user_id) => {
       select: { _id: 1, name: 1 }
     })
     .populate({
+      path: "follower_users",
+      select: { _id: 1, name: 1, surname: 1 }
+    })
+    .populate({
+      path: "followed_users",
+      select: { _id: 1, name: 1, surname: 1 }
+    })
+    .populate({
       path: "enrollments",
       select: { _id: 1, space: 1 },
       populate: {
