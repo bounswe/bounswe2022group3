@@ -195,7 +195,7 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                             children: [
                               ...contentService
                                   .contents("Event")
-                                  .map((MockContent m) => mockTile(m))
+                                  .map((MockContent m) => mockTile(m.name)) //TODO: mocktile MockContent ile çalışmalı ama aşağıda sorun çıkarıyor 
                             ],
                           ),
                           ListView(
@@ -204,7 +204,7 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                             children: [
                               ...contentService
                                   .contents("Note")
-                                  .map((MockContent m) => mockTile(m))
+                                  .map((MockContent m) => mockTile(m.name))
                             ],
                           ),
                           ListView(
@@ -213,7 +213,7 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                             children: [
                               ...contentService
                                   .contents("Quiz")
-                                  .map((MockContent m) => mockTile(m))
+                                  .map((MockContent m) => mockTile(m.name))
                             ],
                           ),
                           ListView(
