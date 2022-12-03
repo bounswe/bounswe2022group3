@@ -4,7 +4,7 @@ exports.validate = (method) => {
   switch (method) {
     case "create-annotation": {
       return [
-        body("context", "context doesn't exist").exists(),
+        body("@context", "@context doesn't exist").exists(),
         body("type", "type doesn't exist").exists(),
         body("body", "body doesn't exist").exists(),
         body("target", "target doesn't exist").exists(),
