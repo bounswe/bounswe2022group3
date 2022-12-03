@@ -27,11 +27,16 @@ const annotationSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  resource: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Resource",
+    required: true,
+  }
 });
 
 const Annotation = mongoose.model("Annotation", annotationSchema);
 
-const createAnnotation = async (context, type, body, target, id) => {
+const createAnnotation = async (context, type, body, target, id, resource) => {
   var bodies_l = [];
   for (var body_el of body) {
     var body_t = await createBody(
@@ -67,8 +72,16 @@ const createAnnotation = async (context, type, body, target, id) => {
     body: bodies_l,
     target: target_el,
     id,
+    resource,
   });
   const res = await annotation.save();
+  return res;
+};
+
+const updateAnnotation = async (id, body) => {
+  const filter = { id };
+  const update = { body };
+  const res = await Annotation.findOneAndUpdate(filter, update);
   return res;
 };
 
@@ -80,5 +93,6 @@ const deleteAnnotation = async (id) => {
 module.exports = {
   Annotation,
   createAnnotation,
+  updateAnnotation,
   deleteAnnotation,
 };
