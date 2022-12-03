@@ -40,13 +40,13 @@ class MockContentService {
     return temp;
   }
 
-  Future<TopicDetailed?> getTopicDetails({required String topicId}) async{ 
+  Future<TopicDetailed?> getTopicDetails({required String topicId}) async {
     try {
       Response response = await dioService.dio.get('/topic/$topicId');
       if (response.statusCode != 200) {
         return null;
       }
-      TopicDetailed t =  TopicDetailed.fromJson(response.data["message"]);
+      TopicDetailed t = TopicDetailed.fromJson(response.data["message"]);
       return t;
     } catch (e) {
       print(e);
@@ -54,13 +54,16 @@ class MockContentService {
     return null;
   }
 
-  Future<TopicDetailed?> createNewTopic({required String space_id, required String name}) async{
+  Future<TopicDetailed?> createNewTopic(
+      {required String spaceId, required String name}) async {
     try {
-      Response response = await dioService.dio.post('/space', data: {space_id, name});
-      if(response.statusCode != 200) {
+      Response response = await dioService.dio
+          .post('/topic', data: {'space_id': spaceId, 'name': name});
+      if (response.statusCode != 201) {
         return null;
       }
-      TopicDetailed t = TopicDetailed.fromJson(response.data["message"]);
+
+      TopicDetailed t = TopicDetailed.fromJson(response.data["topic"]);
       return t;
     } catch (e) {
       print(e);
