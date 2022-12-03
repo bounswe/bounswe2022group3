@@ -59,14 +59,6 @@ const getResource = async (id) => {
 
 const getPopulatedResource = async (id) => {
   return Resource.findById(id)
-    .populate({
-      path: "topic",
-      populate: {
-        path: "space",
-        select: { _id: 1, name: 1 }
-      },
-      select: { _id: 1, name: 1 }
-    })
     .populate("creator", "name surname image")
     .populate({
       path: "discussion",
