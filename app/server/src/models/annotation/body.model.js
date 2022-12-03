@@ -19,19 +19,19 @@ const bodySchema = new mongoose.Schema(
     created: {
       type: String,
     },
-  },
-  { timestamps: true }
+  }
 );
 
 const Body = mongoose.model("Body", bodySchema);
 
-const createBody = async (purpose, type, value) => {
+const createBody = async (purpose, type, value, creator, created) => {
   var body = new Body({
     purpose,
     type,
     value,
+    creator,
+    created,
   });
-  body.created = body.createdAt;
   const res = await body.save();
   return res;
 };

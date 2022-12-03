@@ -21,7 +21,7 @@ const AnnotationController = {
     try {
       const { id } = req.params;
       console.log(id);
-      const annotation = await AnnotationModel.Annotation.find({
+      const annotation = await AnnotationModel.Annotation.findOne({
         id,
       })
         .populate({

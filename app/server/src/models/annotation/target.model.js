@@ -4,7 +4,7 @@ const targetSchema = new mongoose.Schema({
   selector: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Target",
+      ref: "Selector",
     },
   ],
 });
