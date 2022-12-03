@@ -81,7 +81,7 @@ const SpaceController = {
         } else {
           enrolled = false;
         }
-        if (space.creator.toString() == user._id.toString()) {
+        if (space.creator._id.toString() == user._id.toString()) {
           enrolled = true;
         }
       } else {
