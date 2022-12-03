@@ -6,6 +6,7 @@ import 'package:bucademy/resources/custom_colors.dart';
 import 'package:bucademy/resources/text_styles.dart';
 import 'package:bucademy/services/locator.dart';
 import 'package:bucademy/view/course/add_button.dart';
+import 'package:bucademy/view/course/topic/create_topic.dart';
 import 'package:bucademy/view/course/topic_tile.dart';
 import 'package:bucademy/view/course/discussion/create_discussion.dart';
 import 'package:bucademy/view/course/discussion/discussion_view.dart';
@@ -23,7 +24,7 @@ Widget coursePageView(Course c) => ViewModelBuilder<
           ? const Center(child: CircularProgressIndicator())
           : viewModel.course != null
               ? DefaultTabController(
-                  length: 5,
+                  length: 4,//5,
                   child: Scaffold(
                     body: NestedScrollView(
                       headerSliverBuilder:
@@ -35,12 +36,13 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                             flexibleSpace: FlexibleSpaceBar(
                               collapseMode: CollapseMode.pin,
                               background: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 10),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 10),
                                 decoration: const BoxDecoration(
                                   // color: CustomColors.main,
                                   color: Color.fromARGB(255, 242, 241, 248),
-                                  borderRadius: BorderRadius.all(Radius.circular(
-                                        Constants
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(Constants
                                           .borderRadius)), //(Constants.borderRadius)
                                 ),
                                 child: Column(
@@ -48,8 +50,8 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                                     mainAxisSize: MainAxisSize.max,
                                     children: [
                                       ConstrainedBox(
-                                        constraints: 
-                                          const BoxConstraints(maxHeight: 200),
+                                        constraints: const BoxConstraints(
+                                            maxHeight: 200),
                                         child: ClipRRect(
                                           borderRadius: const BorderRadius.all(
                                               Radius.circular(
@@ -67,7 +69,8 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                                               mainAxisAlignment:
                                                   MainAxisAlignment.spaceEvenly,
                                               children: [
-                                                Text('★ ${viewModel.course!.rating}'),
+                                                Text(
+                                                    '★ ${viewModel.course!.rating}'),
                                                 Text(
                                                     '👤 ${viewModel.course!.numberOfEnrolled}'),
                                               ])),
@@ -79,8 +82,8 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                                               Radius.circular(
                                                   Constants.borderRadius)),
                                         ),
-                                        child: 
-                                            Text(viewModel.course!.info, maxLines: 5),
+                                        child: Text(viewModel.course!.info,
+                                            maxLines: 5),
                                         // child:Text('Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',maxLines: 4,)
                                       ),
                                       if (!courseService.enrolledIds
@@ -152,15 +155,15 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                                       "Notes",
                                       style: TextStyle(color: Colors.black),
                                     )),
-                                Tab(
-                                    icon: Icon(
-                                      Icons.quiz_outlined,
-                                      color: Colors.black,
-                                    ),
-                                    child: Text(
-                                      "Quizzes",
-                                      style: TextStyle(color: Colors.black),
-                                    )),
+                                // Tab(
+                                //     icon: Icon(
+                                //       Icons.quiz_outlined,
+                                //       color: Colors.black,
+                                //     ),
+                                //     child: Text(
+                                //       "Quizzes",
+                                //       style: TextStyle(color: Colors.black),
+                                //     )),
                                 Tab(
                                     icon: Icon(
                                       Icons.group_outlined,
@@ -183,6 +186,29 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                               shrinkWrap: true,
                               padding: const EdgeInsets.all(10.0),
                               children: [
+                                if (userService.user != null)
+                                  GestureDetector(
+                                    onTap: () =>
+                                        createTopic(context, viewModel),
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 20, vertical: 20),
+                                      margin: const EdgeInsets.only(bottom: 10),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(
+                                            Constants.borderRadius),
+                                      ),
+                                      child: Row(
+                                        children: const [
+                                          Icon(Icons.add,
+                                              color: CustomColors.main,
+                                              size: 30),
+                                          SizedBox(width: 15),
+                                          Text('Create a new topic'),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ...viewModel.course!.topics
                                     .map((Topic t) => topicTile(t, context))
                               ],
@@ -193,9 +219,9 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                             shrinkWrap: true,
                             padding: const EdgeInsets.all(10.0),
                             children: [
-                              ...contentService
-                                  .contents("Event")
-                                  .map((MockContent m) => mockTile(m.name)) //TODO: mocktile MockContent ile çalışmalı ama aşağıda sorun çıkarıyor 
+                              ...contentService.contents("Event").map(
+                                  (MockContent m) => mockTile(m
+                                      .name)) //TODO: mocktile MockContent ile çalışmalı ama aşağıda sorun çıkarıyor
                             ],
                           ),
                           ListView(
@@ -207,15 +233,15 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                                   .map((MockContent m) => mockTile(m.name))
                             ],
                           ),
-                          ListView(
-                            shrinkWrap: true,
-                            padding: const EdgeInsets.all(10.0),
-                            children: [
-                              ...contentService
-                                  .contents("Quiz")
-                                  .map((MockContent m) => mockTile(m.name))
-                            ],
-                          ),
+                          // ListView(
+                          //   shrinkWrap: true,
+                          //   padding: const EdgeInsets.all(10.0),
+                          //   children: [
+                          //     ...contentService
+                          //         .contents("Quiz")
+                          //         .map((MockContent m) => mockTile(m.name))
+                          //   ],
+                          // ),
                           ListView(
                             shrinkWrap: true,
                             padding: const EdgeInsets.all(10.0),
@@ -235,7 +261,7 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                                     child: Row(
                                       children: const [
                                         Icon(Icons.add,
-                                            color: Colors.green, size: 30),
+                                            color: CustomColors.main, size: 30),
                                         SizedBox(width: 15),
                                         Text('Create a new discussion'),
                                       ],
@@ -310,6 +336,12 @@ class CoursePageViewModel extends ChangeNotifier {
   void addNewDiscussion(Discussion d) {
     if (course == null) return;
     course!.discussions.insert(0, DiscussionShortened(d.title, d.id));
+    notifyListeners();
+  }
+
+  void addNewTopic(Topic t){
+    if (course == null) return;
+    course!.topics.insert(0, Topic(t.name,t.id,course!.id));
     notifyListeners();
   }
 
