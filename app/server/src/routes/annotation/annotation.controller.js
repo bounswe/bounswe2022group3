@@ -73,7 +73,7 @@ const AnnotationController = {
             },
           })
           .exec();
-        if (annotations == []) {
+        if (annotations.length == 0) {
           return res
             .status(404)
             .json({ message: "No annotation exists for this resource!" });
