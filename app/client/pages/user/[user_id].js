@@ -12,13 +12,17 @@ import {
   Divider,
   CardHeader,
   TextField,
+  InputLabel
 } from '@mui/material';
+import * as Yup from "yup";
 import { API_URL } from "../../next.config";
 import axios from 'axios';
 import { useEffect, useState } from "react";
 import { useRouter } from 'next/router'
 import UserLayout from '../../layouts/user-layout/UserLayout';
+import { authorization } from '../../../server/src/services/auth';
 
+let owner_id = ''
 
 const post = { //getpersonalınfo request adding backend then this will be deleted 
   'id': '634cf129a727c14722a631fa',
@@ -39,16 +43,23 @@ const post = { //getpersonalınfo request adding backend then this will be delet
   },
   'is_private': true
 }
-
 export default function profile(props) {
   const router = useRouter();
   const { user_id } = router.query;
+  const [personal_infos, setPersonal_info] = useState({
 
-  const [values, setValues] = useState({
-    name: '',
-    surname: ''
+    bio: '',
+    interests: '',
+    knowledge: ''
   });
-
+  const [personalValues, setValues] = useState({
+    id: '',
+    name: '',
+    surname: '',
+    email: '',
+    image: '',
+    is_private: true
+  });
   const get_user = async () => {
     if (user_id) {
       try {
@@ -58,6 +69,7 @@ export default function profile(props) {
         console.log(res)
         if (res) {
           setValues(res.profile);
+          setPersonal_info(res.profile.personal_info)
         }
       } catch (e) {
         console.log(e);
@@ -65,22 +77,52 @@ export default function profile(props) {
     }
 
   }
-
+ 
   useEffect(() => {
     get_user();
-  }, [router.query]);
+    owner_id = localStorage.getItem('user_id');
+  }, [user_id]);
 
   const handleChange = (event) => {
     setValues({
-      ...values,
+      ...personalValues,
+      [event.target.name]: event.target.value
+    });
+    setPersonal_info({
+      ...personal_infos,
       [event.target.name]: event.target.value
     });
   };
 
+  const onClick = async () => {
+
+    const body = {
+      "id": user_id,
+      "bio": personal_infos.bio,
+      "interests": [personal_infos.interests],
+      "knowledge": [personal_infos.knowledge]
+    };
+
+    console.log(body)
+    try {
+      const res = (await axios.post(`${API_URL}/userProfile/updatePersonalInfo`, body))
+      console.log(res)
+      alert("Profile Updated")
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  let isOwner = true;
+  if(owner_id === user_id ){
+    isOwner = true;
+  }else{
+    isOwner = false;
+  }
+  
   return (
     <>
-      <Box
-        style={{minHeight: "100vh"}}
+      {isOwner ? (<Box
+        style={{ minHeight: "100vh" }}
         component="main"
         sx={{
           flexGrow: 1,
@@ -110,7 +152,7 @@ export default function profile(props) {
                     }}
                   >
                     <Avatar
-                      src={post.avatar}
+                      src={personalValues.image}
                       sx={{
                         height: 64,
                         mb: 2,
@@ -122,22 +164,21 @@ export default function profile(props) {
                       gutterBottom
                       variant="h5"
                     >
-                      {values.name} {values.surname}
+                      {personalValues.name} {personalValues.surname}
                     </Typography>
                     <Typography
                       color="textSecondary"
                       variant="body2"
                     >
+                      {personalValues.email}
                     </Typography>
-                    <Typography
-                      color="textSecondary"
-                      variant="body2"
-                    >
-                    </Typography>
+
                   </Box>
                 </CardContent>
+
                 <Divider />
                 <CardActions>
+
                   <Button
                     color="primary"
                     fullWidth
@@ -147,6 +188,12 @@ export default function profile(props) {
                   </Button>
                 </CardActions>
               </Card>
+              <Grid
+                container
+                spacing={3}
+                sx={{ height: '95%', width: '80%', margin: 'auto' }}
+              >
+              </Grid>
             </Grid>
             <Grid
               item
@@ -156,12 +203,11 @@ export default function profile(props) {
             >
               <form
                 autoComplete="off"
-                noValidate
-                {...props}
+                onSubmit={onClick}
               >
                 <Card>
                   <CardHeader
-                    subheader="The information can be edited"
+                    subheader="These informations can be edited"
                     title="Profile"
                   />
                   <Divider />
@@ -183,7 +229,7 @@ export default function profile(props) {
                           name="name"
                           onChange={handleChange}
                           required
-                          value={values.name}
+                          value={personalValues.name}
                           variant="outlined"
                         />
                       </Grid>
@@ -195,11 +241,29 @@ export default function profile(props) {
                         <TextField
                           id="outlined-required"
                           fullWidth
+                          helperText="Please specify the last name"
                           label="Last name"
                           name="surname"
                           onChange={handleChange}
                           required
-                          value={values.surname}
+                          value={personalValues.surname}
+                          variant="outlined"
+                        />
+                      </Grid>
+                      <Grid
+                        item
+                        md={12}
+                        xs={12}
+                      >
+                        <TextField
+                          fullWidth
+                          helperText="Please specify the email"
+                          label="Email"
+                          name="email"
+                          multiline
+                          onChange={handleChange}
+                          required
+                          value={personalValues.email}
                           variant="outlined"
                         />
                       </Grid>
@@ -211,11 +275,11 @@ export default function profile(props) {
                         <TextField
                           fullWidth
                           label="Personal Info"
-                          name="personal_info"
+                          name="bio"
                           multiline
                           onChange={handleChange}
                           required
-                          value={post.personal_info.bio}
+                          value={personal_infos.bio}
                           variant="outlined"
                         />
                       </Grid>
@@ -226,11 +290,11 @@ export default function profile(props) {
                       >
                         <TextField
                           fullWidth
-                          label="Badges"
-                          name="badge"
+                          label="Knowledge"
+                          name="knowledge"
                           onChange={handleChange}
-                          disabled
-                          value={post.personal_info.badges[0].title}
+                          //disabled
+                          value={personal_infos.knowledge}
                           variant="outlined"
                         />
                       </Grid>
@@ -242,10 +306,10 @@ export default function profile(props) {
                         <TextField
                           fullWidth
                           label="Intrests"
-                          name="intrest"
+                          name="interests"
                           onChange={handleChange}
-                          disabled
-                          value={post.personal_info.interests[0]}
+                          //disabled
+                          value={personal_infos.interests}
                           variant="outlined"
                         >
                         </TextField>
@@ -263,8 +327,10 @@ export default function profile(props) {
                     <Button
                       color="primary"
                       variant="contained"
+                      type="button"
+                      onClick={onClick}
                     >
-                      Update Profile Page
+                      Edit Profile Page
                     </Button>
                   </Box>
                 </Card>
@@ -273,11 +339,369 @@ export default function profile(props) {
           </Grid>
         </Container>
       </Box>
+      ) : (personalValues.is_private ? (<Box
+        style={{ minHeight: "100vh" }}
+        component="main"
+        sx={{
+          flexGrow: 1,
+          py: 2,
+          backgroundColor: '#F2F1F8'
+        }}
+      >
+        <Container maxWidth="lg">
+          <Grid
+            container
+            spacing={1}
+          >
+            <Grid
+              item
+              lg={4}
+              md={6}
+              xs={12}
+              sx={{ 'background-color': '#F2F1F8' }}
+            >
+              <Card {...props} >
+                <CardContent>
+                  <Box
+                    sx={{
+                      alignItems: 'center',
+                      display: 'flex',
+                      flexDirection: 'column'
+                    }}
+                  >
+                    <Avatar
+                      src={personalValues.image}
+                      sx={{
+                        height: 64,
+                        mb: 2,
+                        width: 64
+                      }}
+                    />
+                    <Typography
+                      color="textPrimary"
+                      gutterBottom
+                      variant="h6"
+                    >
+                      {personalValues.name} {personalValues.surname}
+                    </Typography>
+                  </Box>
+                </CardContent>
+                <Divider />
+              </Card>
+              <Grid
+                container
+                spacing={3}
+                sx={{ height: '95%', width: '80%', margin: 'auto' }}
+              >
+              </Grid>
+            </Grid>
+            <Grid
+              item
+              lg={8}
+              md={6}
+              xs={12}
+            >
+              <form
+                autoComplete="off"
+              >
+                <Card>
+                  <CardHeader
+                    subheader="This profile is private profile"
+                  />
+                  <Divider />
+                  <CardContent>
+                    <Grid
+                      container
+                      spacing={3}
+                      sx={{ height: '95%', width: '80%', margin: 'auto' }}
+                    >
+                      <Grid
+                        item
+                        md={12}
+                        xs={12}
+                      >
+                        <Grid container spacing={{ xs: 2, md: 4 }} columns={{ xs: 2, sm: 8, md: 12 }}>
+                          <Grid item xs={2} sm={4} md={4} >
+                            <Typography
+                              color="textPrimary"
+                              gutterBottom
+                              variant="h5"
+                              component="div"
+                            >
+                              {personalValues.name} {personalValues.surname}
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={2} sm={4} md={4} >
+                            <Typography
+                              color="textPrimary"
+                              gutterBottom
+                              variant="h5"
+                              component="div">
+                              Follower
+                            </Typography>
+                            <Typography
+                              color="textPrimary"
+                              gutterBottom
+                              variant="h5"
+                              component="div">
+                              55
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={2} sm={4} md={4} >
+                            <Typography
+                              color="textPrimary"
+                              gutterBottom
+                              variant="h5"
+                              component="div">
+                              Followed
+                            </Typography>
+                            <Typography
+                              color="textPrimary"
+                              gutterBottom
+                              variant="h5"
+                              component="div">
+                              55
+                            </Typography>
+                          </Grid>
 
+                        </Grid>
+                      </Grid>
+                      <Grid
+                        item
+                        md={12}
+                        xs={12}
+                      >
+                        <details>
+                          <summary><b>About Me</b></summary>
+                          <Typography
+                            color="textPrimary"
+                            gutterBottom
+                            variant="h6"
+                          >
+                            {personal_infos.bio}
+                          </Typography>
+                        </details>
+                      </Grid>
+                    </Grid>
+                  </CardContent>
+                  <Divider />
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'flex-end',
+                      p: 2
+                    }}
+                  >
+                    <Button
+                      color="primary"
+                      variant="contained"
+                    >
+                      Follow
+                    </Button>
+                  </Box>
+                </Card>
+              </form>
+            </Grid>
+          </Grid>
+        </Container>
+      </Box>) : (<Box
+        style={{ minHeight: "100vh" }}
+        component="main"
+        sx={{
+          flexGrow: 1,
+          py: 2,
+          backgroundColor: '#F2F1F8'
+        }}
+      >
+        <Container maxWidth="lg">
+          <Grid
+            container
+            spacing={1}
+          >
+            <Grid
+              item
+              lg={4}
+              md={6}
+              xs={12}
+              sx={{ 'background-color': '#F2F1F8' }}
+            >
+              <Card {...props} >
+                <CardContent>
+                  <Box
+                    sx={{
+                      alignItems: 'center',
+                      display: 'flex',
+                      flexDirection: 'column'
+                    }}
+                  >
+                    <Avatar
+                      src={personalValues.image}
+                      sx={{
+                        height: 64,
+                        mb: 2,
+                        width: 64
+                      }}
+                    />
+                    <Typography
+                      color="textPrimary"
+                      gutterBottom
+                      variant="h5"
+                    >
+                      {personalValues.name} {personalValues.surname}
+                    </Typography>
+                    <Typography
+                      color="textSecondary"
+                      variant="body2"
+                    >
+                      {personalValues.email}
+                    </Typography>
+                  </Box>
+                </CardContent>
+                <Divider />
+              </Card>
+              <Grid
+                container
+                spacing={3}
+                sx={{ height: '95%', width: '80%', margin: 'auto' }}
+              >
+              </Grid>
+            </Grid>
+            <Grid
+              item
+              lg={8}
+              md={6}
+              xs={12}
+            >
+              <Card>
+                <CardHeader
+                  subheader="This Profile is public"
+                  title="Profile"
+                />
+                <Divider />
+                <CardContent>
+                  <Grid
+                    container
+                    spacing={3}
+                    sx={{ height: '95%', width: '80%', margin: 'auto' }}
+                  >
+                    <Grid
+                      item
+                      md={6}
+                      xs={12}
+                    >
+                      <InputLabel shrink>
+                        First Name
+                      </InputLabel>
+                      <TextField
+                        fullWidth
+                        //label="First name"
+                        name="name"
+                        onChange={handleChange}
+                        disabled
+                        value={personalValues.name}
+                        variant="outlined"
+                      />
+                    </Grid>
+                    <Grid
+                      item
+                      md={6}
+                      xs={12}
+                    >
+                      <InputLabel shrink>
+                        Last Name
+                      </InputLabel>
+                      <TextField
+                        id="outlined-required"
+                        fullWidth
+                        //label="Last name"
+                        disabled
+                        onChange={handleChange}
+                        required
+                        value={personalValues.surname}
+                        variant="outlined"
+                      />
+                    </Grid>
+                    <Grid
+                      item
+                      md={12}
+                      xs={12}
+                    >
+                      <InputLabel shrink>
+                        Personal Info
+                      </InputLabel>
+                      <TextField
+                        fullWidth
+                        name="bio"
+                        multiline
+                        disabled
+                        onChange={handleChange}
+                        value={personal_infos.bio}
+                        variant="outlined"
+                      />
+                    </Grid>
+                    <Grid
+                      item
+                      md={12}
+                      xs={12}
+                    >
+                      <InputLabel shrink>
+                        Knowledges
+                      </InputLabel>
+                      <TextField
+                        fullWidth
+                        //label="Knowledge"
+                        name="knowledge"
+                        onChange={handleChange}
+                        disabled
+                        value={personal_infos.knowledge}
+                        variant="outlined"
+                      />
+                    </Grid>
+                    <Grid
+                      item
+                      md={12}
+                      xs={12}
+                    >
+                      <InputLabel shrink>
+                        Interests
+                      </InputLabel>
+                      <TextField
+                        fullWidth
+                        name="interests"
+                        onChange={handleChange}
+                        disabled
+                        value={personal_infos.interests}
+                        variant="outlined"
+                      >
+                      </TextField>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+                <Divider />
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    p: 2
+                  }}
+                >
+                  <Button
+                    color="primary"
+                    variant="contained"
+                    type="button"
+                  >
+                    Follow
+                  </Button>
+                </Box>
+              </Card>
+            </Grid>
+          </Grid>
+        </Container>
+      </Box>)
+      )}
     </>
   );
 }
-
 profile.getLayout = function getLayout(page) {
   return <UserLayout>{page}</UserLayout>;
 };
