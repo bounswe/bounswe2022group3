@@ -56,6 +56,7 @@ const getEnrollment = async (user_id, space_id) => {
     .populate("user", "name surname")
     .populate({
       path: "notes",
+      options: { sort: { createdAt: -1 } },
       select: { _id: 1, title: 1, body: 1 }
     })
     .exec();

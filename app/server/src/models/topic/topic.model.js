@@ -48,6 +48,10 @@ const getPopulatedTopic = async (id) => {
     .populate("creator", "name surname")
     .populate({
       path: "resources",
+      options: { sort: { createdAt: -1 } },
+    })
+    .populate({
+      path: "resources",
       populate: {
         path: "discussion",
         populate: { path: "comments" },
