@@ -14,6 +14,7 @@ enrollmentRouter.post(
   EnrollmentController.createEnrollment
 );
 
+
 enrollmentRouter.get(
   "/searchEnrollments/:keyword?",
   authorization,
@@ -24,6 +25,13 @@ enrollmentRouter.get(
   "/getEnrolledSpaces/:keyword?",
   authorization,
   EnrollmentController.getEnrolledSpaces
+);
+enrollmentRouter.get(
+  "/:id",
+  validate("getEnrollment"),
+  handleValidation,
+  authorization,
+  EnrollmentController.getEnrollment
 );
 
 module.exports = enrollmentRouter;

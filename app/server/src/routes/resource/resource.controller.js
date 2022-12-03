@@ -7,13 +7,16 @@ const ResourceController = {
     try {
       const { name, body, topic_id } = req.body;
       const user = req.auth.id;
+      var topic = await TopicModel.Topic.findById(topic_id);
+      if(!topic){
+        return res.status(400).json({ error: "Topic does not exist!" });
+      }
       const resource = await ResourceModel.createResource(
         name,
         body,
         topic_id,
         user
       );
-      var topic = await TopicModel.Topic.findById(topic_id);
       topic.resources.push(resource);
       topic.save();
       return res.status(201).json({ resource });
@@ -34,6 +37,12 @@ const ResourceController = {
       } else {
         let disc = await DiscussionModel.getDiscussion(resource.discussion);
         disc.remove();
+        var topic = await TopicModel.Topic.findById(resource.topic);
+        const index = topic.resources.indexOf(resource_id);
+        if (index > -1) { // only splice array when item is found
+          topic.resources.splice(index, 1); // 2nd parameter means remove one item only
+        }
+        await topic.save();
         resource.remove();
       }
       return res.status(201).json({ message: "Resource deleted successfully!" });

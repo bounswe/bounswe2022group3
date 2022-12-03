@@ -1,0 +1,30 @@
+{
+    "@context": "http://www.w3.org/ns/anno.jsonld",
+    "type": "Annotation",
+    "body": [
+        {
+            "type": "TextualBody",
+            "value": "h",
+            "purpose": "commenting",
+            "creator": {
+                "id": "1",
+                "name": "nurlan"
+            },
+            "created": "2022-12-01T18:46:37.199Z"
+        }
+    ],
+    "target": {
+        "selector": [
+            {
+                "type": "TextQuoteSelector",
+                "exact": "boya"
+            },
+            {
+                "type": "TextPositionSelector",
+                "start": 17,
+                "end": 21
+            }
+        ]
+    },
+    "id": "#14aad9e5-8e40-4ca2-95a5-b7cd56f23d60"
+}

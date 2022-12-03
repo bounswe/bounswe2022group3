@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const SpaceModel = require("../../models/space/space.model");
 
 const discussionSchema = new mongoose.Schema(
   {
@@ -31,7 +32,9 @@ const createDiscussion = async (user, space_id, title) => {
     space_id,
     title,
   });
-  
+  var space = await SpaceModel.Space.findById(space_id).exec();
+  space.discussions.push(discussion);
+  await space.save();
   const res = await discussion.save();
   return res;
 };
@@ -48,7 +51,8 @@ const getPopulatedDiscussion = async (id) => {
         path: "user",
         select: { _id: 1, name: 1, surname: 1, image: 1 }
       }
-    }).exec();
+    })
+  .exec();
 }
 
 

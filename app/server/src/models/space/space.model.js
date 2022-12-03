@@ -94,23 +94,25 @@ const createSpace = async (name, creator, info, tags, image) => {
 
 const getPopulatedSpace = async (id) => {
   return Space.findById(id)
-    .populate("creator", "name surname")
+    .populate("creator", "name surname image")
     .populate("discussions", "title")
     .populate({
       path: "topics",
       populate: {
         path: "resources",
+        options: { sort: { createdAt: -1 } },
         populate: {
           path: "creator",
           select: { _id: 1, name: 1, surname: 1, image: 1 },
-        }
+        },
       },
     })
     .populate({
       path: "topics",
+      options: { sort: { createdAt: -1 } },
       populate: {
         path: "creator",
-        select: { _id: 1, name: 1, surname: 1, image: 1 }
+        select: { _id: 1, name: 1, surname: 1, image: 1 },
       },
     })
     .exec();
@@ -126,4 +128,10 @@ const deleteSpace = async (_id) => {
   return res;
 };
 
-module.exports = { Space, createSpace, getPopulatedSpace, getSpaceByID, deleteSpace };
+module.exports = {
+  Space,
+  createSpace,
+  getPopulatedSpace,
+  getSpaceByID,
+  deleteSpace,
+};
