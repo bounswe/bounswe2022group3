@@ -66,11 +66,11 @@ const ResourceController = {
     try {
       const { resource_id } = req.body;
       const user = req.auth.id;
-      var resource = await ResourceModel.Resource.findById(resource_id);
+      var resource = await ResourceModel.getPopulatedResource(resource_id);
       if(!resource){
         return res.status(400).json({ error: "Resource does not exist!" });
       }
-      if (resource.creator.toString() !== user.toString()) {
+      if (resource.creator._id.toString() !== user.toString()) {
         return res
         .status(400)
         .send({ error: "User not the creator of the resource!" });
