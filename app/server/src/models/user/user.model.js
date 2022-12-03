@@ -137,7 +137,6 @@ const getPopulatedPersonalInfoPrivate = async (user_id) => {
     .exec();
   let res = {
     _id: user._id,
-    email: user.email,
     name: user.name,
     surname: user.surname,
     image: user.image,
