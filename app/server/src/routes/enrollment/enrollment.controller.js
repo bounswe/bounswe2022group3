@@ -19,7 +19,7 @@ const EnrollmentController = {
         return res.status(400).json({ error: "User already enrolled!" });
       }
       const enrollment = await EnrollmentModel.createEnrollment(user, space_id);
-      space.enrollments.push(enrollment);
+      space.enrollments.push(enrollment._id);
       space.enrolledUsersCount += 1;
       space.save();
       const creator = await UserModel.User.findById(user);

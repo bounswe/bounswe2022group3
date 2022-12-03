@@ -15,7 +15,7 @@ const SpaceController = {
         tags,
         image
       );
-      creator.created_spaces.push(space);
+      creator.created_spaces.push(space._id);
       await creator.save();
       return res.status(201).send({ space });
     } catch (error) {
