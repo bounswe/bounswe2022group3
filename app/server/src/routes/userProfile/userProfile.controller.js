@@ -10,6 +10,10 @@ const UserProfileController = {
       const { bio, interests, knowledge } = req.body;
       const user = await UserModel.getUserByID(req.auth.id);
       const personalInfoId = user.personal_info;
+      const body_keys = Object.keys(req.body);
+      if(body_keys.includes('is_private')){
+        user.is_private = req.body.is_private;
+      }
       let data = {
         bio: bio,
         interests: interests,
@@ -51,6 +55,9 @@ const UserProfileController = {
       const id = req.params.id;
       // Need a new function in user model that returns populated versions of personal info and badges
       const profile = await UserModel.getPopulatedPersonalInfo(id);
+      if(profile.is_private){
+        res.status(200).json({ message: "This profile is private!", profile });
+      }
       res.status(200).json({ profile });
     } catch (e) {
       res.status(400).json({ error: e.toString() });
