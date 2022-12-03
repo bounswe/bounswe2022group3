@@ -27,9 +27,15 @@ const TopicController = {
   getTopicResources: async function (req, res) {
     try {
       const topic_id = req.params.id;
-      const topic = await TopicModel.Topic.findById(topic_id, 'resources')
-        .populate('resources', 'name');
-      let resources = topic.resources
+      const topic = await TopicModel.Topic.findById(
+        topic_id,
+        "resources"
+      ).populate({
+        path: "resources",
+        options: { sort: { createdAt: -1 } },
+        select: { _id: 1, name: 1 },
+      });
+      let resources = topic.resources;
       return res.status(200).json({ resources });
     } catch (e) {
       return res.status(400).send({ error: e });

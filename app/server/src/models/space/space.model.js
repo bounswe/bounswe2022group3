@@ -98,10 +98,6 @@ const getPopulatedSpace = async (id) => {
     .populate("discussions", "title")
     .populate({
       path: "topics",
-      options: { sort: { createdAt: -1 } },
-    })
-    .populate({
-      path: "topics",
       populate: {
         path: "resources",
         options: { sort: { createdAt: -1 } },
@@ -113,6 +109,7 @@ const getPopulatedSpace = async (id) => {
     })
     .populate({
       path: "topics",
+      options: { sort: { createdAt: -1 } },
       populate: {
         path: "creator",
         select: { _id: 1, name: 1, surname: 1, image: 1 },
