@@ -111,11 +111,6 @@ const SpaceController = {
           title: discussion.title,
           discussion_id: discussion._id,
         });
-
-        console.log({
-          title: discussion.title,
-          discussion_id: discussion._id,
-        });
       }
       return res.status(200).json({ discussions });
     } catch (e) {
