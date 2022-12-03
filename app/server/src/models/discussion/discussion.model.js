@@ -52,7 +52,6 @@ const getPopulatedDiscussion = async (id) => {
         select: { _id: 1, name: 1, surname: 1, image: 1 }
       }
     })
-  .sort('-createdAt')
   .exec();
 }
 
