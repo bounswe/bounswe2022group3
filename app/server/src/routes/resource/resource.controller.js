@@ -7,13 +7,16 @@ const ResourceController = {
     try {
       const { name, body, topic_id } = req.body;
       const user = req.auth.id;
+      var topic = await TopicModel.Topic.findById(topic_id);
+      if(!topic){
+        return res.status(400).json({ error: "Topic does not exist!" });
+      }
       const resource = await ResourceModel.createResource(
         name,
         body,
         topic_id,
         user
       );
-      var topic = await TopicModel.Topic.findById(topic_id);
       topic.resources.push(resource);
       topic.save();
       return res.status(201).json({ resource });
