@@ -58,7 +58,7 @@ const AnnotationController = {
         return res.status(400).json({ error: "Resource does not exist!" });
       } else {
         const annotations = await AnnotationModel.Annotation.find({
-          resource,
+          resource_id,
         })
           .populate({
             path: "body",
@@ -73,11 +73,11 @@ const AnnotationController = {
             },
           })
           .exec();
-        if (annotations.length == 0) {
-          return res
-            .status(404)
-            .json({ message: "No annotation exists for this resource!" });
-        }
+        // if (annotations.length == 0) {
+        //   return res
+        //     .status(404)
+        //     .json({ message: "No annotation exists for this resource!", });
+        // }
         return res.status(200).json({ annotations });
       }
     } catch (e) {
