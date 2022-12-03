@@ -59,7 +59,7 @@ const AnnotationController = {
         return res.status(400).json({ error: "Resource does not exist!" });
       } else {
         const annotations = await AnnotationModel.Annotation.find({
-          resource_id,
+          resource: resource_id,
         })
           .populate({
             path: "body",
