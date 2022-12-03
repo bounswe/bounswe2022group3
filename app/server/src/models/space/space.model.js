@@ -94,7 +94,7 @@ const createSpace = async (name, creator, info, tags, image) => {
 
 const getPopulatedSpace = async (id) => {
   return Space.findById(id)
-    .populate("creator", "name surname")
+    .populate("creator", "name surname image")
     .populate("discussions", "title")
     .populate({
       path: "topics",
