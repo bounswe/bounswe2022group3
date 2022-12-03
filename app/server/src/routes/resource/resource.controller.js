@@ -19,7 +19,8 @@ const ResourceController = {
       );
       topic.resources.push(resource);
       topic.save();
-      return res.status(201).json({ resource });
+      const resource_populated = await ResourceModel.getPopulatedResource(resource._id);
+      return res.status(201).json({ resource: resource_populated });
     } catch (e) {
       return res.status(400).json({ error: e.toString() });
     }
