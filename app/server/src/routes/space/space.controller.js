@@ -81,6 +81,9 @@ const SpaceController = {
         } else {
           enrolled = false;
         }
+        if (space.creator.toString() == user._id.toString()) {
+          enrolled = true;
+        }
       } else {
         return res.status(200).json({ space });
       }
