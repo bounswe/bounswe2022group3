@@ -6,6 +6,7 @@ import 'package:bucademy/resources/text_styles.dart';
 import 'package:bucademy/services/locator.dart';
 import 'package:bucademy/view/home/appbar.dart';
 import 'package:bucademy/view/home/search_bar.dart';
+import 'package:bucademy/view/widgets/markdown_input.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
@@ -50,25 +51,7 @@ Widget addContentView(Topic c) => ViewModelBuilder<HomeViewModel>.reactive(
                     },
                   ),
                 ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                  child: TextFormField(
-                    decoration: const InputDecoration(
-                      enabledBorder: const OutlineInputBorder(
-                          borderSide:
-                              const BorderSide(color: CustomColors.main)),
-                      border: OutlineInputBorder(),
-                      labelText: 'Enter Resource Body Name',
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please Enter Some Text';
-                      }
-                      return null;
-                    },
-                  ),
-                ),
+                //markdownInput(viewModel, controller),
                 GestureDetector(
                   onTap: () async {
                     if (viewModel._formKey.currentState!.validate()) {
@@ -131,6 +114,8 @@ class HomeViewModel extends ChangeNotifier {
     isLoading = false;
     notifyListeners();
   }
+
+  
 }
 
 Widget loadingIndicator() => const Padding(
