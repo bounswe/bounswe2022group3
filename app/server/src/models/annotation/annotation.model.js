@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const { Body, createBody } = require("./body.model");
 const { Selector, createTextQuoteSelector, createTextPositionSelector } = require("./selector.model");
-const { Target } = require("./target.model");
+const { Target, createTarget } = require("./target.model");
 
 const annotationSchema = new mongoose.Schema({
   "@context": {
@@ -34,38 +34,33 @@ const Annotation = mongoose.model("Annotation", annotationSchema);
 const createAnnotation = async (context, type, body, target, id) => {
   var bodies_l = [];
   for (var body_el of body) {
-    var body_t = createBody(
+    var body_t = await createBody(
       body_el.purpose,
       body_el.type,
       body_el.value,
       body_el.creator,
       body_el.created,
     );
-    await body_t.save();
     bodies_l.push(body_t);
   }
   var selectors_l = [];
   for (var selector_el of target.selector) {
     selector_keys = Object.keys(selector_el);
     if (selector_keys.includes('exact')) {
-      var selector_t = createTextQuoteSelector(
+      var selector_t = await createTextQuoteSelector(
         selector_el.type,
         selector_el.exact,
       );
     } else if (selector_keys.includes('start')) {
-      var selector_t = createTextPositionSelector(
+      var selector_t = await createTextPositionSelector(
         selector_el.type,
         selector_el.start,
         selector_el.end,
       );
     }
-    await selector_t.save();
     selectors_l.push(selector_t);
   }
-  var target_el = new Target({
-    selector: selectors_l,
-  });
-  await target_el.save();
+  var target_el = await createTarget(selectors_l);
   var annotation = new Annotation({
     "@context": context,
     type,
