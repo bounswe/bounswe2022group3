@@ -18,7 +18,9 @@ GestureDetector addButton(Topic c, BuildContext context,
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
                 color: const Color.fromARGB(255, 242, 241, 248),
-                borderRadius: BorderRadiusDirectional.circular(10)),
+                borderRadius: BorderRadiusDirectional.circular(10),
+                border: Border.all(color: Colors.black),
+              ),
             child: const Icon(
               Icons.add_outlined,
               color: Colors.black,
