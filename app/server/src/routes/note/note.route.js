@@ -28,8 +28,10 @@ noteRouter.get(
   NoteController.getNote
 );
 
-noteRouter.get(
-  "/getNoteList/:space_id",
+noteRouter.post(
+  "/getNoteList",
+  validate("get-note-list"),
+  handleValidation,
   authorization,
   NoteController.getNoteList
 );

@@ -15,7 +15,7 @@ const SpaceController = {
         tags,
         image
       );
-      creator.created_spaces.push(space);
+      creator.created_spaces.push(space._id);
       await creator.save();
       return res.status(201).send({ space });
     } catch (error) {
@@ -80,6 +80,9 @@ const SpaceController = {
           enrolled = true;
         } else {
           enrolled = false;
+        }
+        if (space.creator._id.toString() == user._id.toString()) {
+          enrolled = true;
         }
       } else {
         return res.status(200).json({ space });

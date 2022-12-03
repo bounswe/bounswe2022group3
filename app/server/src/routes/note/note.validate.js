@@ -6,7 +6,7 @@ exports.validate = (method) => {
       return [
         body("title", "title doesn't exist").exists(),
         body("body", "body doesn't exist").exists(),
-        body("space_id", "topic_id doesn't exist or broken").exists().isMongoId(),
+        body("resource_id", "resource_id doesn't exist or broken").exists().isMongoId(),
       ];
     case "delete-note":
       return [
@@ -15,6 +15,10 @@ exports.validate = (method) => {
     case "update-note":
       return [
         body("note_id", "note_id doesn't exist or broken").exists().isMongoId(),
+      ];
+    case "get-note-list":
+      return [
+        body("space_id", "space_id doesn't exist or broken").exists().isMongoId(),
       ];
   }
 };
