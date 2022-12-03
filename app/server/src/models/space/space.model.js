@@ -100,17 +100,19 @@ const getPopulatedSpace = async (id) => {
       path: "topics",
       populate: {
         path: "resources",
+        options: { sort: { createdAt: -1 } },
         populate: {
           path: "creator",
           select: { _id: 1, name: 1, surname: 1, image: 1 },
-        }
+        },
       },
     })
     .populate({
       path: "topics",
+      options: { sort: { createdAt: -1 } },
       populate: {
         path: "creator",
-        select: { _id: 1, name: 1, surname: 1, image: 1 }
+        select: { _id: 1, name: 1, surname: 1, image: 1 },
       },
     })
     .exec();
@@ -126,4 +128,10 @@ const deleteSpace = async (_id) => {
   return res;
 };
 
-module.exports = { Space, createSpace, getPopulatedSpace, getSpaceByID, deleteSpace };
+module.exports = {
+  Space,
+  createSpace,
+  getPopulatedSpace,
+  getSpaceByID,
+  deleteSpace,
+};

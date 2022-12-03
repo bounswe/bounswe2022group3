@@ -6,6 +6,7 @@ import 'package:bucademy/view/dashboard_view.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:uni_links/uni_links.dart';
+import '../login/login.dart';
 
 Widget introView() => ViewModelBuilder<IntroViewModel>.reactive(
     viewModelBuilder: () => IntroViewModel(),
@@ -29,6 +30,13 @@ Widget introView() => ViewModelBuilder<IntroViewModel>.reactive(
 
 class IntroViewModel extends ChangeNotifier {
   init(BuildContext context, [bool mounted = true]) async {
+    if (!await userService.isLoggedIn()) {
+      if (!mounted) return;
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => const LoginForm()),
+          (route) => false);
+      return;
+    }
     // Get the initial link
     Uri? initialLink = await getInitialUri();
     await handleInitialLink(initialLink);
@@ -64,7 +72,8 @@ handleInitialLink(Uri? initialLink, {BuildContext? context}) async {
                     GestureDetector(
                       child: Container(
                           decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(Constants.borderRadius)),
+                            borderRadius: BorderRadius.all(
+                                Radius.circular(Constants.borderRadius)),
                             color: CustomColors.main,
                           ),
                           padding: const EdgeInsets.symmetric(
@@ -85,7 +94,9 @@ handleInitialLink(Uri? initialLink, {BuildContext? context}) async {
                 )))
       ]);
       // ignore: use_build_context_synchronously
-      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => introView()), (route) => false);
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => introView()),
+          (route) => false);
     }
   }
 }

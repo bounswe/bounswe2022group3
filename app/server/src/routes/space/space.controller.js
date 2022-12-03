@@ -94,7 +94,9 @@ const SpaceController = {
     try {
       var space = req.params.id;
       space = await SpaceModel.Space.findById(space)
-        .populate({ path: "discussions", populate: { path: "title _id" } })
+        .populate({ path: "discussions", 
+        options: { sort: { 'createdAt': -1 } },
+        populate: { path: "title _id" } })
         .exec();
       if (!space) {
         return res.status(404).json({ message: "The space does not exist!" }); // The token exists but email mismatch.

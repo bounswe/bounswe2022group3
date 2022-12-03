@@ -51,7 +51,8 @@ const getPopulatedDiscussion = async (id) => {
         path: "user",
         select: { _id: 1, name: 1, surname: 1, image: 1 }
       }
-    }).exec();
+    })
+  .exec();
 }
 
 
