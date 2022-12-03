@@ -6,7 +6,8 @@ const { Selector } = require("../../models/annotation/selector.model");
 const AnnotationController = {
   createAnnotation: async function (req, res) {
     try {
-      const { context, type, body, target, id, resource } = req.body;
+      const { type, body, target, id, resource } = req.body;
+      const context = req.body['@context'];
       const annotation = await AnnotationModel.createAnnotation(
         context,
         type,
@@ -73,11 +74,6 @@ const AnnotationController = {
             },
           })
           .exec();
-        // if (annotations.length == 0) {
-        //   return res
-        //     .status(404)
-        //     .json({ message: "No annotation exists for this resource!", });
-        // }
         return res.status(200).json({ annotations });
       }
     } catch (e) {
