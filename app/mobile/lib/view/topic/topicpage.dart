@@ -8,76 +8,77 @@ import 'package:bucademy/view/topic/resource_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-Widget topicPageView(Topic c) =>
-    ViewModelBuilder<TopicPageViewModel>.reactive(
-        viewModelBuilder: () => TopicPageViewModel(c.id),
-        builder: (context, viewModel, child) {
-          return viewModel.contentsLoading
-              ? const Center(child: CircularProgressIndicator())
-              : viewModel.topic != null
-                  ? Scaffold(
-                      appBar: AppBar(
-                        iconTheme: const IconThemeData(color: Colors.white),
-                        elevation: 0,
-                        backgroundColor: CustomColors.main,
-                        shadowColor: CustomColors.main,
-                        foregroundColor: CustomColors.main,
-                        title: FittedBox(
-                          fit: BoxFit.fitWidth,
-                          child: Text(
-                            viewModel.topic!.name,
-                            style: TextStyles.pageTitle,
-                          ),
-                        ),
+Widget topicPageView(Topic c) => ViewModelBuilder<TopicPageViewModel>.reactive(
+    viewModelBuilder: () => TopicPageViewModel(c.id),
+    builder: (context, viewModel, child) {
+      return viewModel.contentsLoading
+          ? const Center(child: CircularProgressIndicator())
+          : viewModel.topic != null
+              ? Scaffold(
+                  appBar: AppBar(
+                    iconTheme: const IconThemeData(color: Colors.white),
+                    elevation: 0,
+                    backgroundColor: CustomColors.main,
+                    shadowColor: CustomColors.main,
+                    foregroundColor: CustomColors.main,
+                    title: FittedBox(
+                      fit: BoxFit.fitWidth,
+                      child: Text(
+                        viewModel.topic!.name,
+                        style: TextStyles.pageTitle,
                       ),
-                      body: Stack(
-                        children: [Center(
-                            child: SingleChildScrollView(
-                          child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                ...viewModel.topic!.resources
-                                    .map((Resource cont) => resourceTile(cont,context))
-                              ]),
-                        )),
-                        addButton(viewModel.topic!, context),
-]
-                      ),
-                    )
-                  : Scaffold(
-                      body: Center(
+                    ),
+                  ),
+                  body: Stack(children: [
+                    Center(
+                      child: SingleChildScrollView(
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            const Text(
-                              "Oops an Error Occurred!",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 30,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            OutlinedButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStatePropertyAll<Color>(
-                                        Colors.amber[800]!),
-                              ),
-                              autofocus: true,
-                              child: const Text(
-                                "Go Back To Safety",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            )
-                          ],
-                        ),
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.max,
+                            children: viewModel.topic!.resources.isEmpty
+                                ? [const Text("There is nothing here consider creating new resources!")]
+                                : [
+                                    ...viewModel.topic!.resources.map(
+                                        (Resource cont) =>
+                                            resourceTile(cont, context))
+                                  ]),
                       ),
-                      backgroundColor: Colors.amber[800]);
-        });
+                    ),
+                    addButton(viewModel.topic!, context),
+                  ]),
+                )
+              : Scaffold(
+                  body: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        const Text(
+                          "Oops an Error Occurred!",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        OutlinedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStatePropertyAll<Color>(
+                                Colors.amber[800]!),
+                          ),
+                          autofocus: true,
+                          child: const Text(
+                            "Go Back To Safety",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  backgroundColor: Colors.amber[800]);
+    });
 
 // ViewModel
 class TopicPageViewModel extends ChangeNotifier {
