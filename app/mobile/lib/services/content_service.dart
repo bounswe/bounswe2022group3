@@ -79,8 +79,8 @@ class MockContentService {
     try {
       Response response = await dioService.dio.post('/resource',
           data: {'topic_id': topicId, 'name': name, 'body': body});
-      if(response.statusCode != 201) {
-        return  null;
+      if (response.statusCode != 201) {
+        return null;
       }
 
       Resource r = Resource.fromJson(response.data["resource"]);
@@ -89,5 +89,38 @@ class MockContentService {
       print(e);
     }
     return null;
+  }
+
+  Future<Resource?> editResource(
+    String name,
+    String body, {
+    required String resourceId,
+  }) async {
+    try {
+      Response response = await dioService.dio.put('/resource/update',
+          data: {'resource_id': resourceId, 'name': name, 'body': body});
+      if (response.statusCode != 200) {
+        return null;
+      }
+
+      Resource r = Resource.fromJson(response.data["resource"]);
+      return r;
+    } catch (e) {
+      print(e);
+    }
+    return null;
+  }
+
+  Future<int?> deleteResource({
+    required String resourceId,
+  }) async {
+    try {
+      Response response = await dioService.dio
+          .delete('/resource/delete', data: {'resource_id': resourceId});
+      return response.statusCode;
+    } catch (e) {
+      print(e);
+    }
+    return -1;
   }
 }
