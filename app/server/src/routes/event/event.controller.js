@@ -3,27 +3,18 @@ const EventModel = require("../../models/event/event.model");
 const EventController = {
     createEvent: async function (req, res) {
         try {
+            req.body.creator = req.auth.id
             const event = await EventModel.createEvent(req.body)
-            console.log("event creation result:", event)
             return res.status(201).json(event)
-
-
-            //   const { name, body, topic_id } = req.body;
-            //   const user = req.auth.id;
-            //   var topic = await TopicModel.Topic.findById(topic_id);
-            //   if(!topic){
-            //     return res.status(400).json({ error: "Topic does not exist!" });
-            //   }
-            //   const resource = await ResourceModel.createResource(
-            //     name,
-            //     body,
-            //     topic_id,
-            //     user
-            //   );
-            //   topic.resources.push(resource);
-            //   topic.save();
-            //   const resource_populated = await ResourceModel.getPopulatedResource(resource._id);
-            //   return res.status(201).json({ resource: resource_populated });
+        } catch (e) {
+            return res.status(400).json({ error: e.toString() });
+        }
+    },
+    getEvent: async function (req, res) {
+        try {
+            const event = await EventModel.getPopulatedEvent(req.params.id)
+            let participating = event.participants.includes(req.auth.id) ? true : false
+            return res.status(200).json({event, participating})
         } catch (e) {
             return res.status(400).json({ error: e.toString() });
         }
@@ -41,6 +32,7 @@ const EventController = {
                 if (event.quota && event.quota <= event.participants.length) {
                     return res.status(400).json("Quota is full, cannot participate")
                 }
+                event.participant_count += 1
                 event.participants.push(user)
             }
 
@@ -62,6 +54,7 @@ const EventController = {
 
             if (event.participants.includes(user)) {
                 event.participants.pop(user)
+                event.participant_count -= 1
             }
             await event.save()
             return res.status(200).json("User does not participate in event")

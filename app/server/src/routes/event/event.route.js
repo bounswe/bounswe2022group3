@@ -31,11 +31,11 @@ eventRouter.post(
 );
 
 eventRouter.get(
-    "/:event_id",
+    "/:id",
     validate("get-event"),
-    // handleValidation,
-    // authorization,
-    // EventController.participateToEvent
+    handleValidation,
+    authorization,
+    EventController.getEvent
 );
 
 // TODO: remove participant
