@@ -43,15 +43,14 @@ const createEvent = async (body) => {
 };
 const deleteEvent = async (id) => {
     const event = await Event.findOneAndDelete({ id });
-    
-    const space = await SpaceModel.getSpaceByID(event.space_id)
-    space.events.pop(event._id)
-    return await space.save()
 
+    const space = await SpaceModel.getSpaceByID(event.space_id)
+    space.events.remove(id)
+    await space.save()
 };
 
 const getEvent = async (id) => {
-    return await Event.findById(id);
+    return await Event.findById(id).exec();
 };
 
 const getPopulatedEvent = async (id) => {

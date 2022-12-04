@@ -1,5 +1,4 @@
 const EventModel = require("../../models/event/event.model");
-const SpaceModel = require("../../models/space/space.model");
 
 const EventController = {
     createEvent: async function (req, res) {
@@ -74,10 +73,11 @@ const EventController = {
             }
 
             if (event.participants.includes(user)) {
-                event.participants.pop(user)
+                const event = await EventModel.getEvent(event_id)
+                event.participants.remove(user)
                 event.participant_count -= 1
+                await event.save()
             }
-            await event.save()
             return res.status(200).json("User does not participate in event")
         }
         catch (e) {

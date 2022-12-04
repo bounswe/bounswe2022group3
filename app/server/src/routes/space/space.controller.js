@@ -97,9 +97,11 @@ const SpaceController = {
     try {
       var space = req.params.id;
       space = await SpaceModel.Space.findById(space)
-        .populate({ path: "discussions", 
-        options: { sort: { 'createdAt': -1 } },
-        populate: { path: "title _id" } })
+        .populate({
+          path: "discussions",
+          options: { sort: { 'createdAt': -1 } },
+          populate: { path: "title _id" }
+        })
         .exec();
       if (!space) {
         return res.status(404).json({ message: "The space does not exist!" }); // The token exists but email mismatch.
@@ -113,6 +115,38 @@ const SpaceController = {
         });
       }
       return res.status(200).json({ discussions });
+    } catch (e) {
+      res.status(400).send({ error: e.toString() });
+    }
+  },
+
+  getAllEvents: async function (req, res) {
+    try {
+      var space = req.params.id;
+      space = await SpaceModel.Space.findById(space)
+        .populate({
+          path: "events",
+          options: { sort: { 'start_date': -1 } },
+          populate: { path: "event_title _id description location quota start_date" }
+        })
+        .exec();
+      if (!space) {
+        return res.status(404).json({ message: "The space does not exist!" }); // The token exists but email mismatch.
+      }
+
+      // if we need to specify, we can do that here.
+      // var events = [];
+      // for (var event of space.events) {
+      //   events.push({
+      //     title: event.event_title,
+      //     description: event.description,
+      //     location: event.location,
+      //     event_id: event._id,
+      //     quota: event.quota,
+      //     start_date: start_date,
+      //   });
+      // }
+      return res.status(200).json(space.events);
     } catch (e) {
       res.status(400).send({ error: e.toString() });
     }
