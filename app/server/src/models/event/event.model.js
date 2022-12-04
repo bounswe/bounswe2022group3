@@ -68,6 +68,10 @@ const getPopulatedEvent = async (id) => {
             path: "creator",
             select: { name: 1, surname: 1, image: 1 }
         })
+        .populate({
+            path: "participants",
+            select: { name: 1, surname: 1 }
+        })
         .exec();
 };
 

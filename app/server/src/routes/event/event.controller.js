@@ -5,7 +5,7 @@ const EventController = {
         try {
             req.body.creator = req.auth.id
             const event = await EventModel.createEvent(req.body)
-            return res.status(201).json(event)
+            return res.status(201).json({event})
         } catch (e) {
             return res.status(400).json({ error: e.toString() });
         }
@@ -15,13 +15,13 @@ const EventController = {
             const event_id = req.params.id
             const event = await EventModel.getEvent(event_id)
             if (!event) {
-                return res.status(404).json("Event does not exist")
+                return res.status(404).json({message: "Event does not exist"})
             }
             if (event.creator.toString() != req.auth.id.toString()) {
-                return res.status(400).json("User is not the creator of the event")
+                return res.status(400).json({message: "User is not the creator of the event"})
             }
             await EventModel.deleteEvent(event_id)
-            return res.status(200).json("event deleted")
+            return res.status(200).json({message: "event deleted"})
         } catch (e) {
             return res.status(400).json({ error: e.toString() });
         }
@@ -31,14 +31,14 @@ const EventController = {
             const event_id = req.params.id
             let event = await EventModel.getEvent(event_id)
             if (!event) {
-                return res.status(404).json("Event does not exist")
+                return res.status(404).json({message:"Event does not exist"})
             }
             if (event.creator.toString() != req.auth.id.toString()) {
-                return res.status(400).json("User is not the creator of the event")
+                return res.status(400).json({message:"User is not the creator of the event"})
             }
             await EventModel.updateEvent(event_id, req.body)
             event = await EventModel.getEvent(event_id)
-            return res.status(200).json(event)
+            return res.status(200).json({event})
         } catch (e) {
             return res.status(400).json({ error: e.toString() });
         }
@@ -47,7 +47,7 @@ const EventController = {
         try {
             const event = await EventModel.getPopulatedEvent(req.params.id)
             if (!event) {
-                return res.status(404).json("Event not found")
+                return res.status(404).json({message: "Event not found"})
 
             }
             let participating = event.participants.includes(req.auth.id) ? true : false
@@ -62,19 +62,19 @@ const EventController = {
             const user = req.auth.id
             var event = await EventModel.Event.findById(event_id);
             if (!event) {
-                return res.status(404).json({ error: "Event does not exist" });
+                return res.status(404).json({ message: "Event does not exist" });
             }
 
             if (!event.participants.includes(user)) {
                 if (event.quota && event.quota <= event.participants.length) {
-                    return res.status(400).json("Quota is full, cannot participate")
+                    return res.status(400).json({ message: "Quota is full, cannot participate"})
                 }
                 event.participant_count += 1
                 event.participants.push(user)
             }
 
             await event.save()
-            return res.status(200).json("User participates in event")
+            return res.status(200).json({ message: "User participates in event"})
         }
         catch (e) {
             return res.status(400).json({ error: e.toString() });
@@ -95,7 +95,7 @@ const EventController = {
                 event.participant_count -= 1
                 await event.save()
             }
-            return res.status(200).json("User does not participate in event")
+            return res.status(200).json({ message: "User removed from participation list."})
         }
         catch (e) {
             return res.status(400).json({ error: e.toString() });
