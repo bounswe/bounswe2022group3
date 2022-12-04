@@ -7,8 +7,8 @@ const AnnotationController = {
   createAnnotation: async function (req, res) {
     try {
       const { type, body, target, id, resource } = req.body;
-      const context = req.body['@context'];
-      const annotation = await AnnotationModel.createAnnotation(
+      const context = req.body["@context"];
+      var annotation = await AnnotationModel.createAnnotation(
         context,
         type,
         body,
@@ -24,21 +24,7 @@ const AnnotationController = {
   getAnnotation: async function (req, res) {
     try {
       const { id } = req.params;
-      const annotation = await AnnotationModel.Annotation.findOne({
-        id,
-      })
-        .populate({
-          path: "body",
-          populate: { path: "creator", select: { name: 1 } },
-        })
-        .populate({
-          path: "target",
-          populate: {
-            path: "selector",
-            model: Selector,
-          },
-        })
-        .exec();
+      const annotation = await AnnotationModel.Annotation.findOne({ id }, "-_id -__v").exec();
       if (!annotation) {
         return res
           .status(404)
@@ -52,28 +38,11 @@ const AnnotationController = {
   getResourceAnnotations: async function (req, res) {
     try {
       const { resource_id } = req.params;
-      const resource = await Resource.findOne({
-        id: resource_id,
-      });
+      const resource = await Resource.findById(resource_id);
       if (!resource) {
         return res.status(400).json({ error: "Resource does not exist!" });
       } else {
-        const annotations = await AnnotationModel.Annotation.find({
-          resource: resource_id,
-        })
-          .populate({
-            path: "body",
-            options: { sort: { created: -1 } }, // not sorting
-            populate: { path: "creator", select: { name: 1 } },
-          })
-          .populate({
-            path: "target",
-            populate: {
-              path: "selector",
-              model: Selector,
-            },
-          })
-          .exec();
+        const annotations = await AnnotationModel.Annotation.find({ resource: resource_id }, "-_id -__v").exec();
         return res.status(200).json({ annotations });
       }
     } catch (e) {
@@ -84,21 +53,19 @@ const AnnotationController = {
     try {
       const { id, body } = req.body;
       const user = req.auth.id;
-      const annotation = await AnnotationModel.Annotation.findOne({id});
+      const annotation = await AnnotationModel.Annotation.findOne({ id });
       if (!annotation) {
         return res.status(400).json({ error: "Annotation does not exist!" });
       }
-      const body_el = await Body.findById(annotation.body[0].toString());
-      if (body_el.creator.toString() !== user.toString()) {
+      let els = body[0].creator.id.split('/');
+      let user_id = els[els.length - 1];
+      if (user_id !== user.toString()) {
         return res
           .status(400)
           .json({ error: "User not the creator of annotation!" });
       } else {
-        let fields = ['purpose', 'type', 'value', 'created'];
-        for (var field of fields) {
-          body_el[field] = body[0][field];
-        }
-        body_el.save();
+        annotation.body = body;
+        annotation.save();
         return res
           .status(201)
           .json({ message: "Annotation updated successfully!" });
@@ -115,8 +82,9 @@ const AnnotationController = {
       if (!annotation) {
         return res.status(400).json({ error: "Annotation does not exist!" });
       }
-      const body = await Body.findById(annotation.body[0].toString());
-      if (body.creator.toString() !== user.toString()) {
+      let els = annotation.body[0].creator.id.split('/');
+      let user_id = els[els.length - 1];
+      if (user_id !== user.toString()) {
         return res
           .status(400)
           .json({ error: "User not the creator of annotation!" });
