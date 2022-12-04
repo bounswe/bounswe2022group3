@@ -30,20 +30,19 @@ Widget topicPageView(Topic c) => ViewModelBuilder<TopicPageViewModel>.reactive(
                     ),
                   ),
                   body: Stack(children: [
-                    Center(
-                      child: SingleChildScrollView(
-                        child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.max,
-                            children: viewModel.topic!.resources.isEmpty
-                                ? [const Text("There is nothing here consider creating new resources!")]
-                                : [
-                                    ...viewModel.topic!.resources.map(
-                                        (Resource cont) =>
-                                            resourceTile(cont, context))
-                                  ]),
-                      ),
-                    ),
+                    ListView(
+                        shrinkWrap: true,
+                        padding: const EdgeInsets.all(10.0),
+                        children: viewModel.topic!.resources.isEmpty
+                            ? [
+                                const Text(
+                                    "There is nothing here consider creating new resources!")
+                              ]
+                            : [
+                                ...viewModel.topic!.resources.map(
+                                    (Resource cont) =>
+                                        resourceTile(cont, context))
+                              ]),
                     addButton(viewModel.topic!, context, viewModel),
                   ]),
                 )
