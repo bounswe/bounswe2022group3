@@ -66,7 +66,7 @@ const AnnotationController = {
         annotation.save();
         return res
           .status(201)
-          .json({ message: "Annotation updated successfully!" });
+          .json();//{ message: "Annotation updated successfully!" }
       }
     } catch (e) {
       return res.status(400).send({ error: e.toString() });
@@ -90,7 +90,7 @@ const AnnotationController = {
         annotation.remove();
         return res
           .status(201)
-          .json({ message: "Annotation deleted successfully!" });
+          .json();//{ message: "Annotation deleted successfully!" }
       }
     } catch (e) {
       return res.status(400).send({ error: e.toString() });
