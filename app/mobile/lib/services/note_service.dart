@@ -41,4 +41,40 @@ class NoteService {
     }
     return null;
   }
+
+  Future<List<Note>> notesOfSpace({
+    required String spaceId,
+  }) async {
+    if (userService.user == null) {
+      return []; // cannot get notes if the user is not logged in
+    }
+    try {
+      Response response = await dioService.dio.post(
+        '/note/getNoteList',
+        data: {"space_id": spaceId},
+      );
+      Map json = response.data;
+      return json['notes'].map<Note>((e) => Note.fromJson(e)).toList();
+    } catch (e) {
+      print(e);
+    }
+    return [];
+  }
+
+  Future<Note?> updateNote({
+    required String noteId,
+    required String body,
+  }) async {
+    try {
+      Response response = await dioService.dio.put(
+        '/note/update',
+        data: {"note_id": noteId, "body": body},
+      );
+      Map json = response.data;
+      return Note.fromJson(json['note']);
+    } catch (e) {
+      print(e);
+    }
+    return null;
+  }
 }

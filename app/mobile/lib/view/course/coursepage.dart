@@ -1,5 +1,6 @@
 import 'package:bucademy/classes/chapter/chapter.dart';
 import 'package:bucademy/classes/discussion/discussion.dart';
+import 'package:bucademy/classes/note/note.dart';
 import 'package:bucademy/resources/constants.dart';
 import 'package:bucademy/classes/course/course.dart';
 import 'package:bucademy/resources/custom_colors.dart';
@@ -200,13 +201,12 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                             shrinkWrap: true,
                             padding: const EdgeInsets.all(10.0),
                             children: [
-                              ...contentService
-                                  .contents("Note")
-                                  .map((MockContent m) => GestureDetector(
-                                        child: mockTile(m.name),
+                              ...viewModel.course!.notes!
+                                  .map((Note n) => GestureDetector(
+                                        child: mockTile(n.title ),
                                         onTap: () => PersistentNavBarNavigator
                                             .pushNewScreen(context,
-                                                screen: noteView(noteId: ""),
+                                                screen: noteView(note: n ),
                                                 withNavBar: false),
                                       ))
                             ],
