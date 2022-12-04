@@ -1,0 +1,75 @@
+@import "../../styles/variables.scss";
+
+.icon {
+    display: flex;
+    align-items: center;
+
+    h2 {
+        font-family: "Merriweather", sans-serif;
+        color: $secondary;
+        margin-left: 20px;
+        margin-top: -4px;
+    }
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 72px;
+    padding: 0 96px;
+    position: relative;
+    background-color: transparent;
+}
+
+.main_nav_list {
+    list-style: none;
+
+    display: flex;
+    align-items: center;
+    gap: 48px;
+
+    svg {
+        cursor: pointer;
+        color: $black;            
+        transition: color 200ms linear;
+
+        &:hover {
+            color: $secondary;
+        }
+    }
+}
+
+.main_nav_links:link,
+.main_nav_links:visited {
+    display: inline-block;
+    font-size: 18px;
+    font-weight: 500;
+    color: #333;
+    text-decoration: none;
+
+    transition: all 0.3s;
+}
+
+.main_nav_links:hover,
+.main_nav_links:active {
+    color: $secondary;
+}
+
+.btn_mobile_nav {
+    border: none;
+    background: none;
+    cursor: pointer;
+
+    display: none;
+}
+
+.icon_mobile_nav {
+    height: 4.8rem;
+    width: 4.8rem;
+    color: #333;
+}
+
+.icon_mobile_nav[name="close-outline"] {
+    display: none;
+}
