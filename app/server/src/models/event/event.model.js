@@ -36,12 +36,19 @@ const createEvent = async (body) => {
     event.participant_count = 0
     return await event.save()
 };
+const deleteEvent = async (id) => {
+    return await Event.findOneAndDelete({ id });
+};
+
+const getEvent = async (id) => {
+    return await Event.findById(id);
+};
 
 const getPopulatedEvent = async (id) => {
     return Event.findById(id)
         .populate({
             path: "space_id",
-            select: {name: 1, info: 1 }
+            select: { name: 1, info: 1 }
         })
         .populate({
             path: "creator",
@@ -53,5 +60,7 @@ const getPopulatedEvent = async (id) => {
 module.exports = {
     Event,
     createEvent,
+    deleteEvent,
+    getEvent,
     getPopulatedEvent
 };

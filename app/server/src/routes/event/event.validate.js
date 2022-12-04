@@ -8,6 +8,10 @@ exports.validate = (method) => {
         body("start_date", "start_date is given in wrong format, should be a date").isISO8601().toDate(),
       ];
     }
+    case "delete-event": {
+      // not sure what to put here...
+      return [];
+    }
     case "participate": {
       // not sure what to put here...
       return [];

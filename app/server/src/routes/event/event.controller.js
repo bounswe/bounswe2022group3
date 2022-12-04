@@ -10,11 +10,27 @@ const EventController = {
             return res.status(400).json({ error: e.toString() });
         }
     },
+    deleteEvent: async function (req, res) {
+        try {
+            const event_id = req.params.id
+            const event = await EventModel.getEvent(event_id)
+            if (!event) {
+                return res.status(404).json("Event does not exist")
+            }
+            if (event.creator.toString() != req.auth.id.toString()) {
+                return res.status(400).json("User is not the creator of the event")
+            }
+            await EventModel.deleteEvent(event_id)
+            return res.status(200).json(event)
+        } catch (e) {
+            return res.status(400).json({ error: e.toString() });
+        }
+    },
     getEvent: async function (req, res) {
         try {
             const event = await EventModel.getPopulatedEvent(req.params.id)
             let participating = event.participants.includes(req.auth.id) ? true : false
-            return res.status(200).json({event, participating})
+            return res.status(200).json({ event, participating })
         } catch (e) {
             return res.status(400).json({ error: e.toString() });
         }

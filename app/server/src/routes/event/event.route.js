@@ -14,6 +14,14 @@ eventRouter.post(
     EventController.createEvent
 );
 
+eventRouter.delete(
+    "/:id",
+    validate("delete-event"),
+    handleValidation,
+    authorization,
+    EventController.deleteEvent
+);
+
 eventRouter.post(
     "/participate/:event_id",
     validate("participate"),
@@ -38,13 +46,9 @@ eventRouter.get(
     EventController.getEvent
 );
 
-// TODO: remove participant
-// eventRouter.post(
-//     "/un-participate/:event_id",
-//     // validate("participate-to-event"),
-//     // handleValidation,
-//     // authorization,
-//     // EventController.createEvent
-// );
+// TODO: add update function
+
+
+// TODO: getAllEvents for space
 
 module.exports = eventRouter;
