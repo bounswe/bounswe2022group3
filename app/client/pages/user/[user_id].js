@@ -12,15 +12,15 @@ import {
   Divider,
   CardHeader,
   TextField,
-  InputLabel
+  InputLabel,
+  Autocomplete,
+  Chip
 } from '@mui/material';
-import * as Yup from "yup";
 import { API_URL } from "../../next.config";
 import axios from 'axios';
 import { useEffect, useState } from "react";
 import { useRouter } from 'next/router'
 import UserLayout from '../../layouts/user-layout/UserLayout';
-import { authorization } from '../../../server/src/services/auth';
 
 let owner_id = ''
 
@@ -47,7 +47,6 @@ export default function profile(props) {
   const router = useRouter();
   const { user_id } = router.query;
   const [personal_infos, setPersonal_info] = useState({
-
     bio: '',
     interests: '',
     knowledge: ''
@@ -60,6 +59,8 @@ export default function profile(props) {
     image: '',
     is_private: true
   });
+  const [tags, setTags] = useState([]);
+  const [knowledgeTags, setKnowledgeTags] = useState([]);
   const get_user = async () => {
     if (user_id) {
       try {
@@ -70,6 +71,9 @@ export default function profile(props) {
         if (res) {
           setValues(res.profile);
           setPersonal_info(res.profile.personal_info)
+          setTags(res.profile.personal_info.interests)
+          setKnowledgeTags(res.profile.personal_info.knowledge)
+
         }
       } catch (e) {
         console.log(e);
@@ -77,7 +81,6 @@ export default function profile(props) {
     }
 
   }
- 
   useEffect(() => {
     get_user();
     owner_id = localStorage.getItem('user_id');
@@ -97,7 +100,6 @@ export default function profile(props) {
   const onClick = async () => {
 
     const body = {
-      "id": user_id,
       "bio": personal_infos.bio,
       "interests": [personal_infos.interests],
       "knowledge": [personal_infos.knowledge]
@@ -105,7 +107,7 @@ export default function profile(props) {
 
     console.log(body)
     try {
-      const res = (await axios.post(`${API_URL}/userProfile/updatePersonalInfo`, body))
+      const res = (await axios.post(`${API_URL}/userProfile/updateProfile`, body))
       console.log(res)
       alert("Profile Updated")
     } catch (err) {
@@ -118,7 +120,7 @@ export default function profile(props) {
   }else{
     isOwner = false;
   }
-  
+
   return (
     <>
       {isOwner ? (<Box
@@ -152,7 +154,7 @@ export default function profile(props) {
                     }}
                   >
                     <Avatar
-                      src={personalValues.image}
+                      src={`${API_URL}/user/${personalValues.image}`}
                       sx={{
                         height: 64,
                         mb: 2,
@@ -172,13 +174,10 @@ export default function profile(props) {
                     >
                       {personalValues.email}
                     </Typography>
-
                   </Box>
                 </CardContent>
-
                 <Divider />
                 <CardActions>
-
                   <Button
                     color="primary"
                     fullWidth
@@ -288,12 +287,11 @@ export default function profile(props) {
                         md={12}
                         xs={12}
                       >
-                        <TextField
+                       <TextField
                           fullWidth
                           label="Knowledge"
                           name="knowledge"
                           onChange={handleChange}
-                          //disabled
                           value={personal_infos.knowledge}
                           variant="outlined"
                         />
@@ -305,10 +303,9 @@ export default function profile(props) {
                       >
                         <TextField
                           fullWidth
-                          label="Intrests"
+                          label="Interests"
                           name="interests"
                           onChange={handleChange}
-                          //disabled
                           value={personal_infos.interests}
                           variant="outlined"
                         >
@@ -370,7 +367,7 @@ export default function profile(props) {
                     }}
                   >
                     <Avatar
-                      src={personalValues.image}
+                      src={`${API_URL}/user/${personalValues.image}`}
                       sx={{
                         height: 64,
                         mb: 2,
@@ -463,7 +460,6 @@ export default function profile(props) {
                               55
                             </Typography>
                           </Grid>
-
                         </Grid>
                       </Grid>
                       <Grid
@@ -535,7 +531,7 @@ export default function profile(props) {
                     }}
                   >
                     <Avatar
-                      src={personalValues.image}
+                      src={`${API_URL}/user/${personalValues.image}`}              
                       sx={{
                         height: 64,
                         mb: 2,
@@ -645,35 +641,58 @@ export default function profile(props) {
                       xs={12}
                     >
                       <InputLabel shrink>
-                        Knowledges
+                        Knowledge
                       </InputLabel>
-                      <TextField
-                        fullWidth
-                        //label="Knowledge"
-                        name="knowledge"
-                        onChange={handleChange}
-                        disabled
-                        value={personal_infos.knowledge}
-                        variant="outlined"
-                      />
+                      <Autocomplete
+                            multiple
+                            id="tags-filled"
+                            options={knowledgeTags}
+                            value={knowledgeTags}
+                            defaultValue={[knowledgeTags]}
+                            disabled
+                            freeSolo
+                            renderTags={(value, getTagProps) =>
+                              value.map((option, index) => (
+                                <Chip variant="outlined" label={option} {...getTagProps({ index })} />
+                              ))
+                            }
+                            renderInput={(params) => (
+                              <TextField
+                                {...params}
+                                variant="outlined"         
+                              />
+                            )}
+                          />
                     </Grid>
                     <Grid
                       item
                       md={12}
                       xs={12}
-                    >
-                      <InputLabel shrink>
-                        Interests
-                      </InputLabel>
-                      <TextField
-                        fullWidth
-                        name="interests"
-                        onChange={handleChange}
-                        disabled
-                        value={personal_infos.interests}
-                        variant="outlined"
-                      >
-                      </TextField>
+                        >
+                          <InputLabel shrink>
+                            Interests
+                          </InputLabel>
+                          <Autocomplete
+                            multiple
+                            id="tags-filled"
+                            options={tags}
+                            value={tags}
+                            defaultValue={[tags]}
+                            disabled
+                            freeSolo
+                            renderTags={(value, getTagProps) =>
+                              value.map((option, index) => (
+                                <Chip variant="outlined" label={option} {...getTagProps({ index })} />
+                              ))
+                            }
+                            renderInput={(params) => (
+                              <TextField
+                                {...params}
+                                variant="outlined"         
+                              />
+                            )}
+                          />
+
                     </Grid>
                   </Grid>
                 </CardContent>
