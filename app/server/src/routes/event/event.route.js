@@ -22,6 +22,14 @@ eventRouter.post(
     EventController.participateToEvent
 );
 
+eventRouter.post(
+    "/unparticipate/:event_id",
+    validate("unparticipate"),
+    handleValidation,
+    authorization,
+    EventController.unparticipateToEvent
+);
+
 eventRouter.get(
     "/:event_id",
     validate("get-event"),

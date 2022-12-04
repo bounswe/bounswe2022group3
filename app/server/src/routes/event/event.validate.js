@@ -12,6 +12,10 @@ exports.validate = (method) => {
       // not sure what to put here...
       return [];
     }
+    case "unparticipate": {
+      // not sure what to put here...
+      return [];
+    }
     case "get-event": {
       // not sure what to put here...
       return [];

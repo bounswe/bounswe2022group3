@@ -39,7 +39,6 @@ const EventController = {
 
             if (!event.participants.includes(user)) {
                 if (event.quota && event.quota <= event.participants.length) {
-                    console.log("inside.")
                     return res.status(400).json("Quota is full, cannot participate")
                 }
                 event.participants.push(user)
@@ -47,6 +46,25 @@ const EventController = {
 
             await event.save()
             return res.status(200).json("User participates in event")
+        }
+        catch (e) {
+            return res.status(400).json({ error: e.toString() });
+        }
+    },
+    unparticipateToEvent: async function (req, res) {
+        try {
+            const event_id = req.params.event_id
+            const user = req.auth.id
+            var event = await EventModel.Event.findById(event_id);
+            if (!event) {
+                return res.status(404).json({ error: "Event does not exist" });
+            }
+
+            if (event.participants.includes(user)) {
+                event.participants.pop(user)
+            }
+            await event.save()
+            return res.status(200).json("User does not participate in event")
         }
         catch (e) {
             return res.status(400).json({ error: e.toString() });
