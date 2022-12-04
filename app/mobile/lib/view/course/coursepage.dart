@@ -211,7 +211,7 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                             shrinkWrap: true,
                             padding: const EdgeInsets.all(10.0),
                             children: [
-                              ...viewModel.course!.notes!
+                              ...(viewModel.course!.notes ?? [])
                                   .map((Note n) => GestureDetector(
                                         child: mockTile(n.title ),
                                         onTap: () => PersistentNavBarNavigator
