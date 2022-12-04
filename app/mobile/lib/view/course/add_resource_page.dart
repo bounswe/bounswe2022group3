@@ -8,7 +8,7 @@ import 'package:bucademy/view/widgets/markdown_input.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-Widget addContentView(TopicDetailed c) =>
+Widget addContentView(TopicDetailed c, ChangeNotifier topicPageView,) =>
     ViewModelBuilder<HomeViewModel>.reactive(
       viewModelBuilder: () => HomeViewModel(),
       builder: (context, viewModel, child) => Scaffold(
@@ -98,7 +98,7 @@ Widget addContentView(TopicDetailed c) =>
                             const SnackBar(
                                 content: Text('Successfully Created!')),
                           );
-                          viewModel.addNewResource(c, created);
+                          viewModel.addNewResource(c, created, topicPageView);
                           Navigator.pop(context);
                           viewModel.notifyListeners();
                         } else {
@@ -143,8 +143,9 @@ class HomeViewModel extends ChangeNotifier {
   TextEditingController controller = TextEditingController();
   TextEditingController controller_title = TextEditingController();
 
-  void addNewResource(TopicDetailed t, Resource r) {
+  void addNewResource(TopicDetailed t, Resource r,  ChangeNotifier topicPageView) {
     t.resources.insert(0, r);
+    topicPageView.notifyListeners();
     notifyListeners();
   }
 }

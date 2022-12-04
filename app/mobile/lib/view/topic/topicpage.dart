@@ -44,7 +44,7 @@ Widget topicPageView(Topic c) => ViewModelBuilder<TopicPageViewModel>.reactive(
                                   ]),
                       ),
                     ),
-                    addButton(viewModel.topic!, context),
+                    addButton(viewModel.topic!, context, viewModel),
                   ]),
                 )
               : Scaffold(
