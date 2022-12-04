@@ -4,8 +4,8 @@ import FileUploadIcon from '@mui/icons-material/FileUpload';
 
 function PhotoWidgetDropzone({setFiles}) {
     const dzStyles = {
-        border: 'dashed 3px #eee',
-        borderColor: '#eee',
+        border: 'dashed 3px #7d97f4',
+        borderColor: '#7d97f4',
         borderRadius: '5px',
         paddingTop: '30px',
         marginTop: '15px',

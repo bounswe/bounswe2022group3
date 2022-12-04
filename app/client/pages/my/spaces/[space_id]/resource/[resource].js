@@ -103,43 +103,73 @@ export default function resource() {
     }
 
     useEffect(() => {
-        const initTerminal = async () => {
-            try {
-                const { Recogito } = await import('@recogito/recogito-js');
-                const r = new Recogito({ content: document.querySelector(".wmde-markdown") });
-                setRec(r)
-
-                r.setAnnotations(annotations)
-                r.setAuthInfo({
-                    id: localStorage.getItem("user_id"),
-                    displayName: localStorage.getItem("display_name")
-                });
-
-                r.on('createAnnotation', (annotation) => {
-                    setAnnotations(r.getAnnotations())
-                });
-                r.on('updateAnnotation', (annotation, previous) => {
-                    setAnnotations(r.getAnnotations())
-                });
-                r.on('deleteAnnotation', (annotation, previous) => {
-                    const annos = r.getAnnotations()
-                    setAnnotations(annos)
-                    if (annos.length == 0) {
-                        setOpen(false)
-                    }
-                });
-
-                clearInterval(intervalId);
-            }
-            catch (err) {
-                console.log(err)
-            }
-        }
-        intervalId = setInterval(initTerminal, 1000);
-    }, []);
-
-    useEffect(() => {
         fetchContent();
+        if (router_query?.resource !== undefined) {
+            const initTerminal = async () => {
+                try {
+                    const { Recogito } = await import('@recogito/recogito-js');
+                    const r = new Recogito({ content: document.querySelector(".wmde-markdown") });
+                    setRec(r)
+                    const resource_id = router_query.resource;
+                    const response = (
+                        await axios.get(API_URL + "/annotation/get/" + resource_id, {
+                            DISABLE_LOADING: true,
+                        })
+                    )?.data;
+                    setAnnotations(response.annotations)
+
+                    r.setAnnotations(response.annotations)
+                    r.setAuthInfo({
+                        id: `https://bucademy.tk/user/${localStorage.getItem("user_id")}`,
+                        displayName: localStorage.getItem("display_name")
+                    });
+
+                    r.on('createAnnotation', async (annotation) => {
+                        setAnnotations(r.getAnnotations())
+                        try {
+                            await axios.post(API_URL + "/annotation", { ...annotation, resource: resource_id },
+                            {
+                                DISABLE_LOADING: true,
+                            })
+                        }
+                        catch(e) {
+                            console.log(e)
+                        }
+                    });
+                    r.on('updateAnnotation', async (annotation, previous) => {
+                        setAnnotations(r.getAnnotations())
+                        try {
+                            await axios.put(API_URL + "/annotation/update", { ...annotation, resource: resource_id },
+                            {
+                                DISABLE_LOADING: true,
+                            })
+                        }
+                        catch(e) {
+                            console.log(e)
+                        }
+                    });
+                    r.on('deleteAnnotation', async (annotation, previous) => {
+                        const annos = r.getAnnotations()
+                        setAnnotations(annos)
+                        if (annos.length == 0) {
+                            setOpen(false)
+                        }
+                        try {
+                            await axios.delete(API_URL + "/annotation/delete", { data: {...annotation, resource: resource_id},  DISABLE_LOADING: true })
+                        }
+                        catch(e) {
+                            console.log(e)
+                        }
+                    });
+
+                    clearInterval(intervalId);
+                }
+                catch (err) {
+                    console.log(err)
+                }
+            }
+            intervalId = setInterval(initTerminal, 1000);
+        }
     }, [router_query]);
 
     function onEditButtonClicked() {
@@ -156,7 +186,7 @@ export default function resource() {
                         <h1>{data?.resource?.name}</h1>
 
                         <Link href={`/user/${data?.resource?.creator?._id}`}>
-                            <div className="review__user" style={{cursor: "pointer"}}>
+                            <div className="review__user" style={{ cursor: "pointer" }}>
                                 <img
                                     src="https://i.pravatar.cc/150?img=1"
                                     alt="User"
