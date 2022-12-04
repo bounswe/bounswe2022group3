@@ -43,9 +43,8 @@ const spaceSchema = new mongoose.Schema(
     ],
     events: [
       {
-        // type: mongoose.Schema.Types.ObjectId,
-        // ref: "Event",
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Event",
       },
     ],
     discussions: [
@@ -88,6 +87,7 @@ const createSpace = async (name, creator, info, tags, image) => {
     image,
   });
   space.enrolledUsersCount = 0;
+  space.events = [];
   const res = await space.save();
   return res;
 };

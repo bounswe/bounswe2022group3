@@ -1,4 +1,5 @@
 const EventModel = require("../../models/event/event.model");
+const SpaceModel = require("../../models/space/space.model");
 
 const EventController = {
     createEvent: async function (req, res) {
@@ -21,7 +22,7 @@ const EventController = {
                 return res.status(400).json("User is not the creator of the event")
             }
             await EventModel.deleteEvent(event_id)
-            return res.status(200).json(event)
+            return res.status(200).json("event deleted")
         } catch (e) {
             return res.status(400).json({ error: e.toString() });
         }
