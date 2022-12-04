@@ -57,7 +57,9 @@ const AnnotationController = {
       if (!annotation) {
         return res.status(400).json({ error: "Annotation does not exist!" });
       }
-      if (body[0].creator.id !== user.toString()) { // change according to URL
+      let els = body[0].creator.id.split('/');
+      let user_id = els[els.length - 1];
+      if (user_id !== user.toString()) {
         return res
           .status(400)
           .json({ error: "User not the creator of annotation!" });
@@ -80,7 +82,9 @@ const AnnotationController = {
       if (!annotation) {
         return res.status(400).json({ error: "Annotation does not exist!" });
       }
-      if (annotation.body[0].creator.id !== user.toString()) { // change according to URL
+      let els = annotation.body[0].creator.id.split('/');
+      let user_id = els[els.length - 1];
+      if (user_id !== user.toString()) {
         return res
           .status(400)
           .json({ error: "User not the creator of annotation!" });
