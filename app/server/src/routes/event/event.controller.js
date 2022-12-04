@@ -30,6 +30,10 @@ const EventController = {
     getEvent: async function (req, res) {
         try {
             const event = await EventModel.getPopulatedEvent(req.params.id)
+            if (!event) {
+                return res.status(404).json("Event not found")
+
+            }
             let participating = event.participants.includes(req.auth.id) ? true : false
             return res.status(200).json({ event, participating })
         } catch (e) {
