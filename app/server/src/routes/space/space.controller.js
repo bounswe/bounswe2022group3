@@ -15,7 +15,7 @@ const SpaceController = {
         tags,
         image
       );
-      creator.created_spaces.push(space);
+      creator.created_spaces.push(space._id);
       await creator.save();
       return res.status(201).send({ space });
     } catch (error) {
@@ -81,6 +81,9 @@ const SpaceController = {
         } else {
           enrolled = false;
         }
+        if (space.creator._id.toString() == user._id.toString()) {
+          enrolled = true;
+        }
       } else {
         return res.status(200).json({ space });
       }
@@ -94,7 +97,9 @@ const SpaceController = {
     try {
       var space = req.params.id;
       space = await SpaceModel.Space.findById(space)
-        .populate({ path: "discussions", populate: { path: "title _id" } })
+        .populate({ path: "discussions", 
+        options: { sort: { 'createdAt': -1 } },
+        populate: { path: "title _id" } })
         .exec();
       if (!space) {
         return res.status(404).json({ message: "The space does not exist!" }); // The token exists but email mismatch.
@@ -103,11 +108,6 @@ const SpaceController = {
 
       for (var discussion of space.discussions) {
         discussions.push({
-          title: discussion.title,
-          discussion_id: discussion._id,
-        });
-
-        console.log({
           title: discussion.title,
           discussion_id: discussion._id,
         });

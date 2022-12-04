@@ -7,16 +7,20 @@ const ResourceController = {
     try {
       const { name, body, topic_id } = req.body;
       const user = req.auth.id;
+      var topic = await TopicModel.Topic.findById(topic_id);
+      if(!topic){
+        return res.status(400).json({ error: "Topic does not exist!" });
+      }
       const resource = await ResourceModel.createResource(
         name,
         body,
         topic_id,
         user
       );
-      var topic = await TopicModel.Topic.findById(topic_id);
       topic.resources.push(resource);
       topic.save();
-      return res.status(201).json({ resource });
+      const resource_populated = await ResourceModel.getPopulatedResource(resource._id);
+      return res.status(201).json({ resource: resource_populated });
     } catch (e) {
       return res.status(400).json({ error: e.toString() });
     }
@@ -62,11 +66,11 @@ const ResourceController = {
     try {
       const { resource_id } = req.body;
       const user = req.auth.id;
-      var resource = await ResourceModel.Resource.findById(resource_id);
+      var resource = await ResourceModel.getPopulatedResource(resource_id);
       if(!resource){
         return res.status(400).json({ error: "Resource does not exist!" });
       }
-      if (resource.creator.toString() !== user.toString()) {
+      if (resource.creator._id.toString() !== user.toString()) {
         return res
         .status(400)
         .send({ error: "User not the creator of the resource!" });

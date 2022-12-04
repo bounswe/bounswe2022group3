@@ -13,6 +13,13 @@ topicRouter.post(
   authorization,
   TopicController.createTopic
 );
+topicRouter.delete(
+  "/delete",
+  validate("delete-topic"),
+  handleValidation,
+  authorization,
+  TopicController.deleteTopic
+);
 topicRouter.get(
   "/:id",
   validate("get-topic"),

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:bucademy/classes/topic/topic.dart';
 import 'package:bucademy/classes/discussion/discussion.dart';
 import 'package:bucademy/resources/constants.dart';
@@ -57,10 +59,17 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                                           borderRadius: const BorderRadius.all(
                                               Radius.circular(
                                                   Constants.borderRadius)),
-                                          child: Image.network(
-                                            viewModel.course!.image,
-                                            fit: BoxFit.cover,
-                                          ),
+                                          child: c.image.startsWith("http")
+                                              ? Image.network(
+                                                  c.image,
+                                                  fit: BoxFit.cover,
+                                                )
+                                              : Image.memory(
+                                                  base64Decode(c.image.replaceFirst(
+                                                      "data:image/jpeg;base64,",
+                                                      "")),
+                                                  fit: BoxFit.cover,
+                                                ),
                                         ),
                                       ),
                                       Container(

@@ -5,27 +5,38 @@ var crypto = require('crypto');
 
 
 const UserProfileController = {
-  updatePersonalInfo: async function (req, res) {
+  updateProfile: async function (req, res) {
     try {
       const { bio, interests, knowledge } = req.body;
       const user = await UserModel.getUserByID(req.auth.id);
       const personalInfoId = user.personal_info;
+      const body_keys = Object.keys(req.body);
+      if (body_keys.includes('is_private')) {
+        user.is_private = req.body.is_private;
+      }
+      if (body_keys.includes('name')) {
+        user.name = req.body.name;
+      }
+      if (body_keys.includes('surname')) {
+        user.surname = req.body.surname;
+      }
       let data = {
         bio: bio,
         interests: interests,
         knowledge: knowledge,
       };
+      await user.save();
       await personalInfoModel.updateBio(personalInfoId, data);
-      res.status(201).send({ message: "Updated bio successfully" });
+      return res.status(201).send({ message: "Updated profile successfully" });
     } catch (e) {
-      res.status(400).send({ error: e.toString() });
+      return res.status(400).send({ error: e.toString() });
     }
   },
 
   updatePicture: async function (req, res) {
     try {
       const user = await UserModel.getUserByID(req.auth.id);
-      if(!req.files){
+      if (!req.files) {
         return res.status(400).json({ error: "Picture missing!" });
       }
       let picture = req.files.picture;
@@ -37,23 +48,103 @@ const UserProfileController = {
       user.image = picture_name
       await user.save();
       let link = process.env.API_URL + "/user/" + picture_name;
-      res.status(200).json({ 
+      return res.status(200).json({
         message: "Profile Picture updated!",
         link: link,
       });
     } catch (e) {
-      res.status(400).json({ error: e.toString() });
+      return res.status(400).json({ error: e.toString() });
+    }
+  },
+
+  follow: async function (req, res) {
+    try {
+      const id = req.body.user_id;
+      const user_id = req.auth.id;
+      if(id == user_id.toString()){
+        return res.status(400).json({ message: "You can't follow yourself!" });
+      }
+      const user = await UserModel.User.findById(user_id);
+      const other_user = await UserModel.User.findById(id);
+      if(user.followed_users.includes(id)){// already following
+        return res.status(400).json({ message: "You already follow this user!" });
+      }
+      user.followed_users.push(other_user);
+      other_user.follower_users.push(user);
+      await user.save();
+      await other_user.save();
+      return res.status(200).json({ message: `${user.name+" "+user.surname} started following ${other_user.name+" "+ other_user.surname}` });
+    } catch (e) {
+      return res.status(400).json({ error: e.toString() });
+    }
+  },
+
+  unfollow: async function (req, res) {
+    try {
+      const id = req.body.user_id;
+      const user_id = req.auth.id;
+      if(id == user_id.toString()){
+        return res.status(400).json({ message: "You can't unfollow yourself!" });
+      }
+      const user = await UserModel.User.findById(user_id);
+      const other_user = await UserModel.User.findById(id);
+      if(!(user.followed_users.includes(id))){// already following
+        return res.status(400).json({ message: "You are already not following this user!" });
+      }
+      let index = user.followed_users.indexOf(id);
+      if (index > -1) { // only splice array when item is found
+        user.followed_users.splice(index, 1); // 2nd parameter means remove one item only
+      }
+      index = other_user.follower_users.indexOf(user_id.toString());
+      if (index > -1) { // only splice array when item is found
+        other_user.follower_users.splice(index, 1); // 2nd parameter means remove one item only
+      }
+      await user.save();
+      await other_user.save();
+      return res.status(200).json({ message: `${user.name+" "+user.surname} stopped following ${other_user.name+" "+ other_user.surname}` });
+    } catch (e) {
+      return res.status(400).json({ error: e.toString() });
     }
   },
 
   getProfile: async function (req, res) {
     try {
       const id = req.params.id;
-      // Need a new function in user model that returns populated versions of personal info and badges
-      const profile = await UserModel.getPopulatedPersonalInfo(id);
-      res.status(200).json({ profile });
+      // if user logged-in
+      let profile;
+      if (req.auth) {
+        var user_id = req.auth.id;
+        const user = await UserModel.User.findById(user_id);
+        if(id == user_id.toString()){// own profile
+          profile = await UserModel.getPopulatedPersonalInfo(id);
+          return res.status(200).json({ profile });
+        }
+        if(user.followed_users.includes(id)){// looking at the profile of a user we follow
+          profile = await UserModel.getPopulatedPersonalInfo(id);
+          return res.status(200).json({ profile });
+        }
+        // looking at a profile we don't follow
+        const other_user = await UserModel.getUserByID(id);
+        if(other_user.is_private){
+          profile = await UserModel.getPopulatedPersonalInfoPrivate(id);
+        }
+        else{
+          profile = await UserModel.getPopulatedPersonalInfo(id);
+        }
+        return res.status(200).json({ profile });
+      }
+      else{
+        const user = await UserModel.getUserByID(id);
+        if(user.is_private){
+          profile = await UserModel.getPopulatedPersonalInfoPrivate(id);
+        }
+        else{
+          profile = await UserModel.getPopulatedPersonalInfo(id);
+        }
+        return res.status(200).json({ profile });
+      }
     } catch (e) {
-      res.status(400).json({ error: e.toString() });
+      return res.status(400).json({ error: e.toString() });
     }
   },
 };

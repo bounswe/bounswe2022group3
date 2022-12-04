@@ -1,19 +1,31 @@
 const NoteModel = require("../../models/note/note.model");
 const SpaceModel = require("../../models/space/space.model");
+const TopicModel = require("../../models/topic/topic.model");
+const ResourceModel = require("../../models/resource/resource.model");
 const EnrollmentModel = require("../../models/enrollment/enrollment.model");
 
 const NoteController = {
   createNote: async function (req, res) {
     try {
-      const { title, body, space_id } = req.body;
+      const { title, body, resource_id } = req.body;
       const user_id = req.auth.id;
+      var resource = await ResourceModel.Resource.findById(resource_id);
+      if(!resource){
+        return res.status(400).json({ error: "Resource does not exist!" });
+      }
+      var topic = await TopicModel.Topic.findById(resource.topic);
+      var space = await SpaceModel.Space.findById(topic.space);
+      if(!space){
+        return res.status(400).json({ error: "Space does not exist!" });
+      }
       const note = await NoteModel.createNote(
         title,
         body,
-        space_id,
-        user_id
+        user_id,
+        resource_id,
+        space._id
       );
-      var enrollment = await EnrollmentModel.getEnrollment(user_id, space_id)
+      var enrollment = await EnrollmentModel.getEnrollment(user_id, space._id)
       if (enrollment.length !== 1 ) {
         return res.status(400).json({ error: "Enrollment does not exist!" });
       }
@@ -105,14 +117,37 @@ const NoteController = {
   getNoteList: async function (req, res) {
     try {
       const user = req.auth.id;
-      var enrollment = await EnrollmentModel.getEnrollment(user, req.params.space_id)
-      console.log(enrollment)
+      var enrollment = await EnrollmentModel.getEnrollmentNoteExtended(user, req.body.space_id)
       if (enrollment.length !== 1 ) {
         return res.status(400).json({ error: "Enrollment does not exist!" });
       }
       enrollment = enrollment[0];
-      let notes = enrollment.notes;
-      return res.status(200).json({ user: enrollment.user, notes: enrollment.notes });
+      let notes = [];
+      const body_keys = Object.keys(req.body);
+      if ((!body_keys.includes('resource_id')) && (!body_keys.includes('topic_id'))) {
+        // no filter
+        notes = enrollment.notes;
+      }
+      // filter by resource if resource exists, filter by topic if topic exists
+      // if both exist, filter by resource.
+      if (body_keys.includes('resource_id')) {
+        let resource_id = req.body.resource_id;
+        for(var note of enrollment.notes){
+          if(note.resource.toString() == resource_id.toString()){
+            notes.push(note)
+          }
+        }
+      }
+      else if (body_keys.includes('topic_id')) {
+        let topic_id = req.body.topic_id;
+        for(var note of enrollment.notes){
+          var resource = await ResourceModel.Resource.findById(note.resource);
+          if(resource.topic.toString() == topic_id.toString()){
+            notes.push(note)
+          }
+        }
+      }
+      return res.status(200).json({ user: enrollment.user, notes });
     } catch (e) {
       return res.status(400).send({ error: e.toString() });
     }
