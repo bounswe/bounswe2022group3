@@ -230,7 +230,7 @@ describe("User", () => {
                     decoded = {
                         email : "kadir@gmail.com",
                     }
-                    return {decoded};
+                    return decoded;
                 });
                 spy2 = jest.spyOn(auth, "generateToken").mockReturnValue("newMockedToken");
                 const { body, statusCode } = await supertest(app)
@@ -256,7 +256,7 @@ describe("User", () => {
                     decoded = {
                         email : "stranger@gmail.com",
                     }
-                    return {decoded};
+                    return decoded;
                 });
                 const { body, statusCode } = await supertest(app)
                     .post("/user/confirm-email")
@@ -276,7 +276,7 @@ describe("User", () => {
                     decoded = {
                         email : "kadir@gmail.com",
                     }
-                    return {decoded};
+                    return decoded;
                 });
                 const { body, statusCode } = await supertest(app)
                     .post("/user/confirm-email")
@@ -300,7 +300,7 @@ describe("User", () => {
                     decoded = {
                         email : "kadir@gmail.com",
                     }
-                    return {decoded};
+                    return decoded;
                 });
                 spy2 = jest.spyOn(auth, "generateToken").mockReturnValue("newMockedToken");
                 const { body, statusCode } = await supertest(app)

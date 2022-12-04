@@ -1,0 +1,45 @@
+@import "../variables.scss";
+
+.form {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    max-width: 500px;
+    width: 80%;
+
+    @media screen and (min-width: 48rem) {
+        margin-top: 2rem;
+        width: 70%;
+    }
+}
+
+.input {
+    height: calc(1.8em + 1.375rem + 2px);
+    padding: 0.6875rem 0.75rem;
+    font-size: 0.9rem;
+    font-weight: 400;
+    border: 1px solid #C4C4C4;
+    color: inherit;
+    font-family: inherit;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    transition: 0.5s;
+
+    &::placeholder {
+        color: #aaa;
+    }
+
+    &:focus {
+        border-color: $base-color-light;
+        outline: none;
+    }
+}
+
+.error {
+    margin-top: -0.7rem !important;
+    margin-bottom: 0.8rem;
+    margin-left: 5px;
+    text-align: left;
+    color: $secondary;
+    font-weight: 600;
+}

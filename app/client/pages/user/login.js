@@ -17,7 +17,7 @@ export default function login() {
             .required("No password provided")
             .min(8, "Password is too short - should be 8 chars minimum")
             .matches(
-                /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
+                /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*\+])(?=.{8,})/,
                 "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
             ),
     });
@@ -35,6 +35,7 @@ export default function login() {
             localStorage.setItem("access_token", response.access_token);
             localStorage.setItem("refresh_token", response.refresh_token);
             localStorage.setItem("user_id", response.id);
+            localStorage.setItem("display_name", `${response.name} ${response.surname}`);
 
             router.push('/user/my_spaces')
         } catch (err) {
