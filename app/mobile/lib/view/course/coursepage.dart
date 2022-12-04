@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:bucademy/classes/chapter/chapter.dart';
 import 'package:bucademy/classes/discussion/discussion.dart';
 import 'package:bucademy/classes/note/note.dart';
@@ -7,6 +9,7 @@ import 'package:bucademy/resources/custom_colors.dart';
 import 'package:bucademy/resources/text_styles.dart';
 import 'package:bucademy/services/locator.dart';
 import 'package:bucademy/view/course/content_tile.dart';
+import 'package:bucademy/view/course/discussion/create_discussion.dart';
 import 'package:bucademy/view/course/discussion/discussion_view.dart';
 import 'package:bucademy/view/course/mock_tile.dart';
 import 'package:bucademy/view/course/note/note_view.dart';
@@ -55,10 +58,17 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                                           borderRadius: const BorderRadius.all(
                                               Radius.circular(
                                                   Constants.borderRadius)),
-                                          child: Image.network(
-                                            viewModel.course!.image,
-                                            fit: BoxFit.cover,
-                                          ),
+                                          child: c.image.startsWith("http")
+                                              ? Image.network(
+                                                  c.image,
+                                                  fit: BoxFit.cover,
+                                                )
+                                              : Image.memory(
+                                                  base64Decode(c.image.replaceFirst(
+                                                      "data:image/jpeg;base64,",
+                                                      "")),
+                                                  fit: BoxFit.cover,
+                                                ),
                                         ),
                                       ),
                                       Container(
@@ -224,27 +234,28 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                             shrinkWrap: true,
                             padding: const EdgeInsets.all(10.0),
                             children: [
-                              GestureDetector(
-                                onTap: () =>
-                                    createDiscussion(context, viewModel),
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 20),
-                                  margin: const EdgeInsets.only(bottom: 10),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(
-                                        Constants.borderRadius),
-                                  ),
-                                  child: Row(
-                                    children: const [
-                                      Icon(Icons.add,
-                                          color: Colors.green, size: 30),
-                                      SizedBox(width: 15),
-                                      Text('Create a new discussion'),
-                                    ],
+                              if (userService.user != null)
+                                GestureDetector(
+                                  onTap: () =>
+                                      createDiscussion(context, viewModel),
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 20, vertical: 20),
+                                    margin: const EdgeInsets.only(bottom: 10),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(
+                                          Constants.borderRadius),
+                                    ),
+                                    child: Row(
+                                      children: const [
+                                        Icon(Icons.add,
+                                            color: Colors.green, size: 30),
+                                        SizedBox(width: 15),
+                                        Text('Create a new discussion'),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
                               ...viewModel.course!.discussions.map(
                                   (DiscussionShortened m) => GestureDetector(
                                         child: mockTile(m.title),
@@ -324,38 +335,4 @@ class CoursePageViewModel extends ChangeNotifier {
     contentsLoading = false;
     notifyListeners();
   }
-}
-
-createDiscussion(BuildContext context, CoursePageViewModel viewModel) {
-  String? title;
-  showDialog(
-      context: context,
-      builder: ((context) => AlertDialog(
-            title: const Text('Enter the title of discussion'),
-            content: TextField(
-              onChanged: (value) => title = value,
-              decoration: const InputDecoration(hintText: "Title"),
-            ),
-            actions: [
-              GestureDetector(
-                onTap: (title != null && title!.isNotEmpty)
-                    ? null
-                    : () async {
-                        Discussion? d =
-                            await discussionService.createDiscussion(
-                                spaceId: viewModel.course!.id, title: title!);
-                        if (d != null) {
-                          viewModel.addNewDiscussion(d);
-                          Navigator.of(context).pop();
-                        }
-                      },
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
-                  color: CustomColors.main,
-                  child: Text('Create', style: TextStyles.bodyWhite),
-                ),
-              )
-            ],
-          )));
 }

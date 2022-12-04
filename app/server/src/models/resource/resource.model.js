@@ -46,7 +46,7 @@ const createResource = async (name, body, topic, creator) => {
   resource.ratings = new Map();
   topic_obj = await TopicModel.getTopic(topic);
   space_id = topic_obj.space;
-  discussion = await DiscussionModel.createDiscussion(creator,space_id,name);
+  discussion = await DiscussionModel.createDiscussion(creator, space_id, name);
   resource.discussion = discussion;
   const res = await resource.save();
   return res;
@@ -59,8 +59,25 @@ const getResource = async (id) => {
 
 const getPopulatedResource = async (id) => {
   return Resource.findById(id)
-    .populate("discussion")
-    .populate("creator", "name surname")
+    .populate("creator", "name surname image")
+    .populate({
+      path: "discussion",
+      populate: {
+        path: "user",
+        select: { _id: 1, name: 1, surname: 1, image: 1 }
+      },
+    })
+    .populate({
+      path: "discussion",
+      populate: {
+        path: "comments",
+        populate: {
+          path: "user",
+          select: { _id: 1, name: 1, surname: 1, image: 1 }
+        },
+        select: { _id: 1, user: 1, comment: 1 }
+      },
+    })
     .exec();
 };
 

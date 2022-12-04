@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:bucademy/classes/course/course.dart';
 import 'package:bucademy/resources/custom_colors.dart';
 import 'package:bucademy/resources/constants.dart';
@@ -22,11 +24,19 @@ GestureDetector courseTile(Course c, BuildContext context, {bool isClickable = t
         children: [
           Row(
             children: [
-              Image.network(
-                c.image,
-                width: 20,
-                fit: BoxFit.cover,
-              ),
+              if (c.image.startsWith("http"))
+                Image.network(
+                  c.image,
+                  width: 20,
+                  fit: BoxFit.cover,
+                )
+              else
+                Image.memory(
+                  base64Decode(
+                      c.image.replaceFirst("data:image/jpeg;base64,", "")),
+                  width: 20,
+                  fit: BoxFit.cover,
+                ),
               const SizedBox(width: 10),
               Flexible(
                 child: Text(
