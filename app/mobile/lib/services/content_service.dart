@@ -1,3 +1,4 @@
+import 'package:bucademy/classes/resource/resource.dart';
 import 'package:bucademy/classes/topic/topic.dart';
 import 'package:bucademy/services/locator.dart';
 import 'package:dio/dio.dart';
@@ -46,7 +47,7 @@ class MockContentService {
       if (response.statusCode != 200) {
         return null;
       }
-      TopicDetailed t = TopicDetailed.fromJson(response.data["message"]);
+      TopicDetailed t = TopicDetailed.fromJson(response.data["topic"]);
       return t;
     } catch (e) {
       print(e);
@@ -65,6 +66,25 @@ class MockContentService {
 
       TopicDetailed t = TopicDetailed.fromJson(response.data["topic"]);
       return t;
+    } catch (e) {
+      print(e);
+    }
+    return null;
+  }
+
+  Future<Resource?> createNewResource(
+      {required String topicId,
+      required String name,
+      required String body}) async {
+    try {
+      Response response = await dioService.dio.post('/resource',
+          data: {'topic_id': topicId, 'name': name, 'body': body});
+      if(response.statusCode != 201) {
+        return  null;
+      }
+
+      Resource r = Resource.fromJson(response.data["resource"]);
+      return r;
     } catch (e) {
       print(e);
     }
