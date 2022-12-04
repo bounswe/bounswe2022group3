@@ -88,6 +88,9 @@ const createSpace = async (name, creator, info, tags, image) => {
     image,
   });
   space.enrolledUsersCount = 0;
+  // randomized rating, will change
+  space.rating = Math.floor(Math.random() * 3) + 3;
+  //
   const res = await space.save();
   return res;
 };
