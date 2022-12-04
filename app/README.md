@@ -31,7 +31,7 @@ docker run --net host -it -d --name server server:latest
 2. Update the `API_URL` variable in `next.config.json` file. In our case, set it to `http://localhost:5000`
 #### Building and running 
 ```bash
-docker built -t client:latest .
+docker build -t client:latest .
 docker run --net host --name front client:latest
 ```
 Go to localhost:8008 in your browser
