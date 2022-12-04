@@ -12,6 +12,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import LogoutIcon from '@mui/icons-material/Logout';
 import HomeIcon from '@mui/icons-material/Home';
 import { useRouter } from 'next/router';
+import UserLayout2 from '../../layouts/user-layout2/UserLayout2';
 
 
 export default function Home() {
@@ -57,17 +58,17 @@ export default function Home() {
         950: 1
     };
 
-    const CustomTooltip = styled(({ className, ...props }) => (
-        <Tooltip {...props} classes={{ popper: className }} />
-    ))(({ theme }) => ({
-        [`& .${tooltipClasses.arrow}`]: {
-            color: "#4d4ffa",
-        },
-        [`& .${tooltipClasses.tooltip}`]: {
-            backgroundColor: "#4d4ffa",
-            color: '#fff'
-        },
-    }));
+    // const CustomTooltip = styled(({ className, ...props }) => (
+    //     <Tooltip {...props} classes={{ popper: className }} />
+    // ))(({ theme }) => ({
+    //     [`& .${tooltipClasses.arrow}`]: {
+    //         color: "#4d4ffa",
+    //     },
+    //     [`& .${tooltipClasses.tooltip}`]: {
+    //         backgroundColor: "#4d4ffa",
+    //         color: '#fff'
+    //     },
+    // }));
 
     async function logout() {
         try {
@@ -85,43 +86,6 @@ export default function Home() {
 
     return (
         <>
-            <header className={styles.header}>
-                <a href="#">
-                    <div className={styles.icon}>
-                        <img src="/education.png" width="50px" height="50px" />
-                        <h2>BUcademy</h2>
-                    </div>
-                </a>
-                <nav className={styles.main_nav}>
-                    <ul className={styles.main_nav_list}>
-                        <li>
-                            <Link href="/">
-                                <CustomTooltip title="Home" arrow>
-                                    <HomeIcon />
-                                </CustomTooltip>
-                            </Link>
-                        </li>
-                        <li>
-                            <Link href={`/user/${typeof window !== 'undefined' && localStorage.getItem("user_id")}`}>
-                                <CustomTooltip title="Profile" arrow>
-                                    <PersonIcon />
-                                </CustomTooltip>
-                            </Link>
-                        </li>
-                        <li onClick={logout}>
-                            <CustomTooltip title="Logout" arrow>
-                                <LogoutIcon />
-                            </CustomTooltip>
-                        </li>
-                    </ul>
-                </nav>
-
-                {/* <button className={styles.btn_mobile_nav}>
-        <ion_icon class="icon_mobile_nav" name="menu_outline"></ion_icon>
-        <ion_icon class="icon_mobile_nav" name="close_outline"></ion_icon>
-      </button> */}
-            </header>
-
             <section className={styles.hero}>
                 <h2>Welcome back!</h2>
                 <h3>Ready to learn more?</h3>
@@ -144,7 +108,7 @@ export default function Home() {
                     {
                         courseList.map(course => {
                             return <Link href={'/my/spaces/' + course._id + "/resources"}>
-                                <div className={styles.card}>
+                                <div className={styles.card} style={{border: course.creator._id == localStorage.getItem("user_id") && "2px solid #4d4ffa"}}>
                                     <div className={styles.image}>
                                         <img src={course.image} layout="fill" />
                                     </div>
@@ -165,3 +129,7 @@ export default function Home() {
         </>
     )
 }
+
+Home.getLayout = function getLayout(page) {
+    return <UserLayout2>{page}</UserLayout2>;
+};

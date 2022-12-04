@@ -1,12 +1,12 @@
 // ignore_for_file: non_constant_identifier_names
 
-import 'dart:io';
 import 'dart:math';
 
 import 'package:bucademy/classes/profile/profile.dart';
 import 'package:bucademy/resources/constants.dart';
 import 'package:bucademy/services/locator.dart';
 import 'package:flutter/material.dart';
+import 'package:restart_app/restart_app.dart';
 import 'package:stacked/stacked.dart';
 
 import 'package:bucademy/resources/custom_colors.dart';
@@ -96,6 +96,15 @@ Widget profileView(String p_id) => ViewModelBuilder<ProfileView>.reactive(
                                     onPressed: () {},
                                     icon: const Icon(
                                       Icons.settings,
+                                      color: Colors.white,
+                                    )),
+                                IconButton(
+                                    onPressed: () async {
+                                      await userService.logout();
+                                      Restart.restartApp();
+                                    },
+                                    icon: const Icon(
+                                      Icons.logout,
                                       color: Colors.white,
                                     ))
                               ],

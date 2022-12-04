@@ -4,6 +4,17 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+
+    h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    h2 {
+        font-size: 1.2rem;
+        margin-left: 2.5px;
+        font-weight: 600;
+    }
 }
 
 .titleCard>* {
@@ -23,14 +34,14 @@
 }
 
 .resourceDetailPage {
-    padding: 1rem 2rem;
+    padding: 0 20px;
     display: flex;
     flex-direction: column;
     height: 100%;
 }
 
 .mdeBox {
-    margin-top: 2rem;
+    margin-top: 10px;
     flex-grow: 1;
 }
 

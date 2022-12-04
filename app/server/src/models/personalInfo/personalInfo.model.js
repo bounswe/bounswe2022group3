@@ -59,8 +59,6 @@ const updateBio = async (id, data) => {
     interests: data.interests,
     knowledge: data.knowledge,
   });
-  const res = await profile.save();
-  return res;
 };
 
 module.exports = {
