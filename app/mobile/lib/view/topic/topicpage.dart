@@ -1,4 +1,3 @@
-import 'package:bucademy/classes/content/content.dart';
 import 'package:bucademy/view/course/add_button.dart';
 import 'package:bucademy/classes/resource/resource.dart';
 import 'package:bucademy/classes/topic/topic.dart';
@@ -42,7 +41,7 @@ Widget topicPageView(Topic c) =>
                                     .map((Resource cont) => resourceTile(cont,context))
                               ]),
                         )),
-                        addButton(c, context),
+                        addButton(viewModel.topic!, context),
 ]
                       ),
                     )
