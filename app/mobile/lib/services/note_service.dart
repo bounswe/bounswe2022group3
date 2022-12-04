@@ -8,14 +8,14 @@ import 'package:injectable/injectable.dart';
 @lazySingleton
 class NoteService {
   Future<Note?> postNote({
-    required String spaceId,
     required String title,
     required String body,
+    required String resourceId,
   }) async {
     try {
       Response response = await dioService.dio.post(
-        '/comment',
-        data: {"space_id": spaceId, "title": title, "body": body},
+        '/note',
+        data: {"resource_id": resourceId, "title": title, "body": body},
       );
 
       Map json = response.data;
