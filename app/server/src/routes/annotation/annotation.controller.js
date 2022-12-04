@@ -1,7 +1,5 @@
 const AnnotationModel = require("../../models/annotation/annotation.model");
 const { Resource } = require("../../models/resource/resource.model");
-const { Body } = require("../../models/annotation/body.model");
-const { Selector } = require("../../models/annotation/selector.model");
 
 const AnnotationController = {
   createAnnotation: async function (req, res) {
