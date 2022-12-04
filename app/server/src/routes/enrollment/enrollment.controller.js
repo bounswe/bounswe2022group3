@@ -15,20 +15,22 @@ const EnrollmentController = {
         user,
         space: space_id,
       });
-      console.log(enrolled_space)
       if (enrolled_space.length > 0) {
         return res.status(400).json({ error: "User already enrolled!" });
       }
       const enrollment = await EnrollmentModel.createEnrollment(user, space_id);
-      space.enrollments.push(enrollment);
+      space.enrollments.push(enrollment._id);
       space.enrolledUsersCount += 1;
       space.save();
+      const creator = await UserModel.User.findById(user);
+      creator.enrollments.push(enrollment);
+      creator.save();
       return res.status(201).send({ enrollment });
     } catch (e) {
       return res.status(400).send({ error: e.toString() });
     }
   },
-  
+
   getEnrollment: async function (req, res) {
     try {
       var enrollment_id = req.params.id;
@@ -97,7 +99,10 @@ const EnrollmentController = {
           },
           "name creator info rating tags image enrolledUsersCount"
         )
-          .populate("creator", "name surname")
+          .populate({
+            path: "creator",
+            select: { _id: 1, name: 1, surname: 1, image: 1 }
+          })
           .exec();
         for (var space of spaces) {
           var enr = await EnrollmentModel.Enrollment.find(
@@ -120,11 +125,26 @@ const EnrollmentController = {
           var space = await SpaceModel.Space.find({
             _id: enrolled_space.space
           },
-          "name creator info rating tags image enrolledUsersCount"
-          ).populate("creator", "name surname");
+            "name creator info rating tags image enrolledUsersCount"
+          ).populate({
+            path: "creator",
+            select: { _id: 1, name: 1, surname: 1, image: 1 }
+          })
           if (space) {
             enrollments.push(space[0]);
           }
+        }
+        const creator = await UserModel.User.findById(user);
+        for (var space of creator.created_spaces) {
+          var populated_space = await SpaceModel.Space.findOne({
+            _id: space
+          },
+            "name creator info rating tags image enrolledUsersCount"
+          ).populate({
+            path: "creator",
+            select: { _id: 1, name: 1, surname: 1, image: 1 }
+          });
+          enrollments.push(populated_space);
         }
       }
       return res.status(200).json({ enrollments });
