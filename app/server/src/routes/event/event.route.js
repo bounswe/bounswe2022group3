@@ -46,9 +46,12 @@ eventRouter.get(
     EventController.getEvent
 );
 
-// TODO: add update function
-
-
-// TODO: getAllEvents for space
+eventRouter.put(
+    "/:id",
+    validate("update-event"),
+    handleValidation,
+    authorization,
+    EventController.updateEvent
+);
 
 module.exports = eventRouter;

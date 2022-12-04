@@ -3,7 +3,8 @@ const SpaceModel = require("../../models/space/space.model");
 
 const geoLocation = new mongoose.Schema(
     {
-        latitude: String,
+        latitude: Number,
+        longitude: Number,
     }
 )
 const eventSchema = new mongoose.Schema(
@@ -53,6 +54,10 @@ const getEvent = async (id) => {
     return await Event.findById(id).exec();
 };
 
+const updateEvent = async (id, body) => {
+    return await Event.findOneAndUpdate({_id: id}, body).exec()
+};
+
 const getPopulatedEvent = async (id) => {
     return Event.findById(id)
         .populate({
@@ -71,5 +76,6 @@ module.exports = {
     createEvent,
     deleteEvent,
     getEvent,
-    getPopulatedEvent
+    getPopulatedEvent,
+    updateEvent
 };

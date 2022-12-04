@@ -24,5 +24,9 @@ exports.validate = (method) => {
       // not sure what to put here...
       return [];
     }
+    case "update-event": {
+      // not sure what to put here...
+      return [];
+    }
   }
 };
