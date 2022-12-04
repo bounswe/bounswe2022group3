@@ -100,7 +100,16 @@ const SpaceController = {
         .populate({
           path: "discussions",
           options: { sort: { 'createdAt': -1 } },
-          populate: { path: "title _id" }
+          populate: { path: "title _id comments" }
+        })
+        .populate({
+          path: "discussions",
+          options: { sort: { 'createdAt': -1 } },
+          populate: { 
+            path: "user",
+            select: { _id: 1, name: 1, surname: 1, image: 1 },
+          },
+
         })
         .exec();
       if (!space) {
@@ -110,8 +119,13 @@ const SpaceController = {
 
       for (var discussion of space.discussions) {
         discussions.push({
+          _id: discussion._id,
           title: discussion.title,
-          discussion_id: discussion._id,
+          user: discussion.user,
+          createdAt: discussion.createdAt,
+          updatedAt: discussion.updatedAt,
+          number_of_comments: discussion.comments.length,
+          comments: discussion.comments,
         });
       }
       return res.status(200).json({ discussions });
