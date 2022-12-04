@@ -28,9 +28,9 @@ export default function resource() {
     const SignupSchema = Yup.object().shape({
         name: Yup.string()
     });
-    
+
     const handleSubmit = async (values) => {
-        if(!resourceValue || !values.name) {
+        if (!resourceValue || !values.name) {
             return;
         }
         const body = {
@@ -57,25 +57,25 @@ export default function resource() {
                 <div className={styles.resourceDetailHeader}>
 
                     <Formik
-                    initialValues={{
-                        name: "",
+                        initialValues={{
+                            name: "",
 
-                    }}
-                    validationSchema={SignupSchema}
-                    onSubmit={handleSubmit}>
-                            <Form className={styles.form}>
-                                <Field
-                                    className={styles.input}
-                                    name="name"
-                                    type="text"
-                                    placeholder="Resource Title"
-                                ></Field>
+                        }}
+                        validationSchema={SignupSchema}
+                        onSubmit={handleSubmit}>
+                        <Form className={styles.form}>
+                            <Field
+                                className={styles.input}
+                                name="name"
+                                type="text"
+                                placeholder="Resource Title"
+                            ></Field>
 
-                                <Button type="submit" className={styles.resourceDetailHeaderButton}>Save</Button>
+                            <Button type="submit" className={styles.resourceDetailHeaderButton}>Save</Button>
 
-                            </Form>
-                    
-                    
+                        </Form>
+
+
                     </Formik>
 
                 </div>
