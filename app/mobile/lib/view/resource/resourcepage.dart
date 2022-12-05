@@ -30,26 +30,24 @@ Widget resourcePageView(Resource r) =>
                     ),
                   ),
                   body: Stack(children: [
-                    Center(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            Markdown(
-                              onTapLink: (text, href, title) async {
-                                if (href == null) return;
-                                if (!await launchUrl(Uri.parse(href))) {
-                                  print('Could not launch the url');
-                                }
-                              },
-                              styleSheet: MarkdownStyleSheet(
-                                  blockquoteDecoration:
-                                      const BoxDecoration(color: CustomColors.main)),
-                              data: r.body,
-                              shrinkWrap: true,
-                              physics: const ClampingScrollPhysics(),
-                            ),
-                          ],
-                        ),
+                    SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Markdown(
+                            onTapLink: (text, href, title) async {
+                              if (href == null) return;
+                              if (!await launchUrl(Uri.parse(href))) {
+                                print('Could not launch the url');
+                              }
+                            },
+                            styleSheet: MarkdownStyleSheet(
+                                blockquoteDecoration:
+                                    const BoxDecoration(color: CustomColors.main)),
+                            data: r.body,
+                            shrinkWrap: true,
+                            physics: const ClampingScrollPhysics(),
+                          ),
+                        ],
                       ),
                     ),
                     editResourceButton(r, context),
