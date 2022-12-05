@@ -23,7 +23,7 @@
 }
 
 .resourceDetailPage {
-    padding: 4rem;
+    padding: 2rem;
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -32,6 +32,7 @@
 .mdeBox {
     margin-top: 2rem;
     flex-grow: 1;
+    min-height: 300px;
 }
 
 .titleCreator {

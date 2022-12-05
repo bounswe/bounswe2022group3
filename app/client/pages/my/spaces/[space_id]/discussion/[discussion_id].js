@@ -4,11 +4,13 @@ import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 import rehypeSanitize from "rehype-sanitize";
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { Avatar } from "@mui/material";
 import styles from "../../../../../styles/my/discussions.module.scss";
-import { useEffect } from "react";
-
+import Discussion from "../../../../../components/Discussion/Discussion";
+import { useRouter } from 'next/router'
+import axios from "axios";
+import { API_URL } from "../../../../../next.config";
 const MDEditor = dynamic(
     () => import("@uiw/react-md-editor"),
     { ssr: false }
@@ -16,67 +18,43 @@ const MDEditor = dynamic(
 
 export default function discussion() {
     const [value, setValue] = useState("");
-    const [previousComments, setPreviousComments] = useState([
-        {
-            "value": `**Hi guys!** 
-            
-Can you please share more resources?`,
-            "image": "https://xsgames.co/randomusers/avatar.php?g=male"
-        },
-        {
-            "value": `**Hello!** 
-            
-Thanks for sharing great resources`,
-            "image": "https://xsgames.co/randomusers/avatar.php?g=female"
-        },
-        {
-            "value": `**Hi!** 
-            
-Shall we organize an event?`,
-            "image": "https://xsgames.co/randomusers/avatar.php?g=male"
-        },
-    ])
+    const [previousComments, setPreviousComments] = useState([]);
+    const router = useRouter();
+    let user_id = router.query;
+    let discussion = router.query;
 
-    useEffect(() => {}, [previousComments])
+    async function fetchDiscussion() {
+
+        try {
+            const response = (
+                await axios.get(API_URL + "/discussion/" + discussion.discussion_id)
+            )?.data;
+            console.log("response.discussion.comments")
+            console.log(response.discussion.comments)
+            setPreviousComments(response.discussion.comments);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+    useEffect(() => {
+        discussion = router.query;
+        fetchDiscussion();
+    }, [discussion.discussion_id]);
+
+    useEffect(() => { }, [previousComments])
 
     return (
         <section className={styles.container}>
             <h2>Acoustic Guitar Ed for Beginners</h2>
             <h1>General Discussion</h1>
-            {
-                previousComments.map(previousComment => {
-                    return <div className={styles.comment_container}>
-                        <Avatar className={styles.comment_icon} alt="Agnes Walker" src={previousComment.image} />
-                        <div data-color-mode="light" className={styles.comment}>
-                            <MDEditor
-                                value={previousComment.value}
-                                onChange={() => { }}
-                                preview="preview"
-                                hideToolbar={true}
-                                height={100}
-                                previewOptions={{
-                                    rehypePlugins: [[rehypeSanitize]],
-                                }}
-                            />
-                        </div>
-                    </div>
-                })
-            }
-            <div className={styles.comment_container}>
-                <Avatar className={styles.comment_icon} alt="Agnes Walker" src="https://xsgames.co/randomusers/avatar.php?g=female" />
-                <div data-color-mode="light" className={styles.comment}>
-                    <MDEditor
-                        value={value}
-                        onChange={setValue}
-                        preview="edit"
-                        height={150}
-                        previewOptions={{
-                            rehypePlugins: [[rehypeSanitize]],
-                        }}
-                    />
-                    <Button className={styles.comment_button} onClick={() => { setPreviousComments(previousComments.concat({ value, image: "https://xsgames.co/randomusers/avatar.php?g=female" })); setValue("") }}>post</Button>
-                </div>
-            </div>
+
+            <Discussion
+                previousComments={previousComments}
+                setPreviousComments={setPreviousComments}
+                value={value}
+                setValue={setValue}
+                discussion={discussion}
+            />
         </section>
     );
 }

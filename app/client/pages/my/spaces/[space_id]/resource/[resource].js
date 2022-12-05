@@ -15,6 +15,8 @@ import Button from "../../../../../components/Button/Button";
 import { Field, Form, Formik } from "formik";
 
 
+
+import CreateNote from "../../../../../components/PopUps/CreateNote";
 const MDEditor = dynamic(
     () => import("@uiw/react-md-editor"),
     { ssr: false }
@@ -24,8 +26,10 @@ export default function resource() {
     const [editModeActive, setEditModeActive] = useState(false);
     const [resourceValue, setResourceValue] = useState("");
     const router = useRouter();
+    const [openCreateNote, setOpenCreateNote] = useState(false);
     let router_query = router.query;
     const [data, setData] = useState({});
+    const [post, setPost] = useState("");
 
     async function fetchContent() {
         try {
@@ -59,6 +63,7 @@ export default function resource() {
         < >
             <div className={styles.resourceDetailPage}>
                 <div className={styles.resourceDetailHeader}>
+                    <CreateNote openCreateNote={openCreateNote} post={post} setPost={setPost} setOpenCreateNote={setOpenCreateNote} id ={router_query.resource} />
 
                     <div className={styles.titleCard}>
                         <h2>{data?.resource?.name}</h2>
@@ -72,11 +77,14 @@ export default function resource() {
                         <span>{new Date(data?.resource?.createdAt).toLocaleDateString()}</span>
 
                     </div>
+                    <div className={styles.resourceDetailHeader}> 
+                        <Button variant="outlined" onClick={() => { setOpenCreateNote(true) }} className={styles.resourceDetailHeaderButton}>
+                            add new note
+                        </Button>
 
-
-                    {!editModeActive && <Button onClick={onEditButtonClicked} className={styles.resourceDetailHeaderButton}>Edit</Button>}
-                    {editModeActive && <Button onClick={onEditButtonClicked} className={styles.resourceDetailHeaderButton}>Save</Button>}
-
+                        {!editModeActive && <Button onClick={onEditButtonClicked} className={styles.resourceDetailHeaderButton}>Edit</Button>}
+                        {editModeActive && <Button onClick={onEditButtonClicked} className={styles.resourceDetailHeaderButton}>Save</Button>}
+                    </div>
 
                 </div>
 

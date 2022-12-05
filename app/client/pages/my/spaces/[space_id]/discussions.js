@@ -1,58 +1,66 @@
 import MainLayout from "../../../../layouts/main/MainLayout";
 import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "../../../../styles/my/discussions.module.scss";
-import { Grid, Table, TableBody, TableHead, TableCell, TableRow } from "@mui/material";
+import { Grid, Table, TableBody, TableHead, TableCell, TableRow, Button, Dialog, Box, IconButton, DialogContent } from "@mui/material";
 import TableSortLabel from '@mui/material/TableSortLabel';
 import { useRouter } from 'next/router'
-const discussions_mock = [
-    {
-        'discussion': 'General Discussion',
-        'started_by': 'Kadir Ersoy',
-        'date': '2013-05-23',
-        'replies': '1'
-    },
-    {
-        'discussion': 'Guitar chords',
-        'started_by': 'Salim',
-        'date': '2019-03-03',
-        'replies': '13000'
-    },
-    {
-        'discussion': 'Strumming',
-        'started_by': 'Nurlan',
-        'date': '2023-03-06',
-        'replies': '599'
-    },
-    {
-        'discussion': 'Beginner blues',
-        'started_by': 'Berke',
-        'date': '2023-03-04',
-        'replies': '6'
-    }
+import "@uiw/react-md-editor/markdown-editor.css";
+import "@uiw/react-markdown-preview/markdown.css";
+import axios from "axios";
+import { API_URL } from "../../../../next.config";
+import rehypeSanitize from "rehype-sanitize";
+import CreateDiscussion from "../../../../components/PopUps/CreateDiscussion";
+import dynamic from "next/dynamic";
 
-
-
-]
-
-
-
+const MDEditor = dynamic(
+    () => import("@uiw/react-md-editor"),
+    { ssr: false }
+);
 
 export default function discussions() {
 
+    const [post, setPost] = useState("write your first post here!");
     const [order, setOrder] = useState('asc');
     const [orderBy, setOrderBy] = useState('Date')
+    const [openDiscussion, setOpenDiscussion] = useState(false);
+    const [discussionList, setDiscussionList] = useState([]);
     const router = useRouter();
+    let user_id = router.query;
     let space_id = router.query;
+    let access_token = router.access_token;
+
+//{"discussions":[{"title":"this is a discussion","discussion_id":"638cb750970fc7cb6c01c7c9"},{"title":"das","discussion_id":"638cb69f970fc7cb6c01c7ad"},{"title":"gr","discussion_id":"638cb65a970fc7cb6c01c79b"},{"title":"hi","discussion_id":"638cb55cf8d09437102d1ec9"},{"title":"dg","discussion_id":"638a0a8e66f95b00ebf718fb"}]}
+    async function fetchDiscussion() {
+
+        try {
+            const response = (
+                await axios.get(API_URL + "/space/getAllDiscussions/" + space_id.space_id)
+            )?.data;
+
+            setDiscussionList(response.discussions);
+            console.log(response.discussions)
+        } catch (err) {
+            console.log(err);
+        }
+    }
+    
+    useEffect(() => {
+        space_id = router.query;
+        fetchDiscussion();
+    }, [space_id]);
+    useEffect(() => {
+        fetchDiscussion();
+    }, [openDiscussion]);
 
     function sortBy(fieldName = 'Replies') {
         if (fieldName == 'Replies') {
-            discussions_mock.sort((a, b) => order === 'asc' ? a.replies - b.replies : -(a.replies - b.replies));
+            discussionList.sort((a, b) => order === 'asc' ? a.number_of_comments - b.number_of_comments : -(a.number_of_comments - b.number_of_comments));
             setOrderBy('Replies')
         } else {
 
-            discussions_mock.sort((a, b) => order === 'asc' ? new Date(a.date) - new Date(b.date) : -(new Date(a.date) - new Date(b.date)));
+            discussionList.sort((a, b) => order === 'asc' ? new Date(a.updatedAt) - new Date(b.updatedAt) : -(new Date(a.updatedAt) - new Date(b.updatedAt)));
             setOrderBy('Date')
         }
         order === 'asc' ? setOrder('desc') : setOrder('asc');
@@ -62,12 +70,18 @@ export default function discussions() {
         <section className={styles.container}>
             <h2>Acoustic Guitar Ed for Beginners</h2>
             <h1>Discussions</h1>
+            <CreateDiscussion openDiscussion={openDiscussion} post={post} setPost={setPost} setOpenDiscussion={setOpenDiscussion} type={"discussionCreate"} />
             <Grid container spacing={2} style={{ marginBottom: 12 }}>
+                <Grid item sx={{ width: '80%', paddingLeft: "4px !important", paddingTop: "4px !important" }}>
+                    <Button variant="outlined" onClick={() => { setOpenDiscussion(true) }} sx={{ 'borderColor': '#ddd', 'color': 'black' }}>
+                        <h2 >add new discussion</h2>
+                    </Button>
+                </Grid>
                 <Grid item sx={{ width: '80%', paddingLeft: "4px !important", paddingTop: "4px !important" }}>
                     <Table sx={{ minWidth: 250 }} >
                         <TableHead>
                             <TableRow>
-                                <TableCell ><h3>Discussion</h3></TableCell>
+                            <TableCell ><h3>Discussion</h3></TableCell>
                                 <TableCell ><h3>Started by</h3></TableCell>
                                 <TableCell >
                                     <TableSortLabel
@@ -88,30 +102,28 @@ export default function discussions() {
                                     </TableSortLabel>
                                 </TableCell>
 
+
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {discussions_mock.map((discussion, index) => {
+                            {discussionList.map((discussion, index) => {
                                 return (
-                                    <TableRow key={index}  className={styles.row}  onClick= {() => { router.push(`/my/spaces/`+space_id.space_id+`/discussion/1`  )}}>
+                                    <TableRow key={index} className={styles.row} onClick={() => { router.push(`/my/spaces/` + space_id.space_id + `/discussion/`+discussion._id) }}>
                                         <TableCell >
-                                            <h4 > {discussion.discussion}</h4>
+                                            <h4 > {discussion.title}</h4>
                                         </TableCell>
                                         <TableCell>
-                                            <h4 > {discussion.started_by}</h4>
+                                            <h4 > {discussion.user.name }&nbsp;&nbsp;{discussion.user.surname }</h4>
                                         </TableCell>
                                         <TableCell>
-                                            <h4 > {discussion.date}</h4>
+                                            <h4 > {discussion.updatedAt}</h4>
                                         </TableCell>
                                         <TableCell>
-                                            <h4 > {discussion.replies}</h4>
+                                            <h4 > {discussion.number_of_comments}</h4>
                                         </TableCell>
                                     </TableRow>
                                 );
                             })}
-
-
-
                         </TableBody>
                     </Table>
                 </Grid>
