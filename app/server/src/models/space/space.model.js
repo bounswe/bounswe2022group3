@@ -126,7 +126,7 @@ const getPopulatedSpace = async (id) => {
     .populate({
       path: "events",
       options: { sort: { 'createdAt': -1 } },
-      select: { _id: 1, title: 1},
+      select: { _id: 1, event_title: 1},
     })
     .exec();
 };
