@@ -35,4 +35,12 @@ spaceRouter.get(
   SpaceController.getAllDiscussions
 );
 
+spaceRouter.get(
+  "/getAllEvents/:id",
+  validate("get-all-events"),
+  handleValidation,
+  authorization_conditional,
+  SpaceController.getAllEvents
+);
+
 module.exports = spaceRouter;

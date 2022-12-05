@@ -1,0 +1,86 @@
+.noteModalTitle {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    align-items: left;
+}
+.noteModal {
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    height: 600px;
+}
+.modalButton{
+
+    .row:hover {
+        background-color: rgba(226, 221, 229, 0.679);
+    
+        h4 {
+    
+            color: rgb(38, 64, 192);
+        }
+    }
+    border-color: '#ddd' ;
+    color:'black';
+     
+}
+.discussionModal {
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    height: 600px;
+}
+
+.discussionModalTitle {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    align-items: left;
+}
+
+.modalInput {
+    height: calc(1.8em + 1.375rem + 2px);
+    padding: 0.6875rem 0.75rem;
+    font-size: 0.9rem;
+    font-weight: 400;
+    border: 2px solid #ddd;
+    color: inherit;
+    font-family: inherit;
+    border-radius: 0.5rem;
+    margin-top: 20px;
+    transition: 0.5s;
+    width: 140%;
+    &::placeholder {
+        color: #aaa;
+    }
+
+    &:focus {
+        border-color: rgba(231, 228, 228, 0.679);
+        outline: none;
+    }
+}
+
+.modalForm {
+    display: flex;
+    flex-direction: column;
+
+    width: 80%;
+
+    @media screen and (min-width: 48rem) {
+        width: 50%;
+    }
+}
+
+
+.mdeBox {
+    margin-top: 2rem;
+    flex-grow: 1;
+    width: 100%;
+    height: 60%;
+}
+
+.discussionRow {
+    width: 80%;
+    padding-left: 4px !important;
+    padding-top: 4px !important;
+}

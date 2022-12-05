@@ -16,5 +16,8 @@ exports.validate = (method) => {
     case "get-all-discussions": {
       return [param("id", "id does not exist").exists().isMongoId()];
     }
+    case "get-all-events": {
+      return [param("id", "id does not exist").exists().isMongoId()];
+    }
   }
 };
