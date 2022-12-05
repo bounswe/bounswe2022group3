@@ -28,7 +28,7 @@ class EventService {
     required String startDate,
     required String endDate,
     required String description,
-    required List<double> location,
+    required Map<String, double> location,
     required int quota,
     //required String visibility,
     //required double fee,
