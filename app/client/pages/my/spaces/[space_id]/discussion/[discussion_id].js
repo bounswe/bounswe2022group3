@@ -23,13 +23,13 @@ export default function discussion() {
     const router = useRouter();
     let user_id = router.query;
     let discussion = router.query;
-
     async function fetchDiscussion() {
 
         try {
             const response = (
                 await axios.get(API_URL + "/discussion/" + discussion.discussion_id)
             )?.data;
+
             setPreviousComments(response.discussion.comments);
         } catch (err) {
             console.log(err);

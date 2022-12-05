@@ -5,10 +5,9 @@ import "@uiw/react-markdown-preview/markdown.css";
 import rehypeSanitize from "rehype-sanitize";
 import dynamic from "next/dynamic";
 import { useRouter } from 'next/router'
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { Avatar } from "@mui/material";
 import styles from "../../styles/my/discussions.module.scss";
-import { useEffect } from "react";
 import axios from "axios";
 import { API_URL } from "../../next.config";
 
@@ -18,7 +17,12 @@ const MDEditor = dynamic(
 );
 
 export default function Discussion({ previousComments,setPreviousComments, value ,setValue ,discussion,setReRender,reRender}) {
-
+    const router = useRouter();
+    let  user_id ;
+    if (typeof window !== 'undefined') {
+          user_id   = localStorage.getItem("user_id");
+      }
+    const [picture, setPicture] = useState("");
     const handleSubmit = async () => {
         if(!value) {
             return;
@@ -36,14 +40,25 @@ export default function Discussion({ previousComments,setPreviousComments, value
         }
         
     };
+    async function fetchPicture() {
 
+        try {
+            const response = (
+                await axios.get(API_URL + "/userProfile/getProfile/"+ user_id)
+            )?.data;
+            setPicture(response.profile.image);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+    useEffect(() => {fetchPicture(); }, [user_id])
     return (
         <section className={styles.container}>
             {
                 previousComments.map(previousComment => {
                     return <div className={styles.comment_container}>
-                     {/* A JSX comment <Avatar className={styles.comment_icon} src={previousComment?.user?.image} /> */}
-                        <Avatar className={styles.comment_icon} alt="Agnes Walker" src="https://xsgames.co/randomusers/avatar.php?g=female" />
+                <Avatar className={styles.comment_icon} src={"https://api.bucademy.tk/user/"+previousComment?.user?.image} /> 
+                     {/*         <Avatar className={styles.comment_icon} alt="Agnes Walker" src="https://xsgames.co/randomusers/avatar.php?g=female" />*/}
                         <div data-color-mode="light" className={styles.comment}>
                             <MDEditor
                                 value={previousComment?.comment}
@@ -60,7 +75,7 @@ export default function Discussion({ previousComments,setPreviousComments, value
                 })
             }
             <div className={styles.comment_container}>
-                <Avatar className={styles.comment_icon} alt="Agnes Walker" src="https://xsgames.co/randomusers/avatar.php?g=female" />
+                <Avatar className={styles.comment_icon}  src={"https://api.bucademy.tk/user/"+picture} />
                 <div data-color-mode="light" className={styles.comment}>
                     <MDEditor
                         value={value}

@@ -11,11 +11,12 @@ export default function notes() {
     const [openEditNote, setOpenEditNote] = useState(false);
     const [editNote,setEditNote]=useState();
     const [post, setPost] = useState("");
+    const [reRender,setReRender] = useState(false);
     const [discussionsList, setDiscussionList] = useState([]);
     const router = useRouter();
 
     let space_id = router.query;
-
+    
     async function fetchNotes() {
         const body = {
             space_id: space_id.space_id
@@ -35,10 +36,11 @@ export default function notes() {
         space_id = router.query;
         fetchNotes();
     }, [space_id]);
+
     useEffect(() => {
         fetchNotes();
     }, [openEditNote]);
-  
+    useEffect(() => {fetchNotes(); }, [reRender])
     return (
         <section className={styles.container}>
 
@@ -53,7 +55,7 @@ export default function notes() {
                         discussionsList.map((note) => {
                               
                             return( 
-                            <Note note={note} space_id ={space_id}  setEditNote ={setEditNote} setOpenEditNote={setOpenEditNote} openEditNote ={openEditNote}/>);
+                            <Note note={note} setReRender = {setReRender} reRender = {reRender} space_id ={space_id}  setEditNote ={setEditNote} setOpenEditNote={setOpenEditNote} openEditNote ={openEditNote}/>);
                         }) :
                         <h2>you have no notes !</h2>
                 }

@@ -36,9 +36,7 @@ export default function discussions() {
             const response = (
                 await axios.get(API_URL + "/space/getAllDiscussions/" + space_id.space_id)
             )?.data;
-
             setDiscussionList(response.discussions);
-            console.log(response.discussions)
         } catch (err) {
             console.log(err);
         }

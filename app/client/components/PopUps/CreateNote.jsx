@@ -16,13 +16,11 @@ const MDEditor = dynamic(
 
 
 
-function CreateNote({ type, post, setPost,  openCreateNote, setOpenCreateNote,id }) {
+function CreateNote({   post, setPost,openCreateNote, setOpenCreateNote,id }) {
  
 
     const handleSubmit = async (values) => {
-        console.log("burdasın!")
         if( !post) {
-            console.log("burdasın2!")
             return;
         }
         const body = {
@@ -32,6 +30,7 @@ function CreateNote({ type, post, setPost,  openCreateNote, setOpenCreateNote,id
         }
         try {
             await axios.post(API_URL + "/note", body);
+            setPost("")
         } catch (err) {
             console.log(err);
         }
