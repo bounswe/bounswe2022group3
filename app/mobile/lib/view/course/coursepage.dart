@@ -7,7 +7,6 @@ import 'package:bucademy/classes/course/course.dart';
 import 'package:bucademy/resources/custom_colors.dart';
 import 'package:bucademy/resources/text_styles.dart';
 import 'package:bucademy/services/locator.dart';
-import 'package:bucademy/view/course/add_button.dart';
 import 'package:bucademy/view/course/topic/create_topic.dart';
 import 'package:bucademy/view/course/topic_tile.dart';
 import 'package:bucademy/view/course/discussion/create_discussion.dart';
@@ -27,7 +26,7 @@ Widget coursePageView(Course c) => ViewModelBuilder<
           ? const Center(child: CircularProgressIndicator())
           : viewModel.course != null
               ? DefaultTabController(
-                  length: 4,//5,
+                  length: 4,
                   child: Scaffold(
                     body: NestedScrollView(
                       headerSliverBuilder:
@@ -94,7 +93,6 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                                         ),
                                         child: Text(viewModel.course!.info,
                                             maxLines: 5),
-                                        // child:Text('Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',maxLines: 4,)
                                       ),
                                       if (!courseService.enrolledIds
                                           .contains(c.id))
@@ -165,15 +163,6 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                                       "Notes",
                                       style: TextStyle(color: Colors.black),
                                     )),
-                                // Tab(
-                                //     icon: Icon(
-                                //       Icons.quiz_outlined,
-                                //       color: Colors.black,
-                                //     ),
-                                //     child: Text(
-                                //       "Quizzes",
-                                //       style: TextStyle(color: Colors.black),
-                                //     )),
                                 Tab(
                                     icon: Icon(
                                       Icons.group_outlined,
@@ -223,7 +212,6 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                                     .map((Topic t) => topicTile(t, context))
                               ],
                             ),
-                            // addButton(c, context) //TODO: this needs to be changed and fixed with a similar style w Muhammet
                           ]),
                           ListView(
                             shrinkWrap: true,
@@ -249,15 +237,6 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                                       ))
                             ],
                           ),
-                          // ListView(
-                          //   shrinkWrap: true,
-                          //   padding: const EdgeInsets.all(10.0),
-                          //   children: [
-                          //     ...contentService
-                          //         .contents("Quiz")
-                          //         .map((MockContent m) => mockTile(m.name))
-                          //   ],
-                          // ),
                           ListView(
                             shrinkWrap: true,
                             padding: const EdgeInsets.all(10.0),
