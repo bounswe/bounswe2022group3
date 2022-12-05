@@ -51,6 +51,7 @@ dependencies:
   flutter_launcher_icons: ^0.10.0
 
   restart_app: ^1.1.0
+  datetime_picker_formfield: ^2.0.1
 
 dev_dependencies:
   flutter_test:
