@@ -99,7 +99,6 @@ const createSpace = async (name, creator, info, tags, image) => {
 const getPopulatedSpace = async (id) => {
   return Space.findById(id)
     .populate("creator", "name surname image")
-    .populate("discussions", "title")
     .populate({
       path: "topics",
       populate: {
@@ -121,6 +120,11 @@ const getPopulatedSpace = async (id) => {
     })
     .populate({
       path: "discussions",
+      options: { sort: { 'createdAt': -1 } },
+      select: { _id: 1, title: 1},
+    })
+    .populate({
+      path: "events",
       options: { sort: { 'createdAt': -1 } },
       select: { _id: 1, title: 1},
     })
