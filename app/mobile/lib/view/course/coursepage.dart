@@ -16,10 +16,15 @@ import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:stacked/stacked.dart';
 import 'package:bucademy/services/content_service.dart';
 
+import '../../classes/event/event.dart';
+import 'event/create_event.dart';
+import 'event/event_view.dart';
+
 Widget coursePageView(Course c) => ViewModelBuilder<
         CoursePageViewModel>.reactive(
     viewModelBuilder: () => CoursePageViewModel(c.id),
     builder: (context, viewModel, child) {
+      bool eventReady = true;
       return viewModel.contentsLoading
           ? const Center(child: CircularProgressIndicator())
           : viewModel.course != null
@@ -196,15 +201,7 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                                   .map((Chapter e) => chapterTile(e))
                             ],
                           ),
-                          ListView(
-                            shrinkWrap: true,
-                            padding: const EdgeInsets.all(10.0),
-                            children: [
-                              ...contentService
-                                  .contents("Event")
-                                  .map((MockContent m) => mockTile(m.name))
-                            ],
-                          ),
+                          viewModel.getEvents(eventReady, context, viewModel),
                           ListView(
                             shrinkWrap: true,
                             padding: const EdgeInsets.all(10.0),
@@ -307,6 +304,7 @@ class CoursePageViewModel extends ChangeNotifier {
   CoursePageViewModel(String courseId) {
     init(courseId);
   }
+
   Future<void> init(String courseId) async {
     CourseDetailed? c = await courseService.getCourseDetails(id: courseId);
     if (c != null) course = c;
@@ -320,6 +318,12 @@ class CoursePageViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void addNewEvent(Event e) {
+    if (course == null) return;
+    course!.events.insert(0, EventShortened(e.description, e.id));
+    notifyListeners();
+  }
+
   Future<void> getContents() async {
     contentsLoading = true;
     notifyListeners();
@@ -327,5 +331,62 @@ class CoursePageViewModel extends ChangeNotifier {
     title = await contentService.contents('Chapter');
     contentsLoading = false;
     notifyListeners();
+  }
+
+  Widget getEvents(
+      bool eventReady, BuildContext context, CoursePageViewModel viewModel) {
+    return eventReady
+        ? ListView(
+            shrinkWrap: true,
+            padding: const EdgeInsets.all(10.0),
+            children: [
+              if (userService.user != null)
+                GestureDetector(
+                  onTap: () => createEvent(context, viewModel),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 20),
+                    margin: const EdgeInsets.only(bottom: 10),
+                    decoration: BoxDecoration(
+                      borderRadius:
+                          BorderRadius.circular(Constants.borderRadius),
+                    ),
+                    child: Row(
+                      children: const [
+                        Icon(Icons.add, color: Colors.green, size: 30),
+                        SizedBox(width: 15),
+                        Text('Create a new event'),
+                      ],
+                    ),
+                  ),
+                ),
+              ...viewModel.course!.events
+                  .map((EventShortened es) => GestureDetector(
+                        child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 20),
+                            margin: const EdgeInsets.only(bottom: 10),
+                            decoration: BoxDecoration(
+                              color: CustomColors.getRandomColor(),
+                              borderRadius:
+                                  BorderRadius.circular(Constants.borderRadius),
+                            ),
+                            child: Text(es.title)),
+                        onTap: () => PersistentNavBarNavigator.pushNewScreen(
+                            context,
+                            screen: eventView(eventId: es.id),
+                            withNavBar: false),
+                      )),
+            ],
+          )
+        : ListView(
+            shrinkWrap: true,
+            padding: const EdgeInsets.all(10.0),
+            children: [
+              ...contentService
+                  .contents("Event")
+                  .map((MockContent m) => mockTile(m.name))
+            ],
+          );
   }
 }
