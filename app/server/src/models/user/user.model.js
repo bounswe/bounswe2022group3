@@ -79,6 +79,7 @@ const createUser = async ({ email, name, surname }) => {
 
   const personalInfo = await PersonalInfoModel.createPersonalInfo();
   user.personal_info = personalInfo._id;
+  user.image = "default.png";
   const res = await user.save();
   return res;
 };
