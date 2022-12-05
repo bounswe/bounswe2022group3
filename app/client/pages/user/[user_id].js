@@ -295,15 +295,11 @@ export default function profile(props) {
                             defaultValue={[knowledgeTags]}
                             freeSolo
                             onChange={(e) => setKnowledgeTags([...knowledgeTags, e.target.value])}
-                            renderTags={(value, getTagProps) =>
-                              value.map((option, index) => (
-                                <Chip variant="outlined" label={option} {...getTagProps({ index })} />
-                              ))
-                            }
                             renderInput={(params) => (
                               <TextField
                                 {...params}
-                                variant="outlined"         
+                                variant="outlined"
+                                label="Knowledge"         
                               />
                             )}
                           />
@@ -321,15 +317,11 @@ export default function profile(props) {
                             defaultValue={[tags]}
                             freeSolo
                             onChange={(e) => setTags([...tags, e.target.value])}
-                            renderTags={(value, getTagProps) =>
-                              value.map((option, index) => (
-                                <Chip variant="outlined" label={option} {...getTagProps({ index })} />
-                              ))
-                            }
                             renderInput={(params) => (
                               <TextField
                                 {...params}
-                                variant="outlined"         
+                                variant="outlined" 
+                                label="Interest"        
                               />
                             )}
                           />
@@ -674,16 +666,11 @@ export default function profile(props) {
                             defaultValue={[knowledgeTags]}
                             disabled
                             readOnly
-                            freeSolo
-                            renderTags={(value, getTagProps) =>
-                              value.map((option, index) => (
-                                <Chip variant="outlined" label={option} {...getTagProps({ index })} />
-                              ))
-                            }
+                            freeSolo                       
                             renderInput={(params) => (
                               <TextField
                                 {...params}
-                                variant="outlined"         
+                                variant="outlined"        
                               />
                             )}
                           />
@@ -705,15 +692,10 @@ export default function profile(props) {
                             disabled
                             readOnly
                             freeSolo
-                            renderTags={(value, getTagProps) =>
-                              value.map((option, index) => (
-                                <Chip variant="outlined" label={option} {...getTagProps({ index })} />
-                              ))
-                            }
                             renderInput={(params) => (
                               <TextField
                                 {...params}
-                                variant="outlined"         
+                                variant="outlined"     
                               />
                             )}
                           />
