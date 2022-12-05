@@ -101,8 +101,8 @@ export default function profile(props) {
 
     const body = {
       "bio": personal_infos.bio,
-      "interests": [personal_infos.interests],
-      "knowledge": [personal_infos.knowledge]
+      "interests": tags,
+      "knowledge": knowledgeTags
     };
 
     console.log(body)
@@ -287,29 +287,52 @@ export default function profile(props) {
                         md={12}
                         xs={12}
                       >
-                       <TextField
-                          fullWidth
-                          label="Knowledge"
-                          name="knowledge"
-                          onChange={handleChange}
-                          value={personal_infos.knowledge}
-                          variant="outlined"
-                        />
+                       <Autocomplete
+                            multiple
+                            id="tags-filled"
+                            options={knowledgeTags}
+                            value={knowledgeTags}
+                            defaultValue={[knowledgeTags]}
+                            freeSolo
+                            onChange={(e) => setKnowledgeTags([...knowledgeTags, e.target.value])}
+                            renderTags={(value, getTagProps) =>
+                              value.map((option, index) => (
+                                <Chip variant="outlined" label={option} {...getTagProps({ index })} />
+                              ))
+                            }
+                            renderInput={(params) => (
+                              <TextField
+                                {...params}
+                                variant="outlined"         
+                              />
+                            )}
+                          />
                       </Grid>
                       <Grid
                         item
                         md={12}
                         xs={12}
                       >
-                        <TextField
-                          fullWidth
-                          label="Interests"
-                          name="interests"
-                          onChange={handleChange}
-                          value={personal_infos.interests}
-                          variant="outlined"
-                        >
-                        </TextField>
+                <Autocomplete
+                            multiple
+                            id="tags-filled"
+                            options={tags}
+                            value={tags}
+                            defaultValue={[tags]}
+                            freeSolo
+                            onChange={(e) => setTags([...tags, e.target.value])}
+                            renderTags={(value, getTagProps) =>
+                              value.map((option, index) => (
+                                <Chip variant="outlined" label={option} {...getTagProps({ index })} />
+                              ))
+                            }
+                            renderInput={(params) => (
+                              <TextField
+                                {...params}
+                                variant="outlined"         
+                              />
+                            )}
+                          />
                       </Grid>
                     </Grid>
                   </CardContent>
