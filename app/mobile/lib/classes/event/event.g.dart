@@ -1,8 +1,11 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
 part of 'event.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
+
 Event _$EventFromJson(Map<String, dynamic> json) => Event(
       json['_id'] as String,
       json['space_id'] as String,
@@ -11,11 +14,12 @@ Event _$EventFromJson(Map<String, dynamic> json) => Event(
       json['start_date'] as String,
       json['end_date'] as String,
       json['description'] as String,
-      json['location'] as Map<String, double>,
+      (json['location'] as Map<String, dynamic>).map(
+        (k, e) => MapEntry(k, (e as num).toDouble()),
+      ),
       json['quota'] as int,
-      //json['visibility'] as String,
-      //json['fee'] as double,
-      //json['is_online'] as bool,
+      (json['participants'] as List<dynamic>).map((e) => e as String).toList(),
+      json['participant_count'] as int,
     );
 
 Map<String, dynamic> _$EventToJson(Event instance) => <String, dynamic>{
@@ -30,9 +34,6 @@ Map<String, dynamic> _$EventToJson(Event instance) => <String, dynamic>{
       'quota': instance.quota,
       'participants': instance.participants,
       'participant_count': instance.participantCount,
-      //'visibility': instance.visibility,
-      //'fee': instance.fee,
-      //'is_online': instance.medium,
     };
 
 EventShortened _$EventShortenedFromJson(Map<String, dynamic> json) =>
