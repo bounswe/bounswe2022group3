@@ -1,4 +1,5 @@
 import 'package:bucademy/classes/resource/resource.dart';
+import 'package:bucademy/classes/topic/topic.dart';
 import 'package:bucademy/resources/constants.dart';
 import 'package:bucademy/resources/custom_colors.dart';
 import 'package:bucademy/resources/text_styles.dart';
@@ -10,7 +11,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-GestureDetector resourceTile(Resource r, BuildContext context,
+GestureDetector resourceTile(TopicDetailed t,Resource r, BuildContext context, ChangeNotifier viewModelTopic,
     {bool isClickable = true}) {
   return GestureDetector(
     onLongPress: () {
@@ -18,7 +19,7 @@ GestureDetector resourceTile(Resource r, BuildContext context,
         context: context,
         builder: ((context) => AlertDialog(
               backgroundColor: Colors.white.withOpacity(0),
-              content: longPressDialog(r),
+              content: longPressDialog(t, r, viewModelTopic),
             )),
       );
     },

@@ -1,3 +1,4 @@
+import 'package:bucademy/classes/topic/topic.dart';
 import 'package:bucademy/resources/constants.dart';
 import 'package:bucademy/view/resource/edit_resource_page.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,7 +14,7 @@ import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:stacked/stacked.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-Widget longPressDialog(Resource r) => ViewModelBuilder<
+Widget longPressDialog(TopicDetailed topic,Resource r, ChangeNotifier viewModelTopic) => ViewModelBuilder<
         ResourcePageViewModel>.reactive(
     viewModelBuilder: () => ResourcePageViewModel(),
     builder: (context, viewModel, child) {
@@ -111,6 +112,8 @@ Widget longPressDialog(Resource r) => ViewModelBuilder<
                                       Navigator.of(context).pop();
                                       Navigator.of(context).pop();
                                       viewModel.notifyListeners();
+                                      topic.resources.remove(r);
+                                      viewModelTopic.notifyListeners();
                                     } else if (deleted == 400) {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(
