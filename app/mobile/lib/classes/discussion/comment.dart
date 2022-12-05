@@ -16,7 +16,7 @@ class Comment {
   final double rating;
 
   @JsonKey(name: 'user')
-  final User user;
+  User user;
 
   @JsonKey(name: 'createdAt')
   final DateTime createdAt;
