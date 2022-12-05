@@ -1,5 +1,6 @@
 
 import 'package:bucademy/resources/custom_colors.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 
 TextFormField emailBar(TextEditingController controller) {
@@ -15,8 +16,9 @@ TextFormField emailBar(TextEditingController controller) {
       fillColor: Colors.white,
       isDense: true,
     ),
+    autofillHints: const [AutofillHints.email],
     validator: (value) {
-      if (value == null || !RegExp(r'^(\w+)(\.\w+)?@(\w+)\.(\w+)(\.\w+)?$').hasMatch(value)) {
+      if (value!=null && !EmailValidator.validate(value)) {
         return "Please enter a valid email.";
       }
       return null;
