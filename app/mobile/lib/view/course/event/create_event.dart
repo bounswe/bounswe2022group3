@@ -13,8 +13,7 @@ createEvent(BuildContext context, CoursePageViewModel viewModel) {
   DateTime? startDate;
   DateTime? endDate;
   String? description;
-  Map<String, double>? location;
-  String address = "";
+  Map<String, double>? location = {'latitude': 12.23, 'longitude': 23.34};
   int? quota;
   //String? visibility;
   //double? fee;
@@ -26,78 +25,70 @@ createEvent(BuildContext context, CoursePageViewModel viewModel) {
       context: context,
       builder: ((context) => AlertDialog(
             title: const Text('Enter the details of the event'),
-            content: Scaffold(
-                resizeToAvoidBottomInset: false,
-                body: SingleChildScrollView(
-                  child: Column(
-                    // shrinkWrap: true,
-                    // padding: const EdgeInsets.all(10.0),
-                    children: [
-                      TextField(
-                        onChanged: (value) => title = value,
-                        decoration: const InputDecoration(hintText: "Title"),
-                      ),
-                      DateTimeField(
-                          format: format,
-                          decoration: const InputDecoration(
-                              hintText: 'Set the starting date'),
-                          onShowPicker: (context, currentValue) async {
-                            final date = await showDatePicker(
-                                context: context,
-                                initialDate: currentValue ?? DateTime.now(),
-                                firstDate: DateTime(1900),
-                                lastDate: DateTime(2100));
+            content: Column(
+              children: [
+                TextField(
+                  onChanged: (value) => title = value,
+                  decoration: const InputDecoration(hintText: "Title"),
+                ),
+                DateTimeField(
+                    format: format,
+                    decoration: const InputDecoration(
+                        hintText: 'Set the starting date'),
+                    onShowPicker: (context, currentValue) async {
+                      final date = await showDatePicker(
+                          context: context,
+                          initialDate: currentValue ?? DateTime.now(),
+                          firstDate: DateTime(1900),
+                          lastDate: DateTime(2100));
 
-                            if (date != null) {
-                              final time = await showTimePicker(
-                                  context: context,
-                                  initialTime: TimeOfDay.fromDateTime(
-                                      currentValue ?? DateTime.now()));
-                              final combined =
-                                  DateTimeField.combine(date, time);
-                              startDate = combined;
-                              return combined;
-                            } else {
-                              startDate = currentValue;
-                              return currentValue;
-                            }
-                          }),
-                      DateTimeField(
-                          format: format,
-                          decoration: const InputDecoration(
-                              hintText: 'Set the starting date'),
-                          onShowPicker: (context, currentValue) async {
-                            final date = await showDatePicker(
-                                context: context,
-                                initialDate: currentValue ?? DateTime.now(),
-                                firstDate: DateTime(1900),
-                                lastDate: DateTime(2100));
+                      if (date != null) {
+                        final time = await showTimePicker(
+                            context: context,
+                            initialTime: TimeOfDay.fromDateTime(
+                                currentValue ?? DateTime.now()));
+                        final combined = DateTimeField.combine(date, time);
+                        startDate = combined;
+                        return combined;
+                      } else {
+                        startDate = currentValue;
+                        return currentValue;
+                      }
+                    }),
+                DateTimeField(
+                    format: format,
+                    decoration: const InputDecoration(
+                        hintText: 'Set the starting date'),
+                    onShowPicker: (context, currentValue) async {
+                      final date = await showDatePicker(
+                          context: context,
+                          initialDate: currentValue ?? DateTime.now(),
+                          firstDate: DateTime(1900),
+                          lastDate: DateTime(2100));
 
-                            if (date != null) {
-                              final time = await showTimePicker(
-                                  context: context,
-                                  initialTime: TimeOfDay.fromDateTime(
-                                      currentValue ?? DateTime.now()));
-                              final combined =
-                                  DateTimeField.combine(date, time);
-                              endDate = combined;
-                              return combined;
-                            } else {
-                              endDate = currentValue;
-                              return currentValue;
-                            }
-                          }),
-                      TextField(
-                          keyboardType: TextInputType.number,
-                          onChanged: (value) => quota = int.parse(value),
-                          decoration: const InputDecoration(hintText: "Quota")),
-                      TextField(
-                        onChanged: (value) => description = value,
-                        decoration:
-                            const InputDecoration(hintText: "Description"),
-                        maxLines: 15,
-                      ),
-                      MapLocationPicker(
+                      if (date != null) {
+                        final time = await showTimePicker(
+                            context: context,
+                            initialTime: TimeOfDay.fromDateTime(
+                                currentValue ?? DateTime.now()));
+                        final combined = DateTimeField.combine(date, time);
+                        endDate = combined;
+                        return combined;
+                      } else {
+                        endDate = currentValue;
+                        return currentValue;
+                      }
+                    }),
+                TextField(
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) => quota = int.parse(value),
+                    decoration: const InputDecoration(hintText: "Quota")),
+                TextField(
+                  onChanged: (value) => description = value,
+                  decoration: const InputDecoration(hintText: "Description"),
+                  maxLines: 15,
+                ),
+                /*MapLocationPicker(
                         apiKey: 'AIzaSyAXTzbniq2PnBkL1GbxGzCqv4rFCgAaFpA',
                         canPopOnNextButtonTaped: true,
                         currentLatLng: const LatLng(29.121599, 76.396698),
@@ -110,49 +101,9 @@ createEvent(BuildContext context, CoursePageViewModel viewModel) {
                             address = result.formattedAddress ?? "";
                           }
                         },
-                      ),
-                      const Spacer(),
-                      ListTile(title: Text(address)),
-                      /*RadioListTile(
-                        title: const Text("Private"),
-                        groupValue: visibility,
-                        value: "private",
-                        onChanged: (value) {
-                          visibility = value.toString();
-                          },
-                        ),
-                        RadioListTile(
-                          title: const Text("Public"),
-                          groupValue: visibility,
-                          value: "public",
-                          onChanged: (value) {
-                            visibility = value.toString();
-                          },
-                        ),
-                        TextField(
-                            keyboardType: TextInputType.number,
-                            onChanged: (value) => fee = double.parse(value),
-                            decoration:
-                                const InputDecoration(hintText: "Entrance Fee")),
-                        RadioListTile(
-                          title: const Text("Online"),
-                          groupValue: medium,
-                          value: "public",
-                          onChanged: (value) {
-                            medium = value.toString();
-                          },
-                        ),
-                        RadioListTile(
-                          title: const Text("In person"),
-                          groupValue: medium,
-                          value: "in_person",
-                          onChanged: (value) {
-                            medium = value.toString();
-                          },
-                        ),*/
-                    ],
-                  ),
-                )),
+                      ),*/
+              ],
+            ),
             actions: [
               GestureDetector(
                 onTap: () => Navigator.pop(context),
@@ -194,8 +145,8 @@ createEvent(BuildContext context, CoursePageViewModel viewModel) {
                         if (e != null) {
                           viewModel.addNewEvent(e);
                           print('Here!');
-                          Navigator.pop(context);
                         }
+                        Navigator.pop(context);
                       },
                 child: Container(
                   padding:
