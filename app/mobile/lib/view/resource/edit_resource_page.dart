@@ -85,22 +85,19 @@ Widget editResourceView(Resource r) =>
                         ),
                   GestureDetector(
                     onTap: () async {
-                      Resource? created = await contentService
-                          .editResource(viewModel.controller_title.text, viewModel.controller.text, resourceId: r.id);
-                      if (created == null) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text('Could Not Edit Resource!')),
-                        );
-                        viewModel.notifyListeners();
-                      }
-                      if (created!.id.isNotEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text('Successfully Editted!')),
-                        );
-                        Navigator.pop(context);
-                        viewModel.notifyListeners();
+                      Resource? created = await contentService.editResource(
+                          viewModel.controller_title.text,
+                          viewModel.controller.text,
+                          resourceId: r.id);
+                      if (created != null) {
+                        if (created!.id.isNotEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('Successfully Editted!')),
+                          );
+                          Navigator.pop(context);
+                          viewModel.notifyListeners();
+                        }
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
