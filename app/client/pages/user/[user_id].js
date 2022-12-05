@@ -673,6 +673,7 @@ export default function profile(props) {
                             value={knowledgeTags}
                             defaultValue={[knowledgeTags]}
                             disabled
+                            readOnly
                             freeSolo
                             renderTags={(value, getTagProps) =>
                               value.map((option, index) => (
@@ -702,6 +703,7 @@ export default function profile(props) {
                             value={tags}
                             defaultValue={[tags]}
                             disabled
+                            readOnly
                             freeSolo
                             renderTags={(value, getTagProps) =>
                               value.map((option, index) => (
