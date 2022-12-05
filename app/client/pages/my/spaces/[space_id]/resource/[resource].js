@@ -20,6 +20,8 @@ import { Box } from '@mui/system';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 import Link from 'next/link';
 
+
+import CreateNote from "../../../../../components/PopUps/CreateNote";
 const MDEditor = dynamic(
     () => import("@uiw/react-md-editor"),
     { ssr: false }
@@ -52,7 +54,12 @@ export default function resource() {
     const [open, setOpen] = React.useState(false);
 
     const router = useRouter();
+    const [openCreateNote, setOpenCreateNote] = useState(false);
     let router_query = router.query;
+
+    const [data, setData] = useState({});
+    const [post, setPost] = useState("");
+
     let intervalId;
 
     const handleDrawerToggle = () => {
@@ -180,11 +187,21 @@ export default function resource() {
         < >
             <div className={styles.resourceDetailPage} style={{ width: open && `calc(100% - ${drawerWidth}px)` }}>
                 <div className={styles.resourceDetailHeader}>
+                    <CreateNote openCreateNote={openCreateNote} post={post} setPost={setPost} setOpenCreateNote={setOpenCreateNote} id ={router_query.resource} />
 
                     <div className={styles.titleCard}>
                         <h2>{data?.resource?.topic?.name}</h2>
                         <h1>{data?.resource?.name}</h1>
 
+                    </div>
+                    <div className={styles.resourceDetailHeader}> 
+                        <Button variant="outlined" onClick={() => { setOpenCreateNote(true) }} className={styles.resourceDetailHeaderButton}>
+                            add new note
+                        </Button>
+
+                        {!editModeActive && <Button onClick={onEditButtonClicked} className={styles.resourceDetailHeaderButton}>Edit</Button>}
+                        {editModeActive && <Button onClick={onEditButtonClicked} className={styles.resourceDetailHeaderButton}>Save</Button>}
+                    </div>
                         <Link href={`/user/${data?.resource?.creator?._id}`}>
                             <div className="review__user" style={{ cursor: "pointer" }}>
                                 <img
@@ -208,6 +225,7 @@ export default function resource() {
                     <Button onClick={onEditButtonClicked} className={styles.resourceDetailHeaderButton}>
                         Edit
                     </Button>
+
 
                 </div>
 
