@@ -14,7 +14,22 @@ class EventService {
         return null;
       }
       Map json = response.data;
-      return Event.fromJson(json['event']);
+      return Event.fromJson({
+        '_id': json['event']['_id'],
+        'space_id': json['event']['space_id']['_id'],
+        'creator': json['event']['creator']['_id'],
+        'event_title': json['event']['event_title'],
+        'start_date': json['event']['start_date'],
+        'end_date': json['event']['end_date'],
+        'description': json['event']['description'],
+        'location': {
+          'longitude': json['event']['location']['longitude'],
+          'latitude': json['event']['location']['latitude']
+        },
+        'quota': json['event']['quota'],
+        'participants': json['event']['participants'],
+        'participant_count': json['event']['participant_count'],
+      });
     } catch (e) {
       print(e);
     }
@@ -29,7 +44,7 @@ class EventService {
     required String endDate,
     required String description,
     required Map<String, double> location,
-    required int quota,
+    required int? quota,
     //required String visibility,
     //required double fee,
     //required String medium
