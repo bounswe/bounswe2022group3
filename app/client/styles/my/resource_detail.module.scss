@@ -4,9 +4,20 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+
+    h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    h2 {
+        font-size: 1.2rem;
+        margin-left: 2.5px;
+        font-weight: 600;
+    }
 }
 
-.titleCard > *{
+.titleCard>* {
     margin-top: 0.5rem;
 }
 
@@ -23,14 +34,14 @@
 }
 
 .resourceDetailPage {
-    padding: 2rem;
+    padding: 0 20px;
     display: flex;
     flex-direction: column;
     height: 100%;
 }
 
 .mdeBox {
-    margin-top: 2rem;
+    margin-top: 10px;
     flex-grow: 1;
     min-height: 300px;
 }
@@ -55,6 +66,7 @@
     border-radius: 0.5rem;
     margin-bottom: 1rem;
     transition: 0.5s;
+    width: 400px;
 
     &::placeholder {
         color: #aaa;
@@ -68,11 +80,8 @@
 
 .form {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: space-between;
     margin: 1rem 0;
-    width: 80%;
-
-    @media screen and (min-width: 48rem) {
-        width: 50%;
-    }
+    width: 100%;
 }

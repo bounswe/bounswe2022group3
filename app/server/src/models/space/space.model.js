@@ -43,9 +43,8 @@ const spaceSchema = new mongoose.Schema(
     ],
     events: [
       {
-        // type: mongoose.Schema.Types.ObjectId,
-        // ref: "Event",
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Event",
       },
     ],
     discussions: [
@@ -88,6 +87,11 @@ const createSpace = async (name, creator, info, tags, image) => {
     image,
   });
   space.enrolledUsersCount = 0;
+
+  space.events = [];
+  // randomized rating, will change
+  space.rating = Math.floor(Math.random() * 3) + 3;
+
   const res = await space.save();
   return res;
 };
