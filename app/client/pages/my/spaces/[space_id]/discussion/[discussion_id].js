@@ -19,6 +19,7 @@ const MDEditor = dynamic(
 export default function discussion() {
     const [value, setValue] = useState("");
     const [previousComments, setPreviousComments] = useState([]);
+    const [reRender, setReRender] = useState(false);
     const router = useRouter();
     let user_id = router.query;
     let discussion = router.query;
@@ -29,8 +30,6 @@ export default function discussion() {
             const response = (
                 await axios.get(API_URL + "/discussion/" + discussion.discussion_id)
             )?.data;
-            console.log("response.discussion.comments")
-            console.log(response.discussion.comments)
             setPreviousComments(response.discussion.comments);
         } catch (err) {
             console.log(err);
@@ -40,9 +39,8 @@ export default function discussion() {
         discussion = router.query;
         fetchDiscussion();
     }, [discussion.discussion_id]);
-
-    useEffect(() => { }, [previousComments])
-
+    
+    useEffect(() => {fetchDiscussion(); }, [reRender])
     return (
         <section className={styles.container}>
             <h2>Acoustic Guitar Ed for Beginners</h2>
@@ -54,6 +52,8 @@ export default function discussion() {
                 value={value}
                 setValue={setValue}
                 discussion={discussion}
+                setReRender = {setReRender}
+                reRender = {reRender}
             />
         </section>
     );

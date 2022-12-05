@@ -17,7 +17,7 @@ const MDEditor = dynamic(
 
 
 
-function CreateDiscussion({ type, post, setPost, openDiscussion, setOpenDiscussion }) {
+function CreateDiscussion({  post ,setPost  ,openDiscussion, setOpenDiscussion }) {
 
     const [title, setTitle] = useState({ title: "" });
     const router = useRouter();
@@ -32,7 +32,6 @@ function CreateDiscussion({ type, post, setPost, openDiscussion, setOpenDiscussi
         }
         try {
             const reponse = await axios.post(API_URL + "/comment", body);
-            console.log(response)
         } catch (err) {
             console.log(err);
         }
@@ -50,7 +49,7 @@ function CreateDiscussion({ type, post, setPost, openDiscussion, setOpenDiscussi
                 await axios.post(API_URL + "/discussion", body)
 
             )?.data;
-              putFirstPost(response);
+            putFirstPost(response);
             setPost("");
         } catch (err) {
             console.log(err);

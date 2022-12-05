@@ -17,7 +17,7 @@ const MDEditor = dynamic(
     { ssr: false }
 );
 
-export default function Discussion({ previousComments,setPreviousComments, value ,setValue ,discussion}) {
+export default function Discussion({ previousComments,setPreviousComments, value ,setValue ,discussion,setReRender,reRender}) {
 
     const handleSubmit = async () => {
         if(!value) {
@@ -29,9 +29,12 @@ export default function Discussion({ previousComments,setPreviousComments, value
         }
         try {
             await axios.post(API_URL + "/comment", body);
+            setValue("");
+            setReRender(!reRender);
         } catch (err) {
             console.log(err);
         }
+        
     };
 
     return (
@@ -68,7 +71,7 @@ export default function Discussion({ previousComments,setPreviousComments, value
                             rehypePlugins: [[rehypeSanitize]],
                         }}
                     />
-                    <Button className={styles.comment_button} onClick={() => { handleSubmit(); setValue("") }}>post</Button>
+                    <Button className={styles.comment_button} onClick={() => { handleSubmit(); }}>post</Button>
                 </div>
             </div>
         </section>

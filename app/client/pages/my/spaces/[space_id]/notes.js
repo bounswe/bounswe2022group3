@@ -25,7 +25,6 @@ export default function notes() {
             const response = (
                 await axios.post(API_URL + "/note/getNoteList", body)
             )?.data;
-            console.log(response.notes)
             setDiscussionList(response.notes);
         } catch (err) {
             console.log(err);
@@ -37,7 +36,6 @@ export default function notes() {
         fetchNotes();
     }, [space_id]);
     useEffect(() => {
-       
         fetchNotes();
     }, [openEditNote]);
   

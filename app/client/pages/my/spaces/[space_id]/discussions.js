@@ -27,12 +27,10 @@ export default function discussions() {
     const [openDiscussion, setOpenDiscussion] = useState(false);
     const [discussionList, setDiscussionList] = useState([]);
     const router = useRouter();
-    let user_id = router.query;
-    let space_id = router.query;
-    let access_token = router.access_token;
 
-//{"discussions":[{"title":"this is a discussion","discussion_id":"638cb750970fc7cb6c01c7c9"},{"title":"das","discussion_id":"638cb69f970fc7cb6c01c7ad"},{"title":"gr","discussion_id":"638cb65a970fc7cb6c01c79b"},{"title":"hi","discussion_id":"638cb55cf8d09437102d1ec9"},{"title":"dg","discussion_id":"638a0a8e66f95b00ebf718fb"}]}
-    async function fetchDiscussion() {
+    let space_id = router.query;
+
+  async function fetchDiscussion() {
 
         try {
             const response = (
