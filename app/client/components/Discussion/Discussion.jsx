@@ -54,12 +54,15 @@ export default function Discussion({ previousComments,setPreviousComments, value
     useEffect(() => {fetchPicture(); }, [user_id])
     return (
         <section className={styles.container}>
+            
             {
                 previousComments.map(previousComment => {
                     return <div className={styles.comment_container}>
                 <Avatar className={styles.comment_icon} src={"https://api.bucademy.tk/user/"+previousComment?.user?.image} /> 
+             
                      {/*         <Avatar className={styles.comment_icon} alt="Agnes Walker" src="https://xsgames.co/randomusers/avatar.php?g=female" />*/}
-                        <div data-color-mode="light" className={styles.comment}>
+                        <div data-color-mode="light" className={styles.comment} >
+                        <h3 style={{margin:12}} >{previousComment?.user?.name}</h3>
                             <MDEditor
                                 value={previousComment?.comment}
                                 onChange={() => { }}

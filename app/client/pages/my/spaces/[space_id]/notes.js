@@ -12,11 +12,30 @@ export default function notes() {
     const [editNote,setEditNote]=useState();
     const [post, setPost] = useState("");
     const [reRender,setReRender] = useState(false);
-    const [discussionsList, setDiscussionList] = useState([]);
+    const [noteList, setNoteList] = useState([]);
     const router = useRouter();
-
+    const [data, setData] = useState({});
     let space_id = router.query;
-    
+   
+
+    async function fetchContent() {
+        try {
+           
+                const response = (
+                    await axios.get(API_URL + "/space/" + space_id.space_id)
+                );
+                console.log("response");
+                console.log(response);
+                setData(response?.data);
+            
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    useEffect(() => {
+        fetchContent();
+    }, [router]);
     async function fetchNotes() {
         const body = {
             space_id: space_id.space_id
@@ -26,7 +45,7 @@ export default function notes() {
             const response = (
                 await axios.post(API_URL + "/note/getNoteList", body)
             )?.data;
-            setDiscussionList(response.notes);
+            setNoteList(response.notes);
         } catch (err) {
             console.log(err);
         }
@@ -35,6 +54,7 @@ export default function notes() {
     useEffect(() => {
         space_id = router.query;
         fetchNotes();
+        fetchContent();
     }, [space_id]);
 
     useEffect(() => {
@@ -45,14 +65,14 @@ export default function notes() {
         <section className={styles.container}>
 
 
-            <h2>Acoustic Guitar Ed for Beginners</h2>
+            <h2>{data?.space?.name}</h2>
             <h1>My Notes</h1>
             <EditNote openEditNote={openEditNote} note = {editNote} setOpenEditNote={setOpenEditNote} post={post} setPost={setPost} /> 
             <div className={styles.grid}>
                   
                 {
-                    discussionsList ?
-                        discussionsList.map((note) => {
+                    noteList ?
+                    noteList.map((note) => {
                               
                             return( 
                             <Note note={note} setReRender = {setReRender} reRender = {reRender} space_id ={space_id}  setEditNote ={setEditNote} setOpenEditNote={setOpenEditNote} openEditNote ={openEditNote}/>);

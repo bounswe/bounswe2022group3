@@ -26,10 +26,24 @@ export default function discussions() {
     const [orderBy, setOrderBy] = useState('Date')
     const [openDiscussion, setOpenDiscussion] = useState(false);
     const [discussionList, setDiscussionList] = useState([]);
+    const [data, setData] = useState({});
     const router = useRouter();
 
     let space_id = router.query;
-
+    async function fetchContent() {
+        try {
+           
+                const response = (
+                    await axios.get(API_URL + "/space/" + space_id.space_id)
+                );
+                console.log("response");
+                console.log(response);
+                setData(response?.data);
+            
+        } catch (err) {
+            console.log(err);
+        }
+    }
   async function fetchDiscussion() {
 
         try {
@@ -45,6 +59,7 @@ export default function discussions() {
     useEffect(() => {
         space_id = router.query;
         fetchDiscussion();
+        fetchContent();
     }, [space_id]);
     useEffect(() => {
         fetchDiscussion();
@@ -64,7 +79,7 @@ export default function discussions() {
     }
     return (
         <section className={styles.container}>
-            <h2>Acoustic Guitar Ed for Beginners</h2>
+            <h2>{data?.space?.name}</h2>
             <h1>Discussions</h1>
             <CreateDiscussion openDiscussion={openDiscussion} post={post} setPost={setPost} setOpenDiscussion={setOpenDiscussion} type={"discussionCreate"} />
             <Grid container spacing={2} style={{ marginBottom: 12 }}>

@@ -4,7 +4,7 @@ import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 import rehypeSanitize from "rehype-sanitize";
 import dynamic from "next/dynamic";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Avatar } from "@mui/material";
 import styles from "../../../../../styles/my/discussions.module.scss";
 import Discussion from "../../../../../components/Discussion/Discussion";
@@ -23,11 +23,17 @@ export default function discussion() {
     const router = useRouter();
     let user_id = router.query;
     let discussion = router.query;
+    const [counter, setCounter] = useState(0);
+
+ 
     async function fetchDiscussion() {
 
         try {
             const response = (
-                await axios.get(API_URL + "/discussion/" + discussion.discussion_id)
+                await axios.get(API_URL + "/discussion/" + discussion.discussion_id,
+                {
+                    DISABLE_LOADING: true,
+                })
             )?.data;
 
             setPreviousComments(response.discussion.comments);
@@ -36,24 +42,33 @@ export default function discussion() {
         }
     }
     useEffect(() => {
+        const interval = setInterval(() => {
+            setCounter((prevCounter) => prevCounter + 1);
+
+            fetchDiscussion();
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, [discussion.discussion_id]);
+    useEffect(() => {
         discussion = router.query;
         fetchDiscussion();
     }, [discussion.discussion_id]);
-    
-    useEffect(() => {fetchDiscussion(); }, [reRender])
+
+    useEffect(() => { fetchDiscussion(); }, [reRender])
     return (
         <section className={styles.container}>
             <h2>Acoustic Guitar Ed for Beginners</h2>
             <h1>General Discussion</h1>
-
+            {counter}
             <Discussion
                 previousComments={previousComments}
                 setPreviousComments={setPreviousComments}
                 value={value}
                 setValue={setValue}
                 discussion={discussion}
-                setReRender = {setReRender}
-                reRender = {reRender}
+                setReRender={setReRender}
+                reRender={reRender}
             />
         </section>
     );
