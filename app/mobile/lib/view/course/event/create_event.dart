@@ -1,3 +1,4 @@
+import 'package:map_location_picker/map_location_picker.dart';
 import 'package:bucademy/resources/custom_colors.dart';
 import 'package:bucademy/resources/text_styles.dart';
 import 'package:bucademy/services/locator.dart';
@@ -12,7 +13,8 @@ createEvent(BuildContext context, CoursePageViewModel viewModel) {
   DateTime? startDate;
   DateTime? endDate;
   String? description;
-  List<double>? location = [41.015137, 28.979530];
+  Map<String, double>? location;
+  String address = "";
   int? quota;
   //String? visibility;
   //double? fee;
@@ -95,6 +97,22 @@ createEvent(BuildContext context, CoursePageViewModel viewModel) {
                             const InputDecoration(hintText: "Description"),
                         maxLines: 15,
                       ),
+                      MapLocationPicker(
+                        apiKey: 'AIzaSyAXTzbniq2PnBkL1GbxGzCqv4rFCgAaFpA',
+                        canPopOnNextButtonTaped: true,
+                        currentLatLng: const LatLng(29.121599, 76.396698),
+                        onNext: (GeocodingResult? result) {
+                          if (result != null) {
+                            location = {
+                              'latitude': result.geometry.location.lat,
+                              'longitude': result.geometry.location.lng
+                            };
+                            address = result.formattedAddress ?? "";
+                          }
+                        },
+                      ),
+                      const Spacer(),
+                      ListTile(title: Text(address)),
                       /*RadioListTile(
                         title: const Text("Private"),
                         groupValue: visibility,
@@ -167,7 +185,7 @@ createEvent(BuildContext context, CoursePageViewModel viewModel) {
                             title: title!,
                             startDate: startDate!.toIso8601String(),
                             endDate: endDate!.toIso8601String(),
-                            location: location,
+                            location: location!,
                             description: description!,
                             quota: quota!);
                         //visibility: visibility!,
