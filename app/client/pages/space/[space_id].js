@@ -54,7 +54,7 @@ export default function courseSummary() {
         console.log(err);
       }
     }
-    enroll();
+
     if (!(token)) {
       router.push(`/user/login`);
     }
