@@ -120,7 +120,7 @@ function MainLayout({ children }) {
                         </div>
                     </Link>
                 </nav>
-                <div className={styles.exit} onClick={() => router.push("/user/home")}>
+                <div className={styles.exit} onClick={() => router.push("/user/my_spaces")}>
                     <CustomTooltip title="Leave Space" placement="right" arrow>
                         <LogoutIcon />
                     </CustomTooltip>
@@ -172,7 +172,7 @@ function MainLayout({ children }) {
                         <NoteAltIcon />
                     </div>
                 </Link>
-                <div onClick={() => router.push("/user/home")}>
+                <div onClick={() => router.push("/user/my_spaces")}>
                     <LogoutIcon />
                 </div>
             </nav>

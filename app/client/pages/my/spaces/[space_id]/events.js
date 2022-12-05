@@ -36,7 +36,7 @@ export default function resources() {
     const DefaultLocation = { lat: 10, lng: 106 };
     const DefaultZoom = 15;
 
-    const [defaultLocation, setDefaultLocation] = useState(null);
+    const [defaultLocation, setDefaultLocation] = useState(DefaultLocation);
 
     const [location, setLocation] = useState(defaultLocation);
     const [zoom, setZoom] = useState(DefaultZoom);
