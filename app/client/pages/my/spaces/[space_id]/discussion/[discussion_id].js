@@ -60,7 +60,6 @@ export default function discussion() {
         <section className={styles.container}>
             <h2>Acoustic Guitar Ed for Beginners</h2>
             <h1>General Discussion</h1>
-            {counter}
             <Discussion
                 previousComments={previousComments}
                 setPreviousComments={setPreviousComments}
