@@ -141,7 +141,7 @@ const SpaceController = {
         .populate({
           path: "events",
           options: { sort: { 'start_date': -1 } },
-          populate: { path: "event_title _id description location quota start_date" }
+          populate: { path: "creator", select: { 'name': 1, 'surname': 1, 'image': 1} }
         })
         .exec();
       if (!space) {

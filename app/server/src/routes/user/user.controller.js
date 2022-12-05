@@ -170,9 +170,14 @@ const UserController = {
             const new_refresh_token = await auth.generateToken(email, jwt_ref_secret, refresh_jwtExpiry)
             tokens.access_token = new_access_token
             tokens.refresh_token = new_refresh_token
-            tokens.save()
+            tokens.save();
+            const user = await UserModel.getUserByEmail(email);
             return res.status(200).json({
                 // message: "Access and Refresh Tokens are Updated!",
+                id: user._id,
+                name: user.name,
+                surname: user.surname,
+                image: user.image,
                 access_token: new_access_token,
                 refresh_token: new_refresh_token,
             })

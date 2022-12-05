@@ -57,12 +57,12 @@ function UserLayout2({ children }) {
     return (
         <>
             <header className={styles.header}>
-                <a href="#">
-                    <div className={styles.icon}>
+                <Link href="/">
+                    <div className={styles.icon} style={{cursor: "pointer"}}>
                         <img src="/education.png" width="50px" height="50px" />
                         <h2>BUcademy</h2>
                     </div>
-                </a>
+                </Link>
                 <nav className={styles.main_nav}>
                     <ul className={styles.main_nav_list}>
                         <li>
