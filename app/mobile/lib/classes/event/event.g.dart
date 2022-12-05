@@ -14,9 +14,13 @@ Event _$EventFromJson(Map<String, dynamic> json) => Event(
       json['start_date'] as String,
       json['end_date'] as String,
       json['description'] as String,
-      (json['location'] as Map<String, dynamic>).map(
-        (k, e) => MapEntry(k, (e as num).toDouble()),
-      ),
+      {
+        'longitude': json['location']['longitude'],
+        'latitude': json['location']['latitude']
+      },
+      //(json['location'] as Map<String, dynamic>).map(
+      //  (k, e) => MapEntry(k, (e as num).toDouble()),
+      //),
       json['quota'] as int,
       (json['participants'] as List<dynamic>).map((e) => e as String).toList(),
       json['participant_count'] as int,
