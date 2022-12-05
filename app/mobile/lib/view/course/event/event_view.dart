@@ -23,26 +23,35 @@ Widget eventView({required String eventId}) =>
                     child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Container(child: Text(viewModel.event!.title)),
+                      ListTile(
+                          title: const Text('Title'),
+                          subtitle: Text(viewModel.event!.title)),
                       const Divider(thickness: 1.5),
-                      Container(child: Text(viewModel.event!.startDate)),
+                      ListTile(
+                          title: const Text('Start date'),
+                          subtitle: Text(viewModel.event!.startDate)),
                       const Divider(thickness: 1.5),
-                      Container(child: Text(viewModel.event!.endDate)),
+                      ListTile(
+                          title: const Text('End date'),
+                          subtitle: Text(viewModel.event!.endDate)),
                       const Divider(thickness: 1.5),
-                      Container(child: Text(viewModel.event!.description)),
+                      ListTile(
+                          title: const Text('Description'),
+                          subtitle: Text(viewModel.event!.description)),
                       const Divider(thickness: 1.5),
-                      Container(
-                          child: Text(
-                              "${viewModel.event!.location[0]}, ${viewModel.event!.location[1]}")),
+                      ListTile(
+                          title: const Text('Location'),
+                          subtitle: Text(
+                              "${viewModel.event!.location['longitude']}, ${viewModel.event!.location['latitude']}")),
                       const Divider(thickness: 1.5),
-                      Container(child: Text(viewModel.event!.quota.toString())),
+                      ListTile(
+                          title: const Text('Quota'),
+                          subtitle: Text(viewModel.event!.quota.toString())),
                       const Divider(thickness: 1.5),
-                      Container(
-                          child: Text(
+                      ListTile(
+                          title: const Text('Registered'),
+                          subtitle: Text(
                               viewModel.event!.participantCount.toString())),
-                      //Container(child: Text(viewModel.event!.visibility)),
-                      //Container(child: Text(viewModel.event!.fee.toString())),
-                      //Container(child: Text(viewModel.event!.medium)),
                     ],
                   )),
           ],
