@@ -37,15 +37,6 @@ class Event {
   @JsonKey(name: 'participant_count')
   int participantCount = 0;
 
-  //@JsonKey(name: 'visibility')
-  //String visibility;
-
-  //@JsonKey(name: 'fee')
-  //double fee;
-
-  //@JsonKey(name: 'medium')
-  //bool medium;
-
   Event(
       this.id,
       this.spaceId,
@@ -57,9 +48,7 @@ class Event {
       this.location,
       this.quota,
       this.participants,
-      this.participantCount
-      /*this.visibility, this.fee, this.medium*/
-      );
+      this.participantCount);
   factory Event.fromJson(Map<String, dynamic> json) => _$EventFromJson(json);
 
   Map<String, dynamic> toJson() => _$EventToJson(this);
