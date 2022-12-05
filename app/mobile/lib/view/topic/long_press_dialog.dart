@@ -94,8 +94,7 @@ Widget longPressDialog(Resource r) => ViewModelBuilder<
                               ),
                               textAlign: TextAlign.center,
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                            Wrap(
                               children: [
                                 GestureDetector(
                                   onTap: () async {
