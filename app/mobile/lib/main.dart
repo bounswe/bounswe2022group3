@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:bucademy/resources/custom_colors.dart';
 import 'package:bucademy/services/locator.dart';
 import 'package:bucademy/view/intro/intro.dart';
@@ -5,7 +6,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+  }
+}
+
 void main() {
+  HttpOverrides.global = MyHttpOverrides();
   configureDependencies();
   navigatorService.controller = PersistentTabController(initialIndex: 0);
   WidgetsFlutterBinding.ensureInitialized();
