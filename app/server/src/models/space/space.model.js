@@ -119,6 +119,11 @@ const getPopulatedSpace = async (id) => {
         select: { _id: 1, name: 1, surname: 1, image: 1 },
       },
     })
+    .populate({
+      path: "discussions",
+      options: { sort: { 'createdAt': -1 } },
+      select: { _id: 1, title: 1},
+    })
     .exec();
 };
 
