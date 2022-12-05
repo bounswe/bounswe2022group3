@@ -11,4 +11,221 @@
         margin-left: 2.5px;
         font-weight: 600;
     }
+
+    .eventsHeader {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .eventsHeaderButton {
+        width: 200px;
+        margin: 0;
+
+    }
+}
+
+.saveEventButton {
+    width: 300px !important;
+}
+
+.locationDialogDescription {
+    max-width: 400px;
+}
+
+.unjoinButton {
+    width: 300px !important;
+    background: green;
+}
+
+.eventListContainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+}
+
+.eventCard{
+    height: 300px;
+    border-radius: 10px;
+    background: #FFFFFF;
+    cursor: pointer;
+    overflow: hidden;
+    padding: 20px 0px;
+    position: relative;
+
+    box-shadow: 0 2rem 5rem rgb(0 0 0 / 6%);
+    width: 29rem;
+    transition: transform 0.3s;
+    cursor: pointer;
+
+
+    &:hover {
+        transform: translateY(-.8rem) scale(1.02);
+    }
+}
+
+
+.eventCardBlocker {
+    position: absolute;
+    inset: 0;
+    z-index: 100;
+}
+
+.eventCardInfo {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    justify-content: space-around;
+    align-items: flex-start;
+    padding: 0px 10px;
+}
+
+.eventCardInfo > * {
+    text-align: start;
+}
+
+.eventCardTitle {
+    font-size: 20px;
+}
+
+.eventCardMapConatiner {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.eventCardInfoLastLine {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.createEventFormList {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+}
+
+.jointButton {
+    width: 100px;
+}
+
+.eventJoined {
+    color: green;
+}
+
+.eventCardFooter {
+    display: flex;
+    flex-direction: column;
+}
+
+.locationDialogCreator {
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+}
+
+.locationDialogFooterName {
+    margin-left: 5px;
+}
+
+.dateTime {
+    flex-grow: 1;
+    margin: 4px;
+    input {
+        height: calc(1.8em + 1.375rem + 2px);
+        padding: 0.6875rem 0.75rem;
+        font-size: 0.9rem;
+        font-weight: 400;
+        border: 2px solid #ddd;
+        color: inherit;
+        font-family: inherit;
+        flex-grow: 1;
+        width: 100%;
+        border-radius: 0.5rem;
+        margin-bottom: 1rem;
+        transition: 0.5s;
+    
+        &::placeholder {
+            color: #aaa;
+        }
+    
+        &:focus {
+            border-color: $base-color-light;
+            outline: none;
+        }
+    }
+}
+
+.locationDialogDescription {
+    margin: 10px 0px;
+}
+
+.locationDialogFooter {
+    margin-top: 10px;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+}
+
+.checkbox {
+    height: calc(1.8em + 1.375rem + 2px);
+    padding: 0.6875rem 0.75rem;
+    font-size: 0.9rem;
+    font-weight: 400;
+    color: inherit;
+    font-family: inherit;
+    margin-bottom: 1rem;
+    transition: 0.5s;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    span {
+        margin-left: 1rem;
+    }
+
+}
+
+.input {
+    height: calc(1.8em + 1.375rem + 2px);
+    padding: 0.6875rem 0.75rem;
+    font-size: 0.9rem;
+    font-weight: 400;
+    border: 2px solid #ddd;
+    color: inherit;
+    font-family: inherit;
+    flex-grow: 1;
+    margin: 4px;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    transition: 0.5s;
+
+    &::placeholder {
+        color: #aaa;
+    }
+
+    &:focus {
+        border-color: $base-color-light;
+        outline: none;
+    }
+}
+
+.error {
+    margin-top: -0.7rem !important;
+    margin-bottom: 0.8rem;
+    margin-left: 5px;
+    text-align: left;
+    color: $secondary;
+    font-weight: 600;
 }
