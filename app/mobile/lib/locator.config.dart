@@ -2,6 +2,7 @@ import 'package:bucademy/services/course_service.dart';
 import 'package:bucademy/services/content_service.dart';
 import 'package:bucademy/services/dio_service.dart';
 import 'package:bucademy/services/discussion_service.dart';
+import 'package:bucademy/services/event_service.dart';
 import 'package:bucademy/services/navigator_service.dart';
 import 'package:bucademy/services/persistence_service.dart';
 import 'package:bucademy/services/profile_service.dart';
@@ -23,5 +24,6 @@ GetIt $initGetIt(
   gh.lazySingleton<DiscussionService>((() => DiscussionService()));
   gh.lazySingleton<MockContentService>((() => MockContentService()));
   gh.lazySingleton<ProfileService>((() => ProfileService()));
+  gh.lazySingleton<EventService>(() => EventService());
   return get;
 }
