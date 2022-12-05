@@ -201,7 +201,53 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                                   .map((Chapter e) => chapterTile(e))
                             ],
                           ),
-                          viewModel.getEvents(eventReady, context, viewModel),
+                          ListView(
+                            shrinkWrap: true,
+                            padding: const EdgeInsets.all(10.0),
+                            children: [
+                              if (userService.user != null)
+                                GestureDetector(
+                                  onTap: () => createEvent(context, viewModel),
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 20, vertical: 20),
+                                    margin: const EdgeInsets.only(bottom: 10),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(
+                                          Constants.borderRadius),
+                                    ),
+                                    child: Row(
+                                      children: const [
+                                        Icon(Icons.add,
+                                            color: Colors.green, size: 30),
+                                        SizedBox(width: 15),
+                                        Text('Create a new event'),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ...viewModel.course!.events.map((EventShortened
+                                      es) =>
+                                  GestureDetector(
+                                    child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 20, vertical: 20),
+                                        margin:
+                                            const EdgeInsets.only(bottom: 10),
+                                        decoration: BoxDecoration(
+                                          color: CustomColors.getRandomColor(),
+                                          borderRadius: BorderRadius.circular(
+                                              Constants.borderRadius),
+                                        ),
+                                        child: Text(es.title)),
+                                    onTap: () =>
+                                        PersistentNavBarNavigator.pushNewScreen(
+                                            context,
+                                            screen: eventView(eventId: es.id),
+                                            withNavBar: false),
+                                  )),
+                            ],
+                          ),
                           ListView(
                             shrinkWrap: true,
                             padding: const EdgeInsets.all(10.0),
@@ -331,62 +377,5 @@ class CoursePageViewModel extends ChangeNotifier {
     title = await contentService.contents('Chapter');
     contentsLoading = false;
     notifyListeners();
-  }
-
-  Widget getEvents(
-      bool eventReady, BuildContext context, CoursePageViewModel viewModel) {
-    return eventReady
-        ? ListView(
-            shrinkWrap: true,
-            padding: const EdgeInsets.all(10.0),
-            children: [
-              if (userService.user != null)
-                GestureDetector(
-                  onTap: () => createEvent(context, viewModel),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 20),
-                    margin: const EdgeInsets.only(bottom: 10),
-                    decoration: BoxDecoration(
-                      borderRadius:
-                          BorderRadius.circular(Constants.borderRadius),
-                    ),
-                    child: Row(
-                      children: const [
-                        Icon(Icons.add, color: Colors.green, size: 30),
-                        SizedBox(width: 15),
-                        Text('Create a new event'),
-                      ],
-                    ),
-                  ),
-                ),
-              ...viewModel.course!.events
-                  .map((EventShortened es) => GestureDetector(
-                        child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 20),
-                            margin: const EdgeInsets.only(bottom: 10),
-                            decoration: BoxDecoration(
-                              color: CustomColors.getRandomColor(),
-                              borderRadius:
-                                  BorderRadius.circular(Constants.borderRadius),
-                            ),
-                            child: Text(es.title)),
-                        onTap: () => PersistentNavBarNavigator.pushNewScreen(
-                            context,
-                            screen: eventView(eventId: es.id),
-                            withNavBar: false),
-                      )),
-            ],
-          )
-        : ListView(
-            shrinkWrap: true,
-            padding: const EdgeInsets.all(10.0),
-            children: [
-              ...contentService
-                  .contents("Event")
-                  .map((MockContent m) => mockTile(m.name))
-            ],
-          );
   }
 }
