@@ -1,5 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-import '../user/user.dart';
 
 part 'event.g.dart';
 
@@ -33,7 +32,7 @@ class Event {
   int quota;
 
   @JsonKey(name: 'participants')
-  List<User> participants = [];
+  List<String> participants = [];
 
   @JsonKey(name: 'participant_count')
   int participantCount = 0;
@@ -48,17 +47,19 @@ class Event {
   //bool medium;
 
   Event(
-    this.id,
-    this.spaceId,
-    this.creator,
-    this.title,
-    this.startDate,
-    this.endDate,
-    this.description,
-    this.location,
-    this.quota,
-    /*this.visibility, this.fee, this.medium*/
-  );
+      this.id,
+      this.spaceId,
+      this.creator,
+      this.title,
+      this.startDate,
+      this.endDate,
+      this.description,
+      this.location,
+      this.quota,
+      this.participants,
+      this.participantCount
+      /*this.visibility, this.fee, this.medium*/
+      );
   factory Event.fromJson(Map<String, dynamic> json) => _$EventFromJson(json);
 
   Map<String, dynamic> toJson() => _$EventToJson(this);
