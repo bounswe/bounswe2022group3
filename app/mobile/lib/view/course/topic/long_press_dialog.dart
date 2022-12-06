@@ -1,77 +1,20 @@
+import 'package:bucademy/classes/course/course.dart';
 import 'package:bucademy/classes/topic/topic.dart';
 import 'package:bucademy/resources/constants.dart';
-import 'package:bucademy/view/resource/edit_resource_page.dart';
-import 'package:bucademy/classes/resource/resource.dart';
 import 'package:bucademy/resources/custom_colors.dart';
 import 'package:bucademy/resources/text_styles.dart';
 import 'package:bucademy/services/locator.dart';
 import 'package:flutter/material.dart';
-import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:stacked/stacked.dart';
 
-Widget longPressDialog(TopicDetailed topic,Resource r, ChangeNotifier viewModelTopic) => ViewModelBuilder<
-        ResourcePageViewModel>.reactive(
-    viewModelBuilder: () => ResourcePageViewModel(),
+Widget longPressTopicTile(Topic topic, ChangeNotifier viewModelCoursePage, CourseDetailed course) => ViewModelBuilder<
+        LongPressTopicModel>.reactive(
+    viewModelBuilder: () => LongPressTopicModel(),
     builder: (context, viewModel, child) {
       return Column(
           mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              margin: const EdgeInsets.all(5),
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-              child: Text(
-                "Discussion",
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
-              ),
-              decoration: BoxDecoration(
-                  color: CustomColors.main,
-                  borderRadius: BorderRadius.circular(10)),
-            ),
-            Container(
-              margin: const EdgeInsets.all(5),
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-              child: Text(
-                "Details",
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
-              ),
-              decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 68, 84, 141),
-                  borderRadius: BorderRadius.circular(10)),
-            ),
-            GestureDetector(
-              onTap: () {
-                PersistentNavBarNavigator.pushNewScreen(context,
-                    screen: editResourceView(topic,r,viewModelTopic));
-              },
-              child: Container(
-                margin: const EdgeInsets.all(5),
-                width: double.infinity,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                child: Text(
-                  "Edit",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.center,
-                ),
-                decoration: BoxDecoration(
-                    color: CustomColors.main,
-                    borderRadius: BorderRadius.circular(10)),
-              ),
-            ),
             GestureDetector(
               onTap: () {
                 showDialog(
@@ -82,7 +25,7 @@ Widget longPressDialog(TopicDetailed topic,Resource r, ChangeNotifier viewModelT
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             const Text(
-                              "You are about to delete this resource.\nThis action is irreversable.\nDo you want to continue?",
+                              "You are about to delete this topic.\nThis action is irreversable.\nDo you want to continue?",
                               style: TextStyle(
                                 color: Colors.red,
                                 fontWeight: FontWeight.bold,
@@ -95,26 +38,25 @@ Widget longPressDialog(TopicDetailed topic,Resource r, ChangeNotifier viewModelT
                                 GestureDetector(
                                   onTap: () async {
                                     int? deleted = await contentService
-                                        .deleteResource(resourceId: r.id);
+                                        .deleteTopic(topicId: topic.id);
                                     if (deleted == 201) {
-                                      //TODO: remove the resource tile from here
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(
                                         const SnackBar(
                                             content: Text(
-                                                'Resource Successfully Deleted!')),
+                                                'Topic Successfully Deleted!')),
                                       );
                                       Navigator.of(context).pop();
                                       Navigator.of(context).pop();
+                                      course.topics.remove(topic);
                                       viewModel.notifyListeners();
-                                      topic.resources.remove(r);
-                                      viewModelTopic.notifyListeners();
+                                      viewModelCoursePage.notifyListeners();
                                     } else if (deleted == 400) {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(
                                         const SnackBar(
                                             content: Text(
-                                                'Resource Could Not Be Deleted!\nYou are not the creator of this resource.')),
+                                                'Topic Could Not Be Deleted!\nYou are not the creator of this topic.')),
                                       );
                                       Navigator.of(context).pop();
                                       Navigator.of(context).pop();
@@ -124,7 +66,7 @@ Widget longPressDialog(TopicDetailed topic,Resource r, ChangeNotifier viewModelT
                                           .showSnackBar(
                                         SnackBar(
                                             content: Text(
-                                                'Could Not Delete Resource!\nYou might not be the creator.'//'A problem occured. Status code $deleted'
+                                                'Could Not Delete Topic!\nYou might not be the creator.'//'A problem occured. Status code $deleted'
                                                 )),
                                       );
                                       Navigator.of(context).pop();
@@ -187,7 +129,7 @@ Widget longPressDialog(TopicDetailed topic,Resource r, ChangeNotifier viewModelT
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                 decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 68, 84, 141),
+                    color: CustomColors.main,
                     borderRadius: BorderRadius.circular(10)),
                 child: const Text(
                   "Delete",
@@ -203,4 +145,4 @@ Widget longPressDialog(TopicDetailed topic,Resource r, ChangeNotifier viewModelT
     });
 
 // ViewModel
-class ResourcePageViewModel extends ChangeNotifier {}
+class LongPressTopicModel extends ChangeNotifier {}
