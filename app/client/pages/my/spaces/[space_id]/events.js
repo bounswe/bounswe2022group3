@@ -45,7 +45,7 @@ export default function resources() {
 
     const breakpointColumnsObj = {
         default: 3,
-        1250: 2,
+        1350: 2,
         950: 1
     };
 

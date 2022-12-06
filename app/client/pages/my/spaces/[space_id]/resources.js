@@ -118,7 +118,13 @@ export default function resources() {
     return (
         <section className={styles.container}>
             <h2>{data?.space?.name}</h2>
-            <h1>Resources</h1>
+            <div style={{display:"flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px"}}>
+                <h1>Resources</h1>
+                <Button className={styles.addTopicButton} onClick={handleClickOpen} style={{margin: 0, marginRight: "48px"}}>
+                    Add Topic
+                </Button>
+            </div>
+            
             <Grid container spacing={2} style={{ marginBottom: 12 }}>
                 <Grid item sx={{ width: '80%', paddingLeft: "4px !important", paddingTop: "4px !important" }}>
                     <Table sx={{ minWidth: 250 }} >
@@ -155,11 +161,11 @@ export default function resources() {
                                 );
                             })}
 
-                            <TableRow>
+                            {/* <TableRow>
                                 <Button className={styles.addTopicButton} onClick={handleClickOpen}>
                                     Add Topic
                                 </Button>
-                            </TableRow>
+                            </TableRow> */}
                         </TableBody>
                     </Table>
                 </Grid>

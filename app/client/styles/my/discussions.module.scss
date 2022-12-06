@@ -1,6 +1,5 @@
 .comment_container {
     display: flex;
-    margin-top : 2rem;
 }
 
 .comment {
@@ -12,6 +11,7 @@
 
 .comment_icon {
     margin-top: 0.5rem;
+    cursor: pointer;
 }
 
 .comment_button {
@@ -23,7 +23,6 @@
 .container {
     h1 {
         font-size: 3rem;
-        margin-bottom: 1.5rem;
     }
 
     h2 {
@@ -34,7 +33,7 @@
 }
 
 .row:hover {
-    background-color: rgba(226, 221, 229, 0.679);
+    cursor: pointer;
 
     h4 {
 

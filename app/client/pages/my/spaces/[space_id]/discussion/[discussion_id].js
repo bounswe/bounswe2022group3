@@ -41,21 +41,31 @@ export default function discussion() {
             console.log(err);
         }
     }
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setCounter((prevCounter) => prevCounter + 1);
+    // useEffect(() => {
+    //     const interval = setInterval(() => {
+    //         setCounter((prevCounter) => prevCounter + 1);
 
-            fetchDiscussion();
-        }, 1000);
+    //         fetchDiscussion();
+    //     }, 1000);
 
-        return () => clearInterval(interval);
-    }, [discussion.discussion_id]);
-    useEffect(() => {
+    //     return () => clearInterval(interval);
+    // }, [discussion.discussion_id]);
+
+    useEffect(() => { 
         discussion = router.query;
-        fetchDiscussion();
-    }, [discussion.discussion_id]);
+        if (discussion?.discussion_id) {
+            setInterval(() => {
+                fetchDiscussion(); 
+            }, 1000); 
+        }
+    }, [discussion.discussion_id])
 
-    useEffect(() => { fetchDiscussion(); }, [reRender])
+    // useEffect(() => {
+    //     discussion = router.query;
+    //     fetchDiscussion();
+    // }, [discussion.discussion_id]);
+
+    // useEffect(() => { fetchDiscussion(); }, [reRender])
     return (
         <section className={styles.container}>
             <h2>Acoustic Guitar Ed for Beginners</h2>

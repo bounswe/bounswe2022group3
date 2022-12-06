@@ -40,6 +40,7 @@ export default function resource() {
         }
         try {
             await axios.post(API_URL + "/resource", body);
+            router.push(`/my/spaces/${router_query.space_id}/resources`)
         } catch (err) {
             console.log(err);
         }
@@ -54,6 +55,7 @@ export default function resource() {
         < >
             <div className={styles.resourceDetailPage}>
                 <h2>{router_query.space_name}</h2>
+                <h1>Create a Resource</h1>
                 <div className={styles.resourceDetailHeader}>
 
                     <Formik

@@ -17,7 +17,7 @@ const MDEditor = dynamic(
 
 
 
-function CreateDiscussion({  post ,setPost  ,openDiscussion, setOpenDiscussion }) {
+function CreateDiscussion({  post ,setPost  ,openDiscussion, setOpenDiscussion, fetchDiscussion }) {
 
     const [title, setTitle] = useState({ title: "" });
     const router = useRouter();
@@ -51,6 +51,7 @@ function CreateDiscussion({  post ,setPost  ,openDiscussion, setOpenDiscussion }
             )?.data;
             putFirstPost(response);
             setPost("");
+            fetchDiscussion()
         } catch (err) {
             console.log(err);
         }
