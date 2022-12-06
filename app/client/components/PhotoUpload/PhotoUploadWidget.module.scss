@@ -1,0 +1,39 @@
+@import '../../styles/variables.scss';
+
+.stackable_grid_wrapper {
+    border-radius: .5rem;
+    padding: 3rem;
+    border: 1px solid $base-color;
+    width: 70%;
+    margin: 0 auto;
+    // transform: translateX(-32.5%);
+}
+
+.stackable_grid_three {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: stretch;
+    padding: 0;
+    margin: -1rem;
+}
+
+.column_of_three {
+    width: 30%;
+    float: left;
+}
+
+@media (max-width: 850px) {
+    .column_of_three {
+        width: 100%;
+        display: block;
+    }
+
+    .column_of_three:not(:first-child) {
+        margin-top: 2rem;
+    }
+}
+
+.column_of_three:not(:last-child) {
+    margin-right: 5%;
+}

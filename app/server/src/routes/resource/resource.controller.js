@@ -1,6 +1,7 @@
 const ResourceModel = require("../../models/resource/resource.model");
 const TopicModel = require("../../models/topic/topic.model");
 const DiscussionModel = require("../../models/discussion/discussion.model");
+const AnnotationModel = require("../../models/annotation/annotation.model");
 
 const ResourceController = {
   createResource: async function (req, res) {
@@ -57,6 +58,11 @@ const ResourceController = {
       if(!resource){
         return res.status(400).json({ error: "Resource does not exist!" });
       }
+      var topic = await TopicModel.Topic.findById(resource.topic);
+      Object.keys(resource).map(
+        function(object){
+          resource[object]["resource_name"] = topic.name
+      });
       return res.status(200).json({ resource });
     } catch (e) {
       return res.status(400).send({ error: e.toString() });
@@ -88,6 +94,7 @@ const ResourceController = {
         resource.body = req.body.body;
       }
       await resource.save();
+      await AnnotationModel.Annotation.deleteMany({resource});
       return res.status(200).json({ resource });
     } catch (e) {
       return res.status(400).send({ error: e.toString() });

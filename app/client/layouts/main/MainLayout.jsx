@@ -10,6 +10,19 @@ import GroupIcon from '@mui/icons-material/Group';
 import NoteAltIcon from '@mui/icons-material/NoteAlt';
 import LogoutIcon from '@mui/icons-material/Logout';
 import styles from "./MainLayout.module.scss";
+import { styled, Tooltip, tooltipClasses } from "@mui/material";
+
+const CustomTooltip = styled(({ className, ...props }) => (
+    <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+    [`& .${tooltipClasses.arrow}`]: {
+        color: "#4d4ffa",
+    },
+    [`& .${tooltipClasses.tooltip}`]: {
+        backgroundColor: "#4d4ffa",
+        color: '#fff'
+    },
+}));
 
 function MainLayout({ children }) {
     const router = useRouter();
@@ -49,8 +62,8 @@ function MainLayout({ children }) {
         <main className={styles.main}>
             <div className={styles.navbar}>
                 <div className={styles.icon}>
-                    <Link href="/user/home">
-                        <img src="/education.png" width="50px" height="50px" style={{cursor: 'pointer'}} />
+                    <Link href="/user/my_spaces">
+                        <img src="/education.png" width="50px" height="50px" style={{ cursor: 'pointer' }} />
                     </Link>
                 </div>
                 <nav className={styles.nav}>
@@ -62,19 +75,9 @@ function MainLayout({ children }) {
                                     : ""
                             }
                         >
-                            <LibraryBooksIcon />
-                        </div>
-                    </Link>
-
-                    <Link href={`/my/spaces/${spaceId}/events`}>
-                        <div
-                            className={
-                                router.pathname === "/my/spaces/[space_id]/events"
-                                    ? styles.selected
-                                    : ""
-                            }
-                        >
-                            <EventNoteIcon />
+                            <CustomTooltip title="Resources" placement="right" arrow>
+                                <LibraryBooksIcon />
+                            </CustomTooltip>
                         </div>
                     </Link>
                     <Link href={`/my/spaces/${spaceId}/discussions`}>
@@ -85,7 +88,9 @@ function MainLayout({ children }) {
                                     : ""
                             }
                         >
-                            <GroupIcon />
+                            <CustomTooltip title="Discussions" placement="right" arrow>
+                                <GroupIcon />
+                            </CustomTooltip>
                         </div>
                     </Link>
                     <Link href={`/my/spaces/${spaceId}/notes`}>
@@ -96,12 +101,29 @@ function MainLayout({ children }) {
                                     : ""
                             }
                         >
-                            <NoteAltIcon />
+                            <CustomTooltip title="Notes" placement="right" arrow>
+                                <NoteAltIcon />
+                            </CustomTooltip>
+                        </div>
+                    </Link>
+                    <Link href={`/my/spaces/${spaceId}/events`}>
+                        <div
+                            className={
+                                router.pathname === "/my/spaces/[space_id]/events"
+                                    ? styles.selected
+                                    : ""
+                            }
+                        >
+                            <CustomTooltip title="Events" placement="right" arrow>
+                                <EventNoteIcon />
+                            </CustomTooltip>
                         </div>
                     </Link>
                 </nav>
-                <div className={styles.exit} onClick={() => router.push("/user/home")}>
-                    <LogoutIcon />
+                <div className={styles.exit} onClick={() => router.push("/user/my_spaces")}>
+                    <CustomTooltip title="Leave Space" placement="right" arrow>
+                        <LogoutIcon />
+                    </CustomTooltip>
                 </div>
             </div>
 
@@ -117,7 +139,6 @@ function MainLayout({ children }) {
                         <LibraryBooksIcon />
                     </div>
                 </Link>
-
                 <Link href={`/my/spaces/${spaceId}/events`}>
                     <div
                         className={
@@ -151,7 +172,7 @@ function MainLayout({ children }) {
                         <NoteAltIcon />
                     </div>
                 </Link>
-                <div onClick={() => router.push("/user/home")}>
+                <div onClick={() => router.push("/user/my_spaces")}>
                     <LogoutIcon />
                 </div>
             </nav>

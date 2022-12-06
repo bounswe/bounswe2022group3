@@ -12,6 +12,7 @@ Widget markdownInput(
   IconData sendIcon = Icons.send_outlined,
   String sendText = 'Send',
   bool prewiewFirst = false,
+  bool withBorderRadius = false,
 }) =>
     ViewModelBuilder<MarkdownInputViewModel>.reactive(
       viewModelBuilder: () => MarkdownInputViewModel(),
@@ -28,9 +29,11 @@ Widget markdownInput(
           child: Column(
             children: [
               Container(
-                decoration: const BoxDecoration(
-                  color: CustomColors.main,
-                ),
+                decoration: BoxDecoration(
+                    color: CustomColors.main,
+                    borderRadius: withBorderRadius
+                        ? const BorderRadiusDirectional.only(topEnd: Radius.circular(10), topStart: Radius.circular(10))
+                        : BorderRadiusDirectional.circular(0)),
                 child: Row(
                   children: [
                     ChangeViewButton(
@@ -38,6 +41,7 @@ Widget markdownInput(
                       text: 'Edit',
                       onTap: () => viewModel.updateScreen(isPreview: false),
                       isActive: viewModel.preview == false,
+                      withBorderRadius: withBorderRadius,
                     ),
                     const SizedBox(width: 10),
                     ChangeViewButton(
@@ -56,7 +60,8 @@ Widget markdownInput(
                       }),
                       child: Row(
                         children: [
-                          Icon(sendIcon, color: Colors.white),
+                          if (onSend != null)
+                            Icon(sendIcon, color: Colors.white),
                           const SizedBox(width: 5),
                           Text(sendText,
                               style: const TextStyle(color: Colors.white)),
@@ -73,8 +78,13 @@ Widget markdownInput(
                       child: const Center(child: CircularProgressIndicator()))
                   : viewModel.preview
                       ? Container(
-                          height: maxLines * 32,
-                          color: Theme.of(context).cardColor,
+                          height: maxLines * 20.9,
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).cardColor,
+                            borderRadius: withBorderRadius
+                                ? BorderRadiusDirectional.circular(10)
+                                : BorderRadiusDirectional.circular(0),
+                          ),
                           child:
                               Markdown(data: controller.text, shrinkWrap: true),
                         )
@@ -97,12 +107,14 @@ class ChangeViewButton extends StatelessWidget {
   final IconData icon;
   final void Function() onTap;
   final bool isActive;
+  final bool withBorderRadius;
   const ChangeViewButton({
     Key? key,
     required this.text,
     required this.onTap,
     required this.isActive,
     required this.icon,
+    this.withBorderRadius = false,
   }) : super(key: key);
 
   @override
@@ -110,6 +122,14 @@ class ChangeViewButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
+        decoration: BoxDecoration(
+          borderRadius: withBorderRadius
+              ? BorderRadiusDirectional.only(topStart: Radius.circular(10))
+              : BorderRadiusDirectional.circular(0),
+          color: isActive
+              ? const Color.fromARGB(255, 61, 48, 154)
+              : CustomColors.main.withOpacity(0.0),
+        ),
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
         color: isActive
             ? const Color.fromARGB(255, 61, 48, 154)
