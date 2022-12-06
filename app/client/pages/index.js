@@ -101,14 +101,14 @@ export default function Home() {
         </div>
       </section>
 
-      <div className={styles.search_container} id="search">
+      <section className={styles.search_container}>
         <div className={styles.searchbar}>
           <SearchIcon />
           <form className={styles.searchbar_form}>
             <input type="search" placeholder="Search..." className={styles.searchbar_input} onChange={onSearchbarChange} />
           </form>
         </div>
-      </div>
+      </section>
 
       <section className={styles.spaces} id="spaces">
         <Masonry
