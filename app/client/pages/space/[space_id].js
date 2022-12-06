@@ -14,32 +14,31 @@ import { useRouter } from 'next/router'
 import { API_URL } from "../../next.config";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import UserLayout from "../../layouts/user-layout/UserLayout";
+import UserLayout2 from "../../layouts/user-layout2/UserLayout2";
 
 export default function courseSummary() {
   const [post, setPost] = useState({});
   const router = useRouter();
-  let space_id = router.query;;
+  const router_query = router.query;
 
 
   async function fetchContent() {
     try {
-      const response = (
-        await axios.get(API_URL + "/space/" + space_id.space_id)
-      );
-      setPost(response?.data);
+      if(router_query?.space_id !== undefined) {
+        const response = (
+          await axios.get(API_URL + "/space/" + router_query.space_id)
+        );
+        setPost(response?.data);
+      }
+
     } catch (err) {
       console.log(err);
     }
   }
 
   useEffect(() => {
-    space_id = router.query;
-    if(!space_id) {
-      return;
-    }
     fetchContent();
-  }, [space_id]);
+  }, [router_query]);
 
   function handleSubmit() {
     const token = localStorage.getItem("access_token");
@@ -47,9 +46,9 @@ export default function courseSummary() {
     async function enroll() {
       try {
         const response = (
-          await axios.post(API_URL + "/enrollment", {space_id: space_id.space_id} )
+          await axios.post(API_URL + "/enrollment", {space_id: router_query.space_id} )
         )?.data;
-        router.push(`/my/spaces/` + space_id.space_id + '/resources');
+        router.push(`/my/spaces/` + router_query.space_id + '/resources');
       } catch (err) {
         console.log(err);
       }
@@ -59,7 +58,7 @@ export default function courseSummary() {
       router.push(`/user/login`);
     }
     if (post.enrolled) {
-      router.push(`/my/spaces/` + space_id.space_id + '/resources');
+      router.push(`/my/spaces/` + router_query.space_id + '/resources');
     } else {
       enroll();   //if user not enrolled, enroll first
     }
@@ -76,37 +75,32 @@ export default function courseSummary() {
             </h1>
           </Grid>
 
-          <Grid item>
-            <h2 >
-              {post?.space?.rating}
-            </h2>
-          </Grid>
+        
           <Grid item >
-            <div style={{ position: 'relative', display: 'inline-block' }}>
+            <div style={{ position: 'relative' }} sx={{ margin: 'auto', width: '100%' }}>
               <div className={styles.emptyStars} ></div>
               <div className={styles.fullStars} style={{ width: post?.space?.rating * 100 / 5 + '%' }}></div>
             </div>
           </Grid>
-          <Grid item >
+          <Grid item sx={{ width: '100%' }}  >
             <h2 >
               {post?.space?.creator?.name}
-              <span style={{'margin-left': '10px'}}>{post?.space?.creator?.surname}</span>
-
+              <span style={{marginLeft: '10px'}}>{post?.space?.creator?.surname}</span>
             </h2>
           </Grid>
 
           <Grid item sx={{ width: '100%' }}  >
-            <Button fullWidth variant="contained" sx={{ width: '100%' }} onClick={() => { handleSubmit() }}>
-              <h1   >
+            <Button fullWidth variant="contained" sx={{ width: '200px' }} onClick={() => { handleSubmit() }}>
+              <span   >
                 {post?.enrolled ? "Check Details" : "Join In!"}
-              </h1>
+              </span>
             </Button>
 
           </Grid>
 
         </Grid>
 
-        <Grid container variant="contained" className={styles.right}>
+        <Grid item variant="contained" className={styles.right}>
           <img src={post?.space?.image} className={styles.descriptionImage} />
         </Grid>
 
@@ -115,8 +109,8 @@ export default function courseSummary() {
       <Container style={{ marginBottom: 80 }} className={styles.details} >
 
         <Box sx={{ overflow: 'hidden', minWidth: 250, mt: 1 }}>
-          <Paper variant='outlined' style={{ marginBottom: 20 }}>
-            <Grid container spacing={2} style={{ marginBottom: 20, padding: 35 }}>
+          <Paper variant='outlined' style={{ marginBottom: 5, border: 0 }}>
+            <Grid container spacing={2} style={{ marginBottom: 5, padding: 35 }}>
 
               <Grid item sx={{ width: '100%' }}>
                 <h1>
@@ -135,7 +129,7 @@ export default function courseSummary() {
                 }}>
                   {post?.space?.tags?.map((tag, index) => {
                     return (
-                      <Paper variant='elevation' key={index} style={{ marginRight: 12, marginTop: 19, padding: 4 }}>
+                      <Paper className={styles.spaceTag} variant='elevation' key={index} style={{ marginRight: 12, marginTop: 19}}>
                         <h3 >
                           {tag}
                         </h3>
@@ -146,7 +140,7 @@ export default function courseSummary() {
               </Grid>
             </Grid>
           </Paper>
-          <Paper variant='outlined' >
+          <Paper variant='outlined' style={{border: 0}}>
             <Grid container spacing={2} style={{ marginBottom: 12, padding: 35 }}>
               <Grid item sx={{ width: '100%' }}>
                 <h1 >
@@ -181,5 +175,5 @@ export default function courseSummary() {
 }
 
 courseSummary.getLayout = function getLayout(page) {
-  return <UserLayout>{page}</UserLayout>;
+  return <UserLayout2>{page}</UserLayout2>;
 };
