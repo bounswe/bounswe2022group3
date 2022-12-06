@@ -66,7 +66,7 @@ class CourseService {
         return [];
       }
       Map json = response.data;
-      List<Course> t = json['spaces'].map<Course>((e) => Course.fromJson(e)).toList();
+      List<Course> t = json['enrollments'].map<Course>((e) => Course.fromJson(e)).toList();
       enrolledIds.addAll(t.map((e) => e.id));
 
       return t;

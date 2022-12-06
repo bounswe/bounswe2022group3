@@ -45,7 +45,7 @@ const createTopic = async (name, space, creator) => {
 const getPopulatedTopic = async (id) => {
   return Topic.findById(id)
     .populate("name badge resources")
-    .populate("creator", "name surname")
+    .populate("creator", "name surname image")
     .populate({
       path: "resources",
       populate: {
@@ -55,6 +55,7 @@ const getPopulatedTopic = async (id) => {
     })
     .populate({
       path: "resources",
+      options: { sort: { createdAt: -1 } },
       populate: {
         path: "creator",
         select: { _id: 1, name: 1, surname: 1, image: 1 }

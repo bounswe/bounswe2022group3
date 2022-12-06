@@ -43,9 +43,8 @@ const spaceSchema = new mongoose.Schema(
     ],
     events: [
       {
-        // type: mongoose.Schema.Types.ObjectId,
-        // ref: "Event",
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Event",
       },
     ],
     discussions: [
@@ -88,30 +87,46 @@ const createSpace = async (name, creator, info, tags, image) => {
     image,
   });
   space.enrolledUsersCount = 0;
+
+  space.events = [];
+  // randomized rating, will change
+  space.rating = Math.floor(Math.random() * 3) + 3;
+
   const res = await space.save();
   return res;
 };
 
 const getPopulatedSpace = async (id) => {
   return Space.findById(id)
-    .populate("creator", "name surname")
-    .populate("discussions", "title")
+    .populate("creator", "name surname image")
     .populate({
       path: "topics",
       populate: {
         path: "resources",
+        options: { sort: { createdAt: -1 } },
         populate: {
           path: "creator",
           select: { _id: 1, name: 1, surname: 1, image: 1 },
-        }
+        },
       },
     })
     .populate({
       path: "topics",
+      options: { sort: { createdAt: -1 } },
       populate: {
         path: "creator",
-        select: { _id: 1, name: 1, surname: 1, image: 1 }
+        select: { _id: 1, name: 1, surname: 1, image: 1 },
       },
+    })
+    .populate({
+      path: "discussions",
+      options: { sort: { 'createdAt': -1 } },
+      select: { _id: 1, title: 1},
+    })
+    .populate({
+      path: "events",
+      options: { sort: { 'createdAt': -1 } },
+      select: { _id: 1, event_title: 1},
     })
     .exec();
 };
@@ -126,4 +141,10 @@ const deleteSpace = async (_id) => {
   return res;
 };
 
-module.exports = { Space, createSpace, getPopulatedSpace, getSpaceByID, deleteSpace };
+module.exports = {
+  Space,
+  createSpace,
+  getPopulatedSpace,
+  getSpaceByID,
+  deleteSpace,
+};

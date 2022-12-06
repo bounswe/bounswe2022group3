@@ -9,23 +9,87 @@ import rehypeSanitize from "rehype-sanitize";
 import MainLayout from "../../../../../layouts/main/MainLayout";
 import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
-import { Avatar } from "@mui/material";
+import { Avatar, Divider, Drawer, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, styled, Toolbar, Tooltip, tooltipClasses } from "@mui/material";
 import Rating from "../../../../../components/Rating/Rating"
 import Button from "../../../../../components/Button/Button";
-import { Field, Form, Formik } from "formik";
+import moment from "moment";
+import scrollIntoView from "scroll-into-view";
+
+import '@recogito/recogito-js/dist/recogito.min.css';
+import { Box } from '@mui/system';
+import { ChevronLeft, ChevronRight } from '@mui/icons-material';
+import Link from 'next/link';
 
 
+import CreateNote from "../../../../../components/PopUps/CreateNote";
 const MDEditor = dynamic(
     () => import("@uiw/react-md-editor"),
     { ssr: false }
 );
+const MarkdownPreview = dynamic(
+    () => import("@uiw/react-markdown-preview"),
+    { ssr: false }
+);
+
+const CustomTooltip = styled(({ className, ...props }) => (
+    <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+    [`& .${tooltipClasses.arrow}`]: {
+        color: "#4d4ffa",
+    },
+    [`& .${tooltipClasses.tooltip}`]: {
+        backgroundColor: "#4d4ffa",
+        color: '#fff'
+    },
+}));
+
+const drawerWidth = 275;
 
 export default function resource() {
     const [editModeActive, setEditModeActive] = useState(false);
     const [resourceValue, setResourceValue] = useState("");
-    const router = useRouter();
-    let router_query = router.query;
     const [data, setData] = useState({});
+    const [annotations, setAnnotations] = useState([])
+    const [rec, setRec] = useState(null)
+    const [open, setOpen] = React.useState(false);
+
+    const router = useRouter();
+    const [openCreateNote, setOpenCreateNote] = useState(false);
+    let router_query = router.query;
+
+    const [post, setPost] = useState("");
+
+    let intervalId;
+
+    const handleDrawerToggle = () => {
+        setOpen(!open);
+    };
+
+    function selectAnnotation(id) {
+        const annotationSpan = document.querySelector(`.r6o-annotation[data-id="${id}"]`)
+        // Create the event
+        if (annotationSpan && rec && rec._app && rec._app.current) {
+            scrollIntoView(annotationSpan)
+            rec._app.current.onNormalSelect({
+                selection: rec._app.current.highlighter.getAnnotationsAt(annotationSpan)[0],
+                element: annotationSpan
+            });
+        }
+    }
+
+    const drawer = (
+        <div style={{ overflowY: "auto" }}>
+            {
+                annotations.map(annotation => <figure className="review" onClick={() => selectAnnotation(annotation.id)}>
+                    <blockquote className="review__text">{annotation.target.selector[0].exact}</blockquote>
+                    <figcaption className="review__user">
+                        <p className="review__user-name">{annotation.body[0].creator.name}</p>
+                    </figcaption>
+                    <p className="review__comment">{annotation.body[0].value}</p>
+                </figure>)
+            }
+        </div>
+    );
 
     async function fetchContent() {
         try {
@@ -46,42 +110,120 @@ export default function resource() {
 
     useEffect(() => {
         fetchContent();
+        if (router_query?.resource !== undefined) {
+            const initTerminal = async () => {
+                try {
+                    const { Recogito } = await import('@recogito/recogito-js');
+                    const r = new Recogito({ content: document.querySelector(".wmde-markdown") });
+                    setRec(r)
+                    const resource_id = router_query.resource;
+                    const response = (
+                        await axios.get(API_URL + "/annotation/get/" + resource_id, {
+                            DISABLE_LOADING: true,
+                        })
+                    )?.data;
+                    setAnnotations(response.annotations)
+
+                    r.setAnnotations(response.annotations)
+                    r.setAuthInfo({
+                        id: `https://bucademy.tk/user/${localStorage.getItem("user_id")}`,
+                        displayName: localStorage.getItem("display_name")
+                    });
+
+                    r.on('createAnnotation', async (annotation) => {
+                        setAnnotations(r.getAnnotations())
+                        try {
+                            await axios.post(API_URL + "/annotation", { ...annotation, resource: resource_id },
+                                {
+                                    DISABLE_LOADING: true,
+                                })
+                        }
+                        catch (e) {
+                            console.log(e)
+                        }
+                    });
+                    r.on('updateAnnotation', async (annotation, previous) => {
+                        setAnnotations(r.getAnnotations())
+                        try {
+                            await axios.put(API_URL + "/annotation/update", { ...annotation, resource: resource_id },
+                                {
+                                    DISABLE_LOADING: true,
+                                })
+                        }
+                        catch (e) {
+                            console.log(e)
+                        }
+                    });
+                    r.on('deleteAnnotation', async (annotation, previous) => {
+                        const annos = r.getAnnotations()
+                        setAnnotations(annos)
+                        if (annos.length == 0) {
+                            setOpen(false)
+                        }
+                        try {
+                            await axios.delete(API_URL + "/annotation/delete", { data: { ...annotation, resource: resource_id }, DISABLE_LOADING: true })
+                        }
+                        catch (e) {
+                            console.log(e)
+                        }
+                    });
+
+                    clearInterval(intervalId);
+                }
+                catch (err) {
+                    console.log(err)
+                }
+            }
+            intervalId = setInterval(initTerminal, 1000);
+        }
     }, [router_query]);
 
     function onEditButtonClicked() {
-
         setEditModeActive(!editModeActive);
     }
 
-
-
     return (
-        < >
-            <div className={styles.resourceDetailPage}>
+        <>
+            <div className={styles.resourceDetailPage} style={{ width: open && `calc(100% - ${drawerWidth}px)` }}>
                 <div className={styles.resourceDetailHeader}>
+                    <CreateNote openCreateNote={openCreateNote} post={post} setPost={setPost} setOpenCreateNote={setOpenCreateNote} id={router_query.resource} />
 
                     <div className={styles.titleCard}>
-                        <h2>{data?.resource?.name}</h2>
-                        <div className={styles.titleCreator}>
-                            <Avatar alt="Agnes Walker" src={data?.resource?.creatorimage} />
-                            <span> {data?.resource?.creator?.name} </span>
-                            <span>{data?.resource?.creator?.surname}</span>
-                        </div>
-
-                        <Rating rating={data?.resource?.average_rating}></Rating>
-                        <span>{new Date(data?.resource?.createdAt).toLocaleDateString()}</span>
+                        <h2>{data?.resource?.topic?.name}</h2>
+                        <h1>{data?.resource?.name}</h1>
 
                     </div>
+                    <div className={styles.resourceDetailHeader}>
+                        <Button variant="outlined" onClick={() => { setOpenCreateNote(true) }} className={styles.resourceDetailHeaderButton}>
+                            add new note
+                        </Button>
 
+                        {!editModeActive && <Button onClick={onEditButtonClicked} className={styles.resourceDetailHeaderButton}>Edit</Button>}
+                        {editModeActive && <Button onClick={onEditButtonClicked} className={styles.resourceDetailHeaderButton}>Save</Button>}
+                    </div></div>
+                    <Link href={`/user/${data?.resource?.creator?._id}`}>
+                        <div className="review__user" style={{ cursor: "pointer" }}>
+                            <img
+                                src="https://i.pravatar.cc/150?img=1"
+                                alt="User"
+                                className="review__photo"
+                            />
+                            <div className="review__user-box">
+                                <p className="review__user-name">{data?.resource?.creator?.name} {data?.resource?.creator?.surname}</p>
+                                <p className="review__user-date">{new Date(data?.resource?.createdAt).toLocaleDateString()}</p>
+                            </div>
+                            <div className="review__rating">
+                                <Rating rating={data?.resource?.average_rating || 4.5}></Rating>
+                            </div>
+                        </div>
 
-                    {!editModeActive && <Button onClick={onEditButtonClicked} className={styles.resourceDetailHeaderButton}>Edit</Button>}
-                    {editModeActive && <Button onClick={onEditButtonClicked} className={styles.resourceDetailHeaderButton}>Save</Button>}
+                    </Link>
 
+                
 
-                </div>
-
-                <div data-color-mode="light" className={styles.mdeBox}>
-                    <MDEditor
+        
+            <div data-color-mode="light" className={styles.mdeBox} >
+                {/* <MDEditor
                         value={resourceValue}
                         onChange={setResourceValue}
                         preview={editModeActive ? "edit" : "preview"}
@@ -91,14 +233,41 @@ export default function resource() {
                         }}
                         visibleDragbar={false}
                         height="100%"
-                    />
-                </div>
+                    /> */}
+                <MarkdownPreview source={resourceValue} />
             </div>
+            <Box
+                component="nav"
+                sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+                aria-label="mailbox folders"
+            >
+                <Drawer
+                    anchor="right"
+                    variant="persistent"
+                    sx={{
+                        display: { xs: 'none', sm: 'block' },
+                        '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth, backgroundColor: "#F2F1F8", border: "none", overflow: "visible" },
+                    }}
+                    open={open}
+                    onClose={handleDrawerToggle}
+                >
+                    {drawer}
+                </Drawer>
+            </Box>
 
-
-
+            {
+                annotations.length > 0 && <CustomTooltip title={open ? "Hide annotations" : "Show annotations"} placement="left" arrow>
+                    <IconButton style={{ position: "fixed", right: open ? `${drawerWidth + 32}px` : "32px", bottom: "30px" }} onClick={handleDrawerToggle}>
+                        {
+                            open ?
+                                <ChevronRight fontSize="large" style={{ color: "#4d4ffa" }} /> :
+                                <ChevronLeft fontSize="large" style={{ color: "#4d4ffa" }} />}
+                    </IconButton>
+                </CustomTooltip>
+            }
+            </div>
         </>
-    );
+    )
 }
 
 resource.getLayout = function getLayout(page) {

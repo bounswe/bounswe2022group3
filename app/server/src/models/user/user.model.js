@@ -79,6 +79,7 @@ const createUser = async ({ email, name, surname }) => {
 
   const personalInfo = await PersonalInfoModel.createPersonalInfo();
   user.personal_info = personalInfo._id;
+  user.image = "default.png";
   const res = await user.save();
   return res;
 };
@@ -105,11 +106,44 @@ const getPopulatedPersonalInfo = async (user_id) => {
   return User.findById(user_id)
     .populate({
       path: "personal_info",
+    })
+    .populate({
+      path: "created_spaces",
+      select: { _id: 1, name: 1 }
+    })
+    .populate({
+      path: "follower_users",
+      select: { _id: 1, name: 1, surname: 1 }
+    })
+    .populate({
+      path: "followed_users",
+      select: { _id: 1, name: 1, surname: 1 }
+    })
+    .populate({
+      path: "enrollments",
+      select: { _id: 1, space: 1 },
       populate: {
-        path: "badges",
-      },
+        path: "space",
+        select: { _id: 1, name: 1 }
+      }
     })
     .exec();
+};
+const getPopulatedPersonalInfoPrivate = async (user_id) => {
+  let user = await User.findById(user_id)
+    .populate({
+      path: "personal_info",
+      select: { _id: 1, bio: 1 }
+    })
+    .exec();
+  let res = {
+    _id: user._id,
+    name: user.name,
+    surname: user.surname,
+    image: user.image,
+    personal_info: user.personal_info
+  }
+  return res
 };
 
 module.exports = {
@@ -119,4 +153,5 @@ module.exports = {
   getUserByEmail,
   getUserByID,
   getPopulatedPersonalInfo,
+  getPopulatedPersonalInfoPrivate
 };

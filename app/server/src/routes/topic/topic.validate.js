@@ -8,6 +8,9 @@ exports.validate = (method) => {
         body("space_id", "space_id doesn't exist").exists(),
       ];
     }
+    case "delete-topic": {
+      return [body("topic_id", "topic_id does not exist or broken").exists().isMongoId()];
+    }
     case "get-topic": {
       return [param("id", "id does not exist").exists().isMongoId()];
     }

@@ -1,6 +1,7 @@
 import 'dart:math';
 
-import 'package:bucademy/classes/chapter/chapter.dart';
+import 'package:bucademy/classes/topic/topic.dart';
+import 'package:bucademy/classes/discussion/discussion.dart';
 import 'package:bucademy/classes/user/user.dart';
 import 'package:bucademy/resources/custom_colors.dart';
 import 'package:flutter/material.dart';
@@ -18,11 +19,12 @@ class Course {
   final String image;
   final User creator;
   final double rating = Random().nextInt(20) / 10 + 3;
-  final int numberOfEnrolled = Random().nextInt(2000) + 100;
+  @JsonKey(name: 'enrolledUsersCount')
+  final int numberOfEnrolled;
   final Color color = CustomColors.getRandomColor();
   // final DateTime createdAt;
 
-  Course(this.name, this.id, this.info, this.tags, this.image, this.creator);
+  Course(this.name, this.id, this.info, this.tags, this.image, this.creator, this.numberOfEnrolled);
 
   factory Course.fromJson(Map<String, dynamic> json) => _$CourseFromJson(json);
 
@@ -31,10 +33,11 @@ class Course {
 
 @JsonSerializable()
 class CourseDetailed extends Course {
-  List<Chapter> topics = [];
+  List<Topic> topics = [];
   List<String> badges = [];
+  List<DiscussionShortened> discussions = [];
 
-  CourseDetailed(super.name, super.id, super.info, super.tags, super.image, super.creator, this.topics, this.badges);
+  CourseDetailed(super.name, super.id, super.info, super.tags, super.image, super.creator, super.numberOfEnrolled, this.topics, this.badges, this.discussions);
 
   factory CourseDetailed.fromJson(Map<String, dynamic> json) => _$CourseDetailedFromJson(json);
 
