@@ -47,7 +47,7 @@ class _DashboardViewState extends State<DashboardView> {
       controller: navigatorService.controller,
       screens: [
         homepageView(),
-        profileView("63603cc10a14cd5cda504f15")
+        profileView(userService.user?.id ?? '')
       ], //userService.user?.id ?? ''
       items: [
         PersistentBottomNavBarItem(

@@ -19,6 +19,7 @@ class Profile {
   final List<String>? blocked_users;
   final bool? is_private;
   final PersonalInfo? personal_info;
+  final String? image;
 
   Profile(this.id,
       {this.email,
@@ -30,7 +31,8 @@ class Profile {
       this.follower_users,
       this.blocked_users,
       this.is_private,
-      this.personal_info});
+      this.personal_info,
+      this.image});
 
   factory Profile.fromJson(Map<String, dynamic> json) =>
       _$ProfileFromJson(json);

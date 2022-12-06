@@ -31,6 +31,7 @@ Profile _$ProfileFromJson(Map<String, dynamic> json) => Profile(
           ? null
           : PersonalInfo.fromJson(
               json['personal_info'] as Map<String, dynamic>),
+      image: json['image'] as String?,
     );
 
 Map<String, dynamic> _$ProfileToJson(Profile instance) => <String, dynamic>{
@@ -45,6 +46,7 @@ Map<String, dynamic> _$ProfileToJson(Profile instance) => <String, dynamic>{
       'blocked_users': instance.blocked_users,
       'is_private': instance.is_private,
       'personal_info': instance.personal_info,
+      'image': instance.image,
     };
 
 PersonalInfo _$PersonalInfoFromJson(Map<String, dynamic> json) => PersonalInfo(
