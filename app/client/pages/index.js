@@ -127,7 +127,7 @@ export default function Home() {
                     <h3>{course.name}</h3>
                     <div>
                       <h4>{course.creator.name} {course.creator.surname}</h4>
-                      <Rating defaultValue={Math.random() * 5} precision={0.1} readOnly />
+                      <Rating defaultValue={course?.rating} precision={0.1} readOnly />
                     </div>
                   </div>
                 </div>
