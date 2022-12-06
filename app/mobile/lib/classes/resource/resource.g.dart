@@ -7,17 +7,23 @@ part of 'resource.dart';
 // **************************************************************************
 
 Resource _$ResourceFromJson(Map<String, dynamic> json) => Resource(
+      json['_id'] as String,
       json['name'] as String,
       json['body'] as String,
-      json['_id'] as String,
-      (json['average_rating'] as num).toDouble(),
       json['topic'] as String,
+      User.fromJson(json['creator'] as Map<String, dynamic>),
+      (json['average_rating'] as num).toDouble(),
+      DateTime.parse(json['createdAt'] as String),
+      DateTime.parse(json['updatedAt'] as String),
     );
 
 Map<String, dynamic> _$ResourceToJson(Resource instance) => <String, dynamic>{
+      '_id': instance.id,
       'name': instance.name,
       'body': instance.body,
-      '_id': instance.id,
-      'average_rating': instance.averageRating,
       'topic': instance.topic,
+      'creator': instance.creator,
+      'average_rating': instance.averageRating,
+      'createdAt': instance.createdAt.toIso8601String(),
+      'updatedAt': instance.updatedAt.toIso8601String(),
     };

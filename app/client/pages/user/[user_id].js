@@ -20,7 +20,7 @@ import { API_URL } from "../../next.config";
 import axios from 'axios';
 import { useEffect, useState } from "react";
 import { useRouter } from 'next/router'
-import UserLayout from '../../layouts/user-layout/UserLayout';
+import UserLayout2 from '../../layouts/user-layout2/UserLayout2';
 
 let owner_id = ''
 
@@ -205,11 +205,11 @@ export default function profile(props) {
                 onSubmit={onClick}
               >
                 <Card>
-                  <CardHeader
+                  {/* <CardHeader
                     subheader="These informations can be edited"
                     title="Profile"
                   />
-                  <Divider />
+                  <Divider /> */}
                   <CardContent>
                     <Grid
                       container
@@ -496,7 +496,7 @@ export default function profile(props) {
                     </Grid>
                   </CardContent>
                   <Divider />
-                  <Box
+                  {/* <Box
                     sx={{
                       display: 'flex',
                       justifyContent: 'flex-end',
@@ -509,7 +509,7 @@ export default function profile(props) {
                     >
                       Follow
                     </Button>
-                  </Box>
+                  </Box> */}
                 </Card>
               </form>
             </Grid>
@@ -542,15 +542,16 @@ export default function profile(props) {
                     sx={{
                       alignItems: 'center',
                       display: 'flex',
-                      flexDirection: 'column'
+                      flexDirection: 'column',
+                      paddingTop: "20px"
                     }}
                   >
                     <Avatar
                       src={`${API_URL}/user/${personalValues.image}`}              
                       sx={{
-                        height: 64,
+                        height: 200,
                         mb: 2,
-                        width: 64
+                        width: 200
                       }}
                     />
                     <Typography
@@ -560,12 +561,19 @@ export default function profile(props) {
                     >
                       {personalValues.name} {personalValues.surname}
                     </Typography>
-                    <Typography
+                    {/* <Typography
                       color="textSecondary"
                       variant="body2"
                     >
                       {personalValues.email}
-                    </Typography>
+                    </Typography> */}
+                    <Button
+                      color="primary"
+                      variant="contained"
+                      style={{width: "200px"}}
+                    >
+                      Follow
+                    </Button>
                   </Box>
                 </CardContent>
                 <Divider />
@@ -584,12 +592,12 @@ export default function profile(props) {
               xs={12}
             >
               <Card>
-                <CardHeader
+                {/* <CardHeader
                   subheader="This Profile is public"
                   title="Profile"
                 />
-                <Divider />
-                <CardContent>
+                <Divider /> */}
+                <CardContent style={{paddingBottom: "50px"}}>
                   <Grid
                     container
                     spacing={3}
@@ -704,7 +712,7 @@ export default function profile(props) {
                   </Grid>
                 </CardContent>
                 <Divider />
-                <Box
+                {/* <Box
                   sx={{
                     display: 'flex',
                     justifyContent: 'flex-end',
@@ -718,7 +726,7 @@ export default function profile(props) {
                   >
                     Follow
                   </Button>
-                </Box>
+                </Box> */}
               </Card>
             </Grid>
           </Grid>
@@ -729,5 +737,5 @@ export default function profile(props) {
   );
 }
 profile.getLayout = function getLayout(page) {
-  return <UserLayout>{page}</UserLayout>;
+  return <UserLayout2>{page}</UserLayout2>;
 };

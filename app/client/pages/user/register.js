@@ -119,8 +119,8 @@ export default function register() {
                         )}
 
                         <label className={styles.checkbox}>
-                            <Field type="checkbox" name="agreement" />
-                            <span>I have read the agreement and accept</span>
+                            <Field type="checkbox" id="agreement" name="agreement" />
+                            <span>I have read the <a href="https://gdpr.eu/">GDPR</a> and accept</span>
                         </label>
                         {errors.agreement && (
                             <div className={styles.error}>
