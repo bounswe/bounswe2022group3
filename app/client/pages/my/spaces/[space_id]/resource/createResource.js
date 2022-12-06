@@ -65,15 +65,16 @@ export default function resource() {
                         }}
                         validationSchema={SignupSchema}
                         onSubmit={handleSubmit}>
-                        <Form className={styles.form}>
+                        <Form className={styles.form} style={{alignItems: "center"}}>
                             <Field
                                 className={styles.input}
                                 name="name"
                                 type="text"
                                 placeholder="Resource Title"
+                                style={{marginBottom: "0px"}}
                             ></Field>
 
-                            <Button type="submit" className={styles.resourceDetailHeaderButton}>Save</Button>
+                            <Button type="submit" className={styles.resourceDetailHeaderButton} style={{marginLeft: 0, marginRight: "0px"}}>Save</Button>
 
                         </Form>
 
@@ -82,7 +83,7 @@ export default function resource() {
 
                 </div>
 
-                <div data-color-mode="light" className={styles.mdeBox}>
+                <div data-color-mode="light" className={styles.mdeBox} style={{flexGrow: 1}}>
                     <MDEditor
                         value={resourceValue}
                         onChange={setResourceValue}
