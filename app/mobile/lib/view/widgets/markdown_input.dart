@@ -131,9 +131,6 @@ class ChangeViewButton extends StatelessWidget {
               : CustomColors.main.withOpacity(0.0),
         ),
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-        color: isActive
-            ? const Color.fromARGB(255, 61, 48, 154)
-            : CustomColors.main.withOpacity(0.0),
         child: Row(
           children: [
             Icon(icon, color: Colors.white, size: 18),

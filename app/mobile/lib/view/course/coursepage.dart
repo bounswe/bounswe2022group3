@@ -241,15 +241,6 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                             shrinkWrap: true,
                             padding: const EdgeInsets.all(10.0),
                             children: [
-                              ...contentService
-                                  .contents("Quiz")
-                                  .map((MockContent m) => mockTile(m.name))
-                            ],
-                          ),
-                          ListView(
-                            shrinkWrap: true,
-                            padding: const EdgeInsets.all(10.0),
-                            children: [
                               if (userService.user != null)
                                 GestureDetector(
                                   onTap: () =>
