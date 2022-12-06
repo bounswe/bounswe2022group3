@@ -24,6 +24,7 @@ export default function discussion() {
     let user_id = router.query;
     let discussion = router.query;
     const [counter, setCounter] = useState(0);
+    const [title, setTitle] = useState("")
 
  
     async function fetchDiscussion() {
@@ -37,6 +38,7 @@ export default function discussion() {
             )?.data;
 
             setPreviousComments(response.discussion.comments);
+            setTitle(response?.discussion?.title)
         } catch (err) {
             console.log(err);
         }
@@ -68,8 +70,7 @@ export default function discussion() {
     // useEffect(() => { fetchDiscussion(); }, [reRender])
     return (
         <section className={styles.container}>
-            <h2>Acoustic Guitar Ed for Beginners</h2>
-            <h1>General Discussion</h1>
+            <h2 style={{marginBottom: "20px"}}>{title}</h2>
             <Discussion
                 previousComments={previousComments}
                 setPreviousComments={setPreviousComments}
