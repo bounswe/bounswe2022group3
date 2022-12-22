@@ -7,8 +7,9 @@ class User {
   final String name, surname;
   @JsonKey(name: '_id')
   final String id;
+  String? image;
 
-  User(this.name, this.surname, this.id);
+  User(this.name, this.surname, this.id, { this.image });
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 

@@ -95,11 +95,15 @@ class CourseService {
   Future<CourseDetailed?> getCourseDetails({required String id}) async {
     try {
       Response response = await dioService.dio.get('/space/$id');
-      return CourseDetailed.fromJson(response.data['space']);
+      CourseDetailed c =  CourseDetailed.fromJson(response.data['space']);
+      if(response.data['enrolled']) {
+        c.notes = await noteService.notesOfSpace(spaceId: id);
+      }
+      return c;
     } catch (e) {
       print(e);
-      return null;
     }
+    return null;
   }
 
   Future<bool> enrollToSpace({required String spaceId}) async {

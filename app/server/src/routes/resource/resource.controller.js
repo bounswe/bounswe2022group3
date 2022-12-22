@@ -58,6 +58,11 @@ const ResourceController = {
       if(!resource){
         return res.status(400).json({ error: "Resource does not exist!" });
       }
+      var topic = await TopicModel.Topic.findById(resource.topic);
+      Object.keys(resource).map(
+        function(object){
+          resource[object]["resource_name"] = topic.name
+      });
       return res.status(200).json({ resource });
     } catch (e) {
       return res.status(400).send({ error: e.toString() });

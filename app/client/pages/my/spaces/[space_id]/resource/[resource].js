@@ -14,12 +14,15 @@ import Rating from "../../../../../components/Rating/Rating"
 import Button from "../../../../../components/Button/Button";
 import moment from "moment";
 import scrollIntoView from "scroll-into-view";
+import Discussion from "../../../../../components/Discussion/Discussion"
 
 import '@recogito/recogito-js/dist/recogito.min.css';
 import { Box } from '@mui/system';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 import Link from 'next/link';
 
+
+import CreateNote from "../../../../../components/PopUps/CreateNote";
 const MDEditor = dynamic(
     () => import("@uiw/react-md-editor"),
     { ssr: false }
@@ -52,7 +55,14 @@ export default function resource() {
     const [open, setOpen] = React.useState(false);
 
     const router = useRouter();
+    const [openCreateNote, setOpenCreateNote] = useState(false);
+    const [previousComments, setPreviousComments] = useState([]);
+    const [reRender, setReRender] = useState(false);
+    const [value, setValue] = useState("");
     let router_query = router.query;
+
+    const [post, setPost] = useState("");
+
     let intervalId;
 
     const handleDrawerToggle = () => {
@@ -128,11 +138,11 @@ export default function resource() {
                         setAnnotations(r.getAnnotations())
                         try {
                             await axios.post(API_URL + "/annotation", { ...annotation, resource: resource_id },
-                            {
-                                DISABLE_LOADING: true,
-                            })
+                                {
+                                    DISABLE_LOADING: true,
+                                })
                         }
-                        catch(e) {
+                        catch (e) {
                             console.log(e)
                         }
                     });
@@ -140,11 +150,11 @@ export default function resource() {
                         setAnnotations(r.getAnnotations())
                         try {
                             await axios.put(API_URL + "/annotation/update", { ...annotation, resource: resource_id },
-                            {
-                                DISABLE_LOADING: true,
-                            })
+                                {
+                                    DISABLE_LOADING: true,
+                                })
                         }
-                        catch(e) {
+                        catch (e) {
                             console.log(e)
                         }
                     });
@@ -155,9 +165,9 @@ export default function resource() {
                             setOpen(false)
                         }
                         try {
-                            await axios.delete(API_URL + "/annotation/delete", { data: {...annotation, resource: resource_id},  DISABLE_LOADING: true })
+                            await axios.delete(API_URL + "/annotation/delete", { data: { ...annotation, resource: resource_id }, DISABLE_LOADING: true })
                         }
-                        catch(e) {
+                        catch (e) {
                             console.log(e)
                         }
                     });
@@ -176,40 +186,82 @@ export default function resource() {
         setEditModeActive(!editModeActive);
     }
 
+    async function fetchDiscussion() {
+
+        try {
+            const response = (
+                await axios.get(API_URL + "/discussion/" + data?.resource?.discussion?._id,
+                    {
+                        DISABLE_LOADING: true,
+                    })
+            )?.data;
+
+            setPreviousComments(response.discussion.comments);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+    // useEffect(() => {
+    //     const interval = setInterval(() => {
+    //         setCounter((prevCounter) => prevCounter + 1);
+
+    //         fetchDiscussion();
+    //     }, 1000);
+
+    //     return () => clearInterval(interval);
+    // }, [discussion.discussion_id]);
+    // useEffect(() => {
+    //     discussion = router.query;
+    //     fetchDiscussion();
+    // }, [discussion.discussion_id]);
+
+    useEffect(() => { 
+        if (data?.resource?.discussion?._id) {
+            setInterval(() => {
+                fetchDiscussion(); 
+            }, 1000); 
+        }
+    }, [data?.resource?.discussion?._id])
+
     return (
-        < >
+        <>
             <div className={styles.resourceDetailPage} style={{ width: open && `calc(100% - ${drawerWidth}px)` }}>
                 <div className={styles.resourceDetailHeader}>
+                    <CreateNote openCreateNote={openCreateNote} post={post} setPost={setPost} setOpenCreateNote={setOpenCreateNote} id={router_query.resource} />
 
                     <div className={styles.titleCard}>
-                        <h2>{data?.resource?.topic?.name}</h2>
+                        <h2>{data?.resource?.resource_name}</h2>
                         <h1>{data?.resource?.name}</h1>
 
-                        <Link href={`/user/${data?.resource?.creator?._id}`}>
-                            <div className="review__user" style={{ cursor: "pointer" }}>
-                                <img
-                                    src="https://i.pravatar.cc/150?img=1"
-                                    alt="User"
-                                    className="review__photo"
-                                />
-                                <div className="review__user-box">
-                                    <p className="review__user-name">{data?.resource?.creator?.name} {data?.resource?.creator?.surname}</p>
-                                    <p className="review__user-date">{new Date(data?.resource?.createdAt).toLocaleDateString()}</p>
-                                </div>
-                                <div className="review__rating">
-                                    <Rating rating={data?.resource?.average_rating || 4.5}></Rating>
-                                </div>
-                            </div>
+                    </div>
+                    <div className={styles.resourceDetailHeader} style={{minWidth: "330px"}}>
+                        <Button variant="outlined" onClick={() => { setOpenCreateNote(true) }} className={styles.resourceDetailHeaderButton} style={{ marginRight: "30px" }}>
+                            add new note
+                        </Button>
 
-                        </Link>
-
+                        {/* {!editModeActive && <Button onClick={onEditButtonClicked} className={styles.resourceDetailHeaderButton}>Edit</Button>}
+                        {editModeActive && <Button onClick={onEditButtonClicked} className={styles.resourceDetailHeaderButton}>Save</Button>} */}
+                    </div></div>
+                <Link href={`/user/${data?.resource?.creator?._id}`}>
+                    <div className="review__user" style={{ cursor: "pointer" }}>
+                        <img
+                            src={`${API_URL}/user/${data?.resource?.creator?.image}`}
+                            alt="User"
+                            className="review__photo"
+                        />
+                        <div className="review__user-box">
+                            <p className="review__user-name">{data?.resource?.creator?.name} {data?.resource?.creator?.surname}</p>
+                            <p className="review__user-date">{new Date(data?.resource?.createdAt).toLocaleDateString()}</p>
+                        </div>
+                        <div className="review__rating">
+                            <Rating rating={data?.resource?.average_rating || 4.5}></Rating>
+                        </div>
                     </div>
 
-                    <Button onClick={onEditButtonClicked} className={styles.resourceDetailHeaderButton}>
-                        Edit
-                    </Button>
+                </Link>
 
-                </div>
+
+
 
                 <div data-color-mode="light" className={styles.mdeBox} >
                     {/* <MDEditor
@@ -225,37 +277,49 @@ export default function resource() {
                     /> */}
                     <MarkdownPreview source={resourceValue} />
                 </div>
-            </div>
 
-            <Box
-                component="nav"
-                sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
-                aria-label="mailbox folders"
-            >
-                <Drawer
-                    anchor="right"
-                    variant="persistent"
-                    sx={{
-                        display: { xs: 'none', sm: 'block' },
-                        '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth, backgroundColor: "#F2F1F8", border: "none", overflow: "visible" },
-                    }}
-                    open={open}
-                    onClose={handleDrawerToggle}
+                <Discussion
+                    previousComments={previousComments}
+                    setPreviousComments={setPreviousComments}
+                    value={value}
+                    setValue={setValue}
+                    discussion={{discussion_id: data?.resource?.discussion._id}}
+                    setReRender={setReRender}
+                    reRender={reRender}
+                />
+
+                <Box
+                    component="nav"
+                    sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+                    aria-label="mailbox folders"
                 >
-                    {drawer}
-                </Drawer>
-            </Box>
+                    <Drawer
+                        anchor="right"
+                        variant="persistent"
+                        sx={{
+                            display: { xs: 'none', sm: 'block' },
+                            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth, backgroundColor: "#F2F1F8", border: "none", overflow: "visible" },
+                        }}
+                        open={open}
+                        onClose={handleDrawerToggle}
+                    >
+                        {drawer}
+                    </Drawer>
+                </Box>
 
-            {annotations.length > 0 && <CustomTooltip title={open ? "Hide annotations" : "Show annotations"} placement="left" arrow>
-                <IconButton style={{ position: "fixed", right: open ? `${drawerWidth + 32}px` : "32px", bottom: "30px" }} onClick={handleDrawerToggle}>
-                    {
-                        open ?
-                            <ChevronRight fontSize="large" style={{ color: "#4d4ffa" }} /> :
-                            <ChevronLeft fontSize="large" style={{ color: "#4d4ffa" }} />}
-                </IconButton>
-            </CustomTooltip>}
+                {
+                    annotations.length > 0 && <CustomTooltip title={open ? "Hide annotations" : "Show annotations"} placement="left" arrow>
+                        <IconButton style={{ position: "fixed", right: open ? `${drawerWidth + 32}px` : "32px", bottom: "30px" }} onClick={handleDrawerToggle}>
+                            {
+                                open ?
+                                    <ChevronRight fontSize="large" style={{ color: "#4d4ffa" }} /> :
+                                    <ChevronLeft fontSize="large" style={{ color: "#4d4ffa" }} />}
+                        </IconButton>
+                    </CustomTooltip>
+                }
+            </div>
         </>
-    );
+    )
 }
 
 resource.getLayout = function getLayout(page) {

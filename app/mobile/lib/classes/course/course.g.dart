@@ -13,6 +13,7 @@ Course _$CourseFromJson(Map<String, dynamic> json) => Course(
       (json['tags'] as List<dynamic>).map((e) => e as String).toList(),
       json['image'] as String,
       User.fromJson(json['creator'] as Map<String, dynamic>),
+      json['enrolledUsersCount'] as int,
     );
 
 Map<String, dynamic> _$CourseToJson(Course instance) => <String, dynamic>{
@@ -22,6 +23,7 @@ Map<String, dynamic> _$CourseToJson(Course instance) => <String, dynamic>{
       'tags': instance.tags,
       'image': instance.image,
       'creator': instance.creator,
+      'enrolledUsersCount': instance.numberOfEnrolled,
     };
 
 CourseDetailed _$CourseDetailedFromJson(Map<String, dynamic> json) =>
@@ -32,8 +34,9 @@ CourseDetailed _$CourseDetailedFromJson(Map<String, dynamic> json) =>
       (json['tags'] as List<dynamic>).map((e) => e as String).toList(),
       json['image'] as String,
       User.fromJson(json['creator'] as Map<String, dynamic>),
+      json['enrolledUsersCount'] as int,
       (json['topics'] as List<dynamic>)
-          .map((e) => Chapter.fromJson(e as Map<String, dynamic>))
+          .map((e) => Topic.fromJson(e as Map<String, dynamic>))
           .toList(),
       (json['badges'] as List<dynamic>).map((e) => e as String).toList(),
       (json['discussions'] as List<dynamic>)
@@ -41,6 +44,9 @@ CourseDetailed _$CourseDetailedFromJson(Map<String, dynamic> json) =>
           .toList(),
       (json['events'] as List<dynamic>)
           .map((e) => EventShortened.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      (json['notes'] as List<dynamic>?)
+          ?.map((e) => Note.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
@@ -52,8 +58,10 @@ Map<String, dynamic> _$CourseDetailedToJson(CourseDetailed instance) =>
       'tags': instance.tags,
       'image': instance.image,
       'creator': instance.creator,
+      'enrolledUsersCount': instance.numberOfEnrolled,
       'topics': instance.topics,
       'badges': instance.badges,
       'discussions': instance.discussions,
       'events': instance.events,
+      'notes': instance.notes,
     };

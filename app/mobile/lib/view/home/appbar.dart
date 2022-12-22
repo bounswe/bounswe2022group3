@@ -1,3 +1,4 @@
+import 'package:bucademy/resources/constants.dart';
 import 'package:bucademy/resources/custom_colors.dart';
 import 'package:bucademy/resources/text_styles.dart';
 import 'package:bucademy/services/locator.dart';
@@ -25,7 +26,7 @@ AppBar appBar() {
     actions: [
       Padding(
         padding: const EdgeInsets.only(right: 20),
-        child: profilePicture(imagePath: 'https://randomuser.me/api/portraits/men/40.jpg'),
+        child: profilePicture(imagePath: fullImagePath(userService.user?.image)),
       )
     ],
   );

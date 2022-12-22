@@ -7,7 +7,6 @@
 
     h1 {
         font-size: 2.5rem;
-        margin-bottom: 1.5rem;
     }
 
     h2 {
@@ -29,8 +28,8 @@
 }
 
 .resourceDetailHeaderButton {
-    width: 8rem !important;
-    margin: 0 !important;
+    width: fit-content !important;
+    padding: 0 20px;
 }
 
 .resourceDetailPage {
@@ -38,11 +37,22 @@
     display: flex;
     flex-direction: column;
     height: 100%;
+
+    h1 {
+        font-size: 3rem;
+    }
+
+    h2 {
+        font-size: 1.2rem;
+        margin-left: 2.5px;
+        font-weight: 600;
+    }
 }
 
 .mdeBox {
     margin-top: 10px;
-    flex-grow: 1;
+    // flex-grow: 1;
+    // min-height: 300px;
 }
 
 .titleCreator {
@@ -82,5 +92,6 @@
     flex-direction: row;
     justify-content: space-between;
     margin: 1rem 0;
+    margin-bottom: 0;
     width: 100%;
 }

@@ -11,6 +11,7 @@ class DiscussionService {
     required String body,
   }) async {
     try {
+      if (userService.user == null) return null; // user is not logged in
       Response response = await dioService.dio.post(
         '/comment',
         data: {"discussion_id": discussionId, "comment": body},
@@ -19,6 +20,7 @@ class DiscussionService {
       Map json = response.data;
 
       Comment comment = Comment.fromJson(json['comment']);
+      comment.user = userService.user!;
       return comment;
     } catch (e) {
       print(e);
@@ -49,7 +51,8 @@ class DiscussionService {
     required String title,
   }) async {
     try {
-      Response response = await dioService.dio.post('/discussion', data: {'space_id': spaceId, 'title': title});
+      Response response = await dioService.dio
+          .post('/discussion', data: {'space_id': spaceId, 'title': title});
 
       Map json = response.data;
       Discussion discussion = Discussion.fromJson(json['discussion']);

@@ -1,11 +1,15 @@
+import 'package:bucademy/classes/resource/resource.dart';
+import 'package:bucademy/classes/topic/topic.dart';
+import 'package:bucademy/services/locator.dart';
+import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 
 class MockContent {
   String name;
   String body;
-  String? course;
+  String? space;
 
-  MockContent(this.name, this.body, {this.course});
+  MockContent(this.name, this.body, {this.space});
 }
 
 List<MockContent> mockContents = [];
@@ -35,5 +39,101 @@ class MockContentService {
       ];
     }
     return temp;
+  }
+
+  Future<TopicDetailed?> getTopicDetails({required String topicId}) async {
+    try {
+      Response response = await dioService.dio.get('/topic/$topicId');
+      if (response.statusCode != 200) {
+        return null;
+      }
+      TopicDetailed t = TopicDetailed.fromJson(response.data["topic"]);
+      return t;
+    } catch (e) {
+      print(e);
+    }
+    return null;
+  }
+
+  Future<TopicDetailed?> createNewTopic(
+      {required String spaceId, required String name}) async {
+    try {
+      Response response = await dioService.dio
+          .post('/topic', data: {'space_id': spaceId, 'name': name});
+      if (response.statusCode != 201) {
+        return null;
+      }
+
+      TopicDetailed t = TopicDetailed.fromJson(response.data["topic"]);
+      return t;
+    } catch (e) {
+      print(e);
+    }
+    return null;
+  }
+
+  Future<Resource?> createNewResource(
+      {required String topicId,
+      required String name,
+      required String body}) async {
+    try {
+      Response response = await dioService.dio.post('/resource',
+          data: {'topic_id': topicId, 'name': name, 'body': body});
+      if (response.statusCode != 201) {
+        return null;
+      }
+
+      Resource r = Resource.fromJson(response.data["resource"]);
+      return r;
+    } catch (e) {
+      print(e);
+    }
+    return null;
+  }
+
+  Future<Resource?> editResource(
+    String name,
+    String body, {
+    required String resourceId,
+  }) async {
+    try {
+      Response response = await dioService.dio.put('/resource/update',
+          data: {'resource_id': resourceId, 'name': name, 'body': body});
+      if (response.statusCode != 200) {
+        return null;
+      }
+
+      Resource r = Resource.fromJson(response.data["resource"]);
+      return r;
+    } catch (e) {
+      print(e);
+    }
+    return null;
+  }
+
+  Future<int?> deleteResource({
+    required String resourceId,
+  }) async {
+    try {
+      Response response = await dioService.dio
+          .delete('/resource/delete', data: {'resource_id': resourceId});
+      return response.statusCode;
+    } catch (e) {
+      print(e);
+    }
+    return -1;
+  }
+
+  Future<int?> deleteTopic({
+    required String topicId,
+  }) async {
+    try {
+      Response response = await dioService.dio
+          .delete('/topic/delete', data: {'topic_id': topicId});
+      return response.statusCode;
+    } catch (e) {
+      print(e);
+    }
+    return -1;
   }
 }
