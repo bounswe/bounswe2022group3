@@ -1,0 +1,32 @@
+{
+    "type": "Annotation",
+    "body": [
+        {
+            "type": "TextualBody",
+            "value": "hhh",
+            "purpose": "commenting",
+            "creator": {
+                "id": "63602664f38b09884fa7acb6",
+                "name": "Nurlan Dadashov"
+            },
+            "created": "2022-12-03T20:22:27.357Z",
+            "modified": "2022-12-03T20:22:27.664Z"
+        }
+    ],
+    "target": {
+        "selector": [
+            {
+                "type": "TextQuoteSelector",
+                "exact": "Organization"
+            },
+            {
+                "type": "TextPositionSelector",
+                "start": 6,
+                "end": 18
+            }
+        ]
+    },
+    "id": "#a2bff624-1036-40a8-bb49-1a48786e0ce7",
+    "resource": "638924a9496fffbae8d8afc5",
+    "@context": "http://www.w3.org/ns/anno.jsonld"
+}
