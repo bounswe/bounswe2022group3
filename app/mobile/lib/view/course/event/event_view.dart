@@ -21,7 +21,6 @@ Widget eventView({required String eventId}) =>
                 ? const Center(child: CircularProgressIndicator())
                 : Expanded(
                     child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ListTile(
                           title: const Text('Title'),
