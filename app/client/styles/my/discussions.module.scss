@@ -11,6 +11,7 @@
 
 .comment_icon {
     margin-top: 0.5rem;
+    cursor: pointer;
 }
 
 .comment_button {
@@ -22,7 +23,6 @@
 .container {
     h1 {
         font-size: 3rem;
-        margin-bottom: 1.5rem;
     }
 
     h2 {
@@ -32,10 +32,16 @@
     }
 }
 
-.row:hover{
-    background-color:rgba(226, 221, 229, 0.679);
-        h4 {
-           
-            color : rgb(38, 64, 192);
-        }
+.row:hover {
+    cursor: pointer;
+
+    h4 {
+
+        color: rgb(38, 64, 192);
+    }
+}
+.discussionRow {
+    width: 80%;
+    padding-left: 4px !important;
+    padding-top: 4px !important;
 }

@@ -52,7 +52,7 @@ const TopicController = {
     try {
       const topic_id = req.params.id;
       const topic = await TopicModel.getPopulatedTopic(topic_id);
-      return res.status(200).json({ message: topic });
+      return res.status(200).json({ topic });
     } catch (e) {
       return res.status(400).send({ error: e });
     }

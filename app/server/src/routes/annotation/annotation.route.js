@@ -14,11 +14,34 @@ annotationRouter.post(
   AnnotationController.createAnnotation
 );
 
+annotationRouter.put(
+  "/update/",
+  validate("update-annotation"),
+  handleValidation,
+  authorization,
+  AnnotationController.updateAnnotation
+);
+
 annotationRouter.get(
-  "/:id",
+  "/getOne/:id",
   validate("get-annotation"),
   handleValidation,
   AnnotationController.getAnnotation
+);
+
+annotationRouter.get(
+  "/get/:resource_id",
+  validate("get-resource-annotations"),
+  handleValidation,
+  AnnotationController.getResourceAnnotations
+);
+
+annotationRouter.delete(
+  "/delete/",
+  validate("delete-annotation"),
+  handleValidation,
+  authorization,
+  AnnotationController.deleteAnnotation
 );
 
 module.exports = annotationRouter;

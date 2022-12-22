@@ -43,15 +43,17 @@ export default function Home() {
     950: 1
   };
 
+  if (typeof window === "undefined") {
+    return <></>
+  }
+
   return (
     <>
       <header className={styles.header}>
-        <a href="#">
-          <div className={styles.icon}>
-            <img src="/education.png" width="50px" height="50px" />
-            <h2>BUcademy</h2>
-          </div>
-        </a>
+        <div className={styles.icon}>
+          <img src="/education.png" width="50px" height="50px" />
+          <h2>BUcademy</h2>
+        </div>
         <nav className={styles.main_nav}>
           <ul className={styles.main_nav_list}>
             <li>
@@ -61,8 +63,8 @@ export default function Home() {
               <a href="#meals" className={styles.main_nav_links}>Testimonials</a>
             </li> */}
             <li>
-              <Button style={{ padding: "0 20px" }} onClick={() => router.push("/user/register")}>
-                Join the platform
+              <Button style={{ padding: "0 20px" }} onClick={() => localStorage?.getItem("access_token") ? router.push("/user/my_spaces") : router.push("/user/register")}>
+                {localStorage?.getItem("access_token") ? "My Spaces" : "Join the platform"}
               </Button>
             </li>
           </ul>
@@ -99,14 +101,14 @@ export default function Home() {
         </div>
       </section>
 
-      <div className={styles.search}>
+      <section className={styles.search_container}>
         <div className={styles.searchbar}>
           <SearchIcon />
           <form className={styles.searchbar_form}>
             <input type="search" placeholder="Search..." className={styles.searchbar_input} onChange={onSearchbarChange} />
           </form>
         </div>
-      </div>
+      </section>
 
       <section className={styles.spaces} id="spaces">
         <Masonry
@@ -125,7 +127,7 @@ export default function Home() {
                     <h3>{course.name}</h3>
                     <div>
                       <h4>{course.creator.name} {course.creator.surname}</h4>
-                      <Rating defaultValue={Math.random() * 5} precision={0.1} readOnly />
+                      <Rating defaultValue={course?.rating} precision={0.1} readOnly />
                     </div>
                   </div>
                 </div>

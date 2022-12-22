@@ -1,6 +1,7 @@
 const ResourceModel = require("../../models/resource/resource.model");
 const TopicModel = require("../../models/topic/topic.model");
 const DiscussionModel = require("../../models/discussion/discussion.model");
+const AnnotationModel = require("../../models/annotation/annotation.model");
 
 const ResourceController = {
   createResource: async function (req, res) {
@@ -19,7 +20,8 @@ const ResourceController = {
       );
       topic.resources.push(resource);
       topic.save();
-      return res.status(201).json({ resource });
+      const resource_populated = await ResourceModel.getPopulatedResource(resource._id);
+      return res.status(201).json({ resource: resource_populated });
     } catch (e) {
       return res.status(400).json({ error: e.toString() });
     }
@@ -56,6 +58,11 @@ const ResourceController = {
       if(!resource){
         return res.status(400).json({ error: "Resource does not exist!" });
       }
+      var topic = await TopicModel.Topic.findById(resource.topic);
+      Object.keys(resource).map(
+        function(object){
+          resource[object]["resource_name"] = topic.name
+      });
       return res.status(200).json({ resource });
     } catch (e) {
       return res.status(400).send({ error: e.toString() });
@@ -65,11 +72,11 @@ const ResourceController = {
     try {
       const { resource_id } = req.body;
       const user = req.auth.id;
-      var resource = await ResourceModel.Resource.findById(resource_id);
+      var resource = await ResourceModel.getPopulatedResource(resource_id);
       if(!resource){
         return res.status(400).json({ error: "Resource does not exist!" });
       }
-      if (resource.creator.toString() !== user.toString()) {
+      if (resource.creator._id.toString() !== user.toString()) {
         return res
         .status(400)
         .send({ error: "User not the creator of the resource!" });
@@ -87,6 +94,7 @@ const ResourceController = {
         resource.body = req.body.body;
       }
       await resource.save();
+      await AnnotationModel.Annotation.deleteMany({resource});
       return res.status(200).json({ resource });
     } catch (e) {
       return res.status(400).send({ error: e.toString() });

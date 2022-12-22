@@ -111,6 +111,7 @@ const UserProfileController = {
     try {
       const id = req.params.id;
       // if user logged-in
+      let profile;
       if (req.auth) {
         var user_id = req.auth.id;
         const user = await UserModel.User.findById(user_id);
@@ -124,7 +125,6 @@ const UserProfileController = {
         }
         // looking at a profile we don't follow
         const other_user = await UserModel.getUserByID(id);
-        let profile;
         if(other_user.is_private){
           profile = await UserModel.getPopulatedPersonalInfoPrivate(id);
         }
@@ -135,7 +135,6 @@ const UserProfileController = {
       }
       else{
         const user = await UserModel.getUserByID(id);
-        let profile;
         if(user.is_private){
           profile = await UserModel.getPopulatedPersonalInfoPrivate(id);
         }

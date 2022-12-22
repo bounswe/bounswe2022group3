@@ -28,9 +28,9 @@ export default function resource() {
     const SignupSchema = Yup.object().shape({
         name: Yup.string()
     });
-    
+
     const handleSubmit = async (values) => {
-        if(!resourceValue || !values.name) {
+        if (!resourceValue || !values.name) {
             return;
         }
         const body = {
@@ -40,6 +40,7 @@ export default function resource() {
         }
         try {
             await axios.post(API_URL + "/resource", body);
+            router.push(`/my/spaces/${router_query.space_id}/resources`)
         } catch (err) {
             console.log(err);
         }
@@ -54,33 +55,35 @@ export default function resource() {
         < >
             <div className={styles.resourceDetailPage}>
                 <h2>{router_query.space_name}</h2>
+                <h1>Create a Resource</h1>
                 <div className={styles.resourceDetailHeader}>
 
                     <Formik
-                    initialValues={{
-                        name: "",
+                        initialValues={{
+                            name: "",
 
-                    }}
-                    validationSchema={SignupSchema}
-                    onSubmit={handleSubmit}>
-                            <Form className={styles.form}>
-                                <Field
-                                    className={styles.input}
-                                    name="name"
-                                    type="text"
-                                    placeholder="Resource Title"
-                                ></Field>
+                        }}
+                        validationSchema={SignupSchema}
+                        onSubmit={handleSubmit}>
+                        <Form className={styles.form} style={{alignItems: "center"}}>
+                            <Field
+                                className={styles.input}
+                                name="name"
+                                type="text"
+                                placeholder="Resource Title"
+                                style={{marginBottom: "0px"}}
+                            ></Field>
 
-                                <Button type="submit" className={styles.resourceDetailHeaderButton}>Save</Button>
+                            <Button type="submit" className={styles.resourceDetailHeaderButton} style={{marginLeft: 0, marginRight: "0px"}}>Save</Button>
 
-                            </Form>
-                    
-                    
+                        </Form>
+
+
                     </Formik>
 
                 </div>
 
-                <div data-color-mode="light" className={styles.mdeBox}>
+                <div data-color-mode="light" className={styles.mdeBox} style={{flexGrow: 1}}>
                     <MDEditor
                         value={resourceValue}
                         onChange={setResourceValue}

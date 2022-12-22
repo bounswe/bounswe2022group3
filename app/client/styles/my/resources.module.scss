@@ -3,7 +3,6 @@
 .container {
     h1 {
         font-size: 3rem;
-        margin-bottom: 1.5rem;
     }
 
     h2 {
@@ -25,4 +24,9 @@
     a {
         cursor: pointer;
     }
+}
+
+.addTopicButton {
+    margin-top: 40px;
+    width: 200px !important;
 }
