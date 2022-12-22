@@ -1,3 +1,4 @@
+import 'package:bucademy/classes/user/user.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'event.g.dart';
@@ -32,7 +33,7 @@ class Event {
   int quota;
 
   @JsonKey(name: 'participants')
-  List<String> participants = [];
+  List<User> participants = [];
 
   @JsonKey(name: 'participant_count')
   int participantCount = 0;
