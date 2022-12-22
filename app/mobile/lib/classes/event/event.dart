@@ -21,7 +21,7 @@ class Event {
   String startDate;
 
   @JsonKey(name: 'end_date')
-  String endDate;
+  String? endDate;
 
   @JsonKey(name: 'description')
   String description;
@@ -30,7 +30,7 @@ class Event {
   Map<String, double> location;
 
   @JsonKey(name: 'quota')
-  int quota;
+  int? quota;
 
   @JsonKey(name: 'participants')
   List<User> participants = [];
@@ -44,12 +44,11 @@ class Event {
       this.creator,
       this.title,
       this.startDate,
-      this.endDate,
       this.description,
       this.location,
-      this.quota,
       this.participants,
-      this.participantCount);
+      this.participantCount,
+      {this.endDate, this.quota});
   factory Event.fromJson(Map<String, dynamic> json) => _$EventFromJson(json);
 
   Map<String, dynamic> toJson() => _$EventToJson(this);
