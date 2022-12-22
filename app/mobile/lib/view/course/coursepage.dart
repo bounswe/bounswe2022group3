@@ -186,7 +186,7 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                       },
                       body: TabBarView(
                         children: [
- Stack(children: [
+                          Stack(children: [
                             ListView(
                               shrinkWrap: true,
                               padding: const EdgeInsets.all(10.0),
@@ -214,8 +214,9 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                                       ),
                                     ),
                                   ),
-                                ...viewModel.course!.topics
-                                    .map((Topic t) => topicTile(t, context, viewModel, viewModel.course!))
+                                ...viewModel.course!.topics.map((Topic t) =>
+                                    topicTile(t, context, viewModel,
+                                        viewModel.course!))
                               ],
                             ),
                           ]),
@@ -272,10 +273,10 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                             children: [
                               ...(viewModel.course!.notes ?? [])
                                   .map((Note n) => GestureDetector(
-                                        child: mockTile(n.title ),
+                                        child: mockTile(n.title),
                                         onTap: () => PersistentNavBarNavigator
                                             .pushNewScreen(context,
-                                                screen: noteView(note: n ),
+                                                screen: noteView(note: n),
                                                 withNavBar: false),
                                       ))
                             ],
@@ -384,9 +385,9 @@ class CoursePageViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addNewTopic(Topic t){
+  void addNewTopic(Topic t) {
     if (course == null) return;
-    course!.topics.insert(0, Topic(t.name,t.id,course!.id));
+    course!.topics.insert(0, Topic(t.name, t.id, course!.id));
     notifyListeners();
   }
 
