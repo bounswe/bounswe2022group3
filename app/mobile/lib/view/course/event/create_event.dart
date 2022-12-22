@@ -26,6 +26,7 @@ createEvent(BuildContext context, CoursePageViewModel viewModel) {
       builder: ((context) => AlertDialog(
             title: const Text('Enter the details of the event'),
             content: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 TextField(
                   onChanged: (value) => title = value,
@@ -58,7 +59,7 @@ createEvent(BuildContext context, CoursePageViewModel viewModel) {
                 DateTimeField(
                     format: format,
                     decoration: const InputDecoration(
-                        hintText: 'Set the starting date'),
+                        hintText: 'Set the ending date'),
                     onShowPicker: (context, currentValue) async {
                       final date = await showDatePicker(
                           context: context,
@@ -83,10 +84,12 @@ createEvent(BuildContext context, CoursePageViewModel viewModel) {
                     keyboardType: TextInputType.number,
                     onChanged: (value) => quota = int.parse(value),
                     decoration: const InputDecoration(hintText: "Quota")),
-                TextField(
-                  onChanged: (value) => description = value,
-                  decoration: const InputDecoration(hintText: "Description"),
-                  maxLines: 15,
+                Flexible(
+                  child: TextField(
+                    onChanged: (value) => description = value,
+                    decoration: const InputDecoration(hintText: "Description"),
+                    maxLines: 15,
+                  ),
                 ),
                 /*MapLocationPicker(
                         apiKey: 'AIzaSyAXTzbniq2PnBkL1GbxGzCqv4rFCgAaFpA',
