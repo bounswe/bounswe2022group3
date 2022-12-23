@@ -78,4 +78,6 @@ const getEnrollmentNoteExtended = async (user_id, space_id) => {
   return result;
 };
 
+
+
 module.exports = { Enrollment, createEnrollment, deleteEnrollment, getEnrollment, getEnrollmentByID, getEnrollmentNoteExtended };
