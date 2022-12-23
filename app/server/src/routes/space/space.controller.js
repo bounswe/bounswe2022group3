@@ -165,6 +165,24 @@ const SpaceController = {
       res.status(400).send({ error: e.toString() });
     }
   },
+  getPopularSpaces: async function (req, res) {
+    try {
+      var spaces = await SpaceModel.Space.find(
+        {},
+        "name creator info rating tags image enrolledUsersCount"
+      )
+        .populate({
+          path: "creator",
+          select: { _id: 1, name: 1, surname: 1, image: 1 }
+        })
+        .sort({ enrolledUsersCount: -1 })
+        .limit(5)
+        .exec();
+      return res.status(200).json({ spaces });
+    } catch (e) {
+      res.status(400).send({ error: e.toString() });
+    }
+  },
 };
 
 module.exports = SpaceController;
