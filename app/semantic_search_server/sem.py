@@ -17,15 +17,14 @@ def relevance():
         search_list_embedding = model.encode(search_list)
         res_search_list = util.dot_score(query_embedding, search_list_embedding)
 
-        print(res_search_list[0].tolist()[1] + res_search_list[0].tolist()[2])
-
         return jsonify(
             relevances = res_search_list[0].tolist()
         )
     except Exception as e:
-        print(e)
+        return jsonify(
+            message: e
+        ), 400
 
-    
 if __name__ == "__main__":
     from waitress import serve
     serve(app, host="0.0.0.0", port=9060)
