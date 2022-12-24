@@ -2,7 +2,8 @@ const SpaceModel = require("../../models/space/space.model");
 const EnrollmentModel = require("../../models/enrollment/enrollment.model");
 const UserModel = require("../../models/user/user.model");
 const PersonalInfoModel = require("../../models/personalInfo/personalInfo.model");
-const axios = require("axios"); 
+const axios = require("axios");
+const semanticUrl = process.env.SEMANTIC_SEARCH_SERVER_URL
 
 const SpaceController = {
   createSpace: async function (req, res) {
@@ -51,6 +52,11 @@ const SpaceController = {
             select: { _id: 1, name: 1, surname: 1, image: 1 }
           })
           .exec();
+      }
+
+      if (spaces.length < 1) {
+        const spaceList = semanticSearch(keyword)
+        console.log(1111111, relevances)
       }
       return res.status(200).json({ spaces });
     } catch (error) {
@@ -107,7 +113,7 @@ const SpaceController = {
         .populate({
           path: "discussions",
           options: { sort: { 'createdAt': -1 } },
-          populate: { 
+          populate: {
             path: "user",
             select: { _id: 1, name: 1, surname: 1, image: 1 },
           },
@@ -143,7 +149,7 @@ const SpaceController = {
         .populate({
           path: "events",
           options: { sort: { 'start_date': -1 } },
-          populate: { path: "creator", select: { 'name': 1, 'surname': 1, 'image': 1} }
+          populate: { path: "creator", select: { 'name': 1, 'surname': 1, 'image': 1 } }
         })
         .exec();
       if (!space) {
@@ -171,7 +177,7 @@ const SpaceController = {
     try {
       const user_id = req.auth.id;
       const user = await UserModel.User.findById(user_id);
-      const personalInfo = await PersonalInfoModel.PersonalInfo.findOne({_id: user.personal_info});
+      const personalInfo = await PersonalInfoModel.PersonalInfo.findOne({ _id: user.personal_info });
       var interests = personalInfo.interests;
       const url = "https://api.datamuse.com/words?max=10&ml=";
       var inferred_interests = [];
@@ -188,12 +194,12 @@ const SpaceController = {
         interests.push(inf_in.word);
       }
       for (interest_t of interests) {
-        let spaces_t = await SpaceModel.Space.find({$text: {$search: `\"${interest_t}\"`}})
-                              .limit(2)
-                              .exec();
+        let spaces_t = await SpaceModel.Space.find({ $text: { $search: `\"${interest_t}\"` } })
+          .limit(2)
+          .exec();
         for (space_t of spaces_t) {
           if (!space_ids.includes(space_t._id.toString())) {
-            let enrolled = await EnrollmentModel.Enrollment.find({space: space_t, user});
+            let enrolled = await EnrollmentModel.Enrollment.find({ space: space_t, user });
             if (enrolled.length == 1) continue;
             spaces.push(space_t);
             space_ids.push(space_t._id.toString());
@@ -224,5 +230,93 @@ const SpaceController = {
     }
   },
 };
+
+async function semanticSearch(searchText) {
+  const spaces = await SpaceModel.Space.find(
+    {},
+    "name info"
+  )
+
+  let titles = []
+  let infos = []
+  let spaceIDs = []
+
+  for (let space in spaces) {
+    titles.push(space.title)
+    infos.push(space.info)
+    spaceIDs.push(space._id)
+  }
+
+  const titlePayload = {
+    search_text: searchText,
+    search_list: titles
+  };
+
+  const infoPayload = {
+    search_text: searchText,
+    search_list: info
+  }
+
+  const titleRelevances = (await axios.post(`${semanticUrl}/relevance`, titlePayload)).data
+  const infoRelevances = (await axios.post(`${semanticUrl}/relevance`, infoPayload)).data
+
+  const relevancesAsSeperateArrays = {
+    titleRelevances,
+    infoRelevances,
+    spaceIDs
+  }
+
+  return await spacesWithRelevance(relevancesAsSeperateArrays)
+}
+
+async function spacesWithRelevance(relevancesAsSeperateArrays) {
+  const relevancesNormalized = calculateRelevance(relevancesAsSeperateArrays)
+
+  let spaces = []
+  for (let relevance of relevancesNormalized) {
+    space = await SpaceModel.Space.findById(relevance.spaceID)
+      .populate("name creator info rating tags image enrolledUsersCount")
+      .populate({
+        path: "creator",
+        select: { _id: 1, name: 1, surname: 1, image: 1 }
+      })
+      .exec()
+
+    spaces.push(space)
+  }
+
+  return spaces
+}
+
+function calculateRelevance(relevancesAsSeperateArrays) {
+
+  relevances = []
+  for (let i = 0; i < relevancesAsSeperateArrays.titleRelevances.length; i++) {
+    relevances.push({
+      spaceID: relevancesAsSeperateArrays.spaceIDs[i],
+      titleRelevance: relevancesAsSeperateArrays.titleRelevances[i],
+      infoRelevance: relevancesAsSeperateArrays.infoRelevances[i]
+    })
+  }
+
+  let relevancesNormalized = []
+  // get max from the relevances and normalize them.
+  // Give weight to info and titles, 70 to info, 30 to title maybe?
+  // If the relevance is too low, like less than 0.1, return empty
+  // Normalize all of the data wrt each other and if relevance is less than 50-60 %, do not showcase them.
+
+  for (let relevance of relevances) {
+    relevancesNormalized.push({ spaceID: relevance.spaceID, relevance: relevance.titleRelevance + relevance.infoRelevance })
+  }
+
+  console.log(1111111, relevancesNormalized)
+
+  relevancesNormalized.filter(a => a.relevance > 0.5)
+  relevancesNormalized.sort((a, b) => a.relevance - b.relevance)
+
+  console.log(2222222, relevancesNormalized)
+
+  return relevancesNormalized
+}
 
 module.exports = SpaceController;
