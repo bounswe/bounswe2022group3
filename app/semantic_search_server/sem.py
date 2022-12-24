@@ -22,7 +22,7 @@ def relevance():
         )
     except Exception as e:
         return jsonify(
-            message: e
+            message = "Something is wrong with:{}".format(str(e))
         ), 400
 
 if __name__ == "__main__":
