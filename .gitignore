@@ -11,3 +11,4 @@ back.sh
 app/semantic_search_server/env*
 *.tsv
 *.pkl
+__pycache__
