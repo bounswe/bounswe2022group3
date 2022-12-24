@@ -55,9 +55,10 @@ const SpaceController = {
       }
 
       if (spaces.length < 1) {
-        const spaceList = semanticSearch(keyword)
-        console.log(1111111, relevances)
+        const spaceList = await semanticSearch(keyword)
+        spaces = spaceList
       }
+
       return res.status(200).json({ spaces });
     } catch (error) {
       return res.status(400).send({ error: error.toString() });
@@ -237,28 +238,28 @@ async function semanticSearch(searchText) {
     "name info"
   )
 
-  let titles = []
+  let names = []
   let infos = []
   let spaceIDs = []
 
-  for (let space in spaces) {
-    titles.push(space.title)
+  for (let space of spaces) {
+    names.push(space.name)
     infos.push(space.info)
     spaceIDs.push(space._id)
   }
 
   const titlePayload = {
     search_text: searchText,
-    search_list: titles
+    search_list: names
   };
 
   const infoPayload = {
     search_text: searchText,
-    search_list: info
+    search_list: infos
   }
 
-  const titleRelevances = (await axios.post(`${semanticUrl}/relevance`, titlePayload)).data
-  const infoRelevances = (await axios.post(`${semanticUrl}/relevance`, infoPayload)).data
+  const titleRelevances = (await axios.post(`${semanticUrl}/relevance`, titlePayload)).data.relevances
+  const infoRelevances = (await axios.post(`${semanticUrl}/relevance`, infoPayload)).data.relevances
 
   const relevancesAsSeperateArrays = {
     titleRelevances,
@@ -274,15 +275,15 @@ async function spacesWithRelevance(relevancesAsSeperateArrays) {
 
   let spaces = []
   for (let relevance of relevancesNormalized) {
-    space = await SpaceModel.Space.findById(relevance.spaceID)
-      .populate("name creator info rating tags image enrolledUsersCount")
+
+    const space = await SpaceModel.Space.findById(relevance.spaceID)
       .populate({
         path: "creator",
         select: { _id: 1, name: 1, surname: 1, image: 1 }
       })
       .exec()
-
     spaces.push(space)
+    // console.log(`${relevance.relevance} - ${space.name}: ${space.info}`)
   }
 
   return spaces
@@ -290,7 +291,7 @@ async function spacesWithRelevance(relevancesAsSeperateArrays) {
 
 function calculateRelevance(relevancesAsSeperateArrays) {
 
-  relevances = []
+  let relevances = []
   for (let i = 0; i < relevancesAsSeperateArrays.titleRelevances.length; i++) {
     relevances.push({
       spaceID: relevancesAsSeperateArrays.spaceIDs[i],
@@ -300,22 +301,12 @@ function calculateRelevance(relevancesAsSeperateArrays) {
   }
 
   let relevancesNormalized = []
-  // get max from the relevances and normalize them.
-  // Give weight to info and titles, 70 to info, 30 to title maybe?
-  // If the relevance is too low, like less than 0.1, return empty
-  // Normalize all of the data wrt each other and if relevance is less than 50-60 %, do not showcase them.
-
-  for (let relevance of relevances) {
-    relevancesNormalized.push({ spaceID: relevance.spaceID, relevance: relevance.titleRelevance + relevance.infoRelevance })
+  for (let relevanceObject of relevances) {
+    relevancesNormalized.push({ spaceID: relevanceObject.spaceID, relevance: (0.3 * relevanceObject.titleRelevance) + (0.7 * relevanceObject.infoRelevance) })
   }
 
-  console.log(1111111, relevancesNormalized)
-
-  relevancesNormalized.filter(a => a.relevance > 0.5)
-  relevancesNormalized.sort((a, b) => a.relevance - b.relevance)
-
-  console.log(2222222, relevancesNormalized)
-
+  relevancesNormalized = relevancesNormalized.filter(a => a.relevance > 0.25)
+  relevancesNormalized.sort((a, b) => b.relevance - a.relevance)
   return relevancesNormalized
 }
 
