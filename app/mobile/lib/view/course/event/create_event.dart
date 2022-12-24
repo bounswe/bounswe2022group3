@@ -87,7 +87,7 @@ createEvent(BuildContext context, CoursePageViewModel viewModel) {
                 Flexible(
                   child: TextField(
                     onChanged: (value) => description = value,
-                    decoration: const InputDecoration(hintText: "Description"),
+                    decoration: const InputDecoration(hintText: "Description*"),
                     maxLines: 15,
                   ),
                 ),
@@ -137,7 +137,7 @@ createEvent(BuildContext context, CoursePageViewModel viewModel) {
                                 'Start date cannot be after the end date.')),
                       );
                     } else if (endDate != null &&
-                        startDate!.compareTo(endDate!) == 1) {
+                        endDate!.difference(startDate!).inDays > 365) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                             content:
