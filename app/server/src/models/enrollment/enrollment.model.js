@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const SpaceModel = require("../space/space.model");
+const UserModel = require("../user/user.model");
 
 const enrollmentSchema = new mongoose.Schema(
   {
@@ -37,11 +38,7 @@ const createEnrollment = async (user, space_id) => {
   var enrollment = new Enrollment({ user, space: space_id });
   enrollment.is_active = true;
 
-  const space = await SpaceModel.Space.findById(space_id);
-  space.enrollments.push(enrollment._id);
-  space.enrolledUsersCount += 1;
-  await space.save();
-  const creator = await UserModel.User.findById(user);
+  const creator = await UserModel.getUserByID(user);
   creator.enrollments.push(enrollment);
   await creator.save();
   const res = await enrollment.save();

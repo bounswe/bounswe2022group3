@@ -1,6 +1,7 @@
 const SpaceModel = require("../../models/space/space.model");
 const EnrollmentModel = require("../../models/enrollment/enrollment.model");
 const UserModel = require("../../models/user/user.model");
+const ActivityModel = require("../../models/activity/activity.model");
 
 const EnrollmentController = {
   createEnrollment: async function (req, res) {
@@ -19,9 +20,12 @@ const EnrollmentController = {
         return res.status(400).json({ error: "User already enrolled!" });
       }
       const enrollment = await EnrollmentModel.createEnrollment(user_id, space_id);
+      space.enrollments.push(enrollment._id);
+      space.enrolledUsersCount += 1;
+      await space.save();
       const user = await UserModel.User.findById(user_id);
       // {user} enrolled to {space} space, {date.now-enrollment.createdAt} ago.
-      let activity_body = `${user.name} ${user.surname} enrolled to ${space.name} space, {timeDiff}.`;
+      let activity_body = `${user.name} ${user.surname} enrolled to "${space.name}" space, {timeDiff}.`;
       let activity_data = {
         body : activity_body,
         space: space._id,

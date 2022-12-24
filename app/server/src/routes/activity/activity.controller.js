@@ -13,9 +13,10 @@ const ActivityController = {
       let feed_list = await  ActivityModel.Activity.find({ user: { $in : user_list } })
       .populate({
         path: "user",
-        options: { sort: { createdAt: -1 } },
         select: { _id: 1, name: 1, surname: 1, image: 1 }
-      }).exec();
+      })
+      .sort({ createdAt: -1 })
+      .exec();
       console.log(feed_list);
       for (var activities of feed_list){
         activities.body = activities.body.replace("{timeDiff}", getTimeDifference(activities.createdAt,Date.now(),));

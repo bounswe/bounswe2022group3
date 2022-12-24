@@ -93,10 +93,12 @@ const createSpace = async (name, creator, info, tags, image) => {
   // randomized rating, will change
   space.rating = Math.floor(Math.random() * 3) + 3;
 
-  var creator = await UserModel.User.findById(creator);
-  creator.created_spaces.push(space._id);
-  const enrollment = await EnrollmentModel.createEnrollment(creator._id, space._id);
-  await creator.save();
+  const user = await UserModel.getUserByID(creator);
+  user.created_spaces.push(space._id);
+  const enrollment = await EnrollmentModel.createEnrollment(user._id, space._id);
+  space.enrollments.push(enrollment._id);
+  space.enrolledUsersCount += 1;
+  await user.save();
   const res = await space.save();
   return res;
 };

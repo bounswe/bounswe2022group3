@@ -7,7 +7,8 @@ const SpaceController = {
   createSpace: async function (req, res) {
     try {
       const user_id = req.auth.id;
-      const creator = await UserModel.User.findById(user_id);
+      const creator = await UserModel.getUserByID(user_id);
+      console.log(creator);
       const { name, info, tags, image } = req.body;
       var space = await SpaceModel.createSpace(
         name,

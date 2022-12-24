@@ -33,12 +33,12 @@ const activitySchema = new mongoose.Schema(
 
 const Activity = mongoose.model("Activity", activitySchema);
 
-const createActivity = async (user, activity_data) => {
+const createActivity = async (user_id, activity_data) => {
   var activity = new Activity({
-    user,
+    user: user_id,
     body: activity_data.body,
   });
-  var user = await UserModel.User.findById(user);
+  const user = await UserModel.User.findById(user_id);
   var personal_info = await PersonalInfoModel.getPersonalInfo(user.personal_info);
   personal_info.activities.push(activity);
   await personal_info.save();
