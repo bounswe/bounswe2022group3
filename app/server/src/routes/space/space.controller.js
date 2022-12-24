@@ -193,6 +193,8 @@ const SpaceController = {
                               .exec();
         for (space_t of spaces_t) {
           if (!space_ids.includes(space_t._id.toString())) {
+            let enrolled = await EnrollmentModel.Enrollment.find({space: space_t, user});
+            if (enrolled.length == 1) continue;
             spaces.push(space_t);
             space_ids.push(space_t._id.toString());
           }
