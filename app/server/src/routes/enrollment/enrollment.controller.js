@@ -24,7 +24,11 @@ const EnrollmentController = {
       space.save();
       const creator = await UserModel.User.findById(user);
       creator.enrollments.push(enrollment);
-      creator.save();
+
+      // {user} enrolled to {space} space, {date.now-enrollment.createdAt} ago.
+      let activity_body = `${creator.name} ${creator.surname} enrolled to ${space.name} space, ${Date.now()-enrollment.createdAt} ago.`;
+      const activity = await ActivityModel.createActivity(user, activity_body);
+      
       return res.status(201).send({ enrollment });
     } catch (e) {
       return res.status(400).send({ error: e.toString() });

@@ -1,22 +1,24 @@
 const DiscussionModel = require("../../models/discussion/discussion.model");
 const SpaceModel = require("../../models/space/space.model");
+const ActivityModel = require("../../models/activity/activity.model");
+const UserModel = require("../../models/user/user.model");
 
 const DiscussionController = {
   createDiscussion: async function (req, res) {
     try {
       const { space_id, title } = req.body;
-      const user = req.auth.id;
+      const user_id = req.auth.id;
 
       const discussion = await DiscussionModel.createDiscussion(
-        user,
+        user_id,
         space_id,
         title,
       );
-
-      // var space = await SpaceModel.Space.findById(space_id).exec();
-      // space.discussions.push(discussion);
-      // space.save();
-
+      const user = await UserModel.User.findById(user_id);
+      const space = await SpaceModel.Space.findById(space_id);
+      // {user} started a new {discussion} about {discussion.title} in {space} space, {date.now-discussion.createdAt} ago.
+      let activity_body = `${user.name} ${user.surname} started a new discussion about ${discussion.title} in ${space.name} space, ${discussion.createdAt} ago.`;
+      const activity = await ActivityModel.createActivity(user_id, activity_body);
       res.status(201).send({ discussion });
     } catch (e) {
       res.status(400).send({ error: e });

@@ -1,6 +1,7 @@
 const SpaceModel = require("../../models/space/space.model");
 const EnrollmentModel = require("../../models/enrollment/enrollment.model");
 const UserModel = require("../../models/user/user.model");
+const ActivityModel = require("../../models/activity/activity.model");
 
 const SpaceController = {
   createSpace: async function (req, res) {
@@ -17,6 +18,9 @@ const SpaceController = {
       );
       creator.created_spaces.push(space._id);
       await creator.save();
+      // {user} created a new space called {space.name}, {date.now-space.createdAt} ago.
+      let activity_body = `${creator.name} ${creator.surname} created a new space called ${space.name}, ${Date.now()-space.createdAt} ago.`;
+      const activity = await ActivityModel.createActivity(user_id, activity_body);
       return res.status(201).send({ space });
     } catch (error) {
       return res.status(400).send({ error: error.toString() });

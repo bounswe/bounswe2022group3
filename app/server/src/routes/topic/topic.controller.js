@@ -1,20 +1,26 @@
 const TopicModel = require("../../models/topic/topic.model");
 const SpaceModel = require("../../models/space/space.model");
 const ResourceModel = require("../../models/resource/resource.model");
+const ActivityModel = require("../../models/activity/activity.model");
+const UserModel = require("../../models/user/user.model");
 
 const TopicController = {
   createTopic: async function (req, res) {
     try {
       const { space_id, name } = req.body;
-      const user = req.auth.id;
+      const user_id = req.auth.id;
       var space = await SpaceModel.Space.findById(space_id);
       if(!space){
         return res.status(400).json({ error: "Space does not exist!" });
       }
-      const topic = await TopicModel.createTopic(name, space_id, user);
+      const topic = await TopicModel.createTopic(name, space_id, user_id);
       space.topics.push(topic);
       space.save();
       let populated_topic = await TopicModel.getPopulatedTopic(topic);
+      const user = await UserModel.User.findById(user_id);
+      // {user} initiated {topic} topic in {space} space, {date.now-topic.createdAt} ago.
+      let activity_body = `${user.name} ${user.surname} initiated ${topic.name} topic in ${space.name} space, ${Date.now()-topic.createdAt} ago.`;
+      const activity = await ActivityModel.createActivity(user_id, activity_body);
       return res.status(201).json({ topic: populated_topic });
     } catch (e) {
       return res.status(400).send({ error: e.toString() });

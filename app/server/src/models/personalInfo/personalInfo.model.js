@@ -14,7 +14,7 @@ const personalInfoSchema = new mongoose.Schema({
       type: String,
     },
   ],
-  personal_activities: [
+  activities: [
     {
       type: String,
     },

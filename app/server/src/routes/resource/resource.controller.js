@@ -2,13 +2,15 @@ const ResourceModel = require("../../models/resource/resource.model");
 const TopicModel = require("../../models/topic/topic.model");
 const DiscussionModel = require("../../models/discussion/discussion.model");
 const AnnotationModel = require("../../models/annotation/annotation.model");
+const ActivityModel = require("../../models/activity/activity.model");
+const UserModel = require("../../models/user/user.model");
 
 const ResourceController = {
   createResource: async function (req, res) {
     try {
       const { name, body, topic_id } = req.body;
-      const user = req.auth.id;
-      var topic = await TopicModel.Topic.findById(topic_id);
+      const user_id = req.auth.id;
+      var topic = await TopicModel.Topic.findById(topic_id).populate("space", "name").exec();
       if(!topic){
         return res.status(400).json({ error: "Topic does not exist!" });
       }
@@ -16,11 +18,15 @@ const ResourceController = {
         name,
         body,
         topic_id,
-        user
+        user_id
       );
       topic.resources.push(resource);
       topic.save();
       const resource_populated = await ResourceModel.getPopulatedResource(resource._id);
+      const user = await UserModel.User.findById(user_id);
+      // {user} published "{resource.name}" on {space} space under the {topic} topic, {date.now-resource.createdAt} ago.
+      let activity_body = `${user.name} ${user.surname} published "${resource.name}" on ${topic.space.name} space under the ${topic.name} topic, ${Date.now()-resource.createdAt} ago.`;
+      const activity = await ActivityModel.createActivity(user_id, activity_body);
       return res.status(201).json({ resource: resource_populated });
     } catch (e) {
       return res.status(400).json({ error: e.toString() });

@@ -1,10 +1,17 @@
 const EventModel = require("../../models/event/event.model");
-
+const ActivityModel = require("../../models/activity/activity.model");
+const UserModel = require("../../models/user/user.model");
+const SpaceModel = require("../../models/space/space.model");
 const EventController = {
     createEvent: async function (req, res) {
         try {
             req.body.creator = req.auth.id
-            const event = await EventModel.createEvent(req.body)
+            const event = await EventModel.createEvent(req.body);
+            const user = await UserModel.User.findById(req.auth.id);
+            const space = await SpaceModel.Space.findById(req.body.space_id);  
+            // {user} launched a new event called {event.name} in {space} space, {date.now-event.createdAt} ago.
+            let activity_body = `${user.name} ${user.surname} launched a new event called ${event.event_title} in ${space.name} space, ${event.createdAt} ago.`;
+            const activity = await ActivityModel.createActivity(req.auth.id, activity_body);
             return res.status(201).json({event})
         } catch (e) {
             return res.status(400).json({ error: e.toString() });
