@@ -20,7 +20,7 @@ const SpaceController = {
         image
       );
       // {user} created a new space called {space.name}, {date.now-space.createdAt} ago.
-      let activity_body = `${creator.name} ${creator.surname} created a new space called ${space.name}, {timeDiff}.`;
+      let activity_body = `${creator.name} ${creator.surname} created a new space called [${space.name}"](https://bucademy.tk/space/${space._id}), {timeDiff}.`;
       let activity_data = {
         body : activity_body,
         space: space._id,

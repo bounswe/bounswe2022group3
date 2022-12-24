@@ -11,6 +11,9 @@ const activitySchema = new mongoose.Schema(
     body: {
       type: String,
     },
+    type: {
+      type: String,
+    },
     resource: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Resource",
@@ -26,6 +29,10 @@ const activitySchema = new mongoose.Schema(
     discussion: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Discussion",
+    },
+    event: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Event",
     },
   },
   { timestamps: true }
@@ -53,6 +60,9 @@ const createActivity = async (user_id, activity_data) => {
   } 
   if (activity_data.discussion) {
     activity.discussion = activity_data.discussion;
+  }
+  if (activity_data.event) {
+    activity.event = activity_data.event;
   }
   const res = await activity.save();
   return res;

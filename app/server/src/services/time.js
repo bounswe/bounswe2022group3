@@ -19,13 +19,29 @@ function getTimeDifference(startDate, endDate) {
     if(differenceInDays > 7){
         return Math.floor(differenceInDays) + " weeks ago";
     }else if(differenceInDays > 1){
-      return Math.floor(differenceInDays) + " days ago";
+      if (Math.floor(differenceInDays) == 1) {
+        return Math.floor(differenceInDays) + " day ago";
+      }else{
+        return Math.floor(differenceInDays) + " days ago";
+      }
     }else if(differenceInHours > 1){
-      return Math.floor(differenceInHours) + " hours ago";
+      if (Math.floor(differenceInHours) == 1) {
+        return Math.floor(differenceInHours) + " hour ago";
+      }else{
+        return Math.floor(differenceInHours) + " hours ago";
+      }
     }else if(differenceInMinutes > 1){
-      return Math.floor(differenceInMinutes) + " minutes ago";
+      if(Math.floor(differenceInMinutes) == 1){
+        return Math.floor(differenceInMinutes) + " minute ago";
+      } else {
+        return Math.floor(differenceInMinutes) + " minutes ago";
+      }
     }else if(differenceInSeconds > 1){
-      return Math.floor(differenceInSeconds) + " seconds ago";
+      if(Math.floor(differenceInSeconds) == 1){
+        return Math.floor(differenceInSeconds) + " second ago";
+      } else {
+        return Math.floor(differenceInSeconds) + " seconds ago";
+      }
     }else{
       return "just now";
     }
