@@ -42,7 +42,7 @@ function Note({ note, openEditNote, setOpenEditNote, space_id, setEditNote,setRe
 
     return (
 
-        <Card onMouseEnter={() => setActions(true)} onMouseLeave={() => setActions(false)}>
+        <Card onMouseEnter={() => setActions(true)} onMouseLeave={() => setActions(false)} style={{maxWidth: "300px"}}>
 
             <CardContent>
                 <div data-color-mode="light">

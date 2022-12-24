@@ -101,14 +101,14 @@ export default function Home() {
         </div>
       </section>
 
-      <div className={styles.search_container} id="search">
+      <section className={styles.search_container}>
         <div className={styles.searchbar}>
           <SearchIcon />
           <form className={styles.searchbar_form}>
             <input type="search" placeholder="Search..." className={styles.searchbar_input} onChange={onSearchbarChange} />
           </form>
         </div>
-      </div>
+      </section>
 
       <section className={styles.spaces} id="spaces">
         <Masonry
@@ -127,7 +127,7 @@ export default function Home() {
                     <h3>{course.name}</h3>
                     <div>
                       <h4>{course.creator.name} {course.creator.surname}</h4>
-                      <Rating defaultValue={Math.random() * 5} precision={0.1} readOnly />
+                      <Rating defaultValue={course?.rating} precision={0.1} readOnly />
                     </div>
                   </div>
                 </div>

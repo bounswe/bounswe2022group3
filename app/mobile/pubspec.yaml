@@ -43,8 +43,8 @@ dependencies:
   flutter_markdown: ^0.6.13
   uni_links: ^0.5.1
   url_launcher: ^6.1.7
-  email_validator: ^2.1.17
   map_location_picker: ^1.0.1
+  email_validator: ^2.1.17
   
 
   # The following adds the Cupertino Icons font to your application.

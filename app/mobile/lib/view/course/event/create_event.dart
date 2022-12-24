@@ -87,7 +87,7 @@ createEvent(BuildContext context, CoursePageViewModel viewModel) {
                 Flexible(
                   child: TextField(
                     onChanged: (value) => description = value,
-                    decoration: const InputDecoration(hintText: "Description*"),
+                    decoration: const InputDecoration(hintText: "Description"),
                     maxLines: 15,
                   ),
                 ),

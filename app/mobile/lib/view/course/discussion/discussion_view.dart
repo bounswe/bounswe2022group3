@@ -27,6 +27,7 @@ Widget discussionView({required String discussionId}) => ViewModelBuilder<Discus
                       controller: viewModel.scrollController,
                       physics: const ClampingScrollPhysics(),
                       shrinkWrap: true,
+                      padding: const EdgeInsets.only(bottom: 10),
                       itemBuilder: (context, index) => commentTile(viewModel.discussion!.comments[index]),
                       separatorBuilder: (BuildContext context, int index) => const Divider(thickness: 1.5),
                     ),

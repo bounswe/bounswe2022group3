@@ -39,5 +39,10 @@ userProfileRouter.get(
   authorization_conditional,
   UserProfileController.getProfile
 );
+userProfileRouter.get(
+  "/getRelatedTags/:keyword",
+  authorization,
+  UserProfileController.getRelatedTags
+);
 
 module.exports = userProfileRouter;

@@ -3,21 +3,16 @@ import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 import { useState, useEffect } from "react";
 import styles from "../../../../styles/my/discussions.module.scss";
-import { Grid, Table, TableBody, TableHead, TableCell, TableRow, Button, Dialog, Box, IconButton, DialogContent } from "@mui/material";
+import { Grid, Table, TableBody, TableHead, TableCell, TableRow } from "@mui/material";
 import TableSortLabel from '@mui/material/TableSortLabel';
 import { useRouter } from 'next/router'
 import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 import axios from "axios";
 import { API_URL } from "../../../../next.config";
-import rehypeSanitize from "rehype-sanitize";
 import CreateDiscussion from "../../../../components/PopUps/CreateDiscussion";
-import dynamic from "next/dynamic";
-
-const MDEditor = dynamic(
-    () => import("@uiw/react-md-editor"),
-    { ssr: false }
-);
+import Button from "../../../../components/Button/Button";
+import moment from "moment";
 
 export default function discussions() {
 
@@ -32,19 +27,19 @@ export default function discussions() {
     let space_id = router.query;
     async function fetchContent() {
         try {
-           
-                const response = (
-                    await axios.get(API_URL + "/space/" + space_id.space_id)
-                );
-                console.log("response");
-                console.log(response);
-                setData(response?.data);
-            
+
+            const response = (
+                await axios.get(API_URL + "/space/" + space_id.space_id)
+            );
+            console.log("response");
+            console.log(response);
+            setData(response?.data);
+
         } catch (err) {
             console.log(err);
         }
     }
-  async function fetchDiscussion() {
+    async function fetchDiscussion() {
 
         try {
             const response = (
@@ -55,15 +50,17 @@ export default function discussions() {
             console.log(err);
         }
     }
-    
+
     useEffect(() => {
         space_id = router.query;
         fetchDiscussion();
         fetchContent();
     }, [space_id]);
-    useEffect(() => {
-        fetchDiscussion();
-    }, [openDiscussion]);
+    // useEffect(() => {
+    //     if (!openDiscussion) {
+    //         fetchDiscussion();
+    //     }
+    // }, [openDiscussion]);
 
     function sortBy(fieldName = 'Replies') {
         if (fieldName == 'Replies') {
@@ -80,19 +77,24 @@ export default function discussions() {
     return (
         <section className={styles.container}>
             <h2>{data?.space?.name}</h2>
-            <h1>Discussions</h1>
-            <CreateDiscussion openDiscussion={openDiscussion} post={post} setPost={setPost} setOpenDiscussion={setOpenDiscussion} type={"discussionCreate"} />
-            <Grid container spacing={2} style={{ marginBottom: 12 }}>
-                <Grid item sx={{ width: '80%', paddingLeft: "4px !important", paddingTop: "4px !important" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
+                <h1>Discussions</h1>
+                <Button onClick={() => { setOpenDiscussion(true) }} style={{ margin: 0, marginRight: "48px", width: "fit-content", padding: "0 20px" }}>
+                    Add New Discussion
+                </Button>
+            </div>
+            <CreateDiscussion openDiscussion={openDiscussion} post={post} setPost={setPost} setOpenDiscussion={setOpenDiscussion} type={"discussionCreate"} fetchDiscussion={fetchDiscussion} />
+            <Grid container spacing={2} style={{ marginBottom: 12, marginLeft: "4px", marginTop: "20px" }}>
+                {/* <Grid item sx={{ width: '80%', paddingLeft: "4px !important", paddingTop: "4px !important" }}>
                     <Button variant="outlined" onClick={() => { setOpenDiscussion(true) }} sx={{ 'borderColor': '#ddd', 'color': 'black' }}>
                         <h2 >add new discussion</h2>
                     </Button>
-                </Grid>
-                <Grid item sx={{ width: '80%', paddingLeft: "4px !important", paddingTop: "4px !important" }}>
+                </Grid> */}
+                <Grid item sx={{ width: '80%', paddingLeft: "4px !important", paddingTop: "4px !important", backgroundColor: "#fff", borderRadius: "10px", padding: "30px 16px", paddingLeft: "16px" }}>
                     <Table sx={{ minWidth: 250 }} >
                         <TableHead>
                             <TableRow>
-                            <TableCell ><h3>Discussion</h3></TableCell>
+                                <TableCell ><h3>Discussion</h3></TableCell>
                                 <TableCell ><h3>Started by</h3></TableCell>
                                 <TableCell >
                                     <TableSortLabel
@@ -119,15 +121,15 @@ export default function discussions() {
                         <TableBody>
                             {discussionList.map((discussion, index) => {
                                 return (
-                                    <TableRow key={index} className={styles.row} onClick={() => { router.push(`/my/spaces/` + space_id.space_id + `/discussion/`+discussion._id) }}>
+                                    <TableRow key={index} className={styles.row} onClick={() => { router.push(`/my/spaces/` + space_id.space_id + `/discussion/` + discussion._id) }}>
                                         <TableCell >
                                             <h4 > {discussion.title}</h4>
                                         </TableCell>
                                         <TableCell>
-                                            <h4 > {discussion.user.name }&nbsp;&nbsp;{discussion.user.surname }</h4>
+                                            <h4 > {discussion.user.name}&nbsp;&nbsp;{discussion.user.surname}</h4>
                                         </TableCell>
                                         <TableCell>
-                                            <h4 > {discussion.updatedAt}</h4>
+                                            <h4 > {moment(discussion.updatedAt).format("LL")}</h4>
                                         </TableCell>
                                         <TableCell>
                                             <h4 > {discussion.number_of_comments}</h4>

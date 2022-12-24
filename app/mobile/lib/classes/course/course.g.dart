@@ -45,6 +45,9 @@ CourseDetailed _$CourseDetailedFromJson(Map<String, dynamic> json) =>
       (json['events'] as List<dynamic>)
           .map((e) => EventShortened.fromJson(e as Map<String, dynamic>))
           .toList(),
+      (json['notes'] as List<dynamic>?)
+          ?.map((e) => Note.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$CourseDetailedToJson(CourseDetailed instance) =>
@@ -60,4 +63,5 @@ Map<String, dynamic> _$CourseDetailedToJson(CourseDetailed instance) =>
       'badges': instance.badges,
       'discussions': instance.discussions,
       'events': instance.events,
+      'notes': instance.notes,
     };

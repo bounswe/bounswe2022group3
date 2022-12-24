@@ -24,6 +24,7 @@ export default function discussion() {
     let user_id = router.query;
     let discussion = router.query;
     const [counter, setCounter] = useState(0);
+    const [title, setTitle] = useState("")
 
  
     async function fetchDiscussion() {
@@ -37,29 +38,39 @@ export default function discussion() {
             )?.data;
 
             setPreviousComments(response.discussion.comments);
+            setTitle(response?.discussion?.title)
         } catch (err) {
             console.log(err);
         }
     }
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setCounter((prevCounter) => prevCounter + 1);
+    // useEffect(() => {
+    //     const interval = setInterval(() => {
+    //         setCounter((prevCounter) => prevCounter + 1);
 
-            fetchDiscussion();
-        }, 1000);
+    //         fetchDiscussion();
+    //     }, 1000);
 
-        return () => clearInterval(interval);
-    }, [discussion.discussion_id]);
-    useEffect(() => {
+    //     return () => clearInterval(interval);
+    // }, [discussion.discussion_id]);
+
+    useEffect(() => { 
         discussion = router.query;
-        fetchDiscussion();
-    }, [discussion.discussion_id]);
+        if (discussion?.discussion_id) {
+            setInterval(() => {
+                fetchDiscussion(); 
+            }, 1000); 
+        }
+    }, [discussion.discussion_id])
 
-    useEffect(() => { fetchDiscussion(); }, [reRender])
+    // useEffect(() => {
+    //     discussion = router.query;
+    //     fetchDiscussion();
+    // }, [discussion.discussion_id]);
+
+    // useEffect(() => { fetchDiscussion(); }, [reRender])
     return (
         <section className={styles.container}>
-            <h2>Acoustic Guitar Ed for Beginners</h2>
-            <h1>General Discussion</h1>
+            <h2 style={{marginBottom: "20px"}}>{title}</h2>
             <Discussion
                 previousComments={previousComments}
                 setPreviousComments={setPreviousComments}

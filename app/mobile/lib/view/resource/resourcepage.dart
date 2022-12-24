@@ -1,4 +1,5 @@
 import 'package:bucademy/classes/resource/resource.dart';
+import 'package:bucademy/classes/topic/topic.dart';
 import 'package:bucademy/resources/custom_colors.dart';
 import 'package:bucademy/resources/text_styles.dart';
 import 'package:bucademy/services/locator.dart';
@@ -8,7 +9,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:stacked/stacked.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-Widget resourcePageView(Resource r) =>
+Widget resourcePageView(TopicDetailed t, Resource r, ChangeNotifier topicPageView) =>
     ViewModelBuilder<ResourcePageViewModel>.reactive(
         viewModelBuilder: () => ResourcePageViewModel(),
         builder: (context, viewModel, child) {
@@ -50,7 +51,7 @@ Widget resourcePageView(Resource r) =>
                         ],
                       ),
                     ),
-                    editResourceButton(r, context),
+                    editResourceButton(t, r, context, topicPageView),
                   ]),
                 );
         });
