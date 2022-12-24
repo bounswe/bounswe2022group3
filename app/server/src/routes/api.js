@@ -14,6 +14,7 @@ const spaceRouter = require("./space/space.route");
 const enrollmentRouter = require("./enrollment/enrollment.route");
 const annotationRouter = require("./annotation/annotation.route");
 const eventRouter = require("./event/event.route");
+const activityRouter = require("./activity/activity.route");
 
 api.use("/userProfile", userProfileRouter);
 api.use("/topic", topicRouter);
@@ -27,6 +28,7 @@ api.use("/space", spaceRouter);
 api.use("/enrollment", enrollmentRouter);
 api.use("/annotation", annotationRouter);
 api.use("/event", eventRouter);
+api.use("/activity", activityRouter);
 
 module.exports = {
   api,

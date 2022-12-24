@@ -7,9 +7,15 @@ const { authorization } = require("../../services/auth");
 const activityRouter = express.Router();
 
 activityRouter.get(
-    "/getFeed",
-    authorization,
-    ActivityController.getFeed
-  );
+  "/getFeed",
+  authorization,
+  ActivityController.getFeed
+);
+
+activityRouter.delete(
+  "/",
+  authorization,
+  ActivityController.deleteActivity
+);
 
 module.exports = activityRouter;
