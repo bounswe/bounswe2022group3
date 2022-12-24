@@ -1,8 +1,10 @@
 import 'package:bucademy/classes/event/event.dart';
 import 'package:bucademy/resources/custom_colors.dart';
+import 'package:bucademy/resources/text_styles.dart';
 import 'package:bucademy/services/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
+import 'package:maps_launcher/maps_launcher.dart';
 
 Widget eventView({required String eventId}) =>
     ViewModelBuilder<EventViewModel>.reactive(
@@ -41,9 +43,32 @@ Widget eventView({required String eventId}) =>
                           subtitle: Text(viewModel.event!.description)),
                       const Divider(thickness: 1.5),
                       ListTile(
-                          title: const Text('Location'),
-                          subtitle: Text(
-                              "${viewModel.event!.location['longitude']}, ${viewModel.event!.location['latitude']}")),
+                        title: const Text('Location'),
+                        subtitle: GestureDetector(
+                          onTap: () => viewModel.directToMap(
+                              viewModel.event!.location['longitude'],
+                              viewModel.event!.location['latitude'],
+                              viewModel.event!.title),
+                          child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 6, horizontal: 8),
+                              margin: const EdgeInsets.only(top: 10),
+                              decoration: BoxDecoration(
+                                  color: CustomColors.main,
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text('Show On Map',
+                                      style: TextStyles.bodyWhite),
+                                  Icon(
+                                    Icons.location_on_outlined,
+                                    color: Colors.white,
+                                  ),
+                                ],
+                              )),
+                        ),
+                      ),
                       const Divider(thickness: 1.5),
                       ListTile(
                           title: const Text('Quota'),
@@ -78,5 +103,9 @@ class EventViewModel extends ChangeNotifier {
 
     loading = false;
     notifyListeners();
+  }
+
+  directToMap(latitude, longitude, title) {
+    MapsLauncher.launchCoordinates(longitude, latitude, title);
   }
 }
