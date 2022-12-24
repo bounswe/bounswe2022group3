@@ -239,7 +239,6 @@ const SpaceController = {
 };
 
 async function semanticSearch(searchText) {
-  console.log("SEMANTIC SEARCH STARTED")
   const spaces = await SpaceModel.Space.find(
     {},
     "name info"
@@ -320,7 +319,6 @@ function calculateRelevance(relevancesAsSeperateArrays) {
 }
 
 async function searchWithLabels(queryText) {
-  console.log("SEARCHWITHLABELS STARTED")
   tokens = queryText.split()
 
   searchString = ""
@@ -330,8 +328,6 @@ async function searchWithLabels(queryText) {
 
   const mlUrl = `https://api.datamuse.com/words?max=10&ml=${searchString}`
   const mlResult = (await axios.get(mlUrl)).data
-
-  console.log(1111111111111, mlResult)
 
   inferredLabels = [queryText]
   for (res of mlResult) {
