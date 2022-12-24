@@ -276,14 +276,12 @@ async function spacesWithRelevance(relevancesAsSeperateArrays) {
   let spaces = []
   for (let relevance of relevancesNormalized) {
 
-    const space = await SpaceModel.Space.findById(relevance.spaceID)
-      .populate({
-        path: "creator",
-        select: { _id: 1, name: 1, surname: 1, image: 1 }
-      })
+    const space = await SpaceModel.Space.find(
+      { _id: relevance.spaceID },
+      "name creator info rating tags image enrolledUsersCount"
+    )
       .exec()
     spaces.push(space)
-    // console.log(`${relevance.relevance} - ${space.name}: ${space.info}`)
   }
 
   return spaces
