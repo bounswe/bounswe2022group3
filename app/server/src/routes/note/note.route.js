@@ -24,7 +24,6 @@ noteRouter.delete(
 
 noteRouter.get(
   "/:id",
-  authorization,
   NoteController.getNote
 );
 
