@@ -45,6 +45,7 @@ dependencies:
   url_launcher: ^6.1.7
   map_location_picker: ^1.0.1
   email_validator: ^2.1.17
+  maps_launcher: any
   
 
   # The following adds the Cupertino Icons font to your application.
