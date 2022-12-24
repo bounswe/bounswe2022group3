@@ -5,3 +5,9 @@ app/mobile/macos/Flutter/GeneratedPluginRegistrant.swift
 app/mobile/windows/flutter/generated_plugin_registrant.cc
 app/mobile/windows/flutter/generated_plugin_registrant.h
 app/mobile/windows/flutter/generated_plugins.cmake
+
+*.pem
+back.sh
+app/semantic_search_server/env*
+*.tsv
+*.pkl
