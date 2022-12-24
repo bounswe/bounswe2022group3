@@ -173,13 +173,13 @@ const SpaceController = {
       const user = await UserModel.User.findById(user_id);
       const personalInfo = await PersonalInfoModel.PersonalInfo.findOne({_id: user.personal_info});
       var interests = personalInfo.interests;
-      const url = "https://api.datamuse.com/words?";
+      const url = "https://api.datamuse.com/words?max=10&ml=";
       var inferred_interests = [];
       for (interest_t of interests) {
         if (interest_t.includes(" ")) interest_t = interest_t.replace(" ", "+");
-        const trg_url = `${url}max=5&ml=${interest_t}`;
-        const trg_result = await axios.get(trg_url);
-        inferred_interests = inferred_interests.concat(trg_result.data);
+        var ml_url = `${url}${interest_t}`;
+        const ml_result = await axios.get(ml_url);
+        inferred_interests = inferred_interests.concat(ml_result.data);
       }
       inferred_interests.sort((a, b) => b.score - a.score);
       var spaces = [];
