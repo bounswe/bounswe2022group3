@@ -55,6 +55,12 @@ const SpaceController = {
       }
 
       if (spaces.length < 1) {
+        const spaceList = await searchWithLabels(keyword)
+        spaces = spaceList
+      }
+
+      // if still not found, do semantic search
+      if (spaces.length < 1) {
         const spaceList = await semanticSearch(keyword)
         spaces = spaceList
       }
@@ -233,6 +239,7 @@ const SpaceController = {
 };
 
 async function semanticSearch(searchText) {
+  console.log("SEMANTIC SEARCH STARTED")
   const spaces = await SpaceModel.Space.find(
     {},
     "name info"
@@ -276,7 +283,7 @@ async function spacesWithRelevance(relevancesAsSeperateArrays) {
   let spaces = []
   for (let relevance of relevancesNormalized) {
 
-    const space = await SpaceModel.Space.find(
+    const space = await SpaceModel.Space.findOne(
       { _id: relevance.spaceID },
       "name creator info rating tags image enrolledUsersCount"
     )
@@ -306,6 +313,41 @@ function calculateRelevance(relevancesAsSeperateArrays) {
   relevancesNormalized = relevancesNormalized.filter(a => a.relevance > 0.25)
   relevancesNormalized.sort((a, b) => b.relevance - a.relevance)
   return relevancesNormalized
+}
+
+async function searchWithLabels(queryText) {
+  console.log("SEARCHWITHLABELS STARTED")
+  tokens = queryText.split()
+
+  searchString = ""
+  for (token of tokens) {
+    searchString += token + "+"
+  }
+
+  const mlUrl = `https://api.datamuse.com/words?max=10&ml=${searchString}`
+  const mlResult = (await axios.get(mlUrl)).data
+
+  console.log(1111111111111, mlResult)
+
+  inferredLabels = [queryText]
+  for (res of mlResult) {
+    inferredLabels.push(res.word);
+  }
+
+  var spaces = [];
+  var spaceIDs = [];
+  for (label of inferredLabels) {
+    let spacesFound = await SpaceModel.Space.find({ $text: { $search: `\"${label}\"` } }).exec()
+
+    for (let spaceFound of spacesFound) {
+      if (!spaceIDs.includes(spaceFound._id.toString())) {
+        spaces.push(spaceFound);
+        spaceIDs.push(spaceFound._id.toString());
+      }
+    }
+  }
+
+  return spaces
 }
 
 module.exports = SpaceController;
