@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const SpaceModel = require("../../models/space/space.model");
+const CommentModel = require("../../models/comment/comment.model");
 
 const discussionSchema = new mongoose.Schema(
   {
@@ -55,6 +56,15 @@ const getPopulatedDiscussion = async (id) => {
   .exec();
 }
 
+const deleteDiscussion = async (id) => {
+  var discussion = await Discussion.findById(id);
+  for (var comment_temp of discussion.comments) {
+    await CommentModel.deleteComment(comment_temp);
+  }
+  const space = await SpaceModel.getSpaceByID(discussion.space_id)
+  space.discussions.remove(id)
+  await space.save()
+};
 
 const getDiscussion = async (id) => {
   return Discussion.findById(id);
@@ -65,4 +75,5 @@ module.exports = {
   createDiscussion,
   getDiscussion,
   getPopulatedDiscussion,
+  deleteDiscussion
 };

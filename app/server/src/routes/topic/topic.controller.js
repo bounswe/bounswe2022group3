@@ -42,16 +42,7 @@ const TopicController = {
       if (topic.creator.toString() !== user.toString()) {
         return res.status(400).json({ error: "User not creator of topic" });
       } else {
-        for (var resource_temp of topic.resources) {
-          await ResourceModel.deleteResource(resource_temp);
-        }
-        var space = await SpaceModel.Space.findById(topic.space);
-        const index = space.topics.indexOf(topic_id);
-        if (index > -1) { // only splice array when item is found
-          space.topics.splice(index, 1); // 2nd parameter means remove one item only
-        }
-        await space.save();
-        topic.remove();
+        await TopicModel.deleteTopic(topic_id);
       }
       return res.status(201).json({ message: "Topic deleted successfully!" });
     } catch (e) {

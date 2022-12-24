@@ -1,4 +1,7 @@
 const mongoose = require("mongoose");
+const SpaceModel = require("../space/space.model");
+const ResourceModel = require("../resource/resource.model");
+
 
 const topicSchema = new mongoose.Schema(
   {
@@ -64,8 +67,22 @@ const getPopulatedTopic = async (id) => {
     .exec();
 };
 
+const deleteTopic = async (id) => {
+  var topic = await Topic.findById(id);
+  for (var resource_temp of topic.resources) {
+    await ResourceModel.deleteResource(resource_temp);
+  }
+  var space = await SpaceModel.Space.findById(topic.space);
+  const index = space.topics.indexOf(topic_id);
+  if (index > -1) { // only splice array when item is found
+    space.topics.splice(index, 1); // 2nd parameter means remove one item only
+  }
+  await space.save();
+  topic.remove();
+};
+
 const getTopic = async (id) => {
   return Topic.findById(id);
 };
 
-module.exports = { Topic, createTopic, getTopic, getPopulatedTopic };
+module.exports = { Topic, createTopic, getTopic, getPopulatedTopic, deleteTopic };

@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
 const UserModel = require("../user/user.model");
 const EnrollmentModel = require("../enrollment/enrollment.model");
+const TopicModel = require("../topic/topic.model");
+const EventModel = require("../event/event.model");
+const DiscussionModel = require("../discussion/discussion.model");
+
 const spaceSchema = new mongoose.Schema(
   {
     name: {
@@ -145,8 +149,20 @@ const getSpaceByID = async (space_id) => {
 };
 
 const deleteSpace = async (_id) => {
-  const res = await Space.findOneAndDelete({ _id });
-  return res;
+  var space = await Space.findById(space_id);
+  for (var topic_temp of space.topics) {
+    await TopicModel.deleteTopic(topic_temp);
+  }
+  for (var event_temp of space.events) {
+    await EventModel.deleteEvent(event_temp);
+  }
+  for (var discussion_temp of space.discussions) {
+    await DiscussionModel.deleteDiscussion(discussion_temp);
+  }
+  for (var enrollment_temp of space.enrollments) {
+    await EnrollmentModel.deleteEnrollment(enrollment_temp);
+  }
+  space.remove();
 };
 
 module.exports = {

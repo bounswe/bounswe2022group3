@@ -31,7 +31,24 @@ const SpaceController = {
       return res.status(400).send({ error: error.toString() });
     }
   },
-
+  deleteSpace: async function (req, res) {
+    try {
+      const {space_id} = req.body;
+      const user_id = req.auth.id;
+      const space = await SpaceModel.Space.findById(space_id);
+      if(!space){
+        return res.status(400).json({ error: "Space does not exist!" });
+      }
+      if (space.creator.toString() !== user_id.toString()) {
+        return res.status(401).send({ error: "Unauthorized" });
+      }else {
+        await SpaceModel.deleteSpace(space_id);
+      }
+      return res.status(201).json({ message: "Space deleted successfully!" });
+    } catch (error) {
+      return res.status(400).send({ error: error.toString() });
+    }
+  },
   searchSpaces: async function (req, res) {
     try {
       const keyword = req.params.keyword;
