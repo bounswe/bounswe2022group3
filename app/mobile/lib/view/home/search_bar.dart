@@ -12,9 +12,14 @@ TextFormField searchBar(
     maxLines: 1,
     onChanged: onChanged,
     decoration: InputDecoration(
+      contentPadding: const EdgeInsets.only(left: 10, top: 10, bottom: 10),
       prefix: GestureDetector(
         onTap: close,
-        child: Icon(Icons.arrow_back, color: Colors.grey.shade500, size: 20),
+        child: Icon(
+          Icons.arrow_back,
+          size: 14,
+          color: Colors.grey.shade500,
+        ),
       ),
       border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
