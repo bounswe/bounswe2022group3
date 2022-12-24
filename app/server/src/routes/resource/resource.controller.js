@@ -2,13 +2,16 @@ const ResourceModel = require("../../models/resource/resource.model");
 const TopicModel = require("../../models/topic/topic.model");
 const DiscussionModel = require("../../models/discussion/discussion.model");
 const AnnotationModel = require("../../models/annotation/annotation.model");
+const ActivityModel = require("../../models/activity/activity.model");
+const UserModel = require("../../models/user/user.model");
+const SpaceModel = require("../../models/space/space.model");
 
 const ResourceController = {
   createResource: async function (req, res) {
     try {
       const { name, body, topic_id } = req.body;
-      const user = req.auth.id;
-      var topic = await TopicModel.Topic.findById(topic_id);
+      const user_id = req.auth.id;
+      var topic = await TopicModel.Topic.findById(topic_id).populate("space", "name").exec();
       if(!topic){
         return res.status(400).json({ error: "Topic does not exist!" });
       }
@@ -16,11 +19,20 @@ const ResourceController = {
         name,
         body,
         topic_id,
-        user
+        user_id
       );
       topic.resources.push(resource);
       topic.save();
       const resource_populated = await ResourceModel.getPopulatedResource(resource._id);
+      const user = await UserModel.User.findById(user_id);
+      // {user.name} {user.surname} published "{resource.name}", {timeDiff}.
+      let activity_body = `${user.name} ${user.surname} published [${resource.name}](https://bucademy.tk/my/spaces/${topic.space._id}/resource/${resource._id}) in [${topic.space.name}](https://bucademy.tk/my/spaces/${topic.space._id}/resources) space, {timeDiff}.`;
+      let activity_data = {
+        body : activity_body,
+        resource: resource._id,
+        space: topic.space._id, 
+      }
+      const activity = await ActivityModel.createActivity(user_id, activity_data);
       return res.status(201).json({ resource: resource_populated });
     } catch (e) {
       return res.status(400).json({ error: e.toString() });
@@ -37,15 +49,7 @@ const ResourceController = {
       if (resource.creator.toString() !== user.toString()) {
         return res.status(400).json({ error: "User not creator of resource" });
       } else {
-        let disc = await DiscussionModel.getDiscussion(resource.discussion);
-        disc.remove();
-        var topic = await TopicModel.Topic.findById(resource.topic);
-        const index = topic.resources.indexOf(resource_id);
-        if (index > -1) { // only splice array when item is found
-          topic.resources.splice(index, 1); // 2nd parameter means remove one item only
-        }
-        await topic.save();
-        resource.remove();
+        await ResourceModel.deleteResource(resource_id);
       }
       return res.status(201).json({ message: "Resource deleted successfully!" });
     } catch (e) {

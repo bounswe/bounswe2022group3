@@ -1,6 +1,7 @@
 const SpaceModel = require("../../models/space/space.model");
 const EnrollmentModel = require("../../models/enrollment/enrollment.model");
 const UserModel = require("../../models/user/user.model");
+const ActivityModel = require("../../models/activity/activity.model");
 const PersonalInfoModel = require("../../models/personalInfo/personalInfo.model");
 const axios = require("axios"); 
 
@@ -8,7 +9,8 @@ const SpaceController = {
   createSpace: async function (req, res) {
     try {
       const user_id = req.auth.id;
-      const creator = await UserModel.User.findById(user_id);
+      const creator = await UserModel.getUserByID(user_id);
+      console.log(creator);
       const { name, info, tags, image } = req.body;
       var space = await SpaceModel.createSpace(
         name,
@@ -17,8 +19,13 @@ const SpaceController = {
         tags,
         image
       );
-      creator.created_spaces.push(space._id);
-      await creator.save();
+      // {user} created a new space called {space.name}, {date.now-space.createdAt} ago.
+      let activity_body = `${creator.name} ${creator.surname} created a new space called [${space.name}"](https://bucademy.tk/space/${space._id}), {timeDiff}.`;
+      let activity_data = {
+        body : activity_body,
+        space: space._id,
+      }
+      const activity = await ActivityModel.createActivity(user_id, activity_data);
       return res.status(201).send({ space });
     } catch (error) {
       return res.status(400).send({ error: error.toString() });
