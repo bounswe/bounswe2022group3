@@ -41,10 +41,10 @@ class EventService {
     required String creator,
     required String title,
     required String startDate,
-    required String endDate,
+    String? endDate,
     required String description,
     required Map<String, double> location,
-    required int? quota,
+    int? quota,
     //required String visibility,
     //required double fee,
     //required String medium
