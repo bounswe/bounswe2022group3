@@ -45,4 +45,9 @@ userProfileRouter.get(
   UserProfileController.getRelatedTags
 );
 
+userProfileRouter.get(
+  "/getTags",
+  UserProfileController.getTags
+);
+
 module.exports = userProfileRouter;

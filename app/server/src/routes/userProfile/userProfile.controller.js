@@ -3,6 +3,8 @@ const personalInfoModel = require("../../models/personalInfo/personalInfo.model"
 const mongoose = require("mongoose");
 var crypto = require('crypto');
 const axios = require("axios"); 
+const fs = require('fs');
+const path = require('path');
 
 const UserProfileController = {
   updateProfile: async function (req, res) {
@@ -160,6 +162,21 @@ const UserProfileController = {
       let result = trg_result.data;
       res.status(200).json({ result });
     } catch (e) {
+      res.status(400).json({ error: e.toString() });
+    }
+  },
+  getTags: async function (req, res) {
+    try{
+      const filePath = path.join(__dirname, '../../tags/tags.txt');
+      fs.readFile(filePath, 'utf8', (err, data) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
+        const words = data.split('\n');
+        res.status(200).json({ words });
+      });
+    }catch(e){
       res.status(400).json({ error: e.toString() });
     }
   },

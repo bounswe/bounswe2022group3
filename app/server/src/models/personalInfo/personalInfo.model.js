@@ -14,9 +14,10 @@ const personalInfoSchema = new mongoose.Schema({
       type: String,
     },
   ],
-  personal_activities: [
+  activities: [
     {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Activity",
     },
   ],
   knowledge: [

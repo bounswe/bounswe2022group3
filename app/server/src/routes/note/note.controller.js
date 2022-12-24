@@ -68,16 +68,16 @@ const NoteController = {
   },
   getNote: async function (req, res) {
     try {
-      const user = req.auth.id;
+      //const user = req.auth.id;
       const note = await NoteModel.getPopulatedNote(req.params.id);
       if (!note) {
         return res.status(400).json({ error: "Note does not exist!" });
       }
-      if (note.creator._id.toString() !== user.toString()) {
-        return res
-          .status(400)
-          .send({ error: "User not the creator of the note!" });
-      }
+      // if (note.creator._id.toString() !== user.toString()) {
+      //   return res
+      //     .status(400)
+      //     .send({ error: "User not the creator of the note!" });
+      // }
       return res.status(200).json({ note });
     } catch (e) {
       return res.status(400).send({ error: e.toString() });
