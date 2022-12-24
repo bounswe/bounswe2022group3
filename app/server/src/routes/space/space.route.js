@@ -20,6 +20,12 @@ spaceRouter.post(
 spaceRouter.get("/searchSpaces/:keyword?", SpaceController.searchSpaces);
 
 spaceRouter.get(
+  "/getRecommendedSpaces",
+  authorization_conditional,
+  SpaceController.getRecommendedSpaces
+);
+
+spaceRouter.get(
   "/getPopularSpaces/",
   authorization_conditional,
   SpaceController.getPopularSpaces

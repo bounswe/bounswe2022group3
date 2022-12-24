@@ -75,6 +75,7 @@ const spaceSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+spaceSchema.index({info: 'text', tags: 'text', name: 'text'});
 
 const Space = mongoose.model("Space", spaceSchema);
 
