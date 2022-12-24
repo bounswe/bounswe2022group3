@@ -62,14 +62,12 @@ const SpaceController = {
       }
 
       if (spaces.length < 1) {
-        const spaceList = await searchWithLabels(keyword)
-        spaces = spaceList
+        spaces = await searchWithLabels(keyword)
       }
 
       // if still not found, do semantic search
       if (spaces.length < 1) {
-        const spaceList = await semanticSearch(keyword)
-        spaces = spaceList
+        spaces = await semanticSearch(keyword)
       }
 
       return res.status(200).json({ spaces });
@@ -341,8 +339,8 @@ async function searchWithLabels(queryText) {
     inferredLabels.push(res.word);
   }
 
-  var spaces = [];
-  var spaceIDs = [];
+  let spaces = [];
+  let spaceIDs = [];
   for (label of inferredLabels) {
     let spacesFound = await SpaceModel.Space.find({ $text: { $search: `\"${label}\"` } }).exec()
 
