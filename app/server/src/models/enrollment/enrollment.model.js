@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const SpaceModel = require("../space/space.model");
 
 const enrollmentSchema = new mongoose.Schema(
   {
@@ -32,9 +33,17 @@ enrollmentSchema.index({ user: 1, space: 1 }, { unique: true });
 
 const Enrollment = mongoose.model("Enrollment", enrollmentSchema);
 
-const createEnrollment = async (user, space) => {
-  var enrollment = new Enrollment({ user, space });
+const createEnrollment = async (user, space_id) => {
+  var enrollment = new Enrollment({ user, space: space_id });
   enrollment.is_active = true;
+
+  const space = await SpaceModel.Space.findById(space_id);
+  space.enrollments.push(enrollment._id);
+  space.enrolledUsersCount += 1;
+  await space.save();
+  const creator = await UserModel.User.findById(user);
+  creator.enrollments.push(enrollment);
+  await creator.save();
   const res = await enrollment.save();
   return res;
 };

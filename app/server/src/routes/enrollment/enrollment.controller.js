@@ -6,28 +6,27 @@ const EnrollmentController = {
   createEnrollment: async function (req, res) {
     try {
       const space_id = req.body.space_id;
-      const user = req.auth.id;
+      const user_id = req.auth.id;
       const space = await SpaceModel.Space.findById(space_id);
       if (!space) {
         return res.status(400).json({ error: "Space does not exist!" });
       }
       const enrolled_space = await EnrollmentModel.Enrollment.find({
-        user,
+        user: user_id,
         space: space_id,
       });
       if (enrolled_space.length > 0) {
         return res.status(400).json({ error: "User already enrolled!" });
       }
-      const enrollment = await EnrollmentModel.createEnrollment(user, space_id);
-      space.enrollments.push(enrollment._id);
-      space.enrolledUsersCount += 1;
-      space.save();
-      const creator = await UserModel.User.findById(user);
-      creator.enrollments.push(enrollment);
-
+      const enrollment = await EnrollmentModel.createEnrollment(user_id, space_id);
+      const user = await UserModel.User.findById(user_id);
       // {user} enrolled to {space} space, {date.now-enrollment.createdAt} ago.
-      let activity_body = `${creator.name} ${creator.surname} enrolled to ${space.name} space, ${Date.now()-enrollment.createdAt} ago.`;
-      const activity = await ActivityModel.createActivity(user, activity_body);
+      let activity_body = `${user.name} ${user.surname} enrolled to ${space.name} space, {timeDiff}.`;
+      let activity_data = {
+        body : activity_body,
+        space: space._id,
+      }
+      const activity = await ActivityModel.createActivity(user, activity_data);
       
       return res.status(201).send({ enrollment });
     } catch (e) {
@@ -138,18 +137,18 @@ const EnrollmentController = {
             enrollments.push(space[0]);
           }
         }
-        const creator = await UserModel.User.findById(user);
-        for (var space of creator.created_spaces) {
-          var populated_space = await SpaceModel.Space.findOne({
-            _id: space
-          },
-            "name creator info rating tags image enrolledUsersCount"
-          ).populate({
-            path: "creator",
-            select: { _id: 1, name: 1, surname: 1, image: 1 }
-          });
-          enrollments.push(populated_space);
-        }
+        // const creator = await UserModel.User.findById(user);
+        // for (var space of creator.created_spaces) {
+        //   var populated_space = await SpaceModel.Space.findOne({
+        //     _id: space
+        //   },
+        //     "name creator info rating tags image enrolledUsersCount"
+        //   ).populate({
+        //     path: "creator",
+        //     select: { _id: 1, name: 1, surname: 1, image: 1 }
+        //   });
+        //   enrollments.push(populated_space);
+        // }
       }
       return res.status(200).json({ enrollments });
     } catch (e) {

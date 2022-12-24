@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
-
+const UserModel = require("../user/user.model");
+const EnrollmentModel = require("../enrollment/enrollment.model");
 const spaceSchema = new mongoose.Schema(
   {
     name: {
@@ -92,6 +93,10 @@ const createSpace = async (name, creator, info, tags, image) => {
   // randomized rating, will change
   space.rating = Math.floor(Math.random() * 3) + 3;
 
+  var creator = await UserModel.User.findById(creator);
+  creator.created_spaces.push(space._id);
+  const enrollment = await EnrollmentModel.createEnrollment(creator._id, space._id);
+  await creator.save();
   const res = await space.save();
   return res;
 };
