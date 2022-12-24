@@ -16,11 +16,13 @@ const SpaceController = {
         tags,
         image
       );
-      creator.created_spaces.push(space._id);
-      await creator.save();
       // {user} created a new space called {space.name}, {date.now-space.createdAt} ago.
-      let activity_body = `${creator.name} ${creator.surname} created a new space called ${space.name}, ${Date.now()-space.createdAt} ago.`;
-      const activity = await ActivityModel.createActivity(user_id, activity_body);
+      let activity_body = `${creator.name} ${creator.surname} created a new space called ${space.name}, {timeDiff}.`;
+      let activity_data = {
+        body : activity_body,
+        space: space._id,
+      }
+      const activity = await ActivityModel.createActivity(user_id, activity_data);
       return res.status(201).send({ space });
     } catch (error) {
       return res.status(400).send({ error: error.toString() });

@@ -18,9 +18,14 @@ const TopicController = {
       space.save();
       let populated_topic = await TopicModel.getPopulatedTopic(topic);
       const user = await UserModel.User.findById(user_id);
-      // {user} initiated {topic} topic in {space} space, {date.now-topic.createdAt} ago.
-      let activity_body = `${user.name} ${user.surname} initiated ${topic.name} topic in ${space.name} space, ${Date.now()-topic.createdAt} ago.`;
-      const activity = await ActivityModel.createActivity(user_id, activity_body);
+      // {user} initiated {topic} topic in {space} space, {timeDiff}.
+      let activity_body = `${user.name} ${user.surname} initiated ${topic.name} topic in ${space.name} space, {timeDiff}.`;
+      let activity_data = {
+        body : activity_body,
+        topic: topic._id,
+        space: space._id, 
+      }
+      const activity = await ActivityModel.createActivity(user_id, activity_data);
       return res.status(201).json({ topic: populated_topic });
     } catch (e) {
       return res.status(400).send({ error: e.toString() });
@@ -37,9 +42,8 @@ const TopicController = {
       if (topic.creator.toString() !== user.toString()) {
         return res.status(400).json({ error: "User not creator of topic" });
       } else {
-        for (var res_temp of topic.resources) {
-          let resource_temp = await ResourceModel.getResource(res_temp);
-          resource_temp.remove();
+        for (var resource_temp of topic.resources) {
+          await ResourceModel.deleteResource(resource_temp);
         }
         var space = await SpaceModel.Space.findById(topic.space);
         const index = space.topics.indexOf(topic_id);

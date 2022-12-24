@@ -17,8 +17,13 @@ const DiscussionController = {
       const user = await UserModel.User.findById(user_id);
       const space = await SpaceModel.Space.findById(space_id);
       // {user} started a new {discussion} about {discussion.title} in {space} space, {date.now-discussion.createdAt} ago.
-      let activity_body = `${user.name} ${user.surname} started a new discussion about ${discussion.title} in ${space.name} space, ${discussion.createdAt} ago.`;
-      const activity = await ActivityModel.createActivity(user_id, activity_body);
+      let activity_body = `${user.name} ${user.surname} started a new discussion about ${discussion.title} in ${space.name} space, {timeDiff}.`;
+      let activity_data = {
+        body: activity_body,
+        space: space._id,
+        discussion: discussion._id,
+      };
+      const activity = await ActivityModel.createActivity(user_id, activity_data);
       res.status(201).send({ discussion });
     } catch (e) {
       res.status(400).send({ error: e });
