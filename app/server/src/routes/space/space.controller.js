@@ -287,6 +287,10 @@ async function spacesWithRelevance(relevancesAsSeperateArrays) {
       { _id: relevance.spaceID },
       "name creator info rating tags image enrolledUsersCount"
     )
+      .populate({
+        path: "creator",
+        select: { _id: 1, name: 1, surname: 1, image: 1 }
+      })
       .exec()
     spaces.push(space)
   }
