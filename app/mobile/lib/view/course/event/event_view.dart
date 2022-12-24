@@ -21,7 +21,6 @@ Widget eventView({required String eventId}) =>
                 ? const Center(child: CircularProgressIndicator())
                 : Expanded(
                     child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ListTile(
                           title: const Text('Title'),
@@ -33,7 +32,9 @@ Widget eventView({required String eventId}) =>
                       const Divider(thickness: 1.5),
                       ListTile(
                           title: const Text('End date'),
-                          subtitle: Text(viewModel.event!.endDate)),
+                          subtitle: Text(viewModel.event!.endDate != null
+                              ? viewModel.event!.endDate!
+                              : 'Not provided.')),
                       const Divider(thickness: 1.5),
                       ListTile(
                           title: const Text('Description'),
@@ -46,7 +47,9 @@ Widget eventView({required String eventId}) =>
                       const Divider(thickness: 1.5),
                       ListTile(
                           title: const Text('Quota'),
-                          subtitle: Text(viewModel.event!.quota.toString())),
+                          subtitle: Text(viewModel.event!.quota != null
+                              ? viewModel.event!.quota.toString()
+                              : 'Not provided.')),
                       const Divider(thickness: 1.5),
                       ListTile(
                           title: const Text('Registered'),
