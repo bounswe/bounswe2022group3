@@ -1,12 +1,16 @@
 const SpaceModel = require("../../models/space/space.model");
 const EnrollmentModel = require("../../models/enrollment/enrollment.model");
 const UserModel = require("../../models/user/user.model");
+const ActivityModel = require("../../models/activity/activity.model");
+const PersonalInfoModel = require("../../models/personalInfo/personalInfo.model");
+const axios = require("axios"); 
 
 const SpaceController = {
   createSpace: async function (req, res) {
     try {
       const user_id = req.auth.id;
-      const creator = await UserModel.User.findById(user_id);
+      const creator = await UserModel.getUserByID(user_id);
+      console.log(creator);
       const { name, info, tags, image } = req.body;
       var space = await SpaceModel.createSpace(
         name,
@@ -15,8 +19,13 @@ const SpaceController = {
         tags,
         image
       );
-      creator.created_spaces.push(space._id);
-      await creator.save();
+      // {user} created a new space called {space.name}, {date.now-space.createdAt} ago.
+      let activity_body = `${creator.name} ${creator.surname} created a new space called [${space.name}"](https://bucademy.tk/space/${space._id}), {timeDiff}.`;
+      let activity_data = {
+        body : activity_body,
+        space: space._id,
+      }
+      const activity = await ActivityModel.createActivity(user_id, activity_data);
       return res.status(201).send({ space });
     } catch (error) {
       return res.status(400).send({ error: error.toString() });
@@ -161,6 +170,62 @@ const SpaceController = {
       //   });
       // }
       return res.status(200).json(space.events);
+    } catch (e) {
+      res.status(400).send({ error: e.toString() });
+    }
+  },
+  getRecommendedSpaces: async function (req, res) {
+    try {
+      const user_id = req.auth.id;
+      const user = await UserModel.User.findById(user_id);
+      const personalInfo = await PersonalInfoModel.PersonalInfo.findOne({_id: user.personal_info});
+      var interests = personalInfo.interests;
+      const url = "https://api.datamuse.com/words?max=10&ml=";
+      var inferred_interests = [];
+      for (interest_t of interests) {
+        if (interest_t.includes(" ")) interest_t = interest_t.replace(" ", "+");
+        var ml_url = `${url}${interest_t}`;
+        const ml_result = await axios.get(ml_url);
+        inferred_interests = inferred_interests.concat(ml_result.data);
+      }
+      inferred_interests.sort((a, b) => b.score - a.score);
+      var spaces = [];
+      var space_ids = [];
+      for (inf_in of inferred_interests) {
+        interests.push(inf_in.word);
+      }
+      for (interest_t of interests) {
+        let spaces_t = await SpaceModel.Space.find({$text: {$search: `\"${interest_t}\"`}})
+                              .limit(2)
+                              .exec();
+        for (space_t of spaces_t) {
+          if (!space_ids.includes(space_t._id.toString())) {
+            let enrolled = await EnrollmentModel.Enrollment.find({space: space_t, user});
+            if (enrolled.length == 1) continue;
+            spaces.push(space_t);
+            space_ids.push(space_t._id.toString());
+          }
+        }
+      }
+      return res.status(200).json({ spaces });
+    } catch (error) {
+      return res.status(400).send({ error: error.toString() });
+    }
+  },
+  getPopularSpaces: async function (req, res) {
+    try {
+      var spaces = await SpaceModel.Space.find(
+        {},
+        "name creator info rating tags image enrolledUsersCount"
+      )
+        .populate({
+          path: "creator",
+          select: { _id: 1, name: 1, surname: 1, image: 1 }
+        })
+        .sort({ enrolledUsersCount: -1 })
+        .limit(5)
+        .exec();
+      return res.status(200).json({ spaces });
     } catch (e) {
       res.status(400).send({ error: e.toString() });
     }

@@ -135,9 +135,10 @@ class UserService {
             PersistenceKeys.refreshToken, refresh.refresh_token),
       ]);
       user = User(
-        await persistenceService.get(PersistenceKeys.name),
-        await persistenceService.get(PersistenceKeys.surname),
-        "",
+        refresh.name,
+        refresh.surname,
+        refresh.id,
+        image: refresh.image
       );
     } catch (e) {
       print(e);

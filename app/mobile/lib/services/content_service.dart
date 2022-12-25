@@ -123,4 +123,17 @@ class MockContentService {
     }
     return -1;
   }
+
+  Future<int?> deleteTopic({
+    required String topicId,
+  }) async {
+    try {
+      Response response = await dioService.dio
+          .delete('/topic/delete', data: {'topic_id': topicId});
+      return response.statusCode;
+    } catch (e) {
+      print(e);
+    }
+    return -1;
+  }
 }

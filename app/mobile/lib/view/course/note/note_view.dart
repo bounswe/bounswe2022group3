@@ -1,17 +1,18 @@
+import 'package:bucademy/classes/note/note.dart';
 import 'package:bucademy/resources/custom_colors.dart';
+import 'package:bucademy/services/locator.dart';
 import 'package:bucademy/view/widgets/markdown_input.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 String initialText = "## Realism \n- Photorealism\n- Abstract\n- Surrealism ";
 
-Widget noteView({required String noteId}) =>
+Widget noteView({required Note note}) =>
     ViewModelBuilder<NoteViewModel>.reactive(
-      viewModelBuilder: () => NoteViewModel(noteId),
-      onModelReady: (model) => model.init(),
+      viewModelBuilder: () => NoteViewModel(note),
       builder: (context, viewModel, child) => Scaffold(
         appBar: AppBar(
-          title: const Text("My Note"),
+          title: Text(note.title),
           backgroundColor: CustomColors.main,
         ),
         body: viewModel.loading
@@ -31,27 +32,23 @@ Widget noteView({required String noteId}) =>
     );
 
 class NoteViewModel extends ChangeNotifier {
-  final String noteId;
-  String? body = initialText;
+  final Note note;
   bool loading = false;
   TextEditingController controller = TextEditingController();
 
-  NoteViewModel(this.noteId);
-
-  Future updateBody() async {
-    body = controller.text;
-    await Future.delayed(const Duration(milliseconds: 1));
-    notifyListeners();
+  NoteViewModel(this.note) {
+    controller.text = note.body;
   }
 
-  init() async {
+  Future updateBody() async {
     loading = true;
-    controller.text = initialText;
     notifyListeners();
 
-    // discussion = await discussionService.getDiscussion(discussionId: noteId);
-    // if (discussion == null) return;
-
+    Note? updated =
+        await noteService.updateNote(noteId: note.id, body: controller.text);
+    if (updated != null) {
+      note.body = updated.body;
+    }
     loading = false;
     notifyListeners();
   }

@@ -29,7 +29,6 @@
     "react-geolocated": "^4.0.3",
     "react-google-map-picker": "^1.2.3",
     "react-cropper": "^2.1.8",
-    "react-dom": "17.0.2",
     "react-dropzone": "^14.2.3",
     "react-icons": "^4.6.0",
     "react-location-picker": "^1.5.0",

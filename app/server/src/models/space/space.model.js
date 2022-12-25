@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
-
+const UserModel = require("../user/user.model");
+const EnrollmentModel = require("../enrollment/enrollment.model");
 const spaceSchema = new mongoose.Schema(
   {
     name: {
@@ -75,6 +76,7 @@ const spaceSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+spaceSchema.index({info: 'text', tags: 'text', name: 'text'});
 
 const Space = mongoose.model("Space", spaceSchema);
 
@@ -92,6 +94,12 @@ const createSpace = async (name, creator, info, tags, image) => {
   // randomized rating, will change
   space.rating = Math.floor(Math.random() * 3) + 3;
 
+  const user = await UserModel.getUserByID(creator);
+  user.created_spaces.push(space._id);
+  const enrollment = await EnrollmentModel.createEnrollment(user._id, space._id);
+  space.enrollments.push(enrollment._id);
+  space.enrolledUsersCount += 1;
+  await user.save();
   const res = await space.save();
   return res;
 };

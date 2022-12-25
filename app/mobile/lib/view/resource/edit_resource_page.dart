@@ -1,4 +1,5 @@
 import 'package:bucademy/classes/resource/resource.dart';
+import 'package:bucademy/classes/topic/topic.dart';
 import 'package:bucademy/resources/custom_colors.dart';
 import 'package:bucademy/resources/constants.dart';
 import 'package:bucademy/resources/text_styles.dart';
@@ -7,7 +8,7 @@ import 'package:bucademy/view/widgets/markdown_input.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-Widget editResourceView(Resource r) =>
+Widget editResourceView(TopicDetailed t, Resource r, ChangeNotifier topicPageView) =>
     ViewModelBuilder<EditResourceViewModel>.reactive(
       viewModelBuilder: () => EditResourceViewModel(r),
       builder: (context, viewModel, child) => Scaffold(
@@ -95,13 +96,19 @@ Widget editResourceView(Resource r) =>
                             const SnackBar(
                                 content: Text('Successfully Editted!')),
                           );
+                          int index = t.resources.indexOf(r);
+                          t.resources.removeAt(index);
+                          t.resources.insert(index, created);
+                          topicPageView.notifyListeners();
+
+                          Navigator.pop(context);
                           Navigator.pop(context);
                           viewModel.notifyListeners();
                         }
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                              content: Text('Could Not Edit Resource!')),
+                              content: Text('Could Not Edit Resource!\nYou might not be the creator.')),
                         );
                         viewModel.notifyListeners();
                       }

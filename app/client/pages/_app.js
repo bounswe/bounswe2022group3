@@ -82,7 +82,7 @@ function MyApp({ Component, pageProps }) {
             <Loading show={loading} />
             {getLayout(<Component {...pageProps} setLoading={setLoading} />)}
             <ToastContainer position="bottom-right" />
-            {loading && <style>{"body {overflow: hidden}"}</style>}
+            {/* {loading && <style>{"body {overflow: hidden}"}</style>} */}
         </ThemeProvider>
     );
 }

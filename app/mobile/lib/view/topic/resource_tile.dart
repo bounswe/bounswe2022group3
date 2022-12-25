@@ -26,7 +26,7 @@ GestureDetector resourceTile(TopicDetailed t,Resource r, BuildContext context, C
     onTap: () {
       if (!isClickable) return;
       PersistentNavBarNavigator.pushNewScreen(context,
-          screen: resourcePageView(r));
+          screen: resourcePageView(t,r,viewModelTopic));
     },
     child: Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),

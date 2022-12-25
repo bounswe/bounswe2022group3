@@ -4,16 +4,18 @@
 .description {
     width: 100%;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: flex-start;
     align-items: center;
     height: 250px;
-    background-color: $bg-color;
-    margin: 0 ;
+    margin-top: 20px;
+    //background-color: $bg-color;
+    margin: 40px auto auto auto ;
     display: 'block';
     padding: 0 20px;
+    max-width: 1200px;
     @media screen and (max-width: 65rem) {
         height: auto;
-        padding: 0;
+        justify-content: space-between;
     }
     h1 {
         font-family: "Merriweather", sans-serif;
@@ -21,44 +23,46 @@
 }
 
 .left {
-    width: 48%;
     height: 100%;
     float: right;
-    grid-gap: 20px;
     padding: 25px;
     max-width: 500px;
     @media screen and (max-width: 65rem) {
-        background-color: $bg-color;
-        margin-bottom: 2.5rem;
-        width: 100%;
+        max-width: 200px;
     }
 }
 
 .descriptionImage {
     display: block;
     height: 100%;
-    width: auto;
+    width: 378px;
     object-fit: contain;
     max-height: 250px;
+    border-radius: 12px;
     @media screen and (max-width: 65rem) {
         max-height: auto;
-        width: 100%;
+        width: 200px;
         height: auto;
     }
 }
 
+.spaceTag {
+    padding: 10px;
+}
+
 .right {
-    width: 32%;
+    width: auto;
     height: 100%;
     float: right;
     @media screen and (max-width: 65rem) {
         margin-top: 2.5rem;
         margin-bottom: 2.5rem;
-        width: 100%;
+        //width: 100%;
     }
 }
 .details {
-    margin-top: 5rem;
+    border: 0;
+    margin-top: 2rem;
     p {
         font-family: "Montserrat", sans-serif;
         font-size: 1.1rem;
