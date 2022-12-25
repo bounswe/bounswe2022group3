@@ -1,20 +1,25 @@
 import 'package:animated_floating_buttons/animated_floating_buttons.dart';
+import 'package:bucademy/classes/discussion/discussion.dart';
 import 'package:bucademy/classes/resource/resource.dart';
 import 'package:bucademy/classes/topic/topic.dart';
 import 'package:bucademy/resources/custom_colors.dart';
 import 'package:bucademy/resources/text_styles.dart';
 import 'package:bucademy/services/locator.dart';
+import 'package:bucademy/view/course/coursepage.dart';
+import 'package:bucademy/view/course/discussion/discussion_view.dart';
 import 'package:bucademy/view/resource/edit_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:stacked/stacked.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-Widget resourcePageView(
-        TopicDetailed t, Resource r, ChangeNotifier topicPageView) =>
+Widget resourcePageView(TopicDetailed t, Resource r,
+        ChangeNotifier topicPageView, CoursePageViewModel coursePageModel) =>
     ViewModelBuilder<ResourcePageViewModel>.reactive(
         viewModelBuilder: () => ResourcePageViewModel(),
         builder: (context, viewModel, child) {
+          Discussion? d;
           return viewModel.contentsLoading
               ? const Center(child: CircularProgressIndicator())
               : Scaffold(
@@ -58,7 +63,7 @@ Widget resourcePageView(
                       child: AnimatedFloatingActionButton(
                           fabButtons: <Widget>[
                             FloatingActionButton(
-                              onPressed:  () => editResourceButton(
+                              onPressed: () => editResourceButton(
                                   t, r, context, topicPageView),
                               backgroundColor: CustomColors.main,
                               tooltip: 'Edit Resource',
@@ -70,15 +75,35 @@ Widget resourcePageView(
                             FloatingActionButton(
                               onPressed: null,
                               backgroundColor: CustomColors.main,
-                              tooltip: 'Create or Go To Note',
+                              tooltip: 'Create A New Note',
                               heroTag: 'btn2',
-                              child: Icon(Icons.note_alt_outlined),
+                              child: Icon(Icons.note_add_outlined),
                             ),
                             FloatingActionButton(
-                              onPressed: null,
+                              onPressed: () async => {
+                                if (r.discussion?.id != null)
+                                  {
+                                    PersistentNavBarNavigator.pushNewScreen(
+                                        context,
+                                        screen: discussionView(
+                                            discussionId: r.discussion!.id))
+                                  }
+                                else //TODO: This part may be wrong needs further checking
+                                  {
+                                    d = await discussionService
+                                        .createDiscussion(
+                                            spaceId: coursePageModel.course!.id,
+                                            title: r.name),
+                                    viewModel.notifyListeners(), 
+                                    PersistentNavBarNavigator.pushNewScreen(
+                                        context,
+                                        screen:
+                                            discussionView(discussionId: d!.id))
+                                  }
+                              },
                               backgroundColor: CustomColors.main,
                               tooltip: 'Go To Discussion Of The Resource',
-                              heroTag: 'btn3',                        
+                              heroTag: 'btn3',
                               child: Icon(Icons.group_outlined),
                             ),
                           ],
