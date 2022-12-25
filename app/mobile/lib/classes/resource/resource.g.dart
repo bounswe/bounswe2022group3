@@ -17,7 +17,8 @@ Resource _$ResourceFromJson(Map<String, dynamic> json) => Resource(
       DateTime.parse(json['updatedAt'] as String),
       json['discussion'] == null
           ? null
-          : Discussion.fromJson(json['discussion'] as Map<String, dynamic>),
+          : DiscussionShortened.fromJson(
+              json['discussion'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$ResourceToJson(Resource instance) => <String, dynamic>{

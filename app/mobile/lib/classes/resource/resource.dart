@@ -28,7 +28,7 @@ class Resource {
   // final List<bişi bişi>
 
   @JsonKey(name: 'discussion')
-  final Discussion? discussion; //TODO: discussion class will be added
+  final DiscussionShortened? discussion; //TODO: discussion class will be added
 
   @JsonKey(name: 'createdAt')
   final DateTime createdAt;
