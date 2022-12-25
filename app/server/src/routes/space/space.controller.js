@@ -7,6 +7,8 @@ const TopicModel = require("../../models/topic/topic.model");
 const EventModel = require("../../models/event/event.model");
 const DiscussionModel = require("../../models/discussion/discussion.model");
 const axios = require("axios"); 
+const axios = require("axios");
+const semanticUrl = process.env.SEMANTIC_SEARCH_SERVER_URL
 
 const SpaceController = {
   createSpace: async function (req, res) {
@@ -91,6 +93,16 @@ const SpaceController = {
           })
           .exec();
       }
+
+      if (spaces.length < 1) {
+        spaces = await searchWithLabels(keyword)
+      }
+
+      // if still not found, do semantic search
+      if (spaces.length < 1) {
+        spaces = await semanticSearch(keyword)
+      }
+
       return res.status(200).json({ spaces });
     } catch (error) {
       return res.status(400).send({ error: error.toString() });
@@ -146,7 +158,7 @@ const SpaceController = {
         .populate({
           path: "discussions",
           options: { sort: { 'createdAt': -1 } },
-          populate: { 
+          populate: {
             path: "user",
             select: { _id: 1, name: 1, surname: 1, image: 1 },
           },
@@ -182,7 +194,7 @@ const SpaceController = {
         .populate({
           path: "events",
           options: { sort: { 'start_date': -1 } },
-          populate: { path: "creator", select: { 'name': 1, 'surname': 1, 'image': 1} }
+          populate: { path: "creator", select: { 'name': 1, 'surname': 1, 'image': 1 } }
         })
         .exec();
       if (!space) {
@@ -210,7 +222,7 @@ const SpaceController = {
     try {
       const user_id = req.auth.id;
       const user = await UserModel.User.findById(user_id);
-      const personalInfo = await PersonalInfoModel.PersonalInfo.findOne({_id: user.personal_info});
+      const personalInfo = await PersonalInfoModel.PersonalInfo.findOne({ _id: user.personal_info });
       var interests = personalInfo.interests;
       const url = "https://api.datamuse.com/words?max=10&ml=";
       var inferred_interests = [];
@@ -227,12 +239,12 @@ const SpaceController = {
         interests.push(inf_in.word);
       }
       for (interest_t of interests) {
-        let spaces_t = await SpaceModel.Space.find({$text: {$search: `\"${interest_t}\"`}})
-                              .limit(2)
-                              .exec();
+        let spaces_t = await SpaceModel.Space.find({ $text: { $search: `\"${interest_t}\"` } })
+          .limit(2)
+          .exec();
         for (space_t of spaces_t) {
           if (!space_ids.includes(space_t._id.toString())) {
-            let enrolled = await EnrollmentModel.Enrollment.find({space: space_t, user});
+            let enrolled = await EnrollmentModel.Enrollment.find({ space: space_t, user });
             if (enrolled.length == 1) continue;
             spaces.push(space_t);
             space_ids.push(space_t._id.toString());
@@ -263,5 +275,117 @@ const SpaceController = {
     }
   },
 };
+
+async function semanticSearch(searchText) {
+  const spaces = await SpaceModel.Space.find(
+    {},
+    "name info"
+  )
+
+  let names = []
+  let infos = []
+  let spaceIDs = []
+
+  for (let space of spaces) {
+    names.push(space.name)
+    infos.push(space.info)
+    spaceIDs.push(space._id)
+  }
+
+  const titlePayload = {
+    search_text: searchText,
+    search_list: names
+  };
+
+  const infoPayload = {
+    search_text: searchText,
+    search_list: infos
+  }
+
+  const titleRelevances = (await axios.post(`${semanticUrl}/relevance`, titlePayload)).data.relevances
+  const infoRelevances = (await axios.post(`${semanticUrl}/relevance`, infoPayload)).data.relevances
+
+  const relevancesAsSeperateArrays = {
+    titleRelevances,
+    infoRelevances,
+    spaceIDs
+  }
+
+  return await spacesWithRelevance(relevancesAsSeperateArrays)
+}
+
+async function spacesWithRelevance(relevancesAsSeperateArrays) {
+  const relevancesNormalized = calculateRelevance(relevancesAsSeperateArrays)
+
+  let spaces = []
+  for (let relevance of relevancesNormalized) {
+
+    const space = await SpaceModel.Space.findOne(
+      { _id: relevance.spaceID },
+      "name creator info rating tags image enrolledUsersCount"
+    )
+      .populate({
+        path: "creator",
+        select: { _id: 1, name: 1, surname: 1, image: 1 }
+      })
+      .exec()
+    spaces.push(space)
+  }
+
+  return spaces
+}
+
+function calculateRelevance(relevancesAsSeperateArrays) {
+
+  let relevances = []
+  for (let i = 0; i < relevancesAsSeperateArrays.titleRelevances.length; i++) {
+    relevances.push({
+      spaceID: relevancesAsSeperateArrays.spaceIDs[i],
+      titleRelevance: relevancesAsSeperateArrays.titleRelevances[i],
+      infoRelevance: relevancesAsSeperateArrays.infoRelevances[i]
+    })
+  }
+
+  let relevancesNormalized = []
+  for (let relevanceObject of relevances) {
+    relevancesNormalized.push({ spaceID: relevanceObject.spaceID, relevance: (0.3 * relevanceObject.titleRelevance) + (0.7 * relevanceObject.infoRelevance) })
+  }
+
+  relevancesNormalized = relevancesNormalized.filter(a => a.relevance > 0.25)
+  relevancesNormalized.sort((a, b) => b.relevance - a.relevance)
+  return relevancesNormalized
+}
+
+async function searchWithLabels(queryText) {
+  tokens = queryText.split()
+
+  searchString = ""
+  for (token of tokens) {
+    searchString += token + "+"
+  }
+
+  const mlUrl = `https://api.datamuse.com/words?max=10&ml=${searchString}`
+  const mlResult = (await axios.get(mlUrl)).data
+
+  inferredLabels = [queryText]
+  for (res of mlResult) {
+    inferredLabels.push(res.word);
+  }
+
+  let spaces = [];
+  let spaceIDs = [];
+  for (label of inferredLabels) {
+    let spacesFound = await SpaceModel.Space.find({ $text: { $search: `\"${label}\"` } }).exec()
+
+    for (let spaceFound of spacesFound) {
+      if (!spaceIDs.includes(spaceFound._id.toString())) {
+        spaces.push(spaceFound);
+        spaceIDs.push(spaceFound._id.toString());
+      }
+    }
+  }
+
+  return spaces
+}
 
 module.exports = SpaceController;
