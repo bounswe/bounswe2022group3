@@ -9,7 +9,7 @@ import rehypeSanitize from "rehype-sanitize";
 import MainLayout from "../../../../../layouts/main/MainLayout";
 import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
-import { Avatar, Divider, Drawer, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, styled, Toolbar, Tooltip, tooltipClasses } from "@mui/material";
+import { Avatar, Divider, Drawer, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Rating as RatingInput, styled, Toolbar, Tooltip, tooltipClasses } from "@mui/material";
 import Rating from "../../../../../components/Rating/Rating"
 import Button from "../../../../../components/Button/Button";
 import moment from "moment";
@@ -112,6 +112,26 @@ export default function resource() {
         }
     }
 
+    async function rate(value) {
+        if(data?.resource?.ratings) {
+            data.resource.ratings[localStorage.getItem("user_id")] = value;
+        }
+        try {
+            if (router_query?.resource !== undefined) {
+                const response = (await axios.post(API_URL + "/resource/rate", {
+                    "resource_id": router_query.resource,
+                    "rating": value
+                }))?.data;
+                if (response?.average_rating && data?.resource) {
+                    data.resource.average_rating = response?.average_rating;
+                }
+                
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
     useEffect(() => {
         fetchContent();
         if (router_query?.resource !== undefined) {
@@ -201,25 +221,27 @@ export default function resource() {
             console.log(err);
         }
     }
-    // useEffect(() => {
-    //     const interval = setInterval(() => {
-    //         setCounter((prevCounter) => prevCounter + 1);
 
-    //         fetchDiscussion();
-    //     }, 1000);
+    async function saveResource() {
 
-    //     return () => clearInterval(interval);
-    // }, [discussion.discussion_id]);
-    // useEffect(() => {
-    //     discussion = router.query;
-    //     fetchDiscussion();
-    // }, [discussion.discussion_id]);
+        try {
+            const response = (
+                await axios.put(API_URL + "/resource/update", {
+                    "resource_id": router_query.resource,
+                    "body": resourceValue
+                })
+            )?.data;
+            setEditModeActive(false);
+        } catch (err) {
+            console.log(err);
+        }
+    }
 
-    useEffect(() => { 
+    useEffect(() => {
         if (data?.resource?.discussion?._id) {
             setInterval(() => {
-                fetchDiscussion(); 
-            }, 1000); 
+                fetchDiscussion();
+            }, 1000);
         }
     }, [data?.resource?.discussion?._id])
 
@@ -234,13 +256,13 @@ export default function resource() {
                         <h1>{data?.resource?.name}</h1>
 
                     </div>
-                    <div className={styles.resourceDetailHeader} style={{minWidth: "330px"}}>
-                        <Button variant="outlined" onClick={() => { setOpenCreateNote(true) }} className={styles.resourceDetailHeaderButton} style={{ marginRight: "30px" }}>
+                    <div className={styles.resourceDetailHeader} style={{ minWidth: "330px" }}>
+                        <Button variant="outlined" onClick={() => { setOpenCreateNote(true) }} className={styles.resourceDetailHeaderButton} style={{ marginRight: "20px" }}>
                             add new note
                         </Button>
 
-                        {/* {!editModeActive && <Button onClick={onEditButtonClicked} className={styles.resourceDetailHeaderButton}>Edit</Button>}
-                        {editModeActive && <Button onClick={onEditButtonClicked} className={styles.resourceDetailHeaderButton}>Save</Button>} */}
+                        {!editModeActive && <Button onClick={onEditButtonClicked} className={styles.resourceDetailHeaderButton}>Edit</Button>}
+                        {editModeActive && <Button onClick={saveResource} className={styles.resourceDetailHeaderButton}>Save</Button>}
                     </div></div>
                 <Link href={`/user/${data?.resource?.creator?._id}`}>
                     <div className="review__user" style={{ cursor: "pointer" }}>
@@ -254,7 +276,7 @@ export default function resource() {
                             <p className="review__user-date">{new Date(data?.resource?.createdAt).toLocaleDateString()}</p>
                         </div>
                         <div className="review__rating">
-                            <Rating rating={data?.resource?.average_rating || 4.5}></Rating>
+                            <Rating rating={data?.resource?.average_rating}></Rating>
                         </div>
                     </div>
 
@@ -264,59 +286,86 @@ export default function resource() {
 
 
                 <div data-color-mode="light" className={styles.mdeBox} >
-                    {/* <MDEditor
-                        value={resourceValue}
-                        onChange={setResourceValue}
-                        preview={editModeActive ? "edit" : "preview"}
-                        hideToolbar={!editModeActive}
-                        previewOptions={{
-                            rehypePlugins: [[rehypeSanitize]],
-                        }}
-                        visibleDragbar={false}
-                        height="100%"
-                    /> */}
-                    <MarkdownPreview source={resourceValue} />
+                    {
+                        editModeActive
+                            ?
+                            <div key='uniqueKey'>
+                                <MDEditor
+                                    value={resourceValue}
+                                    onChange={setResourceValue}
+                                    preview={"live"}
+                                    hideToolbar={!editModeActive}
+                                    previewOptions={{
+                                        rehypePlugins: [[rehypeSanitize]],
+                                    }}
+                                    visibleDragbar={false}
+                                    height="100%"
+                                />
+                            </div>
+                            :
+                            <div key='uniqueKey2'>
+                                <MarkdownPreview source={resourceValue} />
+                            </div>
+                    }
+
                 </div>
 
-                <Discussion
-                    previousComments={previousComments}
-                    setPreviousComments={setPreviousComments}
-                    value={value}
-                    setValue={setValue}
-                    discussion={{discussion_id: data?.resource?.discussion._id}}
-                    setReRender={setReRender}
-                    reRender={reRender}
-                />
-
-                <Box
-                    component="nav"
-                    sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
-                    aria-label="mailbox folders"
-                >
-                    <Drawer
-                        anchor="right"
-                        variant="persistent"
-                        sx={{
-                            display: { xs: 'none', sm: 'block' },
-                            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth, backgroundColor: "#F2F1F8", border: "none", overflow: "visible" },
-                        }}
-                        open={open}
-                        onClose={handleDrawerToggle}
-                    >
-                        {drawer}
-                    </Drawer>
-                </Box>
-
                 {
-                    annotations.length > 0 && <CustomTooltip title={open ? "Hide annotations" : "Show annotations"} placement="left" arrow>
-                        <IconButton style={{ position: "fixed", right: open ? `${drawerWidth + 32}px` : "32px", bottom: "30px" }} onClick={handleDrawerToggle}>
+                    !editModeActive && (
+                        <>
+                            <div style={{ marginBottom: "30px", marginTop: "10px" }}>
+                                <RatingInput
+                                    name="simple-controlled"
+                                    value={(data?.resource?.ratings && data?.resource?.ratings[localStorage.getItem("user_id")]) || 0}
+                                    onChange={(event, newValue) => {
+                                        rate(newValue);
+                                    }}
+                                />
+                            </div>
+
+                            <Discussion
+                                previousComments={previousComments}
+                                setPreviousComments={setPreviousComments}
+                                value={value}
+                                setValue={setValue}
+                                discussion={{ discussion_id: data?.resource?.discussion._id }}
+                                setReRender={setReRender}
+                                reRender={reRender}
+                            />
+
+                            <Box
+                                component="nav"
+                                sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+                                aria-label="mailbox folders"
+                            >
+                                <Drawer
+                                    anchor="right"
+                                    variant="persistent"
+                                    sx={{
+                                        display: { xs: 'none', sm: 'block' },
+                                        '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth, backgroundColor: "#F2F1F8", border: "none", overflow: "visible" },
+                                    }}
+                                    open={open}
+                                    onClose={handleDrawerToggle}
+                                >
+                                    {drawer}
+                                </Drawer>
+                            </Box>
+
                             {
-                                open ?
-                                    <ChevronRight fontSize="large" style={{ color: "#4d4ffa" }} /> :
-                                    <ChevronLeft fontSize="large" style={{ color: "#4d4ffa" }} />}
-                        </IconButton>
-                    </CustomTooltip>
+                                annotations.length > 0 && <CustomTooltip title={open ? "Hide annotations" : "Show annotations"} placement="left" arrow>
+                                    <IconButton style={{ position: "fixed", right: open ? `${drawerWidth + 32}px` : "32px", bottom: "30px" }} onClick={handleDrawerToggle}>
+                                        {
+                                            open ?
+                                                <ChevronRight fontSize="large" style={{ color: "#4d4ffa" }} /> :
+                                                <ChevronLeft fontSize="large" style={{ color: "#4d4ffa" }} />}
+                                    </IconButton>
+                                </CustomTooltip>
+                            }
+                        </>
+                    )
                 }
+
             </div>
         </>
     )
