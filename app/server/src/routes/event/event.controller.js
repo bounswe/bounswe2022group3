@@ -31,8 +31,12 @@ const EventController = {
             }
             if (event.creator.toString() != req.auth.id.toString()) {
                 return res.status(400).json({message: "User is not the creator of the event"})
+            }else{
+                const space = await SpaceModel.getSpaceByID(event.space_id)
+                space.events.remove(id)
+                await space.save()
+                await EventModel.deleteEvent(event_id)
             }
-            await EventModel.deleteEvent(event_id)
             return res.status(200).json({message: "event deleted"})
         } catch (e) {
             return res.status(400).json({ error: e.toString() });
