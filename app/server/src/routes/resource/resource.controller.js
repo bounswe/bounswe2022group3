@@ -32,7 +32,7 @@ const ResourceController = {
       await resource.save();
       const resource_populated = await ResourceModel.getPopulatedResource(resource._id);
       // {user.name} {user.surname} published "{resource.name}", {timeDiff}.
-      let activity_body = `${user.name} ${user.surname} published [${resource.name}](https://bucademy.tk/my/spaces/${topic.space._id}/resource/${resource._id}) in [${topic.space.name}](https://bucademy.tk/my/spaces/${topic.space._id}/resources) space, {timeDiff}.`;
+      let activity_body = `${user.name} ${user.surname} published "${resource.name}" in "${topic.space.name}" space, {timeDiff}.`;
       let activity_data = {
         body : activity_body,
         resource: resource._id,
