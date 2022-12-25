@@ -46,14 +46,12 @@ const createEnrollment = async (user, space_id) => {
   return res;
 };
 
-const deleteEnrollment = async (_id) => {
+const deleteEnrollment = async (id) => {
   var enrollment = await Enrollment.findById(id);
   for (var note_temp of enrollment.notes) {
     await NoteModel.deleteNote(note_temp);
   }
-  const space = await SpaceModel.getSpaceByID(enrollment.space)
-  space.enrollments.remove(id)
-  await space.save()
+  enrollment.remove();
 };
 const getEnrollmentByID = async (enrollment_id) => {
   const result = await Enrollment.findById(enrollment_id).exec();

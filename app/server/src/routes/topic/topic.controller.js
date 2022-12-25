@@ -3,7 +3,7 @@ const SpaceModel = require("../../models/space/space.model");
 const ResourceModel = require("../../models/resource/resource.model");
 const ActivityModel = require("../../models/activity/activity.model");
 const UserModel = require("../../models/user/user.model");
-
+const DiscussionModel = require("../../models/discussion/discussion.model");
 const TopicController = {
   createTopic: async function (req, res) {
     try {
@@ -42,6 +42,21 @@ const TopicController = {
       if (topic.creator.toString() !== user.toString()) {
         return res.status(400).json({ error: "User not creator of topic" });
       } else {
+        var space = await SpaceModel.Space.findById(topic.space);
+        const index = space.topics.indexOf(topic_id);
+        if (index > -1) { // only splice array when item is found
+          space.topics.splice(index, 1); // 2nd parameter means remove one item only
+        }
+        for (var resource_temp of topic.resources) {
+          var discussion = await DiscussionModel.getDiscussion(resource_temp.discussion);
+          const index_disc = space.discussions.indexOf(discussion._id);
+          if(index_disc > -1){
+            space.discussions.splice(index_disc, 1);
+          }
+          discussion.remove();
+          await ResourceModel.deleteResource(resource_temp);
+        }
+        await space.save();
         await TopicModel.deleteTopic(topic_id);
       }
       return res.status(201).json({ message: "Topic deleted successfully!" });

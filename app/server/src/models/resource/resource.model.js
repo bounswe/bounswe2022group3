@@ -84,27 +84,14 @@ const getPopulatedResource = async (id) => {
 
 const deleteResource = async (resource_id) => {
   var resource = await Resource.findById(resource_id);
-  let disc = await DiscussionModel.getDiscussion(resource.discussion);
-  var topic = await TopicModel.Topic.findById(resource.topic);
-  var space = await SpaceModel.Space.findById(topic.space);
-  const index_disc = space.discussions.indexOf(disc._id);
-  const index_resource = topic.resources.indexOf(resource_id);
-  if (index_resource > -1) { // only splice array when item is found
-    topic.resources.splice(index_resource, 1); // 2nd parameter means remove one item only
-  }
-  if(index_disc > -1){
-    space.discussions.splice(index_disc, 1);
-  }
-  await topic.save();
-  await space.save();
-  disc.remove();
   resource.remove();
 };
+
 
 module.exports = {
   Resource,
   getResource,
   createResource,
   getPopulatedResource,
-  deleteResource
+  deleteResource,
 };

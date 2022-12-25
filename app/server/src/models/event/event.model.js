@@ -44,10 +44,7 @@ const createEvent = async (body) => {
 };
 const deleteEvent = async (id) => {
     const event = await Event.findOneAndDelete({ id });
-
-    const space = await SpaceModel.getSpaceByID(event.space_id)
-    space.events.remove(id)
-    await space.save()
+    return event;
 };
 
 const getEvent = async (id) => {

@@ -22,7 +22,7 @@ const ResourceController = {
         user_id
       );
       topic.resources.push(resource);
-      topic.save();
+      await topic.save();
       const resource_populated = await ResourceModel.getPopulatedResource(resource._id);
       const user = await UserModel.User.findById(user_id);
       // {user.name} {user.surname} published "{resource.name}", {timeDiff}.
@@ -49,6 +49,20 @@ const ResourceController = {
       if (resource.creator.toString() !== user.toString()) {
         return res.status(400).json({ error: "User not creator of resource" });
       } else {
+        var topic = await TopicModel.Topic.findById(resource.topic);
+        var space = await SpaceModel.Space.findById(topic.space);
+        const index_resource = topic.resources.indexOf(resource_id);
+        if (index_resource > -1) { // only splice array when item is found
+          topic.resources.splice(index_resource, 1); // 2nd parameter means remove one item only
+        }
+        var discussion = await DiscussionModel.getDiscussion(resource.discussion);
+        const index_disc = space.discussions.indexOf(discussion._id);
+        if(index_disc > -1){
+          space.discussions.splice(index_disc, 1);
+        }
+        discussion.remove();
+        await topic.save();
+        await space.save();
         await ResourceModel.deleteResource(resource_id);
       }
       return res.status(201).json({ message: "Resource deleted successfully!" });
@@ -116,7 +130,7 @@ const ResourceController = {
       var average_rating = resource.average_rating;
       var users_rated =  Array.from( ratings.keys() );;
       var rate_count = ratings.size;
-      if (users_rated.includes(user._id)) {
+      if (users_rated.includes(user._id.toString())) {
         var old_rating = resource.ratings.get(user._id);
         resource.ratings.set(user._id, rating);
         let total_rating = average_rating * rate_count;

@@ -61,9 +61,6 @@ const deleteDiscussion = async (id) => {
   for (var comment_temp of discussion.comments) {
     await CommentModel.deleteComment(comment_temp);
   }
-  const space = await SpaceModel.getSpaceByID(discussion.space_id)
-  space.discussions.remove(id)
-  await space.save()
 };
 
 const getDiscussion = async (id) => {

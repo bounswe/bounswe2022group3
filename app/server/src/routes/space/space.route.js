@@ -18,7 +18,7 @@ spaceRouter.post(
 );
 
 spaceRouter.delete(
-  "/",
+  "/delete",
   validate("deleteSpace"),
   handleValidation,
   authorization,

@@ -148,7 +148,7 @@ const getSpaceByID = async (space_id) => {
   return result;
 };
 
-const deleteSpace = async (_id) => {
+const deleteSpace = async (space_id) => {
   var space = await Space.findById(space_id);
   for (var topic_temp of space.topics) {
     await TopicModel.deleteTopic(topic_temp);
