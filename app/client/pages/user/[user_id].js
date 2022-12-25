@@ -23,8 +23,6 @@ import { useRouter } from 'next/router'
 import UserLayout2 from '../../layouts/user-layout2/UserLayout2';
 
 let owner_id = ''
-const knowledgeTagList = ["math", "fen",]
-const interestTagList = ["football", "rugby", "baseball", "pianting", "archelogy", "math"]
 export default function profile(props) {
   const router = useRouter();
   const { user_id } = router.query;
