@@ -238,7 +238,7 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                                     child: Row(
                                       children: const [
                                         Icon(Icons.add,
-                                            color: Colors.green, size: 30),
+                                            color: CustomColors.main, size: 30),
                                         SizedBox(width: 15),
                                         Text('Create a new event'),
                                       ],
