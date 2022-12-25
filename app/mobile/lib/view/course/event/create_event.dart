@@ -1,4 +1,3 @@
-import 'package:map_location_picker/map_location_picker.dart';
 import 'package:bucademy/resources/custom_colors.dart';
 import 'package:bucademy/resources/text_styles.dart';
 import 'package:bucademy/services/locator.dart';
@@ -13,7 +12,7 @@ createEvent(BuildContext context, CoursePageViewModel viewModel) {
   DateTime? startDate;
   DateTime? endDate;
   String? description;
-  Map<String, double>? location = {'latitude': 12.23, 'longitude': 23.34};
+  Map<String, double>? location = {};
   int? quota;
   //String? visibility;
   //double? fee;
@@ -84,6 +83,14 @@ createEvent(BuildContext context, CoursePageViewModel viewModel) {
                     keyboardType: TextInputType.number,
                     onChanged: (value) => quota = int.parse(value),
                     decoration: const InputDecoration(hintText: "Quota")),
+                TextField(
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) => location['longitude'] = double.parse(value),
+                    decoration: const InputDecoration(hintText: "Longitude*")),
+                TextField(
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) => location['latitude'] = double.parse(value),
+                    decoration: const InputDecoration(hintText: "Latitude*")),
                 Flexible(
                   child: TextField(
                     onChanged: (value) => description = value,
@@ -122,6 +129,7 @@ createEvent(BuildContext context, CoursePageViewModel viewModel) {
                   if (title != null &&
                       title!.isNotEmpty &&
                       startDate != null &&
+                      location.isNotEmpty &&
                       description != null &&
                       description!.isNotEmpty) {
                     if (startDate!.compareTo(DateTime.now()) == -1) {
@@ -152,7 +160,7 @@ createEvent(BuildContext context, CoursePageViewModel viewModel) {
                           endDate: endDate == null
                               ? null
                               : endDate!.toIso8601String(),
-                          location: location!,
+                          location: location,
                           description: description!,
                           quota: quota);
                       if (e != null) {
