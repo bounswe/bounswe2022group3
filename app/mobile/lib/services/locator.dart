@@ -1,3 +1,4 @@
+import 'package:bucademy/services/annotation_service.dart';
 import 'package:bucademy/services/course_service.dart';
 import 'package:bucademy/services/content_service.dart';
 import 'package:bucademy/services/dio_service.dart';
@@ -20,6 +21,7 @@ Future<void> resetGetIt() async {
   await GetIt.I.reset(dispose: true);
 }
 
+AnnotationService get annotationService => GetIt.I<AnnotationService>();
 CourseService get courseService => GetIt.I<CourseService>();
 MockContentService get contentService => GetIt.I<MockContentService>();
 NavigatorService get navigatorService => GetIt.I<NavigatorService>();
