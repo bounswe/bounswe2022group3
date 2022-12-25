@@ -3,6 +3,7 @@ import 'package:bucademy/resources/custom_colors.dart';
 import 'package:bucademy/resources/text_styles.dart';
 import 'package:bucademy/services/locator.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:stacked/stacked.dart';
 import 'package:maps_launcher/maps_launcher.dart';
 
@@ -12,7 +13,7 @@ Widget eventView({required String eventId}) =>
       onModelReady: (model) => model.init(),
       builder: (context, viewModel, child) => Scaffold(
         appBar: AppBar(
-          title: Text(viewModel.event?.description ?? ""),
+          title: Text(viewModel.event?.title ?? ""),
           backgroundColor: CustomColors.main,
         ),
         body: Column(
@@ -25,17 +26,14 @@ Widget eventView({required String eventId}) =>
                     child: Column(
                     children: [
                       ListTile(
-                          title: const Text('Title'),
-                          subtitle: Text(viewModel.event!.title)),
+                          title: const Text('Event Start'),
+                          subtitle: Text(DateFormat("'Date: 'dd MMMM yyyy  'Time: 'hh:mm").format(DateTime.parse(viewModel.event!.startDate!))),
+                          ),
                       const Divider(thickness: 1.5),
                       ListTile(
-                          title: const Text('Start date'),
-                          subtitle: Text(viewModel.event!.startDate)),
-                      const Divider(thickness: 1.5),
-                      ListTile(
-                          title: const Text('End date'),
+                          title: const Text('Event End'),
                           subtitle: Text(viewModel.event!.endDate != null
-                              ? viewModel.event!.endDate!
+                              ? DateFormat("'Date: 'dd MMMM yyyy  'Time: 'hh:mm").format(DateTime.parse(viewModel.event!.endDate!))
                               : 'Not provided.')),
                       const Divider(thickness: 1.5),
                       ListTile(
