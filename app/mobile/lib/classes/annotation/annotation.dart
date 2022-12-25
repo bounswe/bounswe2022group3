@@ -1,67 +1,3 @@
-/*import 'package:bucademy/classes/resource/resource.dart';
-import 'package:json_annotation/json_annotation.dart';
-
-part 'annotation.g.dart';
-
-@JsonSerializable()
-class Annotation {
-  @JsonKey(name: '_id')
-  final String id;
-  final String resource;
-  final Body body;
-  final List<Selector> target;
-  @JsonKey(name: '@context')
-  final String context; // = 'http://www.w3.org/ns/anno.jsonld';
-  final String type; // = 'Annotation';
-
-  Annotation(
-      this.id, this.resource, this.body, this.target, this.context, this.type);
-  factory Annotation.fromJson(Map<String, dynamic> json) =>
-      _$AnnotationFromJson(json);
-  Map<String, dynamic> toJson() => _$AnnotationToJson(this);
-}
-
-@JsonSerializable()
-class Body {
-  final String type;
-  final String value;
-  final String purpose;
-  final Creator creator;
-  final String created;
-  final String modified;
-
-  Body(this.type, this.value, this.purpose, this.creator, this.created,
-      this.modified);
-  factory Body.fromJson(Map<String, dynamic> json) => _$BodyFromJson(json);
-  Map<String, dynamic> toJson() => _$BodyToJson(this);
-}
-
-@JsonSerializable()
-class Selector {
-  final String? type;
-  final String? exact;
-  final int? start;
-  final int? end;
-  Selector({this.type, this.exact, this.start, this.end});
-  factory Selector.fromJson(Map<String, dynamic> json) =>
-      _$SelectorFromJson(json);
-  Map<String, dynamic> toJson() => _$SelectorToJson(this);
-}
-
-@JsonSerializable()
-class Creator {
-  @JsonKey(name: 'id')
-  final String id;
-
-  @JsonKey(name: 'name')
-  final String name;
-
-  Creator(this.id, this.name);
-  factory Creator.fromJson(Map<String, dynamic> json) =>
-      _$CreatorFromJson(json);
-  Map<String, dynamic> toJson() => _$CreatorToJson(this);
-}
-*/
 class Annotation {
   String? context;
   String? type;
@@ -170,7 +106,7 @@ class Creator {
 class Target {
   List<Selector>? selector;
 
-  Target({this.selector});
+  Target({required List<Selector> selector}) : selector = selector ?? [];
 
   Target.fromJson(Map<String, dynamic> json) {
     if (json['selector'] != null) {
