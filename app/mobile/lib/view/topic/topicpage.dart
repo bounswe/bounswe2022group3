@@ -41,7 +41,7 @@ Widget topicPageView(Topic c) => ViewModelBuilder<TopicPageViewModel>.reactive(
                             : [
                                 ...viewModel.topic!.resources.map(
                                     (Resource cont) =>
-                                        resourceTile(cont, context))
+                                        resourceTile(viewModel.topic!, cont, context, viewModel))
                               ]),
                     addButton(viewModel.topic!, context, viewModel),
                   ]),

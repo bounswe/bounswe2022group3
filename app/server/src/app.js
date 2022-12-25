@@ -7,6 +7,7 @@ const morganBody = require("morgan-body");
 const { api } = require("./routes/api");
 const app = express();
 
+app.use(express.json({limit: '50mb'}));
 // enable files upload
 app.use(fileUpload({
     limits: { fileSize: 5 * 1024 * 1024 },

@@ -2,7 +2,7 @@ const express = require("express");
 const { handleValidation } = require("../../services/validate");
 const NoteController = require("./note.controller");
 const { validate } = require("./note.validate");
-const { authorization } = require("../../services/auth");
+const { authorization, authorization_conditional } = require("../../services/auth");
 
 const noteRouter = express.Router();
 

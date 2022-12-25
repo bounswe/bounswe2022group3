@@ -6,4 +6,5 @@ module.exports = removeImports({
   eslint: {
     ignoreDuringBuilds: true,
   },
+  google_maps_api_key: "AIzaSyDOQSDLIB16cdUtIYZWxrjkxTnOYUd9n0c"
 });

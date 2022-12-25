@@ -2,7 +2,9 @@ const UserModel = require("../../models/user/user.model");
 const personalInfoModel = require("../../models/personalInfo/personalInfo.model");
 const mongoose = require("mongoose");
 var crypto = require('crypto');
-
+const axios = require("axios"); 
+const fs = require('fs');
+const path = require('path');
 
 const UserProfileController = {
   updateProfile: async function (req, res) {
@@ -145,6 +147,37 @@ const UserProfileController = {
       }
     } catch (e) {
       return res.status(400).json({ error: e.toString() });
+    }
+  },
+  getRelatedTags: async function (req, res) {
+    try {
+      const keyword = req.params.keyword;
+      const url = "https://api.datamuse.com/words?"
+      const trg_url = url + "rel_trg=" + keyword+"&max=10";
+      const trg_result = await axios.get(trg_url);
+      // const topics_url = url + "topics=" + keyword;
+      // const ml_url = url + "ml=" + keyword;
+      // const topics_result = await axios.get(topics_url);
+      // const ml_result = await axios.get(ml_url);
+      let result = trg_result.data;
+      res.status(200).json({ result });
+    } catch (e) {
+      res.status(400).json({ error: e.toString() });
+    }
+  },
+  getTags: async function (req, res) {
+    try{
+      const filePath = path.join(__dirname, '../../tags/tags.txt');
+      fs.readFile(filePath, 'utf8', (err, data) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
+        const words = data.split('\n');
+        res.status(200).json({ words });
+      });
+    }catch(e){
+      res.status(400).json({ error: e.toString() });
     }
   },
 };

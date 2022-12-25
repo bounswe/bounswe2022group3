@@ -68,16 +68,16 @@ const NoteController = {
   },
   getNote: async function (req, res) {
     try {
-      const user = req.auth.id;
+      //const user = req.auth.id;
       const note = await NoteModel.getPopulatedNote(req.params.id);
       if (!note) {
         return res.status(400).json({ error: "Note does not exist!" });
       }
-      if (note.creator._id.toString() !== user.toString()) {
-        return res
-          .status(400)
-          .send({ error: "User not the creator of the note!" });
-      }
+      // if (note.creator._id.toString() !== user.toString()) {
+      //   return res
+      //     .status(400)
+      //     .send({ error: "User not the creator of the note!" });
+      // }
       return res.status(200).json({ note });
     } catch (e) {
       return res.status(400).send({ error: e.toString() });
@@ -126,15 +126,24 @@ const NoteController = {
       const body_keys = Object.keys(req.body);
       if ((!body_keys.includes('resource_id')) && (!body_keys.includes('topic_id'))) {
         // no filter
-        notes = enrollment.notes;
+        //notes = enrollment.notes;
+        for(var note of enrollment.notes){
+          var resource = await ResourceModel.Resource.findById(note.resource);
+          var topic = await TopicModel.Topic.findById(resource.topic);
+          var topic_ = {name: topic.name, id: topic._id}
+          notes.push({note, resource_name: resource.name, topic:topic_})
+        }
       }
       // filter by resource if resource exists, filter by topic if topic exists
       // if both exist, filter by resource.
       if (body_keys.includes('resource_id')) {
         let resource_id = req.body.resource_id;
         for(var note of enrollment.notes){
+          var resource = await ResourceModel.Resource.findById(note.resource);
+          var topic = await TopicModel.Topic.findById(resource.topic);
+          var topic_ = {name: topic.name, id: topic._id}
           if(note.resource.toString() == resource_id.toString()){
-            notes.push(note)
+            notes.push({note, resource_name: resource.name, topic:topic_})
           }
         }
       }
@@ -142,8 +151,10 @@ const NoteController = {
         let topic_id = req.body.topic_id;
         for(var note of enrollment.notes){
           var resource = await ResourceModel.Resource.findById(note.resource);
+          var topic = await TopicModel.Topic.findById(resource.topic);
+          var topic_ = {name: topic.name, id: topic._id}
           if(resource.topic.toString() == topic_id.toString()){
-            notes.push(note)
+            notes.push({note, resource_name: resource.name, topic:topic_})
           }
         }
       }

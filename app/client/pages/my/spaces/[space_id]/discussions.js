@@ -1,58 +1,74 @@
 import MainLayout from "../../../../layouts/main/MainLayout";
 import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "../../../../styles/my/discussions.module.scss";
 import { Grid, Table, TableBody, TableHead, TableCell, TableRow } from "@mui/material";
 import TableSortLabel from '@mui/material/TableSortLabel';
 import { useRouter } from 'next/router'
-const discussions_mock = [
-    {
-        'discussion': 'General Discussion',
-        'started_by': 'Kadir Ersoy',
-        'date': '2013-05-23',
-        'replies': '1'
-    },
-    {
-        'discussion': 'Guitar chords',
-        'started_by': 'Salim',
-        'date': '2019-03-03',
-        'replies': '13000'
-    },
-    {
-        'discussion': 'Strumming',
-        'started_by': 'Nurlan',
-        'date': '2023-03-06',
-        'replies': '599'
-    },
-    {
-        'discussion': 'Beginner blues',
-        'started_by': 'Berke',
-        'date': '2023-03-04',
-        'replies': '6'
-    }
-
-
-
-]
-
-
-
+import "@uiw/react-md-editor/markdown-editor.css";
+import "@uiw/react-markdown-preview/markdown.css";
+import axios from "axios";
+import { API_URL } from "../../../../next.config";
+import CreateDiscussion from "../../../../components/PopUps/CreateDiscussion";
+import Button from "../../../../components/Button/Button";
+import moment from "moment";
 
 export default function discussions() {
 
+    const [post, setPost] = useState("write your first post here!");
     const [order, setOrder] = useState('asc');
     const [orderBy, setOrderBy] = useState('Date')
+    const [openDiscussion, setOpenDiscussion] = useState(false);
+    const [discussionList, setDiscussionList] = useState([]);
+    const [data, setData] = useState({});
     const router = useRouter();
+
     let space_id = router.query;
+    async function fetchContent() {
+        try {
+
+            const response = (
+                await axios.get(API_URL + "/space/" + space_id.space_id)
+            );
+            console.log("response");
+            console.log(response);
+            setData(response?.data);
+
+        } catch (err) {
+            console.log(err);
+        }
+    }
+    async function fetchDiscussion() {
+
+        try {
+            const response = (
+                await axios.get(API_URL + "/space/getAllDiscussions/" + space_id.space_id)
+            )?.data;
+            setDiscussionList(response.discussions);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    useEffect(() => {
+        space_id = router.query;
+        fetchDiscussion();
+        fetchContent();
+    }, [space_id]);
+    // useEffect(() => {
+    //     if (!openDiscussion) {
+    //         fetchDiscussion();
+    //     }
+    // }, [openDiscussion]);
 
     function sortBy(fieldName = 'Replies') {
         if (fieldName == 'Replies') {
-            discussions_mock.sort((a, b) => order === 'asc' ? a.replies - b.replies : -(a.replies - b.replies));
+            discussionList.sort((a, b) => order === 'asc' ? a.number_of_comments - b.number_of_comments : -(a.number_of_comments - b.number_of_comments));
             setOrderBy('Replies')
         } else {
 
-            discussions_mock.sort((a, b) => order === 'asc' ? new Date(a.date) - new Date(b.date) : -(new Date(a.date) - new Date(b.date)));
+            discussionList.sort((a, b) => order === 'asc' ? new Date(a.updatedAt) - new Date(b.updatedAt) : -(new Date(a.updatedAt) - new Date(b.updatedAt)));
             setOrderBy('Date')
         }
         order === 'asc' ? setOrder('desc') : setOrder('asc');
@@ -60,10 +76,21 @@ export default function discussions() {
     }
     return (
         <section className={styles.container}>
-            <h2>Acoustic Guitar Ed for Beginners</h2>
-            <h1>Discussions</h1>
-            <Grid container spacing={2} style={{ marginBottom: 12 }}>
-                <Grid item sx={{ width: '80%', paddingLeft: "4px !important", paddingTop: "4px !important" }}>
+            <h2>{data?.space?.name}</h2>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
+                <h1>Discussions</h1>
+                <Button onClick={() => { setOpenDiscussion(true) }} style={{ margin: 0, marginRight: "48px", width: "fit-content", padding: "0 20px" }}>
+                    Add New Discussion
+                </Button>
+            </div>
+            <CreateDiscussion openDiscussion={openDiscussion} post={post} setPost={setPost} setOpenDiscussion={setOpenDiscussion} type={"discussionCreate"} fetchDiscussion={fetchDiscussion} />
+            <Grid container spacing={2} style={{ marginBottom: 12, marginLeft: "4px", marginTop: "20px" }}>
+                {/* <Grid item sx={{ width: '80%', paddingLeft: "4px !important", paddingTop: "4px !important" }}>
+                    <Button variant="outlined" onClick={() => { setOpenDiscussion(true) }} sx={{ 'borderColor': '#ddd', 'color': 'black' }}>
+                        <h2 >add new discussion</h2>
+                    </Button>
+                </Grid> */}
+                <Grid item sx={{ width: '80%', paddingLeft: "4px !important", paddingTop: "4px !important", backgroundColor: "#fff", borderRadius: "10px", padding: "30px 16px", paddingLeft: "16px" }}>
                     <Table sx={{ minWidth: 250 }} >
                         <TableHead>
                             <TableRow>
@@ -88,30 +115,28 @@ export default function discussions() {
                                     </TableSortLabel>
                                 </TableCell>
 
+
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {discussions_mock.map((discussion, index) => {
+                            {discussionList.map((discussion, index) => {
                                 return (
-                                    <TableRow key={index}  className={styles.row}  onClick= {() => { router.push(`/my/spaces/`+space_id.space_id+`/discussion/1`  )}}>
+                                    <TableRow key={index} className={styles.row} onClick={() => { router.push(`/my/spaces/` + space_id.space_id + `/discussion/` + discussion._id) }}>
                                         <TableCell >
-                                            <h4 > {discussion.discussion}</h4>
+                                            <h4 > {discussion.title}</h4>
                                         </TableCell>
                                         <TableCell>
-                                            <h4 > {discussion.started_by}</h4>
+                                            <h4 > {discussion.user.name}&nbsp;&nbsp;{discussion.user.surname}</h4>
                                         </TableCell>
                                         <TableCell>
-                                            <h4 > {discussion.date}</h4>
+                                            <h4 > {moment(discussion.updatedAt).format("LL")}</h4>
                                         </TableCell>
                                         <TableCell>
-                                            <h4 > {discussion.replies}</h4>
+                                            <h4 > {discussion.number_of_comments}</h4>
                                         </TableCell>
                                     </TableRow>
                                 );
                             })}
-
-
-
                         </TableBody>
                     </Table>
                 </Grid>

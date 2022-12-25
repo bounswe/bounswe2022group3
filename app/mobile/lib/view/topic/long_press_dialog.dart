@@ -1,19 +1,15 @@
+import 'package:bucademy/classes/topic/topic.dart';
 import 'package:bucademy/resources/constants.dart';
 import 'package:bucademy/view/resource/edit_resource_page.dart';
-import 'package:flutter/cupertino.dart';
-
 import 'package:bucademy/classes/resource/resource.dart';
 import 'package:bucademy/resources/custom_colors.dart';
 import 'package:bucademy/resources/text_styles.dart';
 import 'package:bucademy/services/locator.dart';
-import 'package:bucademy/view/resource/edit_button.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:stacked/stacked.dart';
-import 'package:url_launcher/url_launcher.dart';
 
-Widget longPressDialog(Resource r) => ViewModelBuilder<
+Widget longPressDialog(TopicDetailed topic,Resource r, ChangeNotifier viewModelTopic) => ViewModelBuilder<
         ResourcePageViewModel>.reactive(
     viewModelBuilder: () => ResourcePageViewModel(),
     builder: (context, viewModel, child) {
@@ -56,7 +52,7 @@ Widget longPressDialog(Resource r) => ViewModelBuilder<
             GestureDetector(
               onTap: () {
                 PersistentNavBarNavigator.pushNewScreen(context,
-                    screen: editResourceView(r));
+                    screen: editResourceView(topic,r,viewModelTopic));
               },
               child: Container(
                 margin: const EdgeInsets.all(5),
@@ -94,8 +90,7 @@ Widget longPressDialog(Resource r) => ViewModelBuilder<
                               ),
                               textAlign: TextAlign.center,
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                            Wrap(
                               children: [
                                 GestureDetector(
                                   onTap: () async {
@@ -112,6 +107,8 @@ Widget longPressDialog(Resource r) => ViewModelBuilder<
                                       Navigator.of(context).pop();
                                       Navigator.of(context).pop();
                                       viewModel.notifyListeners();
+                                      topic.resources.remove(r);
+                                      viewModelTopic.notifyListeners();
                                     } else if (deleted == 400) {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(
@@ -127,7 +124,8 @@ Widget longPressDialog(Resource r) => ViewModelBuilder<
                                           .showSnackBar(
                                         SnackBar(
                                             content: Text(
-                                                'A problem occured. Status code $deleted')),
+                                                'Could Not Delete Resource!\nYou might not be the creator.'//'A problem occured. Status code $deleted'
+                                                )),
                                       );
                                       Navigator.of(context).pop();
                                       Navigator.of(context).pop();
