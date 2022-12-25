@@ -25,7 +25,7 @@ const EnrollmentController = {
       await space.save();
       const user = await UserModel.User.findById(user_id);
       // {user} enrolled to {space} space, {date.now-enrollment.createdAt} ago.
-      let activity_body = `${user.name} ${user.surname} enrolled to [${space.name}](https://bucademy.tk/space/${space._id}) space, {timeDiff}.`;
+      let activity_body = `${user.name} ${user.surname} enrolled to "${space.name}" space, {timeDiff}.`;
       let activity_data = {
         body : activity_body,
         space: space._id,

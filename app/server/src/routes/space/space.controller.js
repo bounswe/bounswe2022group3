@@ -3,6 +3,10 @@ const EnrollmentModel = require("../../models/enrollment/enrollment.model");
 const UserModel = require("../../models/user/user.model");
 const ActivityModel = require("../../models/activity/activity.model");
 const PersonalInfoModel = require("../../models/personalInfo/personalInfo.model");
+const TopicModel = require("../../models/topic/topic.model");
+const EventModel = require("../../models/event/event.model");
+const DiscussionModel = require("../../models/discussion/discussion.model");
+const axios = require("axios"); 
 const axios = require("axios");
 const semanticUrl = process.env.SEMANTIC_SEARCH_SERVER_URL
 
@@ -21,7 +25,7 @@ const SpaceController = {
         image
       );
       // {user} created a new space called {space.name}, {date.now-space.createdAt} ago.
-      let activity_body = `${creator.name} ${creator.surname} created a new space called [${space.name}"](https://bucademy.tk/space/${space._id}), {timeDiff}.`;
+      let activity_body = `${creator.name} ${creator.surname} created a new space called "${space.name}", {timeDiff}.`;
       let activity_data = {
         body : activity_body,
         space: space._id,
@@ -32,7 +36,36 @@ const SpaceController = {
       return res.status(400).send({ error: error.toString() });
     }
   },
-
+  deleteSpace: async function (req, res) {
+    try {
+      const {space_id} = req.body;
+      const user_id = req.auth.id;
+      const space = await SpaceModel.Space.findById(space_id);
+      if(!space){
+        return res.status(400).json({ error: "Space does not exist!" });
+      }
+      if (space.creator.toString() !== user_id.toString()) {
+        return res.status(401).send({ error: "Unauthorized" });
+      }else {
+        for (var topic_temp of space.topics) {
+          await TopicModel.deleteTopic(topic_temp);
+        }
+        for (var event_temp of space.events) {
+          await EventModel.deleteEvent(event_temp);
+        }
+        for (var discussion_temp of space.discussions) {
+          await DiscussionModel.deleteDiscussion(discussion_temp);
+        }
+        for (var enrollment_temp of space.enrollments) {
+          await EnrollmentModel.deleteEnrollment(enrollment_temp);
+        }
+        await SpaceModel.deleteSpace(space_id);
+      }
+      return res.status(201).json({ message: "Space deleted successfully!" });
+    } catch (error) {
+      return res.status(400).send({ error: error.toString() });
+    }
+  },
   searchSpaces: async function (req, res) {
     try {
       const keyword = req.params.keyword;

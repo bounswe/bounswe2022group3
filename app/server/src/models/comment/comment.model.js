@@ -28,4 +28,8 @@ const getComment = async (id) => {
   return Comment.findById(id);
 };
 
-module.exports = { Comment, createComment, getComment };
+const deleteComment = async (id) => {
+  return Comment.findByIdAndDelete(id);
+};
+
+module.exports = { Comment, createComment, getComment, deleteComment };

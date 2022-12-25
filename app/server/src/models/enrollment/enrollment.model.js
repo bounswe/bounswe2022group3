@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const SpaceModel = require("../space/space.model");
 const UserModel = require("../user/user.model");
+const NoteModel = require("../note/note.model");
 
 const enrollmentSchema = new mongoose.Schema(
   {
@@ -45,9 +46,12 @@ const createEnrollment = async (user, space_id) => {
   return res;
 };
 
-const deleteEnrollment = async (_id) => {
-  const res = await Enrollment.findOneAndDelete({ _id });
-  return res;
+const deleteEnrollment = async (id) => {
+  var enrollment = await Enrollment.findById(id);
+  for (var note_temp of enrollment.notes) {
+    await NoteModel.deleteNote(note_temp);
+  }
+  enrollment.remove();
 };
 const getEnrollmentByID = async (enrollment_id) => {
   const result = await Enrollment.findById(enrollment_id).exec();
