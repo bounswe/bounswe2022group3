@@ -15,6 +15,9 @@ Resource _$ResourceFromJson(Map<String, dynamic> json) => Resource(
       (json['average_rating'] as num).toDouble(),
       DateTime.parse(json['createdAt'] as String),
       DateTime.parse(json['updatedAt'] as String),
+      json['discussion'] == null
+          ? null
+          : Discussion.fromJson(json['discussion'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$ResourceToJson(Resource instance) => <String, dynamic>{
@@ -24,6 +27,7 @@ Map<String, dynamic> _$ResourceToJson(Resource instance) => <String, dynamic>{
       'topic': instance.topic,
       'creator': instance.creator,
       'average_rating': instance.averageRating,
+      'discussion': instance.discussion,
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt.toIso8601String(),
     };
