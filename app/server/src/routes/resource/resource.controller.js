@@ -12,6 +12,7 @@ const ResourceController = {
       const { name, body, topic_id } = req.body;
       const user_id = req.auth.id;
       var topic = await TopicModel.Topic.findById(topic_id).populate("space", "name").exec();
+      var space = await SpaceModel.Space.findById(topic.space._id);
       if(!topic){
         return res.status(400).json({ error: "Topic does not exist!" });
       }
@@ -23,8 +24,13 @@ const ResourceController = {
       );
       topic.resources.push(resource);
       await topic.save();
-      const resource_populated = await ResourceModel.getPopulatedResource(resource._id);
       const user = await UserModel.User.findById(user_id);
+      discussion = await DiscussionModel.createDiscussion(user, topic.space._id, name);
+      resource.discussion = discussion;
+      space.discussions.push(discussion);
+      await space.save();
+      await resource.save();
+      const resource_populated = await ResourceModel.getPopulatedResource(resource._id);
       // {user.name} {user.surname} published "{resource.name}", {timeDiff}.
       let activity_body = `${user.name} ${user.surname} published [${resource.name}](https://bucademy.tk/my/spaces/${topic.space._id}/resource/${resource._id}) in [${topic.space.name}](https://bucademy.tk/my/spaces/${topic.space._id}/resources) space, {timeDiff}.`;
       let activity_data = {
@@ -60,7 +66,6 @@ const ResourceController = {
         if(index_disc > -1){
           space.discussions.splice(index_disc, 1);
         }
-        discussion.remove();
         await topic.save();
         await space.save();
         await ResourceModel.deleteResource(resource_id);

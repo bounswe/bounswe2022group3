@@ -33,9 +33,6 @@ const createDiscussion = async (user, space_id, title) => {
     space_id,
     title,
   });
-  var space = await SpaceModel.Space.findById(space_id).exec();
-  space.discussions.push(discussion);
-  await space.save();
   const res = await discussion.save();
   return res;
 };

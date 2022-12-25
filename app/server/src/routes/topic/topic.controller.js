@@ -53,8 +53,6 @@ const TopicController = {
           if(index_disc > -1){
             space.discussions.splice(index_disc, 1);
           }
-          discussion.remove();
-          await ResourceModel.deleteResource(resource_temp);
         }
         await space.save();
         await TopicModel.deleteTopic(topic_id);

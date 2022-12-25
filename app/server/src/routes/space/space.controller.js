@@ -3,6 +3,9 @@ const EnrollmentModel = require("../../models/enrollment/enrollment.model");
 const UserModel = require("../../models/user/user.model");
 const ActivityModel = require("../../models/activity/activity.model");
 const PersonalInfoModel = require("../../models/personalInfo/personalInfo.model");
+const TopicModel = require("../../models/topic/topic.model");
+const EventModel = require("../../models/event/event.model");
+const DiscussionModel = require("../../models/discussion/discussion.model");
 const axios = require("axios"); 
 
 const SpaceController = {
@@ -42,6 +45,18 @@ const SpaceController = {
       if (space.creator.toString() !== user_id.toString()) {
         return res.status(401).send({ error: "Unauthorized" });
       }else {
+        for (var topic_temp of space.topics) {
+          await TopicModel.deleteTopic(topic_temp);
+        }
+        for (var event_temp of space.events) {
+          await EventModel.deleteEvent(event_temp);
+        }
+        for (var discussion_temp of space.discussions) {
+          await DiscussionModel.deleteDiscussion(discussion_temp);
+        }
+        for (var enrollment_temp of space.enrollments) {
+          await EnrollmentModel.deleteEnrollment(enrollment_temp);
+        }
         await SpaceModel.deleteSpace(space_id);
       }
       return res.status(201).json({ message: "Space deleted successfully!" });

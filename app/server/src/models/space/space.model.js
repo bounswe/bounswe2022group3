@@ -150,18 +150,6 @@ const getSpaceByID = async (space_id) => {
 
 const deleteSpace = async (space_id) => {
   var space = await Space.findById(space_id);
-  for (var topic_temp of space.topics) {
-    await TopicModel.deleteTopic(topic_temp);
-  }
-  for (var event_temp of space.events) {
-    await EventModel.deleteEvent(event_temp);
-  }
-  for (var discussion_temp of space.discussions) {
-    await DiscussionModel.deleteDiscussion(discussion_temp);
-  }
-  for (var enrollment_temp of space.enrollments) {
-    await EnrollmentModel.deleteEnrollment(enrollment_temp);
-  }
   space.remove();
 };
 

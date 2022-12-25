@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-
+const  ResourceModel = require("../resource/resource.model");
 const topicSchema = new mongoose.Schema(
   {
     name: {
@@ -66,6 +66,9 @@ const getPopulatedTopic = async (id) => {
 
 const deleteTopic = async (id) => {
   var topic = await Topic.findById(id);
+  for (var resource_temp of topic.resources) {
+    await ResourceModel.deleteResource(resource_temp);
+  }
   topic.remove();
 };
 
