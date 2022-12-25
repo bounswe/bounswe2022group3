@@ -116,7 +116,7 @@ const ResourceController = {
       var average_rating = resource.average_rating;
       var users_rated =  Array.from( ratings.keys() );;
       var rate_count = ratings.size;
-      if (users_rated.includes(user._id)) {
+      if (users_rated.includes(user._id.toString())) {
         var old_rating = resource.ratings.get(user._id);
         resource.ratings.set(user._id, rating);
         let total_rating = average_rating * rate_count;
