@@ -215,12 +215,14 @@ export default function resource() {
     //     fetchDiscussion();
     // }, [discussion.discussion_id]);
 
+    let intervalID;
     useEffect(() => { 
         if (data?.resource?.discussion?._id) {
-            setInterval(() => {
+            intervalID = setInterval(() => {
                 fetchDiscussion(); 
             }, 1000); 
-        }
+        } 
+        return () => clearInterval(intervalID);
     }, [data?.resource?.discussion?._id])
 
     return (

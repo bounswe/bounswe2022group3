@@ -27,18 +27,31 @@ function note() {
     }
   }, [router.query])
 
+  const saveNote = async () => {
+    const body = {
+      title: "",
+      body: note?.body,
+      resource_id: note?.resource?._id
+    }
+    try {
+      await axios.post(API_URL + "/note", body);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   return (
-    <div className={styles.resourceDetailPage} style={{margin: "30px 20px"}}>
+    <div className={styles.resourceDetailPage} style={{ margin: "30px 20px" }}>
       <div className={styles.resourceDetailHeader}>
         <div className={styles.titleCard}>
           <h2>{note?.space?.name}</h2>
           <h1>{note?.resource?.name}</h1>
         </div>
-        {/* <div className={styles.resourceDetailHeader} style={{ minWidth: "330px" }}>
-          <Button variant="outlined" onClick={() => { setOpenCreateNote(true) }} className={styles.resourceDetailHeaderButton} style={{ marginRight: "30px" }}>
-            add new note
+        <div className={styles.resourceDetailHeader} style={{ minWidth: "330px" }}>
+          <Button variant="outlined" onClick={() => { saveNote() }} className={styles.resourceDetailHeaderButton} style={{ marginRight: "30px" }}>
+            Save note
           </Button>
-        </div> */}
+        </div>
       </div>
       <Link href={`/user/${note?.creator?._id}`}>
         <div className="review__user" style={{ cursor: "pointer" }}>

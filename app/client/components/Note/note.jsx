@@ -12,6 +12,7 @@ import axios from "axios";
 import { API_URL } from "../../next.config";
 import { useRouter } from 'next/router'
 import EditNote from "../../components/PopUps/EditNote";
+import Link from 'next/link';
 
 const MDEditor = dynamic(
     () => import("@uiw/react-md-editor"),
@@ -45,18 +46,20 @@ function Note({ note, openEditNote, setOpenEditNote, space_id, setEditNote,setRe
         <Card onMouseEnter={() => setActions(true)} onMouseLeave={() => setActions(false)} style={{maxWidth: "300px"}}>
 
             <CardContent>
-                <div data-color-mode="light">
-                    <MDEditor
-                        value={note.body}
-                        onChange={() => { }}
-                        preview="preview"
-                        hideToolbar={true}
-                        height={100}
-                        previewOptions={{
-                            rehypePlugins: [[rehypeSanitize]],
-                        }}
-                    />
-                </div>
+                <Link href={`/note/${note?._id}`}>
+                    <div data-color-mode="light" style={{cursor: "pointer"}}>
+                        <MDEditor
+                            value={note.body}
+                            onChange={() => { }}
+                            preview="preview"
+                            hideToolbar={true}
+                            height={100}
+                            previewOptions={{
+                                rehypePlugins: [[rehypeSanitize]],
+                            }}
+                        />
+                    </div>
+                </Link>
             </CardContent>
             <Collapse in={actions}>
                 <CardActions style={{ marginTop: "-1rem" }}>

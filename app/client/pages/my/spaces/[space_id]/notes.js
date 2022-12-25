@@ -24,8 +24,6 @@ export default function notes() {
                 const response = (
                     await axios.get(API_URL + "/space/" + space_id.space_id)
                 );
-                console.log("response");
-                console.log(response);
                 setData(response?.data);
             
         } catch (err) {
@@ -75,7 +73,7 @@ export default function notes() {
                     noteList.map((note) => {
                               
                             return( 
-                            <Note note={note} setReRender = {setReRender} reRender = {reRender} space_id ={space_id}  setEditNote ={setEditNote} setOpenEditNote={setOpenEditNote} openEditNote ={openEditNote}/>);
+                            <Note note={note?.note} setReRender = {setReRender} reRender = {reRender} space_id ={space_id}  setEditNote ={setEditNote} setOpenEditNote={setOpenEditNote} openEditNote ={openEditNote}/>);
                         }) :
                         <h2>you have no notes !</h2>
                 }
