@@ -210,7 +210,7 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                                     ),
                                   ),
                                 ...viewModel.course!.topics
-                                    .map((Topic t) => topicTile(t, context, viewModel, viewModel.course!))
+                                    .map((Topic t) => topicTile(t, context, viewModel, viewModel.course!, viewModel))
                               ],
                             ),
                           ]),
