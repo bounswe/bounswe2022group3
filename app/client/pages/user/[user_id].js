@@ -458,13 +458,6 @@ export default function profile(props) {
                           
                           }
 
-                          <Button
-
-                            variant="contained"
-                            style={{ width: "200px", backgroundColor: "red", borderColor: "white" }}
-                          >
-                            block
-                          </Button>
                         </Box>
                       </CardContent>
                       <Divider />
