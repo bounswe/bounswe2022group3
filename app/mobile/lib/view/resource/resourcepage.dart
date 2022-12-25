@@ -1,3 +1,4 @@
+import 'package:animated_floating_buttons/animated_floating_buttons.dart';
 import 'package:bucademy/classes/resource/resource.dart';
 import 'package:bucademy/classes/topic/topic.dart';
 import 'package:bucademy/resources/custom_colors.dart';
@@ -9,7 +10,8 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:stacked/stacked.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-Widget resourcePageView(TopicDetailed t, Resource r, ChangeNotifier topicPageView) =>
+Widget resourcePageView(
+        TopicDetailed t, Resource r, ChangeNotifier topicPageView) =>
     ViewModelBuilder<ResourcePageViewModel>.reactive(
         viewModelBuilder: () => ResourcePageViewModel(),
         builder: (context, viewModel, child) {
@@ -42,8 +44,8 @@ Widget resourcePageView(TopicDetailed t, Resource r, ChangeNotifier topicPageVie
                               }
                             },
                             styleSheet: MarkdownStyleSheet(
-                                blockquoteDecoration:
-                                    const BoxDecoration(color: CustomColors.main)),
+                                blockquoteDecoration: const BoxDecoration(
+                                    color: CustomColors.main)),
                             data: r.body,
                             shrinkWrap: true,
                             physics: const ClampingScrollPhysics(),
@@ -51,7 +53,41 @@ Widget resourcePageView(TopicDetailed t, Resource r, ChangeNotifier topicPageVie
                         ],
                       ),
                     ),
-                    editResourceButton(t, r, context, topicPageView),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: AnimatedFloatingActionButton(
+                          fabButtons: <Widget>[
+                            FloatingActionButton(
+                              onPressed:  () => editResourceButton(
+                                  t, r, context, topicPageView),
+                              backgroundColor: CustomColors.main,
+                              tooltip: 'Edit Resource',
+                              heroTag: 'btn1',
+                              child: const Icon(
+                                Icons.edit_outlined,
+                              ),
+                            ),
+                            FloatingActionButton(
+                              onPressed: null,
+                              backgroundColor: CustomColors.main,
+                              tooltip: 'Create or Go To Note',
+                              heroTag: 'btn2',
+                              child: Icon(Icons.note_alt_outlined),
+                            ),
+                            FloatingActionButton(
+                              onPressed: null,
+                              backgroundColor: CustomColors.main,
+                              tooltip: 'Go To Discussion Of The Resource',
+                              heroTag: 'btn3',                        
+                              child: Icon(Icons.group_outlined),
+                            ),
+                          ],
+                          colorStartAnimation: CustomColors.main,
+                          colorEndAnimation: Color.fromARGB(255, 68, 84, 141),
+                          animatedIconData:
+                              AnimatedIcons.menu_close //To principal button
+                          ),
+                    ),
                   ]),
                 );
         });
