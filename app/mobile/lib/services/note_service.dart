@@ -1,5 +1,3 @@
-import 'package:bucademy/classes/discussion/comment.dart';
-import 'package:bucademy/classes/discussion/discussion.dart';
 import 'package:bucademy/classes/note/note.dart';
 import 'package:bucademy/services/locator.dart';
 import 'package:dio/dio.dart';
@@ -19,7 +17,7 @@ class NoteService {
       );
 
       Map json = response.data;
-      return Note.fromJson(json['note']);
+      return await getNote(noteId: json['note']['_id']);
     } catch (e) {
       print(e);
     }
@@ -42,7 +40,7 @@ class NoteService {
     return null;
   }
 
-  Future<List<Note>> notesOfSpace({
+  Future<List<Note?>> notesOfSpace({
     required String spaceId,
   }) async {
     if (userService.user == null) {
@@ -54,7 +52,10 @@ class NoteService {
         data: {"space_id": spaceId},
       );
       Map json = response.data;
-      return json['notes'].map<Note>((e) => Note.fromJson(e)).toList();
+      return await Future.wait(json['notes']
+          .map<Future<Note?>>(
+              (e) => noteService.getNote(noteId: e['note']['_id']))
+          .toList());
     } catch (e) {
       print(e);
     }
@@ -71,7 +72,7 @@ class NoteService {
         data: {"note_id": noteId, "body": body},
       );
       Map json = response.data;
-      return Note.fromJson(json['note']);
+      return await this.getNote(noteId: json['note']['_id']);
     } catch (e) {
       print(e);
     }

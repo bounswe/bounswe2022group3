@@ -13,6 +13,8 @@ Widget markdownInput(
   String sendText = 'Send',
   bool prewiewFirst = false,
   bool withBorderRadius = false,
+  bool disableEdit = false,
+  bool disableSave = false,
 }) =>
     ViewModelBuilder<MarkdownInputViewModel>.reactive(
       viewModelBuilder: () => MarkdownInputViewModel(),
@@ -32,10 +34,13 @@ Widget markdownInput(
                 decoration: BoxDecoration(
                     color: CustomColors.main,
                     borderRadius: withBorderRadius
-                        ? const BorderRadiusDirectional.only(topEnd: Radius.circular(10), topStart: Radius.circular(10))
+                        ? const BorderRadiusDirectional.only(
+                            topEnd: Radius.circular(10),
+                            topStart: Radius.circular(10))
                         : BorderRadiusDirectional.circular(0)),
                 child: Row(
                   children: [
+                    if(disableSave != true)
                     ChangeViewButton(
                       icon: Icons.edit,
                       text: 'Edit',
@@ -51,23 +56,24 @@ Widget markdownInput(
                       isActive: viewModel.preview == true,
                     ),
                     const Spacer(),
-                    InkWell(
-                      onTap: (() async {
-                        if (onSend != null) {
-                          await onSend();
-                        }
-                        viewModel.updateScreen(isPreview: viewModel.preview);
-                      }),
-                      child: Row(
-                        children: [
-                          if (onSend != null)
-                            Icon(sendIcon, color: Colors.white),
-                          const SizedBox(width: 5),
-                          Text(sendText,
-                              style: const TextStyle(color: Colors.white)),
-                        ],
+                    if (disableEdit != true)
+                      InkWell(
+                        onTap: (() async {
+                          if (onSend != null) {
+                            await onSend();
+                          }
+                          viewModel.updateScreen(isPreview: viewModel.preview);
+                        }),
+                        child: Row(
+                          children: [
+                            if (onSend != null)
+                              Icon(sendIcon, color: Colors.white),
+                            const SizedBox(width: 5),
+                            Text(sendText,
+                                style: const TextStyle(color: Colors.white)),
+                          ],
+                        ),
                       ),
-                    ),
                     const SizedBox(width: 15),
                   ],
                 ),
@@ -105,7 +111,7 @@ Widget markdownInput(
 class ChangeViewButton extends StatelessWidget {
   final String text;
   final IconData icon;
-  final void Function() onTap;
+  final void Function()? onTap;
   final bool isActive;
   final bool withBorderRadius;
   const ChangeViewButton({
