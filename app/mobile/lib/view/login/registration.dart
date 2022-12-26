@@ -39,7 +39,8 @@ class RegistrationFormState extends State<RegistrationForm> {
   final _passwordController = TextEditingController();
   bool _checked = false;
 
-  List<String> tags = """History
+  List<String> tags =
+      """History
 Science
 Technology
 Literature
@@ -788,7 +789,7 @@ Pastries
 Dessert
 Cooking
 """
-      .split('\n');
+          .split('\n');
 
   @override
   Widget build(BuildContext context) {
@@ -821,7 +822,7 @@ Cooking
                         title: const Padding(
                           padding: EdgeInsets.all(12.0),
                           child: Text(
-                            'Interests',
+                            'Choose your interests',
                           ),
                         ),
                         onItemAdded: (c) {},
@@ -957,6 +958,7 @@ Cooking
                 ),
                 onTap: () => _viewModel.navigateToLogin(context),
               ),
+              Padding(padding: EdgeInsets.only(bottom: 20.0))
             ],
           )),
         ));
