@@ -85,14 +85,21 @@ Widget eventView({required String eventId}) =>
                           subtitle: Text(
                               viewModel.event!.participantCount.toString())),
                       viewModel.event!.participants.contains(userService.user)
-                          ? GestureDetector(
-                              child: const Text('Unparticipate'),
-                              onTap: () => viewModel.unparticipate(context),
-                            )
-                          : GestureDetector(
-                              child: const Text('Participate'),
-                              onTap: () => viewModel.participate(context),
-                            )
+                          ? Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 16.0),
+                              child: ElevatedButton(
+                                onPressed: () =>
+                                    viewModel.unparticipate(context),
+                                child: const Text('Unparticipate'),
+                              ))
+                          : Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 16.0),
+                              child: ElevatedButton(
+                                onPressed: () => viewModel.participate(context),
+                                child: const Text('Participate'),
+                              )),
                     ],
                   )),
           ],
@@ -123,6 +130,9 @@ class EventViewModel extends ChangeNotifier {
   }
 
   participate(context) async {
+    loading = true;
+    notifyListeners();
+
     var message = await eventService.participateToEvent(event: event!);
     if (message == null) {
       ScaffoldMessenger.of(context)
@@ -131,9 +141,15 @@ class EventViewModel extends ChangeNotifier {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(message)));
     }
+
+    loading = false;
+    notifyListeners();
   }
 
   unparticipate(context) async {
+    loading = true;
+    notifyListeners();
+
     var message = await eventService.unparticipateToEvent(event: event!);
     if (message == null) {
       ScaffoldMessenger.of(context)
@@ -142,5 +158,8 @@ class EventViewModel extends ChangeNotifier {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(message)));
     }
+
+    loading = false;
+    notifyListeners();
   }
 }
