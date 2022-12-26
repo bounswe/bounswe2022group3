@@ -97,7 +97,9 @@ function UserLayout2({ children }) {
         <ion_icon class="icon_mobile_nav" name="close_outline"></ion_icon>
       </button> */}
             </header>
-            {children}
+            <div style={{height: '100%'}}>
+                {children}
+            </div>
 
         </>
     );

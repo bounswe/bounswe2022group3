@@ -4,9 +4,10 @@ import axios from "axios";
 import { useRouter } from 'next/router'
 import { API_URL } from "../../../next.config";
 import dynamic from "next/dynamic";
-import { ChatBubble, PostAdd, Article, PersonAdd } from '@mui/icons-material';
+import { ChatBubble, PostAdd, Article, PersonAdd, LocationOn, Groups } from '@mui/icons-material';
 import React, { useState, useEffect, useCallback } from 'react'
 import debounce from "lodash/debounce";
+import Link from "next/link";
 
 const MarkdownPreview = dynamic(
     () => import("@uiw/react-markdown-preview"),
@@ -21,13 +22,43 @@ export default function activities() {
     async function fetchContent() {
         try {
             if (router_query?.user_id !== undefined) {
-                
+
                 const response = (
-                  await axios.get(API_URL + "/activity/getFeed")
+                    await axios.get(API_URL + "/activity/getFeed")
                 );
-                console.log(response)
-                setActivities(response?.data.feed);
-                
+                const activityList = response?.data.feed.map(
+                    (activity) => {
+                        if (activity.event && activity.space) {
+                            activity.type = "createEvent"
+                            activity.link = "/my/spaces/" + activity.space + "/events"
+                        }
+
+                        if (activity.resource && activity.space) {
+                            activity.type = "createResource"
+                            activity.link = "/my/spaces/" + activity.space + "/resource/" + activity.resource
+                        }
+
+                        if (activity.topic && activity.space && activity.resource == undefined) {
+                            activity.type = "createTopic"
+                            activity.link = "/my/spaces/" + activity.space + "/resources"
+                        }
+
+                        if (activity.discussion && activity.space) {
+                            activity.type = "discussion"
+                            activity.link = "/my/spaces/" + activity.space + "/discussion/" + activity.discussion
+                        }
+
+                        if (activity.topic == undefined && activity.event == undefined && activity.resource == undefined && activity.discussion == undefined && activity.space) {
+                            activity.type = "createSpace"
+                            activity.link = "/space/" + activity.space + ""
+                        }
+
+                        return activity;
+                    }
+                )
+                console.log(activityList)
+                setActivities(activityList);
+
 
                 console.log(activities);
             }
@@ -45,24 +76,32 @@ export default function activities() {
 
     return (
         <>
-            <section className={styles.activitiesPageContainer}>
+            <div className={styles.activitiesPageContainer}>
                 <h1 className={styles.activitiesTitle}>Activities</h1>
                 <div className={styles.activitiesContainer}>
                     {
                         activities?.map((activity, index) =>
-                            <div className={styles.activityContainer} key={activity._id}>
-                                <div className={styles.activityIconFrame}>
-                                    {activity.type == "discussionPost" && <ChatBubble className={styles.activityIcon} />}
-                                    {activity.type == "spaceCreation" && <PostAdd className={styles.activityIcon} />}
-                                    {activity.type == "spaceEnroll" && <Article className={styles.activityIcon} />}
+                            <Link href={activity.link} key={activity._id}>
+                                <div className={styles.activityContainer} >
+
+                                    <div className={styles.activityIconFrame}>
+                                        {activity.type == "createEvent" && <LocationOn className={styles.activityIcon} />}
+                                        {activity.type == "createTopic" && <PostAdd className={styles.activityIcon} />}
+                                        {activity.type == "createSpace" && <Groups className={styles.activityIcon} />}
+                                        {activity.type == "createResource" && <Article className={styles.activityIcon} />}
+                                        {activity.type == "discussion" && <ChatBubble className={styles.activityIcon} />}
+                                    </div>
+
+                                    <MarkdownPreview source={activity.body} />
                                 </div>
-                                <MarkdownPreview source={activity.body} />
-                            </div>
+
+                            </Link>
+
                         )
                     }
                 </div>
 
-            </section>
+            </div>
         </>
     );
 }
