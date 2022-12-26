@@ -286,7 +286,7 @@ const SpaceController = {
           select: { _id: 1, name: 1, surname: 1, image: 1 }
         })
         .sort({ enrolledUsersCount: -1 })
-        .limit(5)
+        .limit(10)
         .exec();
         if (req.auth) {
           var user_id = req.auth.id;
