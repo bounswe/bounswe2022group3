@@ -143,3 +143,19 @@ class UserService {
     }
   }
 }
+
+Future<List<String>?> getTags() async {
+  try {
+    Response res = await dioService.dio.get(
+      '/userProfile/getTags',
+    );
+    if (res.statusCode == 201) {
+      return res.data['tags'];
+    } else {
+      return null;
+    }
+  } catch (e) {
+    print(e);
+    return null;
+  }
+}

@@ -777,7 +777,7 @@ Portuguese
 Latin
 Greek
 English as a second language
-Arts \& Crafts
+Arts & Crafts
 Fashion Design
 Turkish
 Baking
@@ -965,7 +965,6 @@ Cooking
 
 // ViewModel
 class RegistrationViewModel extends ChangeNotifier {
-  String? title;
   bool isLoading = false;
 
   void navigateToLogin(BuildContext context) {
