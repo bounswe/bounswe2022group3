@@ -125,7 +125,7 @@ const EnrollmentController = {
         for (var space of spaces) {
           var enr = await EnrollmentModel.Enrollment.find(
             {
-              space,
+              space: space._id,
               user,
             },
             "space is_active notes progress"
