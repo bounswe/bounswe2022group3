@@ -283,9 +283,9 @@ Widget seperator(context) {
   );
 }
 
-List<Widget> list_open(List<String> list_name) {
+List<Widget> list_open(List<String>? list_name) {
   List<Widget> tmp = [];
-  if (list_name.isEmpty) {
+  if (list_name == null || list_name.isEmpty) {
     tmp.add(Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: const [
@@ -295,17 +295,18 @@ List<Widget> list_open(List<String> list_name) {
         Text('Wow! Such Empty'),
       ],
     ));
-  }
-  for (var e in list_name) {
-    tmp.add(Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        const SizedBox(width: 30),
-        const Icon(Icons.circle, size: 10),
-        const SizedBox(width: 10),
-        Text(e),
-      ],
-    ));
+  } else {
+    for (var e in list_name) {
+      tmp.add(Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          const SizedBox(width: 30),
+          const Icon(Icons.circle, size: 10),
+          const SizedBox(width: 10),
+          Text(e),
+        ],
+      ));
+    }
   }
   return tmp;
 }
@@ -323,11 +324,11 @@ List<Widget> tabContent = [
   ListView(
       shrinkWrap: true,
       padding: const EdgeInsets.all(10.0),
-      children: list_open(p!.personal_info!.personal_activities!)),
+      children: list_open(p!.personal_info!.personal_activities)),
   ListView(
     shrinkWrap: true,
     padding: const EdgeInsets.all(10.0),
-    children: list_open(p!.personal_info!.personal_achievements!),
+    children: list_open(p!.personal_info!.personal_achievements),
   ),
   ListView(
       shrinkWrap: true,
