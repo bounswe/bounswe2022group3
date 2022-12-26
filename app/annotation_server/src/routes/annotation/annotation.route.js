@@ -9,6 +9,7 @@ annotationRouter.post(
   "/",
   validate("create-annotation"),
   handleValidation,
+  authorization,
   AnnotationController.createAnnotation
 );
 
@@ -16,6 +17,7 @@ annotationRouter.put(
   "/update/",
   validate("update-annotation"),
   handleValidation,
+  authorization,
   AnnotationController.updateAnnotation
 );
 
@@ -37,6 +39,7 @@ annotationRouter.delete(
   "/delete/",
   validate("delete-annotation"),
   handleValidation,
+  authorization,
   AnnotationController.deleteAnnotation
 );
 
