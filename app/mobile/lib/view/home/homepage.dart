@@ -13,7 +13,7 @@ Widget homepageView() => ViewModelBuilder<HomeViewModel>.reactive(
       viewModelBuilder: () => HomeViewModel(),
       onModelReady: (model) => model.getCourses(),
       builder: (context, viewModel, child) => Scaffold(
-          appBar: appBar(),
+          appBar: appBar(context),
           body: RefreshIndicator(
             onRefresh: (() => viewModel.update()),
             child: Column(
