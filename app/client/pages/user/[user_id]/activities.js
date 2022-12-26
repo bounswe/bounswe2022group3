@@ -7,7 +7,6 @@ import dynamic from "next/dynamic";
 import { ChatBubble, PostAdd, Article, PersonAdd, LocationOn, Groups } from '@mui/icons-material';
 import React, { useState, useEffect, useCallback } from 'react'
 import debounce from "lodash/debounce";
-import Link from "next/link";
 
 const MarkdownPreview = dynamic(
     () => import("@uiw/react-markdown-preview"),
@@ -56,11 +55,7 @@ export default function activities() {
                         return activity;
                     }
                 )
-                console.log(activityList)
                 setActivities(activityList);
-
-
-                console.log(activities);
             }
 
         } catch (err) {
@@ -69,7 +64,6 @@ export default function activities() {
     }
 
     useEffect(() => {
-        console.log('fetch');
         fetchContent();
     }, [router_query]);
 
