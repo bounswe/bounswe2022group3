@@ -36,7 +36,8 @@ const ResourceController = {
       let activity_data = {
         body : activity_body,
         resource: resource._id,
-        space: topic.space._id, 
+        space: topic.space._id,
+        topic: topic._id,
         type: "resource",
       }
       const activity = await ActivityModel.createActivity(user_id, activity_data);
