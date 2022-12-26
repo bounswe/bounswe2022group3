@@ -103,6 +103,19 @@ const SpaceController = {
         spaces = await semanticSearch(keyword)
       }
 
+      if (req.auth) {
+        var user_id = req.auth.id;
+        user = await UserModel.User.findById(user_id);
+        var personal_info = await PersonalInfoModel.getPersonalInfo(user.personal_info);
+        var disinterest_l = personal_info.disinterested_spaces;
+        var filtered_spaces = [];
+        for (let space_t of spaces) {
+          if (!disinterest_l.includes(space_t._id)) {
+            filtered_spaces.push(space_t);
+          }
+        }
+        return res.status(200).json({ spaces: filtered_spaces });
+      }
       return res.status(200).json({ spaces });
     } catch (error) {
       return res.status(400).send({ error: error.toString() });
@@ -223,6 +236,7 @@ const SpaceController = {
       const user_id = req.auth.id;
       const user = await UserModel.User.findById(user_id);
       const personalInfo = await PersonalInfoModel.PersonalInfo.findOne({ _id: user.personal_info });
+      var disinterest_l = personalInfo.disinterested_spaces;
       var interests = personalInfo.interests;
       const url = "https://api.datamuse.com/words?max=10&ml=";
       var inferred_interests = [];
@@ -241,11 +255,16 @@ const SpaceController = {
       for (interest_t of interests) {
         let spaces_t = await SpaceModel.Space.find({ $text: { $search: `\"${interest_t}\"` } })
           .limit(2)
+          .populate({
+            path: "creator",
+            select: { _id: 1, name: 1, surname: 1, image: 1 },
+          })
           .exec();
         for (space_t of spaces_t) {
           if (!space_ids.includes(space_t._id.toString())) {
             let enrolled = await EnrollmentModel.Enrollment.find({ space: space_t, user });
             if (enrolled.length == 1) continue;
+            if (disinterest_l.includes(space_t._id)) continue;
             spaces.push(space_t);
             space_ids.push(space_t._id.toString());
           }
@@ -267,13 +286,21 @@ const SpaceController = {
           select: { _id: 1, name: 1, surname: 1, image: 1 }
         })
         .sort({ enrolledUsersCount: -1 })
-        .limit(5)
+        .limit(10)
         .exec();
-        if(req.auth){
-          for (var space of spaces) {
-            let enrolled = await EnrollmentModel.Enrollment.find({ space, user: req.auth.id });
-            if (enrolled.length == 1) spaces.splice(spaces.indexOf(space), 1);
+        if (req.auth) {
+          var user_id = req.auth.id;
+          user = await UserModel.User.findById(user_id);
+          var personal_info = await PersonalInfoModel.getPersonalInfo(user.personal_info);
+          var disinterest_l = personal_info.disinterested_spaces;
+          var filtered_spaces = [];
+          for (let space_t of spaces) {
+            let enrolled = await EnrollmentModel.Enrollment.find({ space_t, user: req.auth.id });
+            if (!disinterest_l.includes(space_t._id) && enrolled.length == 0) {
+              filtered_spaces.push(space_t);
+            }
           }
+          return res.status(200).json({ spaces: filtered_spaces });
         }
       return res.status(200).json({ spaces });
     } catch (e) {
