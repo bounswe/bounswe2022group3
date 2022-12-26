@@ -17,7 +17,19 @@ spaceRouter.post(
   SpaceController.createSpace
 );
 
-spaceRouter.get("/searchSpaces/:keyword?", SpaceController.searchSpaces);
+spaceRouter.delete(
+  "/delete",
+  validate("deleteSpace"),
+  handleValidation,
+  authorization,
+  SpaceController.deleteSpace
+);
+
+spaceRouter.get(
+  "/searchSpaces/:keyword?",
+  authorization_conditional,
+  SpaceController.searchSpaces
+);
 
 spaceRouter.get(
   "/getRecommendedSpaces",
@@ -54,5 +66,6 @@ spaceRouter.get(
   authorization_conditional,
   SpaceController.getAllEvents
 );
+
 
 module.exports = spaceRouter;
