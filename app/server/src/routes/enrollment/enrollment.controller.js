@@ -2,6 +2,8 @@ const SpaceModel = require("../../models/space/space.model");
 const EnrollmentModel = require("../../models/enrollment/enrollment.model");
 const UserModel = require("../../models/user/user.model");
 const ActivityModel = require("../../models/activity/activity.model");
+const semanticUrl = process.env.SEMANTIC_SEARCH_SERVER_URL
+const axios = require("axios"); 
 
 const EnrollmentController = {
   createEnrollment: async function (req, res) {
