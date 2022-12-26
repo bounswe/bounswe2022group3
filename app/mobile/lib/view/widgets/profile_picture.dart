@@ -1,5 +1,7 @@
+import 'package:bucademy/services/locator.dart';
 import 'package:bucademy/view/profile/profile.dart';
 import 'package:flutter/material.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 Widget profilePicture(
         {required String imagePath,
@@ -19,8 +21,11 @@ GestureDetector profilePictureButton(
     double widht = 20,
     bool circle = true}) {
   return GestureDetector(
-      onTap: () => Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => profileView(p_id))),
+      onTap: () {
+        navigatorService.controller.jumpToTab(1);
+        PersistentNavBarNavigator.pushNewScreen(context,
+            screen: profileView(p_id));
+      },
       child: circle
           ? CircleAvatar(
               backgroundImage: NetworkImage(imagePath), radius: height)

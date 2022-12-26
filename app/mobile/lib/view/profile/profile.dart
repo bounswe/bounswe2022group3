@@ -9,6 +9,7 @@ import 'package:bucademy/view/home/course_tile.dart';
 import 'package:bucademy/view/login/login.dart';
 import 'package:bucademy/view/profile/edit_profile.dart';
 import 'package:flutter/material.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:stacked/stacked.dart';
 
 import 'package:bucademy/resources/custom_colors.dart';
@@ -59,10 +60,9 @@ Widget profileView(String p_id) => ViewModelBuilder<ProfileView>.reactive(
                         ),
                         const SizedBox(height: 10),
                         TextButton(
-                            onPressed: () => {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => loginView()))
-                                },
+                            onPressed: () =>
+                                PersistentNavBarNavigator.pushNewScreen(context,
+                                    screen: loginView()),
                             style: ButtonStyle(
                                 backgroundColor: MaterialStateColor.resolveWith(
                                     (states) => CustomColors.main)),
@@ -103,7 +103,8 @@ Widget profileView(String p_id) => ViewModelBuilder<ProfileView>.reactive(
                                           children: [
                                             const SizedBox(height: 30),
                                             profilePicture(
-                                                imagePath: viewModel.p!.image!,
+                                                imagePath: fullImagePath(
+                                                    viewModel.p!.image!),
                                                 height: 40,
                                                 widht: 40),
                                             const SizedBox(
@@ -206,8 +207,10 @@ Widget profileView(String p_id) => ViewModelBuilder<ProfileView>.reactive(
                                   color: Colors.white,
                                 ),
                                 onTap: () {
-                                  navigatorService.controller.jumpToTab(
-                                      0); // TODO: bunu değiştir bi önceki sayfa olsun
+                                  Navigator.of(context).canPop()
+                                      ? Navigator.of(context).pop()
+                                      : navigatorService.controller
+                                          .jumpToTab(0);
                                 },
                               ),
                               actions: viewModel.isMyProfile
@@ -215,12 +218,11 @@ Widget profileView(String p_id) => ViewModelBuilder<ProfileView>.reactive(
                                       IconButton(
                                           onPressed: () {
                                             viewModel.p != null
-                                                ? Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            editProfileView(
-                                                                viewModel.p!)))
+                                                ? PersistentNavBarNavigator
+                                                    .pushNewScreen(context,
+                                                        screen: editProfileView(
+                                                            viewModel.p!),
+                                                        withNavBar: false)
                                                 : ScaffoldMessenger.of(context)
                                                     .showSnackBar(
                                                     const SnackBar(

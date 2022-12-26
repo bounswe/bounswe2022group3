@@ -55,8 +55,10 @@ class PersonalInfo {
   final List<String>? interests;
   final List<String>? badges;
 
-  PersonalInfo(this.id, this.bio,
-      {this.personal_achievements,
+  PersonalInfo(
+      {required this.id,
+      this.bio,
+      this.personal_achievements,
       this.interest_badges_selected,
       this.activities,
       this.knowledge,
