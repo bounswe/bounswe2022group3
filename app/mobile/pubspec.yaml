@@ -46,6 +46,7 @@ dependencies:
   map_location_picker: ^1.0.1
   email_validator: ^2.1.17
   maps_launcher: any
+  flutter_osm_plugin: ^0.42.0
   
 
   # The following adds the Cupertino Icons font to your application.
