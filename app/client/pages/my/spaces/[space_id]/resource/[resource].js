@@ -17,7 +17,7 @@ import scrollIntoView from "scroll-into-view";
 import Discussion from "../../../../../components/Discussion/Discussion"
 
 import '@recogito/recogito-js/dist/recogito.min.css';
-import { Box } from '@mui/system';
+import { Box } from '@mui/material';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 import Link from 'next/link';
 
