@@ -221,7 +221,7 @@ Widget profileView(String p_id) => ViewModelBuilder<ProfileView>.reactive(
                                                 ? PersistentNavBarNavigator
                                                     .pushNewScreen(context,
                                                         screen: editProfileView(
-                                                            viewModel.p!,
+                                                            viewModel,
                                                             viewModel),
                                                         withNavBar: false)
                                                 : ScaffoldMessenger.of(context)
@@ -297,6 +297,7 @@ class ProfileView extends ChangeNotifier {
     "Created Spaces"
   ];
   List<Widget> tabContent = [];
+  List<String>? tags = [];
 
   Future<void> followUnfollowCallback() async {
     if (!isFollowed) {
@@ -312,6 +313,7 @@ class ProfileView extends ChangeNotifier {
     notifyListeners();
     isMyProfile = userService.user!.id == p_id;
     p = await profileService.getProfileInfo(p_id);
+    tags = await profileService.getTags();
     if (p!.created_spaces != null) {
       created = await getSpaces(p!.created_spaces, 'Created Spaces');
     }
@@ -370,24 +372,28 @@ Widget aboutMe(Profile? p, BuildContext context) {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             seperator(context),
-            Row(children: [
-              ...?p!.personal_info!.interests?.map((s) => tag(
-                  s,
-                  Color((Random().nextDouble() * 0xFFFFFF).toInt())
-                      .withOpacity(1.0)))
-            ]),
+            SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(children: [
+                  ...?p.personal_info!.interests?.map((s) => tag(
+                      s,
+                      Color((Random().nextDouble() * 0xFFFFFF).toInt())
+                          .withOpacity(1.0)))
+                ])),
             const SizedBox(height: 15),
             const Text(
               'Knowledge',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             seperator(context),
-            Row(children: [
-              ...p.personal_info!.knowledge!.map((s) => tag(
-                  s,
-                  Color((Random().nextDouble() * 0xFFFFFF).toInt())
-                      .withOpacity(1.0)))
-            ]),
+            SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(children: [
+                  ...p.personal_info!.knowledge!.map((s) => tag(
+                      s,
+                      Color((Random().nextDouble() * 0xFFFFFF).toInt())
+                          .withOpacity(1.0)))
+                ])),
           ]));
 }
 

@@ -8,10 +8,13 @@ import 'package:bucademy/services/locator.dart';
 import 'package:bucademy/view/profile/profile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:multiple_search_selection/helpers/create_options.dart';
+import 'package:multiple_search_selection/multiple_search_selection.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:stacked/stacked.dart';
 
-Widget editProfileView(Profile p, ChangeNotifier viewModelProfilePage) =>
+Widget editProfileView(
+        ProfileView profileViewModel, ChangeNotifier viewModelProfilePage) =>
     ViewModelBuilder<EditProfileView>.reactive(
         viewModelBuilder: () => EditProfileView(),
         builder: (context, viewModel, child) => Scaffold(
@@ -55,8 +58,8 @@ Widget editProfileView(Profile p, ChangeNotifier viewModelProfilePage) =>
                               shape: BoxShape.circle,
                               image: DecorationImage(
                                   fit: BoxFit.cover,
-                                  image:
-                                      NetworkImage(fullImagePath(p.image!)))),
+                                  image: NetworkImage(fullImagePath(
+                                      profileViewModel.p!.image!)))),
                         ),
                         Positioned(
                           bottom: 0,
@@ -78,11 +81,105 @@ Widget editProfileView(Profile p, ChangeNotifier viewModelProfilePage) =>
                     ),
                   ),
                   buildFormField(viewModel._nameController, 'First Name',
-                      p.name ?? 'Name'),
+                      profileViewModel.p!.name ?? 'Name'),
                   buildFormField(viewModel._surnameController, 'Last Name',
-                      p.surname ?? 'Last Name'),
-                  buildFormField(viewModel._bioController, 'About You',
-                      p.personal_info?.bio ?? 'Tell us about yourself!'),
+                      profileViewModel.p!.surname ?? 'Last Name'),
+                  buildFormField(
+                      viewModel._bioController,
+                      'About You',
+                      profileViewModel.p!.personal_info?.bio ??
+                          'Tell us about yourself!'),
+                  MultipleSearchSelection<String>.creatable(
+                    title: const Padding(
+                      padding: EdgeInsets.all(12.0),
+                      child: Text(
+                        'Choose your interests',
+                      ),
+                    ),
+                    initialPickedItems:
+                        profileViewModel.p!.personal_info!.interests!,
+                    onItemAdded: (c) {
+                      if (!profileViewModel.p!.personal_info!.interests!
+                          .contains(c)) {
+                        profileViewModel.p!.personal_info!.interests!.add(c);
+                      }
+                    },
+                    onItemRemoved: (c) {
+                      if (profileViewModel.p!.personal_info!.interests!
+                          .contains(c)) {
+                        profileViewModel.p!.personal_info!.interests!.remove(c);
+                      }
+                    },
+                    createOptions: CreateOptions(
+                      createItem: (text) {
+                        return text;
+                      },
+                      createItemBuilder: (text) => Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text('Create "$text"'),
+                        ),
+                      ),
+                      pickCreatedItem: true,
+                    ),
+                    items: profileViewModel.tags!, // List<Country>
+                    fieldToCheck: (c) {
+                      return c;
+                    },
+                    itemBuilder: (tag) {
+                      return Padding(
+                        padding: const EdgeInsets.all(6.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(6),
+                            color: Colors.white,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 20.0,
+                              horizontal: 12,
+                            ),
+                            child: Text(tag),
+                          ),
+                        ),
+                      );
+                    },
+                    pickedItemBuilder: (tag) {
+                      return GestureDetector(
+                          onTap: () {},
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(color: Colors.grey[400]!),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Text(tag),
+                            ),
+                          ));
+                    },
+                    sortShowedItems: true,
+                    sortPickedItems: true,
+                    clearAllButton: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.red),
+                        ),
+                        child: const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text(
+                            'Clear All',
+                          ),
+                        ),
+                      ),
+                    ),
+                    fuzzySearch: FuzzySearch.jaro,
+                    itemsVisibility: ShowedItemsVisibility.alwaysOn,
+                    showSelectAllButton: false,
+                    maximumShowItemsHeight: 200,
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -127,13 +224,14 @@ Widget editProfileView(Profile p, ChangeNotifier viewModelProfilePage) =>
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10))),
                           onPressed: () async {
-                            bool ok = await viewModel.updateProfile(p);
-                            String snacBarContent = ok
+                            bool ok = await viewModel
+                                .updateProfile(profileViewModel.p!);
+                            /*String snacBarContent = ok
                                 ? 'Your Profile Has Been Updated Successfully'
                                 : 'Your Profile Could Not Be Updated';
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                 content: Text(snacBarContent),
-                                duration: const Duration(milliseconds: 200)));
+                                duration: const Duration(milliseconds: 200)));*/
 
                             if (ok) {
                               Navigator.of(context).pop();
