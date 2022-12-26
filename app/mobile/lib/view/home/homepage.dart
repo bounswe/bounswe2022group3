@@ -156,8 +156,6 @@ class HomeViewModel extends ChangeNotifier {
     ]);
     enrolledCourses = res[0];
     recommendedSpaces = res[1];
-    res[2].removeWhere((element) =>
-        enrolledCourses.indexWhere((s) => element.id == s.id) != -1);
     courses = res[2];
     isLoading = false;
     notifyListeners();
