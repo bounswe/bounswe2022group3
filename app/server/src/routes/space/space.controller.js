@@ -236,6 +236,7 @@ const SpaceController = {
       const user_id = req.auth.id;
       const user = await UserModel.User.findById(user_id);
       const personalInfo = await PersonalInfoModel.PersonalInfo.findOne({ _id: user.personal_info });
+      var disinterest_l = personalInfo.disinterested_spaces;
       var interests = personalInfo.interests;
       const url = "https://api.datamuse.com/words?max=10&ml=";
       var inferred_interests = [];
@@ -263,6 +264,7 @@ const SpaceController = {
           if (!space_ids.includes(space_t._id.toString())) {
             let enrolled = await EnrollmentModel.Enrollment.find({ space: space_t, user });
             if (enrolled.length == 1) continue;
+            if (disinterest_l.includes(space_t._id)) continue;
             spaces.push(space_t);
             space_ids.push(space_t._id.toString());
           }
@@ -286,6 +288,19 @@ const SpaceController = {
         .sort({ enrolledUsersCount: -1 })
         .limit(5)
         .exec();
+        if (req.auth) {
+          var user_id = req.auth.id;
+          user = await UserModel.User.findById(user_id);
+          var personal_info = await PersonalInfoModel.getPersonalInfo(user.personal_info);
+          var disinterest_l = personal_info.disinterested_spaces;
+          var filtered_spaces = [];
+          for (let space_t of spaces) {
+            if (!disinterest_l.includes(space_t._id)) {
+              filtered_spaces.push(space_t);
+            }
+          }
+          return res.status(200).json({ filtered_spaces });
+        }
       return res.status(200).json({ spaces });
     } catch (e) {
       res.status(400).send({ error: e.toString() });
