@@ -114,7 +114,7 @@ const SpaceController = {
             filtered_spaces.push(space_t);
           }
         }
-        return res.status(200).json({ filtered_spaces });
+        return res.status(200).json({ spaces: filtered_spaces });
       }
       return res.status(200).json({ spaces });
     } catch (error) {
