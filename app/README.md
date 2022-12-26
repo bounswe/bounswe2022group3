@@ -18,6 +18,7 @@ JWT_AC_KEY = a_very_secret_value
 JWT_REF_KEY = another_very_secret_value
 FRONTEND_URL = http://localhost:8008
 DB=mongodb://localhost:27017/bucademy
+SEMANTIC_SEARCH_SERVER_URL=<if default of semantic_search_server: http://localhost:9060>
 ```
 #### Building and running 
 ```bash

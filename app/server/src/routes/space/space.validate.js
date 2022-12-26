@@ -10,6 +10,11 @@ exports.validate = (method) => {
         body("image", "image does not exist").exists(),
       ];
     }
+    case "deleteSpace": {
+      return [
+        body("space_id", "space_id does not exist").exists().isMongoId(),
+      ];
+    }
     case "get-space-detail": {
       return [param("id", "id does not exist").exists().isMongoId()];
     }

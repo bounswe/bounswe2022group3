@@ -61,9 +61,14 @@ const getPopulatedNote = async (id) => {
     .exec();
 };
 
+const deleteNote = async (id) => {
+  return Note.findByIdAndDelete(id);
+};
+
 module.exports = {
     Note,
   getNote,
   createNote,
-  getPopulatedNote
+  getPopulatedNote,
+  deleteNote,
 };
