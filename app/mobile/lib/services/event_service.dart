@@ -73,4 +73,34 @@ class EventService {
     }
     return null;
   }
+
+  Future<String?> participateToEvent({required Event event}) async {
+    try {
+      Response response =
+          await dioService.dio.post('/event/participate/${event.id}');
+      if (response.statusCode == 200) {
+        event.participants.add(userService.user!);
+        event.participantCount++;
+      }
+      return response.data['message'];
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
+  Future<String?> unparticipateToEvent({required Event event}) async {
+    try {
+      Response response =
+          await dioService.dio.post('/event/unparticipate/${event.id}');
+      if (response.statusCode == 200) {
+        event.participants.remove(userService.user!);
+        event.participantCount--;
+      }
+      return response.data['message'];
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
 }
