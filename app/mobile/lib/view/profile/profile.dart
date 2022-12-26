@@ -334,7 +334,7 @@ class ProfileView extends ChangeNotifier {
         CourseDetailed? cd = await courseService.getCourseDetails(id: courseId);
         if (cd != null) {
           Course c = Course(cd.name, cd.id, cd.info, cd.tags, cd.image,
-              cd.creator, cd.numberOfEnrolled);
+              cd.creator, cd.numberOfEnrolled, cd.rating);
           courses.add(c);
         }
       }
