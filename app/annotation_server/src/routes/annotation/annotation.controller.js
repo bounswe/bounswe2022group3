@@ -44,24 +44,24 @@ const AnnotationController = {
   updateAnnotation: async function (req, res) {
     try {
       const { id, body } = req.body;
-      const user = req.auth.id;
+      //const user = req.auth.id;
       const annotation = await AnnotationModel.Annotation.findOne({ id });
       if (!annotation) {
         return res.status(400).json({ error: "Annotation does not exist!" });
       }
       let els = body[0].creator.id.split('/');
-      let user_id = els[els.length - 1];
-      if (user_id !== user.toString()) {
-        return res
-          .status(400)
-          .json({ error: "User not the creator of annotation!" });
-      } else {
+      //let user_id = els[els.length - 1];
+      // if (user_id !== user.toString()) {
+      //   return res
+      //     .status(400)
+      //     .json({ error: "User not the creator of annotation!" });
+      // } else {
         annotation.body = body;
         annotation.save();
         return res
           .status(201)
           .json();//{ message: "Annotation updated successfully!" }
-      }
+      //}
     } catch (e) {
       return res.status(400).send({ error: e.toString() });
     }
@@ -69,23 +69,23 @@ const AnnotationController = {
   deleteAnnotation: async function (req, res) {
     try {
       const { id } = req.body;
-      const user = req.auth.id;
+      //const user = req.auth.id;
       const annotation = await AnnotationModel.Annotation.findOne({ id });
       if (!annotation) {
         return res.status(400).json({ error: "Annotation does not exist!" });
       }
       let els = annotation.body[0].creator.id.split('/');
-      let user_id = els[els.length - 1];
-      if (user_id !== user.toString()) {
-        return res
-          .status(400)
-          .json({ error: "User not the creator of annotation!" });
-      } else {
+      //let user_id = els[els.length - 1];
+      // if (user_id !== user.toString()) {
+      //   return res
+      //     .status(400)
+      //     .json({ error: "User not the creator of annotation!" });
+      // } else {
         annotation.remove();
         return res
           .status(201)
           .json();//{ message: "Annotation deleted successfully!" }
-      }
+      //}
     } catch (e) {
       return res.status(400).send({ error: e.toString() });
     }

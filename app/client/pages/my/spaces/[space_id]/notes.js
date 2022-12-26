@@ -40,7 +40,6 @@ export default function notes() {
 
     async function fetchContent() {
         try {
-
             const response = (
                 await axios.get(API_URL + "/space/" + space_id.space_id)
             );
@@ -175,7 +174,6 @@ export default function notes() {
                     <h4 >Filtering</h4>
                     <FilterAltIcon />
                 </IconButton >
-
             </div>
             {sortTopicOpen ? (
                 <div>

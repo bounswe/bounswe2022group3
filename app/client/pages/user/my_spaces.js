@@ -87,7 +87,7 @@ export default function Home() {
         getPopularSpaces("");
     }, []);
     useEffect(() => {
-        
+
         getRecommendedSpaces("");
     }, []);
 
@@ -138,16 +138,16 @@ export default function Home() {
                     </form>
                 </div>
             </div>
-            
+
             <section className={styles.spaces} id="spaces">
                 <Masonry
                     breakpointCols={breakpointColumnsObj}
                     className="my-masonry-grid"
-                    columnClassName="my-masonry-grid_column">                
+                    columnClassName="my-masonry-grid_column">
                     {
                         courseList.map(course => {
                             return <Link href={'/my/spaces/' + course._id + "/resources"}>
-                                <div className={styles.card} style={{border: course.creator._id == localStorage.getItem("user_id") && "2px solid #4d4ffa"}}>
+                                <div className={styles.card} style={{ border: course.creator._id == localStorage.getItem("user_id") && "2px solid #4d4ffa" }}>
                                     <div className={styles.image}>
                                         <img src={course.image} layout="fill" />
                                     </div>
@@ -155,61 +155,7 @@ export default function Home() {
                                         <h3>{course.name}</h3>
                                         <div>
                                             <h4>{course.creator.name} {course.creator.surname}</h4>
-                                            <Rating defaultValue={Math.random() * 5} precision={0.1} readOnly />
-                                        </div>
-                                    </div>
-                                </div>
-                            </Link>
-                        })
-                    } 
-                </Masonry>
-                </section>
-                <section className={styles.spaces} id="spaces">
-                <h1 style={{padding: "20px"}}> Recommended Spaces</h1>
-                <Masonry
-                    breakpointCols={breakpointColumnsObj}
-                    className="my-masonry-grid"
-                    title=' ppaces'
-                    columnClassName="my-masonry-grid_column">
-                    
-                    {
-                        recommendedSpaces.map(course => {
-                            return <Link href={'/my/spaces/' + course._id + "/resources"}>
-                                <div className={styles.card} style={{border: course.creator._id == localStorage.getItem("user_id") && "2px solid #4d4ffa"}}>
-                                    <div className={styles.image}>
-                                        <img src={course.image} layout="fill" />
-                                    </div>
-                                    <div className={styles.details}>
-                                        <h3>{course.name}</h3>
-                                        <div>
-                                            <h4>{course.creator.name} {course.creator.surname}</h4>
-                                            <Rating defaultValue={Math.random() * 5} precision={0.1} readOnly />
-                                        </div>
-                                    </div>
-                                </div>
-                            </Link>
-                        })
-                    }
-                </Masonry>
-                </section>
-                <section className={styles.spaces} id="spaces">
-                <h1 style={{padding: "20px"}}> Popular Spaces</h1>
-                <Masonry
-                    breakpointCols={breakpointColumnsObj}
-                    className="my-masonry-grid"
-                    columnClassName="my-masonry-grid_column">    
-                    {
-                        popularSpaces.map(course => {
-                            return <Link href={'/my/spaces/' + course._id + "/resources"}>
-                                <div className={styles.card} style={{border: course.creator._id == localStorage.getItem("user_id") && "2px solid #4d4ffa"}}>
-                                    <div className={styles.image}>
-                                        <img src={course.image} layout="fill" />
-                                    </div>
-                                    <div className={styles.details}>
-                                        <h3>{course.name}</h3>
-                                        <div>
-                                            <h4>{course.creator.name} {course.creator.surname}</h4>
-                                            <Rating defaultValue={Math.random() * 5} precision={0.1} readOnly />
+                                            <Rating defaultValue={course.rating} precision={0.1} readOnly />
                                         </div>
                                     </div>
                                 </div>
@@ -218,6 +164,64 @@ export default function Home() {
                     }
                 </Masonry>
             </section>
+            {
+                recommendedSpaces.length > 0 && <section className={styles.spaces} id="spaces">
+                    <h1 style={{ padding: "20px" }}> Recommended Spaces</h1>
+                    <Masonry
+                        breakpointCols={breakpointColumnsObj}
+                        className="my-masonry-grid"
+                        title=' ppaces'
+                        columnClassName="my-masonry-grid_column">
+
+                        {
+                            recommendedSpaces.map(course => {
+                                return <Link href={'/my/spaces/' + course._id + "/resources"}>
+                                    <div className={styles.card} style={{ border: course.creator._id == localStorage.getItem("user_id") && "2px solid #4d4ffa" }}>
+                                        <div className={styles.image}>
+                                            <img src={course.image} layout="fill" />
+                                        </div>
+                                        <div className={styles.details}>
+                                            <h3>{course.name}</h3>
+                                            <div>
+                                                <h4>{course.creator.name} {course.creator.surname}</h4>
+                                                <Rating defaultValue={course.rating} precision={0.1} readOnly />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </Link>
+                            })
+                        }
+                    </Masonry>
+                </section>
+            }
+            {
+                popularSpaces.length > 0 && <section className={styles.spaces} id="spaces">
+                    <h1 style={{ padding: "20px" }}> Popular Spaces</h1>
+                    <Masonry
+                        breakpointCols={breakpointColumnsObj}
+                        className="my-masonry-grid"
+                        columnClassName="my-masonry-grid_column">
+                        {
+                            popularSpaces.map(course => {
+                                return <Link href={'/my/spaces/' + course._id + "/resources"}>
+                                    <div className={styles.card} style={{ border: course.creator._id == localStorage.getItem("user_id") && "2px solid #4d4ffa" }}>
+                                        <div className={styles.image}>
+                                            <img src={course.image} layout="fill" />
+                                        </div>
+                                        <div className={styles.details}>
+                                            <h3>{course.name}</h3>
+                                            <div>
+                                                <h4>{course.creator.name} {course.creator.surname}</h4>
+                                                <Rating defaultValue={course.rating} precision={0.1} readOnly />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </Link>
+                            })
+                        }
+                    </Masonry>
+                </section>
+            }
         </>
     )
 }
