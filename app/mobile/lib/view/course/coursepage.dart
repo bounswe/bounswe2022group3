@@ -20,7 +20,6 @@ import 'package:stacked/stacked.dart';
 import '../../classes/event/event.dart';
 import 'event/create_event.dart';
 import 'event/event_view.dart';
-import 'event/long_press_dialog.dart';
 
 Widget coursePageView(Course c) => ViewModelBuilder<
         CoursePageViewModel>.reactive(
@@ -243,37 +242,26 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                                     ),
                                   ),
                                 ),
-                              ...viewModel.course!.events.map(
-                                  (EventShortened es) => GestureDetector(
-                                      child: Container(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 20, vertical: 20),
-                                          margin:
-                                              const EdgeInsets.only(bottom: 10),
-                                          decoration: BoxDecoration(
-                                            color:
-                                                CustomColors.getRandomColor(),
-                                            borderRadius: BorderRadius.circular(
-                                                Constants.borderRadius),
-                                          ),
-                                          child: Text(es.title)),
-                                      onTap: () => PersistentNavBarNavigator
-                                          .pushNewScreen(context,
-                                              screen: eventView(eventId: es.id),
-                                              withNavBar: false),
-                                      onLongPress: () {
-                                        showDialog(
-                                            context: context,
-                                            builder: ((context) => AlertDialog(
-                                                  backgroundColor: Colors.white
-                                                      .withOpacity(0),
-                                                  content: eventLongPress(
-                                                      es,
-                                                      context,
-                                                      viewModel,
-                                                      viewModel.course!),
-                                                )));
-                                      })),
+                              ...viewModel.course!.events.map((EventShortened
+                                      es) =>
+                                  GestureDetector(
+                                    child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 20, vertical: 20),
+                                        margin:
+                                            const EdgeInsets.only(bottom: 10),
+                                        decoration: BoxDecoration(
+                                          color: CustomColors.getRandomColor(),
+                                          borderRadius: BorderRadius.circular(
+                                              Constants.borderRadius),
+                                        ),
+                                        child: Text(es.title)),
+                                    onTap: () =>
+                                        PersistentNavBarNavigator.pushNewScreen(
+                                            context,
+                                            screen: eventView(eventId: es.id),
+                                            withNavBar: false),
+                                  ))
                             ],
                           ),
                           ListView(
