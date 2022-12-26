@@ -24,7 +24,9 @@ import axios from 'axios';
 import { useEffect, useState } from "react";
 import { useRouter } from 'next/router'
 import UserLayout2 from '../../layouts/user-layout2/UserLayout2';
+import Link from 'next/link';
 import PhotoUploadWidget from "../../components/PhotoUpload/PhotoUploadWidget";
+
 
 let owner_id = ''
 export default function profile(props) {
@@ -244,6 +246,9 @@ export default function profile(props) {
                       spacing={3}
                       sx={{ height: '95%', width: '80%', margin: 'auto' }}
                     >
+                      <Link href={"/user/"+user_id+"/activities"}>
+                        <Button>Activities</Button>
+                      </Link>
                     </Grid>
                   </Grid>
                   <Grid
