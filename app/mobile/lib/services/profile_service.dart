@@ -82,4 +82,20 @@ class ProfileService {
     }
     return true;
   }
+
+  Future<List<String>?> getTags() async {
+    try {
+      Response response = await dioService.dio.get('/userProfile/getTags');
+      if (response.statusCode != 200) {
+        print(response.statusMessage);
+        return null;
+      }
+      List<String> list =
+          response.data['words'].map<String>((e) => e.toString()).toList();
+      return list;
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
 }
