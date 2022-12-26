@@ -24,5 +24,13 @@ exports.validate = (method) => {
     case "get-all-events": {
       return [param("id", "id does not exist").exists().isMongoId()];
     }
+    case "rate-space": {
+      return [
+        body("space_id", "space_id does not exist")
+          .exists()
+          .isMongoId(),
+        body("rating", "rating doesn't exist").exists(),
+      ];
+    }
   }
 };
