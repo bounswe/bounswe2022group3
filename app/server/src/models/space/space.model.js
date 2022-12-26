@@ -19,6 +19,10 @@ const spaceSchema = new mongoose.Schema(
     rating: {
       type: Number,
     },
+    rating_map: {
+      type: Map,
+      of: Number
+    },
     topics: [
       {
         type: mongoose.Schema.Types.ObjectId,
