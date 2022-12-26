@@ -85,11 +85,13 @@ createEvent(BuildContext context, CoursePageViewModel viewModel) {
                     decoration: const InputDecoration(hintText: "Quota")),
                 TextField(
                     keyboardType: TextInputType.number,
-                    onChanged: (value) => location['longitude'] = double.parse(value),
+                    onChanged: (value) =>
+                        location['longitude'] = double.parse(value),
                     decoration: const InputDecoration(hintText: "Longitude*")),
                 TextField(
                     keyboardType: TextInputType.number,
-                    onChanged: (value) => location['latitude'] = double.parse(value),
+                    onChanged: (value) =>
+                        location['latitude'] = double.parse(value),
                     decoration: const InputDecoration(hintText: "Latitude*")),
                 Flexible(
                   child: TextField(
@@ -98,20 +100,6 @@ createEvent(BuildContext context, CoursePageViewModel viewModel) {
                     maxLines: 15,
                   ),
                 ),
-                /*MapLocationPicker(
-                        apiKey: 'AIzaSyAXTzbniq2PnBkL1GbxGzCqv4rFCgAaFpA',
-                        canPopOnNextButtonTaped: true,
-                        currentLatLng: const LatLng(29.121599, 76.396698),
-                        onNext: (GeocodingResult? result) {
-                          if (result != null) {
-                            location = {
-                              'latitude': result.geometry.location.lat,
-                              'longitude': result.geometry.location.lng
-                            };
-                            address = result.formattedAddress ?? "";
-                          }
-                        },
-                      ),*/
               ],
             ),
             actions: [
@@ -129,7 +117,8 @@ createEvent(BuildContext context, CoursePageViewModel viewModel) {
                   if (title != null &&
                       title!.isNotEmpty &&
                       startDate != null &&
-                      location.isNotEmpty &&
+                      location.containsKey('longitude') &&
+                      location.containsKey('latitude') &&
                       description != null &&
                       description!.isNotEmpty) {
                     if (startDate!.compareTo(DateTime.now()) == -1) {
