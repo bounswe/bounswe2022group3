@@ -219,7 +219,7 @@ export default function profile(props) {
                       spacing={3}
                       sx={{ height: '95%', width: '80%', margin: 'auto' }}
                     >
-                      <Link href={"user/"+user_id+"/activities"}>
+                      <Link href={"/user/"+user_id+"/activities"}>
                         <Button>Activities</Button>
                       </Link>
                     </Grid>
