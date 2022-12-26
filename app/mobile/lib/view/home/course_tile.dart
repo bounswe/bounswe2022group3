@@ -58,11 +58,12 @@ GestureDetector courseTile(Course c, BuildContext context, {bool isClickable = t
               ],
             ),
             Text(
-                '${NumberFormat.compactCurrency(
+                // ignore: prefer_interpolation_to_compose_strings
+                (c.numberOfEnrolled < 1000 ? c.numberOfEnrolled.toString():NumberFormat.compactCurrency(
                   decimalDigits: 2,
                   locale: 'en_US',
                   symbol: '',
-                ).format(c.numberOfEnrolled)} Learners',
+                ).format(c.numberOfEnrolled)) + " Learners",
                 style: TextStyles.bodyWhite),
           ]),
         ],
