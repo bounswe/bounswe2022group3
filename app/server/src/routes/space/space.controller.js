@@ -262,7 +262,7 @@ const SpaceController = {
           .exec();
         for (space_t of spaces_t) {
           if (!space_ids.includes(space_t._id.toString())) {
-            let enrolled = await EnrollmentModel.Enrollment.find({ space: space_t, user });
+            let enrolled = await EnrollmentModel.Enrollment.find({ space: space_t._id, user });
             if (enrolled.length == 1) continue;
             if (disinterest_l.includes(space_t._id)) continue;
             spaces.push(space_t);
@@ -295,7 +295,7 @@ const SpaceController = {
           var disinterest_l = personal_info.disinterested_spaces;
           var filtered_spaces = [];
           for (let space_t of spaces) {
-            let enrolled = await EnrollmentModel.Enrollment.find({ space_t, user: req.auth.id });
+            let enrolled = await EnrollmentModel.Enrollment.find({ space: space_t._id, user: req.auth.id });
             if (!disinterest_l.includes(space_t._id) && enrolled.length == 0) {
               filtered_spaces.push(space_t);
             }
