@@ -97,7 +97,9 @@ const createSpace = async (name, creator, info, tags, image) => {
 
   space.events = [];
   // randomized rating, will change
-  space.rating = Math.floor(Math.random() * 3) + 3;
+  // space.rating = Math.floor(Math.random() * 3) + 3;
+  space.rating = 0;
+  space.rating_map = new Map();
 
   const user = await UserModel.getUserByID(creator);
   user.created_spaces.push(space._id);
