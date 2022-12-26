@@ -17,6 +17,8 @@ import UserLayout2 from '../../layouts/user-layout2/UserLayout2';
 
 export default function Home() {
     const [courseList, setCourseList] = useState([])
+    const [popularSpaces, setPopularSpaces] = useState([])
+    const [recommendedSpaces, setRecommendedSpaces] = useState([])
 
     const router = useRouter();
 
@@ -44,12 +46,49 @@ export default function Home() {
             console.log(e)
         }
     }
+    async function getPopularSpaces() {
+        try {
+            const data = (
+                await axios.get(`${API_URL}/space/getPopularSpaces`, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("access_token")}`
+                    }
+                })
+            )?.data
+            setPopularSpaces(data.spaces)
+        }
+        catch (e) {
+            console.log(e)
+        }
+    }
+    async function getRecommendedSpaces() {
+        try {
+            const data = (
+                await axios.get(`${API_URL}/space/getRecommendedSpaces`, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("access_token")}`
+                    }
+                })
+            )?.data
+            setRecommendedSpaces(data.spaces)
+        }
+        catch (e) {
+            console.log(e)
+        }
+    }
 
     useEffect(() => {
         if (!(localStorage.getItem("access_token") && localStorage.getItem("user_id"))) {
             router.push("/")
         }
         getCourses("");
+    }, []);
+    useEffect(() => {
+        getPopularSpaces("");
+    }, []);
+    useEffect(() => {
+        
+        getRecommendedSpaces("");
     }, []);
 
     const breakpointColumnsObj = {
@@ -99,12 +138,12 @@ export default function Home() {
                     </form>
                 </div>
             </div>
-
+            
             <section className={styles.spaces} id="spaces">
                 <Masonry
                     breakpointCols={breakpointColumnsObj}
                     className="my-masonry-grid"
-                    columnClassName="my-masonry-grid_column">
+                    columnClassName="my-masonry-grid_column">                
                     {
                         courseList.map(course => {
                             return <Link href={'/my/spaces/' + course._id + "/resources"}>
@@ -112,7 +151,60 @@ export default function Home() {
                                     <div className={styles.image}>
                                         <img src={course.image} layout="fill" />
                                     </div>
-
+                                    <div className={styles.details}>
+                                        <h3>{course.name}</h3>
+                                        <div>
+                                            <h4>{course.creator.name} {course.creator.surname}</h4>
+                                            <Rating defaultValue={Math.random() * 5} precision={0.1} readOnly />
+                                        </div>
+                                    </div>
+                                </div>
+                            </Link>
+                        })
+                    } 
+                </Masonry>
+                </section>
+                <section className={styles.spaces} id="spaces">
+                <h1 style={{padding: "20px"}}> Recommended Spaces</h1>
+                <Masonry
+                    breakpointCols={breakpointColumnsObj}
+                    className="my-masonry-grid"
+                    title=' ppaces'
+                    columnClassName="my-masonry-grid_column">
+                    
+                    {
+                        recommendedSpaces.map(course => {
+                            return <Link href={'/my/spaces/' + course._id + "/resources"}>
+                                <div className={styles.card} style={{border: course.creator._id == localStorage.getItem("user_id") && "2px solid #4d4ffa"}}>
+                                    <div className={styles.image}>
+                                        <img src={course.image} layout="fill" />
+                                    </div>
+                                    <div className={styles.details}>
+                                        <h3>{course.name}</h3>
+                                        <div>
+                                            <h4>{course.creator.name} {course.creator.surname}</h4>
+                                            <Rating defaultValue={Math.random() * 5} precision={0.1} readOnly />
+                                        </div>
+                                    </div>
+                                </div>
+                            </Link>
+                        })
+                    }
+                </Masonry>
+                </section>
+                <section className={styles.spaces} id="spaces">
+                <h1 style={{padding: "20px"}}> Popular Spaces</h1>
+                <Masonry
+                    breakpointCols={breakpointColumnsObj}
+                    className="my-masonry-grid"
+                    columnClassName="my-masonry-grid_column">    
+                    {
+                        popularSpaces.map(course => {
+                            return <Link href={'/my/spaces/' + course._id + "/resources"}>
+                                <div className={styles.card} style={{border: course.creator._id == localStorage.getItem("user_id") && "2px solid #4d4ffa"}}>
+                                    <div className={styles.image}>
+                                        <img src={course.image} layout="fill" />
+                                    </div>
                                     <div className={styles.details}>
                                         <h3>{course.name}</h3>
                                         <div>

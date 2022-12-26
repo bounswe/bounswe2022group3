@@ -7,7 +7,6 @@ const TopicModel = require("../../models/topic/topic.model");
 const EventModel = require("../../models/event/event.model");
 const DiscussionModel = require("../../models/discussion/discussion.model");
 const axios = require("axios"); 
-const axios = require("axios");
 const semanticUrl = process.env.SEMANTIC_SEARCH_SERVER_URL
 
 const SpaceController = {
