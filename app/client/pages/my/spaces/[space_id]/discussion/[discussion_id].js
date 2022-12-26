@@ -25,6 +25,7 @@ export default function discussion() {
     let discussion = router.query;
     const [counter, setCounter] = useState(0);
     const [title, setTitle] = useState("")
+    const [loop, setLoop] = useState();
 
  
     async function fetchDiscussion() {
@@ -52,14 +53,15 @@ export default function discussion() {
 
     //     return () => clearInterval(interval);
     // }, [discussion.discussion_id]);
-
+    let intervalID;
     useEffect(() => { 
         discussion = router.query;
         if (discussion?.discussion_id) {
-            setInterval(() => {
+            intervalID = setInterval(() => {
                 fetchDiscussion(); 
             }, 1000); 
         }
+        return () => clearInterval(intervalID);
     }, [discussion.discussion_id])
 
     // useEffect(() => {

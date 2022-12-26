@@ -32,6 +32,14 @@ userProfileRouter.post(
   UserProfileController.unfollow
 );
 
+userProfileRouter.post(
+  "/disinterest",
+  validate("disinterest"),
+  handleValidation,
+  authorization,
+  UserProfileController.disinterest
+);
+
 userProfileRouter.get(
   "/getProfile/:id",
   //validate("getProfile"),

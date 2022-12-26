@@ -14,7 +14,10 @@ import {
   TextField,
   InputLabel,
   Autocomplete,
-  Chip
+  Chip,
+  Dialog,
+  DialogContent,
+  DialogActions
 } from '@mui/material';
 import { API_URL } from "../../next.config";
 import axios from 'axios';
@@ -22,6 +25,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from 'next/router'
 import UserLayout2 from '../../layouts/user-layout2/UserLayout2';
 import Link from 'next/link';
+import PhotoUploadWidget from "../../components/PhotoUpload/PhotoUploadWidget";
 
 
 let owner_id = ''
@@ -41,10 +45,13 @@ export default function profile(props) {
     image: '',
     is_private: true
   });
-  
+
   const [tagList, setTagList] = useState([]);
   const [tags, setTags] = useState([]);
   const [knowledgeTags, setKnowledgeTags] = useState([]);
+  const [files, setFiles] = useState([]);
+  const [cropper, setCropper] = useState();
+  const [openUpload, setOpenUpload] = useState(false);
   const get_user = async () => {
     if (user_id) {
       try {
@@ -53,11 +60,10 @@ export default function profile(props) {
         )?.data
         console.log(res)
         if (res) {
-          setValues(res.profile);
+          setValues({...res.profile, image: `${API_URL}/user/${res.profile.image}`});
           setPersonal_info(res.profile.personal_info)
           setTags(res.profile.personal_info.interests)
           setKnowledgeTags(res.profile.personal_info.knowledge)
-
         }
       } catch (e) {
         console.log(e);
@@ -145,6 +151,26 @@ export default function profile(props) {
     isOwner = false;
   }
 
+  const upload = async (values) => {
+    setOpenUpload(false);
+    const dataURI = cropper.getCroppedCanvas().toDataURL("image/jpeg");
+    const blob = await (await fetch(dataURI)).blob();
+    const formData = new FormData();
+    formData.append('picture', blob);
+    try {
+      const response = (
+        await axios.post(API_URL + "/userProfile/updatePicture", formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        })
+      )?.data;
+      router.reload(window.location.pathname)
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <>
       {
@@ -181,7 +207,7 @@ export default function profile(props) {
                           }}
                         >
                           <Avatar
-                            src={`${API_URL}/user/${personalValues.image}`}
+                            src={personalValues.image}
                             sx={{
                               height: 64,
                               mb: 2,
@@ -209,6 +235,7 @@ export default function profile(props) {
                           color="primary"
                           fullWidth
                           variant="text"
+                          onClick={() => { setOpenUpload(true) }}
                         >
                           Upload picture
                         </Button>
@@ -420,7 +447,7 @@ export default function profile(props) {
                           }}
                         >
                           <Avatar
-                            src={`${API_URL}/user/${personalValues.image}`}
+                            src={personalValues.image}
                             sx={{
                               height: 200,
                               mb: 2,
@@ -434,33 +461,33 @@ export default function profile(props) {
                           >
                             {personalValues.name} {personalValues.surname}
                           </Typography>
-                        {  !personalValues.follower_users?.filter(user => user._id == owner_id).length ?
-                       
-                             ( 
+                          {!personalValues.follower_users?.filter(user => user._id == owner_id).length ?
+
+                            (
 
                               <Button
-                              color="primary"
-                              variant="contained"
-                              style={{ width: "200px" }}
-                              onClick={follow}
-                            >
-                              follow
-                            </Button>
-                              )
+                                color="primary"
+                                variant="contained"
+                                style={{ width: "200px" }}
+                                onClick={follow}
+                              >
+                                follow
+                              </Button>
+                            )
                             :
-                            
+
                             (
                               <Button
-                              color="primary"
-                              variant="contained"
-                              style={{ width: "200px" }}
-                              onClick={unFollow}
-                            >
-                              UnFollow
-                            </Button>
+                                color="primary"
+                                variant="contained"
+                                style={{ width: "200px" }}
+                                onClick={unFollow}
+                              >
+                                UnFollow
+                              </Button>
 
-                              )
-                          
+                            )
+
                           }
 
                         </Box>
@@ -602,6 +629,22 @@ export default function profile(props) {
               </Container>
             </Box>
           )}
+      <Dialog open={openUpload} sx={{
+        "& .MuiDialog-container": {
+          "& .MuiPaper-root": {
+            width: "100%",
+            maxWidth: "900px",  // Set your width here
+          },
+        },
+      }}>
+        <DialogContent>
+          <PhotoUploadWidget files={files} setFiles={setFiles} setCropper={setCropper} />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={upload} style={{width: "fit-content", marginTop: "-8px", marginRight: "10px", padding: "0 20px"}} disabled={!cropper}>Upload</Button>
+          <Button onClick={() => setOpenUpload(false)} style={{width: "fit-content", marginTop: "-8px", marginLeft: "10px", padding: "0 20px"}}>Cancel</Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
