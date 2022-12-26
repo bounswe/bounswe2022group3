@@ -20,6 +20,7 @@ Widget resourcePageView(TopicDetailed t, Resource r,
         viewModelBuilder: () => ResourcePageViewModel(),
         builder: (context, viewModel, child) {
           Discussion? d;
+          String id;
           return viewModel.contentsLoading
               ? const Center(child: CircularProgressIndicator())
               : Scaffold(
@@ -62,16 +63,18 @@ Widget resourcePageView(TopicDetailed t, Resource r,
                       padding: const EdgeInsets.all(10.0),
                       child: AnimatedFloatingActionButton(
                           fabButtons: <Widget>[
-                            FloatingActionButton(
-                              onPressed: () => editResourceButton(
-                                  t, r, context, topicPageView),
-                              backgroundColor: CustomColors.main,
-                              tooltip: 'Edit Resource',
-                              heroTag: 'btn1',
-                              child: const Icon(
-                                Icons.edit_outlined,
+                            if (userService.user != null &&
+                                r.creator.id == userService.user!.id)
+                              FloatingActionButton(
+                                onPressed: () => editResourceButton(
+                                    t, r, context, topicPageView),
+                                backgroundColor: CustomColors.main,
+                                tooltip: 'Edit Resource',
+                                heroTag: 'btn1',
+                                child: const Icon(
+                                  Icons.edit_outlined,
+                                ),
                               ),
-                            ),
                             FloatingActionButton(
                               onPressed: null,
                               backgroundColor: CustomColors.main,
@@ -81,25 +84,19 @@ Widget resourcePageView(TopicDetailed t, Resource r,
                             ),
                             FloatingActionButton(
                               onPressed: () async => {
-                                if (r.discussion?.id != null)
-                                  {
-                                    PersistentNavBarNavigator.pushNewScreen(
-                                        context,
-                                        screen: discussionView(
-                                            discussionId: r.discussion!.id))
-                                  }
-                                else //TODO: This part may be wrong needs further checking
+                                if (r.discussion?.id == null)
                                   {
                                     d = await discussionService
                                         .createDiscussion(
                                             spaceId: coursePageModel.course!.id,
                                             title: r.name),
-                                    viewModel.notifyListeners(), 
-                                    PersistentNavBarNavigator.pushNewScreen(
-                                        context,
-                                        screen:
-                                            discussionView(discussionId: d!.id))
+                                    viewModel.notifyListeners(),
+                                    id = d!.id
                                   }
+                                else
+                                  id = r.discussion!.id,
+                                PersistentNavBarNavigator.pushNewScreen(context,
+                                    screen: discussionView(discussionId: id))
                               },
                               backgroundColor: CustomColors.main,
                               tooltip: 'Go To Discussion Of The Resource',
