@@ -6,7 +6,8 @@ const geoLocation = new mongoose.Schema(
         latitude: Number,
         longitude: Number,
     }
-)
+);
+
 const eventSchema = new mongoose.Schema(
     {
         creator: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
@@ -32,15 +33,15 @@ const eventSchema = new mongoose.Schema(
 const Event = mongoose.model("Event", eventSchema);
 
 const createEvent = async (body) => {
-    var event = new Event(body)
-    event.participants = []
-    event.participant_count = 0
+    var event = new Event(body);
+    event.participants = [];
+    event.participant_count = 0;
 
-    const space = await SpaceModel.getSpaceByID(body.space_id)
+    var space = await SpaceModel.getSpaceByID(body.space_id);
     space.events.push(event._id);
-    await space.save()
+    await space.save();
 
-    return await event.save()
+    return await event.save();
 };
 const deleteEvent = async (id) => {
     const event = await Event.findOneAndDelete({ id });
