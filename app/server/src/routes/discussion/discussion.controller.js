@@ -19,11 +19,12 @@ const DiscussionController = {
       space.discussions.push(discussion);
       await space.save();
       // {user} started a new {discussion} about {discussion.title} in {space} space, {date.now-discussion.createdAt} ago.
-      let activity_body = `${user.name} ${user.surname} started a new discussion about [${discussion.title}](https://bucademy.tk/my/spaces/${space._id}/discussion/${discussion._id}) in ${space.name}](https://bucademy.tk/my/spaces/${space._id}/discussions) space, {timeDiff}.`;
+      let activity_body = `${user.name} ${user.surname} started a new discussion about "${discussion.title}" in "${space.name}" space, {timeDiff}.`;
       let activity_data = {
         body: activity_body,
         space: space._id,
         discussion: discussion._id,
+        type: "discussion",
       };
       const activity = await ActivityModel.createActivity(user_id, activity_data);
       res.status(201).send({ discussion });

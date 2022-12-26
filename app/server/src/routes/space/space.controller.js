@@ -7,7 +7,6 @@ const TopicModel = require("../../models/topic/topic.model");
 const EventModel = require("../../models/event/event.model");
 const DiscussionModel = require("../../models/discussion/discussion.model");
 const axios = require("axios"); 
-const axios = require("axios");
 const semanticUrl = process.env.SEMANTIC_SEARCH_SERVER_URL
 
 const SpaceController = {
@@ -25,10 +24,11 @@ const SpaceController = {
         image
       );
       // {user} created a new space called {space.name}, {date.now-space.createdAt} ago.
-      let activity_body = `${creator.name} ${creator.surname} created a new space called [${space.name}"](https://bucademy.tk/space/${space._id}), {timeDiff}.`;
+      let activity_body = `${creator.name} ${creator.surname} created a new space called "${space.name}", {timeDiff}.`;
       let activity_data = {
         body : activity_body,
         space: space._id,
+        type: "space"
       }
       const activity = await ActivityModel.createActivity(user_id, activity_data);
       return res.status(201).send({ space });

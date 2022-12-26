@@ -1,9 +1,6 @@
 const mongoose = require("mongoose");
 const UserModel = require("../user/user.model");
 const EnrollmentModel = require("../enrollment/enrollment.model");
-const TopicModel = require("../topic/topic.model");
-const EventModel = require("../event/event.model");
-const DiscussionModel = require("../discussion/discussion.model");
 
 const spaceSchema = new mongoose.Schema(
   {
