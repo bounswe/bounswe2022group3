@@ -7,6 +7,7 @@ import dynamic from "next/dynamic";
 import { ChatBubble, PostAdd, Article, PersonAdd, LocationOn, Groups } from '@mui/icons-material';
 import React, { useState, useEffect, useCallback } from 'react'
 import debounce from "lodash/debounce";
+import Link from 'next/link';
 
 const MarkdownPreview = dynamic(
     () => import("@uiw/react-markdown-preview"),
@@ -64,6 +65,7 @@ export default function activities() {
     }
 
     useEffect(() => {
+        console.log('fetch');
         fetchContent();
     }, [router_query]);
 
@@ -78,15 +80,13 @@ export default function activities() {
                             <Link href={activity.link} key={activity._id}>
                                 <div className={styles.activityContainer} >
 
-                                    <div className={styles.activityIconFrame}>
-                                        {activity.type == "createEvent" && <LocationOn className={styles.activityIcon} />}
-                                        {activity.type == "createTopic" && <PostAdd className={styles.activityIcon} />}
-                                        {activity.type == "createSpace" && <Groups className={styles.activityIcon} />}
-                                        {activity.type == "createResource" && <Article className={styles.activityIcon} />}
-                                        {activity.type == "discussion" && <ChatBubble className={styles.activityIcon} />}
-                                    </div>
+                                    <img
+                                        src={`${API_URL}/user/${activity?.user?.image}`}
+                                        alt="User"
+                                        className="review__photo"
+                                    />
 
-                                    <MarkdownPreview source={activity.body} />
+                                    <div className={styles.activityBody}>{activity.body}</div>
                                 </div>
 
                             </Link>
