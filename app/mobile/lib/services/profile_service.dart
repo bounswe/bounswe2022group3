@@ -37,4 +37,34 @@ class ProfileService {
     }
     return;
   }
+
+  Future<bool> follow(String userId) async {
+    try {
+      Response response = await dioService.dio
+          .post('/userProfile/follow', data: {'user_id': userId});
+      if (response.statusCode != 200) {
+        print(response.statusMessage);
+        return false;
+      }
+    } catch (e) {
+      print(e);
+      return false;
+    }
+    return true;
+  }
+
+  Future<bool> unfollow(String userId) async {
+    try {
+      Response response = await dioService.dio
+          .post('/userProfile/unfollow', data: {'user_id': userId});
+      if (response.statusCode != 200) {
+        print(response.statusMessage);
+        return false;
+      }
+    } catch (e) {
+      print(e);
+      return false;
+    }
+    return true;
+  }
 }
