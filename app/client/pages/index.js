@@ -116,7 +116,7 @@ export default function Home() {
           className="my-masonry-grid"
           columnClassName="my-masonry-grid_column">
           {
-            courseList.map(course => {
+            courseList && courseList.map(course => {
               return <Link href={'/space/' + course._id}>
                 <div className={styles.card}>
                   <div className={styles.image}>
