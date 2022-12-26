@@ -103,4 +103,15 @@ class EventService {
       return null;
     }
   }
+
+  Future<int?> delete({required String eventId}) async {
+    try {
+      Response response = await dioService.dio
+          .delete('/event/delete', data: {'event_id': eventId});
+      return response.statusCode;
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
 }
