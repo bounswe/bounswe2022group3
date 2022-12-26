@@ -157,7 +157,7 @@ export default function resource() {
                     r.on('createAnnotation', async (annotation) => {
                         setAnnotations(r.getAnnotations())
                         try {
-                            await axios.post(ANNOTATION_API_URL + "/annotation", { ...annotation, resource: resource_id },
+                            await axios.post(ANNOTATION_API_URL + "/annotation/", { ...annotation, resource: resource_id },
                                 {
                                     DISABLE_LOADING: true,
                                 })
