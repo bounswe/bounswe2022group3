@@ -166,7 +166,7 @@ const UserProfileController = {
     }
   },
   getTags: async function (req, res) {
-    try{
+    try {
       const filePath = path.join(__dirname, '../../tags/tags.txt');
       fs.readFile(filePath, 'utf8', (err, data) => {
         if (err) {
@@ -176,8 +176,21 @@ const UserProfileController = {
         const words = data.split('\n');
         res.status(200).json({ words });
       });
-    }catch(e){
+    } catch(e) {
       res.status(400).json({ error: e.toString() });
+    }
+  },
+  disinterest: async function (req, res) {
+    try {
+      const { space_id } = req.body;
+      const user_id = req.auth.id;
+      const user = await UserModel.User.findById(user_id);
+      var personal_info = await personalInfoModel.PersonalInfo.findById(user.personal_info);
+      personal_info.disinterested_spaces.push(space_id);
+      await personal_info.save();
+      return res.status(200).json({ message: "Disinterested!" });
+    } catch (e) {
+      return res.status(400).json({ error: e.toString() });
     }
   },
 };
