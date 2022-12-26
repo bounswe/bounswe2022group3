@@ -269,6 +269,12 @@ const SpaceController = {
         .sort({ enrolledUsersCount: -1 })
         .limit(5)
         .exec();
+        if(req.auth){
+          for (var space of spaces) {
+            let enrolled = await EnrollmentModel.Enrollment.find({ space, user: req.auth.id });
+            if (enrolled.length == 1) spaces.splice(spaces.indexOf(space), 1);
+          }
+        }
       return res.status(200).json({ spaces });
     } catch (e) {
       res.status(400).send({ error: e.toString() });
