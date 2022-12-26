@@ -16,127 +16,117 @@ Widget homepageView() => ViewModelBuilder<HomeViewModel>.reactive(
           appBar: appBar(),
           body: RefreshIndicator(
             onRefresh: (() => viewModel.update()),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
+            child: Stack(
               children: [
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 8) +
-                          const EdgeInsets.only(bottom: 12),
-                  decoration: const BoxDecoration(
-                      color: CustomColors.main,
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(Constants.borderRadius),
-                        bottomRight: Radius.circular(Constants.borderRadius),
-                      )),
-                  child:
-                      searchBar(viewModel.search, viewModel.searchBarController,
-                          close: () {
-                    viewModel.closeSearch();
-                    FocusScope.of(context).requestFocus(FocusNode());
-                  }),
+                ListView(
+                  // this listview is needed to trigger refresh
+                  padding: EdgeInsets.zero,
+                  shrinkWrap: true,
+                  children: [
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height,
+                    )
+                  ],
                 ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 12.0, top: 10),
-                    child: viewModel.isSearchScreen
-                        ? viewModel.isLoading
-                            ? const Center(child: CircularProgressIndicator())
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 8) +
+                          const EdgeInsets.only(bottom: 12),
+                      decoration: const BoxDecoration(
+                          color: CustomColors.main,
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(Constants.borderRadius),
+                            bottomRight:
+                                Radius.circular(Constants.borderRadius),
+                          )),
+                      child: searchBar(
+                          viewModel.search, viewModel.searchBarController,
+                          close: () {
+                        viewModel.closeSearch();
+                        FocusScope.of(context).requestFocus(FocusNode());
+                      }),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 12.0, top: 10),
+                        child: viewModel.isSearchScreen
+                            ? viewModel.isLoading
+                                ? const Center(
+                                    child: CircularProgressIndicator())
+                                : SingleChildScrollView(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        ...viewModel.searchResults.map(
+                                            (Course c) =>
+                                                searchCourseTile(c, context)),
+                                      ],
+                                    ),
+                                  )
                             : SingleChildScrollView(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    ...viewModel.searchResults.map((Course c) =>
-                                        searchCourseTile(c, context)),
+                                    const Text(
+                                      'My Spaces',
+                                      style: TextStyles.subtitle,
+                                    ),
+                                    const SizedBox(height: 12),
+                                    viewModel.isLoading
+                                        ? loadingIndicator()
+                                        : SingleChildScrollView(
+                                            scrollDirection: Axis.horizontal,
+                                            child: Row(children: [
+                                              ...viewModel.enrolledCourses.map(
+                                                  (Course c) =>
+                                                      courseTile(c, context))
+                                            ]),
+                                          ),
+                                    const SizedBox(height: 20),
+                                    const Text(
+                                      'Recommended Spaces',
+                                      style: TextStyles.subtitle,
+                                    ),
+                                    const SizedBox(height: 20),
+                                    SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: Row(
+                                        children: [
+                                          ...viewModel.recommendedSpaces.map(
+                                              (Course c) => courseTile(
+                                                  c, context,
+                                                  isClickable: false))
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(height: 20),
+                                    const Text(
+                                      'Discover Top Spaces',
+                                      style: TextStyles.subtitle,
+                                    ),
+                                    const SizedBox(height: 12),
+                                    viewModel.isLoading
+                                        ? loadingIndicator()
+                                        : SingleChildScrollView(
+                                            scrollDirection: Axis.horizontal,
+                                            child: Row(
+                                              children: [
+                                                ...viewModel.courses.map(
+                                                    (Course c) =>
+                                                        courseTile(c, context))
+                                              ],
+                                            ),
+                                          ),
                                   ],
                                 ),
-                              )
-                        : SingleChildScrollView(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'My Spaces',
-                                  style: TextStyles.subtitle,
-                                ),
-                                const SizedBox(height: 12),
-                                viewModel.isLoading
-                                    ? loadingIndicator()
-                                    : SingleChildScrollView(
-                                        scrollDirection: Axis.horizontal,
-                                        child: Row(children: [
-                                          ...viewModel.enrolledCourses.map(
-                                              (Course c) =>
-                                                  courseTile(c, context))
-                                        ]),
-                                      ),
-                                const SizedBox(height: 20),
-                                const Text(
-                                  'Top Spaces',
-                                  style: TextStyles.subtitle,
-                                ),
-                                const SizedBox(height: 12),
-                                viewModel.isLoading
-                                    ? loadingIndicator()
-                                    : SingleChildScrollView(
-                                        scrollDirection: Axis.horizontal,
-                                        child: Row(
-                                          children: [
-                                            ...viewModel.courses.map(
-                                                (Course c) =>
-                                                    courseTile(c, context))
-                                          ],
-                                        ),
-                                      ),
-                                const SizedBox(height: 20),
-                                Text(
-                                  'Browse',
-                                  style: TextStyles.pageTitle
-                                      .copyWith(color: Colors.black),
-                                ),
-                                const SizedBox(height: 20),
-                                const Text(
-                                  'Computer Sciences',
-                                  style: TextStyles.subtitle,
-                                ),
-                                const SizedBox(height: 12),
-                                SingleChildScrollView(
-                                  scrollDirection: Axis.horizontal,
-                                  child: Row(
-                                    children: [
-                                      ...courseService
-                                          .getMockCourses(
-                                              'Introduction to Programming with C')
-                                          .map((Course c) => courseTile(
-                                              c, context,
-                                              isClickable: false))
-                                    ],
-                                  ),
-                                ),
-                                const SizedBox(height: 20),
-                                const Text(
-                                  'Art',
-                                  style: TextStyles.subtitle,
-                                ),
-                                const SizedBox(height: 12),
-                                SingleChildScrollView(
-                                  scrollDirection: Axis.horizontal,
-                                  child: Row(
-                                    children: [
-                                      ...courseService
-                                          .getMockCourses(
-                                              'Painting Techniques for beginners')
-                                          .map((Course c) => courseTile(
-                                              c, context,
-                                              isClickable: false))
-                                    ],
-                                  ),
-                                ),
-                                const SizedBox(height: 20),
-                              ],
-                            ),
-                          ),
-                  ),
+                              ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -147,6 +137,7 @@ Widget homepageView() => ViewModelBuilder<HomeViewModel>.reactive(
 class HomeViewModel extends ChangeNotifier {
   List<Course> courses = [];
   List<Course> enrolledCourses = [];
+  List<Course> recommendedSpaces = [];
   TextEditingController searchBarController = TextEditingController();
 
   List<Course> searchResults = [];
@@ -158,8 +149,16 @@ class HomeViewModel extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
 
-    courses = await courseService.getCourses();
-    enrolledCourses = await courseService.getEnrolledCourses();
+    var res = await Future.wait<List<Course>>([
+      courseService.getEnrolledCourses(),
+      courseService.getRecommendedSpaces(),
+      courseService.getPopularSpaces(),
+    ]);
+    enrolledCourses = res[0];
+    recommendedSpaces = res[1];
+    res[2].removeWhere((element) =>
+        enrolledCourses.indexWhere((s) => element.id == s.id) != -1);
+    courses = res[2];
     isLoading = false;
     notifyListeners();
   }

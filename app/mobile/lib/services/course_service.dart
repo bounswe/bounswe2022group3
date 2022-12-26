@@ -116,4 +116,29 @@ class CourseService {
     }
     return false;
   }
+
+  Future<List<Course>> getRecommendedSpaces() async {
+    try {
+      Response response =
+          await dioService.dio.get('/space/getRecommendedSpaces');
+      return response.data['spaces']
+          .map<Course>((e) => Course.fromJson(e))
+          .toList();
+    } catch (e) {
+      print(e);
+    }
+    return [];
+  }
+  Future<List<Course>> getPopularSpaces() async {
+    try {
+      Response response =
+          await dioService.dio.get('/space/getPopularSpaces');
+      return response.data['spaces']
+          .map<Course>((e) => Course.fromJson(e))
+          .toList();
+    } catch (e) {
+      print(e);
+    }
+    return [];
+  }
 }
