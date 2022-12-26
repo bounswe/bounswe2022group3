@@ -218,6 +218,36 @@ const SpaceController = {
       res.status(400).send({ error: e.toString() });
     }
   },
+  rateSpace: async function (req,res) {
+    try {
+      const {space_id, rating} = req.body;
+      const user = req.auth.id;
+      var space = await SpaceModel.Space.findbyId(space_id);
+      if(!space){
+        return res.status(400).json({ error: "Space does not exist!"});
+      }
+      var ratings = space.rating_map;
+      var average_rating = space.rating;
+      var users_rated = Array.from(rating_map.keys());
+      var rate_count = ratings.size;
+      if(users_rated.includes(user._id.toString())){
+        var old_rating = space.rating_map.get(user._id);
+        space.rating_map.set(user._id, rating);
+        let total_rating = average_rating * rate_count;
+        var new_total_rating = total_rating - old_rating + rating;
+        space.rating = new_total_rating / rate_count;
+      } else{
+        space.ratings.set(user._id, rating);
+        let new_total_rating = average_rating * rate_count + rating;
+        space.rating = new_total_rating / (rate_count + 1);
+      }
+      await space.save();
+      let avg_rating = space.rating;
+      return res.status(200).json({ average_rating: avg_rating});
+    } catch (e) {
+      return res.status(400).send({ error: e.toString() });
+    }
+  },
   getRecommendedSpaces: async function (req, res) {
     try {
       const user_id = req.auth.id;
