@@ -9,7 +9,6 @@ import EditIcon from '@mui/icons-material/Edit';
 import ShareIcon from '@mui/icons-material/Share';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import axios from "axios";
-
 import { API_URL } from "../../next.config";
 import { useRouter } from 'next/router'
 import EditNote from "../../components/PopUps/EditNote";
@@ -20,20 +19,35 @@ const MDEditor = dynamic(
     { ssr: false }
 );
 
-function Note({ note, openEditNote, setOpenEditNote, space_id, setEditNote, setReRender, reRender }) {
+function Note({ note, openEditNote, setOpenEditNote, space_id, setEditNote,setReRender,reRender }) {
 
-
-    const [actions, setActions] = useState(false);
-    const [noteId, setNoteId] = useState(null);
     const router = useRouter();
-  
+    const [actions, setActions] = useState(false);
+
+    const deleteNote = async () => {
+
+        const body = {
+            data:
+            {
+                note_id: note?._id
+            }
+        }
+        try {
+            await axios.delete(API_URL + "/note/delete", body);
+            setReRender(!reRender);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+
     return (
 
-        <Card onMouseEnter={() => setActions(true)} onMouseLeave={() => setActions(false)} style={{ maxWidth: "300px" }}>
+        <Card onMouseEnter={() => setActions(true)} onMouseLeave={() => setActions(false)} style={{maxWidth: "300px"}}>
 
             <CardContent>
                 <Link href={`/note/${note?._id}`}>
-                    <div data-color-mode="light" style={{ cursor: "pointer" }}>
+                    <div data-color-mode="light" style={{cursor: "pointer"}}>
                         <MDEditor
                             value={note.body}
                             onChange={() => { }}
@@ -55,10 +69,9 @@ function Note({ note, openEditNote, setOpenEditNote, space_id, setEditNote, setR
                             setEditNote(note);
                             setOpenEditNote(true);
                         }}
+
                         ><EditIcon /></Button>
-                        <Button onClick={() => navigator.clipboard.writeText("https://bucademy.tk/note/"+note?._id)}>
-                            <ShareIcon />
-                        </Button>
+                        <Button onClick={() => navigator.clipboard.writeText("https://bucademy.tk/note/"+note?._id)}><ShareIcon /></Button>
                         <Button onClick={() => { deleteNote() }}><DeleteIcon /></Button>
                     </ButtonGroup>
                 </CardActions>
