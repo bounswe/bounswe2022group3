@@ -335,8 +335,8 @@ async function semanticSearch(searchText) {
     search_list: infos
   }
 
-  const titleRelevances = (await axios.post(`${semanticUrl}/relevance`, titlePayload)).data.relevances
-  const infoRelevances = (await axios.post(`${semanticUrl}/relevance`, infoPayload)).data.relevances
+  const titleRelevances = (await axios.post(`${semanticUrl}/relevance`, titlePayload, { headers: { "Accept-Encoding": "*" } })).data.relevances
+  const infoRelevances = (await axios.post(`${semanticUrl}/relevance`, infoPayload, { headers: { "Accept-Encoding": "*" } })).data.relevances
 
   const relevancesAsSeperateArrays = {
     titleRelevances,
