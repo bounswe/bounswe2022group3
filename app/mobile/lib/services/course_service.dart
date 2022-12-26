@@ -18,29 +18,6 @@ List<Course> mockCourses = [];
 @lazySingleton
 class CourseService {
   List<String> enrolledIds = [];
-  getMockCourses(String title) {
-    List<Course> temp = [
-      for (var i = 0; i < 0; ++i)
-        Course.fromJson({
-          "name": "$title - ${i.toString()}",
-          "_id": "63595b4aebf6c659ff926310",
-          "info": "Interested in learning more about data science, but don’t know where to start?",
-          "tags": [],
-          "badges": [],
-          "image": "https://cdn-icons-png.flaticon.com/512/2991/2991148.png",
-          "creator": {
-            "name": "Andrew",
-            "surname": "Mg",
-            "email": "andrew.mg@bucademy.com",
-            "_id": "63595b4aebf6c659ff926310"
-          },
-        })
-      // Course('$title - ${i.toString()}',
-      //     "Interested in learning more about data science, but don’t know where to start?" * 10,
-    ];
-    mockCourses.addAll(temp);
-    return temp;
-  }
 
   Future<List<Course>> getCourses() async {
     try {
