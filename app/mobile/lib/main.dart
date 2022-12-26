@@ -20,8 +20,9 @@ void main() {
   configureDependencies();
   navigatorService.controller = PersistentTabController(initialIndex: 0);
   WidgetsFlutterBinding.ensureInitialized();
-  persistenceService.clear();
-  //userService.login(email: 'enmuhammet23@gmail.com', password: "Password123*");
+  //persistenceService.clear();
+  //userService.login(
+  //    email: 'bilalhamdiaytekin@gmail.com', password: "Password123*");
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then(
     (_) => runApp(const MyApp()),
   );
