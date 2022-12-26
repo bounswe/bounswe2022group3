@@ -186,6 +186,9 @@ const UserProfileController = {
       const user_id = req.auth.id;
       const user = await UserModel.User.findById(user_id);
       var personal_info = await personalInfoModel.PersonalInfo.findById(user.personal_info);
+      if (personal_info.disinterested_spaces.includes(space_id)) {
+        return res.status(400).json({ message: "You already disinterested this space!" });
+      }
       personal_info.disinterested_spaces.push(space_id);
       await personal_info.save();
       return res.status(200).json({ message: "Disinterested!" });

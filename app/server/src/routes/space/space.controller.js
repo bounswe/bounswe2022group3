@@ -103,6 +103,19 @@ const SpaceController = {
         spaces = await semanticSearch(keyword)
       }
 
+      if (req.auth) {
+        var user_id = req.auth.id;
+        user = await UserModel.User.findById(user_id);
+        var personal_info = await PersonalInfoModel.getPersonalInfo(user.personal_info);
+        var disinterest_l = personal_info.disinterested_spaces;
+        var filtered_spaces = [];
+        for (let space_t of spaces) {
+          if (!disinterest_l.includes(space_t._id)) {
+            filtered_spaces.push(space_t);
+          }
+        }
+        return res.status(200).json({ filtered_spaces });
+      }
       return res.status(200).json({ spaces });
     } catch (error) {
       return res.status(400).send({ error: error.toString() });

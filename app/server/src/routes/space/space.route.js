@@ -25,7 +25,11 @@ spaceRouter.delete(
   SpaceController.deleteSpace
 );
 
-spaceRouter.get("/searchSpaces/:keyword?", SpaceController.searchSpaces);
+spaceRouter.get(
+  "/searchSpaces/:keyword?",
+  authorization_conditional,
+  SpaceController.searchSpaces
+);
 
 spaceRouter.get(
   "/getRecommendedSpaces",
