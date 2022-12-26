@@ -10,8 +10,7 @@ import 'emailBar.dart';
 
 Widget loginView() => ViewModelBuilder<LoginViewModel>.reactive(
     viewModelBuilder: () => LoginViewModel(),
-    builder: (context, viewModel, child) => LoginFormState().build(context)
-);
+    builder: (context, viewModel, child) => LoginFormState().build(context));
 
 // Made use of https://docs.flutter.dev/cookbook/forms/validation.
 class LoginForm extends StatefulWidget {
@@ -40,65 +39,65 @@ class LoginFormState extends State<LoginForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: SingleChildScrollView( // thanks to https://stackoverflow.com/questions/51774252/bottom-overloaded-by-213-pixels-in-flutter
-        child: Container(
-            // color: Colors.white,
+        resizeToAvoidBottomInset: false,
+        body: SingleChildScrollView(
+            // thanks to https://stackoverflow.com/questions/51774252/bottom-overloaded-by-213-pixels-in-flutter
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 30),
-                Form(
-                  key: _formKey,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                          alignment: Alignment.center,
-                          height: 200,
-                          child: Image.network('https://raw.githubusercontent.com/bounswe/bounswe2022group3/master/app/client/public/education.png')
-                      ),
-                      const Padding(padding: EdgeInsets.only(bottom: 20.0)),
-                      emailBar(_emailController),
-                      passwordBar(_passwordController),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 16.0),
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            // Validate returns true if the form is valid, or false otherwise.
-                            if (_formKey.currentState!.validate()) {
-                              bool loggedIn = await userService.login(email: _emailController.text, password: _passwordController.text);
-                              if (loggedIn) {
-                                Navigator.of(context).pop();
-                                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => introView()), (route) => false);
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('Login failed.')),
-                                );
-                              }
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 30),
+            Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                        alignment: Alignment.center,
+                        height: 200,
+                        child: Image.network(
+                            'https://raw.githubusercontent.com/bounswe/bounswe2022group3/master/app/client/public/education.png')),
+                    const Padding(padding: EdgeInsets.only(bottom: 20.0)),
+                    emailBar(_emailController),
+                    passwordBar(_passwordController),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          // Validate returns true if the form is valid, or false otherwise.
+                          if (_formKey.currentState!.validate()) {
+                            bool loggedIn = await userService.login(
+                                email: _emailController.text,
+                                password: _passwordController.text);
+                            if (loggedIn) {
+                              Navigator.of(context).pop();
+                              Navigator.of(context).pushAndRemoveUntil(
+                                  MaterialPageRoute(
+                                      builder: (context) => introView()),
+                                  (route) => false);
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Login failed.')),
+                              );
                             }
-                          },
-                          child: const Text('Submit'),
-                        ),
+                          }
+                        },
+                        child: const Text('Submit'),
                       ),
-                    ],
-                  )
-                ),
-                GestureDetector(
-                  child: Container(
-                    alignment: Alignment.center,
-                    child: const Text(
-                      'Don\'t have an account? Sign up',
                     ),
-                  ),
-                  onTap: () => _viewModel.navigateToRegister(context),
+                  ],
+                )),
+            GestureDetector(
+              child: Container(
+                alignment: Alignment.center,
+                child: const Text(
+                  'Don\'t have an account? Sign up',
                 ),
-              ],
-            )
-        )
-      )
-    );
+              ),
+              onTap: () => _viewModel.navigateToRegister(context),
+            ),
+          ],
+        )));
   }
 }
 
