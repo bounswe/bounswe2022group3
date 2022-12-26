@@ -11,142 +11,154 @@ import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:stacked/stacked.dart';
 
-Widget editProfileView(Profile p) => ViewModelBuilder<EditProfileView>.reactive(
-    viewModelBuilder: () => EditProfileView(),
-    builder: (context, viewModel, child) => Scaffold(
-        appBar: AppBar(
-          iconTheme: const IconThemeData(color: Colors.white),
-          elevation: 0,
-          backgroundColor: CustomColors.main,
-          shadowColor: CustomColors.main,
-          foregroundColor: CustomColors.main,
-          title: const FittedBox(
-            fit: BoxFit.fitWidth,
-            child: Text(
-              "Edit Profile",
-              style: TextStyles.pageTitle,
-            ),
-          ),
-        ),
-        body: Container(
-          padding: const EdgeInsets.only(top: 25, right: 15, left: 15),
-          child: GestureDetector(
-            onTap: () {
-              FocusScope.of(context).unfocus();
-            },
-            child: ListView(children: [
-              Center(
-                child: Stack(
-                  children: [
-                    Container(
-                      width: 120,
-                      height: 120,
-                      decoration: BoxDecoration(
-                          border:
-                              Border.all(width: 4, color: CustomColors.main),
-                          boxShadow: [
-                            BoxShadow(
-                                spreadRadius: 2,
-                                blurRadius: 10,
-                                color: Colors.blue.shade900.withOpacity(0.4))
-                          ],
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: NetworkImage(fullImagePath(p.image!)))),
-                    ),
-                    Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: GestureDetector(
-                        onTap: () {},
-                        child: Container(
-                          height: 40,
-                          width: 40,
-                          decoration: const BoxDecoration(
-                              shape: BoxShape.circle, color: CustomColors.main),
-                          child: const Icon(Icons.edit, color: Colors.white),
-                        ),
-                      ),
-                    )
-                  ],
+Widget editProfileView(Profile p, ChangeNotifier viewModelProfilePage) =>
+    ViewModelBuilder<EditProfileView>.reactive(
+        viewModelBuilder: () => EditProfileView(),
+        builder: (context, viewModel, child) => Scaffold(
+            appBar: AppBar(
+              iconTheme: const IconThemeData(color: Colors.white),
+              elevation: 0,
+              backgroundColor: CustomColors.main,
+              shadowColor: CustomColors.main,
+              foregroundColor: CustomColors.main,
+              title: const FittedBox(
+                fit: BoxFit.fitWidth,
+                child: Text(
+                  "Edit Profile",
+                  style: TextStyles.pageTitle,
                 ),
               ),
-              buildFormField(
-                  viewModel._nameController, 'First Name', p.name ?? 'Name'),
-              buildFormField(viewModel._surnameController, 'Last Name',
-                  p.surname ?? 'Last Name'),
-              buildFormField(viewModel._bioController, 'About You',
-                  p.personal_info?.bio ?? 'Tell us about yourself!'),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Make my profile Private',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-                  Transform.scale(
-                    scale: 0.7,
-                    child: CupertinoSwitch(
-                        value: viewModel.isPrivate ?? false,
-                        onChanged: (val) {
-                          viewModel.isPrivate = val;
-                        }),
-                  )
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  OutlinedButton(
-                      style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(horizontal: 50),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10))),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text(
-                        'Cancel',
-                        style: TextStyle(
-                            fontSize: 16,
-                            letterSpacing: 1.8,
-                            color: CustomColors.main),
-                      )),
-                  ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: CustomColors.main,
-                          padding: const EdgeInsets.symmetric(horizontal: 50),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10))),
-                      onPressed: () async {
-                        bool ok = await viewModel.updateProfile(p);
-                        String snacBarContent = ok
-                            ? 'Your Profile Has Been Updated Successfully'
-                            : 'Your Profile Could Not Be Updated';
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text(snacBarContent),
-                            duration: const Duration(milliseconds: 200)));
+            ),
+            body: Container(
+              padding: const EdgeInsets.only(top: 25, right: 15, left: 15),
+              child: GestureDetector(
+                onTap: () {
+                  FocusScope.of(context).unfocus();
+                },
+                child: ListView(children: [
+                  Center(
+                    child: Stack(
+                      children: [
+                        Container(
+                          width: 120,
+                          height: 120,
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                  width: 4, color: CustomColors.main),
+                              boxShadow: [
+                                BoxShadow(
+                                    spreadRadius: 2,
+                                    blurRadius: 10,
+                                    color:
+                                        Colors.blue.shade900.withOpacity(0.4))
+                              ],
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                  fit: BoxFit.cover,
+                                  image:
+                                      NetworkImage(fullImagePath(p.image!)))),
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: GestureDetector(
+                            onTap: () {},
+                            child: Container(
+                              height: 40,
+                              width: 40,
+                              decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: CustomColors.main),
+                              child:
+                                  const Icon(Icons.edit, color: Colors.white),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  buildFormField(viewModel._nameController, 'First Name',
+                      p.name ?? 'Name'),
+                  buildFormField(viewModel._surnameController, 'Last Name',
+                      p.surname ?? 'Last Name'),
+                  buildFormField(viewModel._bioController, 'About You',
+                      p.personal_info?.bio ?? 'Tell us about yourself!'),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Make my profile Private',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w500)),
+                      Transform.scale(
+                        scale: 0.7,
+                        child: CupertinoSwitch(
+                            value: viewModel.isPrivate ?? false,
+                            onChanged: (val) {
+                              viewModel.isPrivate = val;
+                              viewModel.notifyListeners();
+                            }),
+                      )
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 50),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10))),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text(
+                            'Cancel',
+                            style: TextStyle(
+                                fontSize: 16,
+                                letterSpacing: 1.8,
+                                color: CustomColors.main),
+                          )),
+                      ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: CustomColors.main,
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 50),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10))),
+                          onPressed: () async {
+                            bool ok = await viewModel.updateProfile(p);
+                            String snacBarContent = ok
+                                ? 'Your Profile Has Been Updated Successfully'
+                                : 'Your Profile Could Not Be Updated';
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text(snacBarContent),
+                                duration: const Duration(milliseconds: 200)));
 
-                        ok
-                            ? PersistentNavBarNavigator.pushNewScreen(context,
-                                screen: profileView(viewModel.id),
-                                withNavBar: true)
-                            : null;
-                      },
-                      child: const Text(
-                        'Update',
-                        style: TextStyle(
-                            fontSize: 16,
-                            letterSpacing: 1.8,
-                            color: Colors.white),
-                      ))
-                ],
-              )
-            ]),
-          ),
-        )));
+                            if (ok) {
+                              Navigator.of(context).pop();
+                              PersistentNavBarNavigator.pushNewScreen(context,
+                                  screen: profileView(viewModel.id),
+                                  withNavBar: true);
+                            }
+                            viewModel.notifyListeners();
+                            viewModelProfilePage.notifyListeners();
+                          },
+                          child: const Text(
+                            'Update',
+                            style: TextStyle(
+                                fontSize: 16,
+                                letterSpacing: 1.8,
+                                color: Colors.white),
+                          ))
+                    ],
+                  )
+                ]),
+              ),
+            )));
 
 class EditProfileView extends ChangeNotifier {
+  Profile? profile;
   final TextEditingController _bioController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _surnameController = TextEditingController();
@@ -200,6 +212,8 @@ class EditProfileView extends ChangeNotifier {
         p.personal_info!.interests,
         p.personal_info!.knowledge,
         false);
+    profile = p;
+    notifyListeners();
     return isUpdated;
   }
 }

@@ -188,10 +188,10 @@ Widget profileView(String p_id) => ViewModelBuilder<ProfileView>.reactive(
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .bold)),
-                                                    onPressed: () => {
-                                                          viewModel
-                                                              .followUnfollowCallback()
-                                                        },
+                                                    onPressed: () {
+                                                      viewModel
+                                                          .followUnfollowCallback();
+                                                    },
                                                     child: Text(
                                                         viewModel.isFollowed
                                                             ? 'Unfollow'
@@ -221,7 +221,8 @@ Widget profileView(String p_id) => ViewModelBuilder<ProfileView>.reactive(
                                                 ? PersistentNavBarNavigator
                                                     .pushNewScreen(context,
                                                         screen: editProfileView(
-                                                            viewModel.p!),
+                                                            viewModel.p!,
+                                                            viewModel),
                                                         withNavBar: false)
                                                 : ScaffoldMessenger.of(context)
                                                     .showSnackBar(
@@ -263,7 +264,7 @@ Widget profileView(String p_id) => ViewModelBuilder<ProfileView>.reactive(
                                 ))),
                           ]),
                       body: TabBarView(children: [
-                        aboutMe(viewModel.p),
+                        aboutMe(viewModel.p, context),
                         ListView(
                             shrinkWrap: true,
                             padding: const EdgeInsets.all(10.0),
@@ -342,7 +343,7 @@ class ProfileView extends ChangeNotifier {
   }
 }
 
-Widget aboutMe(Profile? p) {
+Widget aboutMe(Profile? p, BuildContext context) {
   return Container(
       //height: 400,
       //width: MediaQuery.of(context).size.width,
@@ -361,26 +362,26 @@ Widget aboutMe(Profile? p) {
               'About Me',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            //seperator(context),
-            //Text(p!.personal_info!.bio!),
-            const SizedBox(height: 2),
+            seperator(context),
+            Text(p!.personal_info!.bio!),
+            const SizedBox(height: 15),
             const Text(
               'Interests',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            //seperator(context),
+            seperator(context),
             Row(children: [
               ...?p!.personal_info!.interests?.map((s) => tag(
                   s,
                   Color((Random().nextDouble() * 0xFFFFFF).toInt())
                       .withOpacity(1.0)))
             ]),
-            const SizedBox(height: 2),
+            const SizedBox(height: 15),
             const Text(
               'Knowledge',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            //seperator(context),
+            seperator(context),
             Row(children: [
               ...p.personal_info!.knowledge!.map((s) => tag(
                   s,
