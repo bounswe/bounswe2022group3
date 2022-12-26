@@ -26,14 +26,20 @@ Widget eventView({required String eventId}) =>
                     child: Column(
                     children: [
                       ListTile(
-                          title: const Text('Event Start'),
-                          subtitle: Text(DateFormat("'Date: 'dd MMMM yyyy  'Time: 'hh:mm").format(DateTime.parse(viewModel.event!.startDate!))),
-                          ),
+                        title: const Text('Event Start'),
+                        subtitle: Text(DateFormat(
+                                "'Date: 'dd MMMM yyyy  'Time: 'hh:mm")
+                            .format(
+                                DateTime.parse(viewModel.event!.startDate))),
+                      ),
                       const Divider(thickness: 1.5),
                       ListTile(
                           title: const Text('Event End'),
                           subtitle: Text(viewModel.event!.endDate != null
-                              ? DateFormat("'Date: 'dd MMMM yyyy  'Time: 'hh:mm").format(DateTime.parse(viewModel.event!.endDate!))
+                              ? DateFormat(
+                                      "'Date: 'dd MMMM yyyy  'Time: 'hh:mm")
+                                  .format(
+                                      DateTime.parse(viewModel.event!.endDate!))
                               : 'Not provided.')),
                       const Divider(thickness: 1.5),
                       ListTile(
@@ -59,7 +65,7 @@ Widget eventView({required String eventId}) =>
                                 children: [
                                   Text('Show On Map',
                                       style: TextStyles.bodyWhite),
-                                  Icon(
+                                  const Icon(
                                     Icons.location_on_outlined,
                                     color: Colors.white,
                                   ),
@@ -78,6 +84,15 @@ Widget eventView({required String eventId}) =>
                           title: const Text('Registered'),
                           subtitle: Text(
                               viewModel.event!.participantCount.toString())),
+                      viewModel.event!.participants.contains(userService.user)
+                          ? GestureDetector(
+                              child: const Text('Unparticipate'),
+                              onTap: () => viewModel.unparticipate(context),
+                            )
+                          : GestureDetector(
+                              child: const Text('Participate'),
+                              onTap: () => viewModel.participate(context),
+                            )
                     ],
                   )),
           ],
@@ -105,5 +120,27 @@ class EventViewModel extends ChangeNotifier {
 
   directToMap(latitude, longitude, title) {
     MapsLauncher.launchCoordinates(longitude, latitude, title);
+  }
+
+  participate(context) async {
+    var message = await eventService.participateToEvent(event: event!);
+    if (message == null) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Error')));
+    } else if (message != "User participates in event") {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(message)));
+    }
+  }
+
+  unparticipate(context) async {
+    var message = await eventService.unparticipateToEvent(event: event!);
+    if (message == null) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Error')));
+    } else if (message != "User removed from participation list.") {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(message)));
+    }
   }
 }
