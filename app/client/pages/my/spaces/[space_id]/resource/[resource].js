@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from '../../../../../styles/my/resource_detail.module.scss'
 import { useRouter } from 'next/router'
-import { API_URL } from "../../../../../next.config";
+import { API_URL, ANNOTATION_API_URL } from "../../../../../next.config";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import dynamic from "next/dynamic";
@@ -17,7 +17,7 @@ import scrollIntoView from "scroll-into-view";
 import Discussion from "../../../../../components/Discussion/Discussion"
 
 import '@recogito/recogito-js/dist/recogito.min.css';
-import { Box } from '@mui/system';
+import { Box } from '@mui/material';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 import Link from 'next/link';
 
@@ -122,7 +122,7 @@ export default function resource() {
                     setRec(r)
                     const resource_id = router_query.resource;
                     const response = (
-                        await axios.get(API_URL + "/annotation/get/" + resource_id, {
+                        await axios.get(ANNOTATION_API_URL + "/annotation/get/" + resource_id, {
                             DISABLE_LOADING: true,
                         })
                     )?.data;
@@ -137,7 +137,7 @@ export default function resource() {
                     r.on('createAnnotation', async (annotation) => {
                         setAnnotations(r.getAnnotations())
                         try {
-                            await axios.post(API_URL + "/annotation", { ...annotation, resource: resource_id },
+                            await axios.post(ANNOTATION_API_URL + "/annotation", { ...annotation, resource: resource_id },
                                 {
                                     DISABLE_LOADING: true,
                                 })
@@ -149,7 +149,7 @@ export default function resource() {
                     r.on('updateAnnotation', async (annotation, previous) => {
                         setAnnotations(r.getAnnotations())
                         try {
-                            await axios.put(API_URL + "/annotation/update", { ...annotation, resource: resource_id },
+                            await axios.put(ANNOTATION_API_URL + "/annotation/update", { ...annotation, resource: resource_id },
                                 {
                                     DISABLE_LOADING: true,
                                 })
@@ -165,7 +165,7 @@ export default function resource() {
                             setOpen(false)
                         }
                         try {
-                            await axios.delete(API_URL + "/annotation/delete", { data: { ...annotation, resource: resource_id }, DISABLE_LOADING: true })
+                            await axios.delete(ANNOTATION_API_URL + "/annotation/delete", { data: { ...annotation, resource: resource_id }, DISABLE_LOADING: true })
                         }
                         catch (e) {
                             console.log(e)
