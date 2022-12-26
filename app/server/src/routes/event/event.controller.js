@@ -16,7 +16,8 @@ const EventController = {
             let activity_data = {
                 body : activity_body,
                 space: space._id,
-                event: event._id
+                event: event._id,
+                type: "event"
             }
             const activity = await ActivityModel.createActivity(req.auth.id, activity_data);
             return res.status(201).json({event})

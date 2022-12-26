@@ -24,6 +24,7 @@ const DiscussionController = {
         body: activity_body,
         space: space._id,
         discussion: discussion._id,
+        type: "discussion",
       };
       const activity = await ActivityModel.createActivity(user_id, activity_data);
       res.status(201).send({ discussion });

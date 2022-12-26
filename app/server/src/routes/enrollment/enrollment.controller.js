@@ -29,6 +29,7 @@ const EnrollmentController = {
       let activity_data = {
         body : activity_body,
         space: space._id,
+        type: "enrollment",
       }
       const activity = await ActivityModel.createActivity(user, activity_data);
       

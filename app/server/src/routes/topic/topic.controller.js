@@ -24,6 +24,7 @@ const TopicController = {
         body : activity_body,
         topic: topic._id,
         space: space._id, 
+        type: "topic"
       }
       const activity = await ActivityModel.createActivity(user_id, activity_data);
       return res.status(201).json({ topic: populated_topic });

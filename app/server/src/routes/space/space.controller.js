@@ -28,6 +28,7 @@ const SpaceController = {
       let activity_data = {
         body : activity_body,
         space: space._id,
+        type: "space"
       }
       const activity = await ActivityModel.createActivity(user_id, activity_data);
       return res.status(201).send({ space });

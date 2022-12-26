@@ -37,6 +37,7 @@ const ResourceController = {
         body : activity_body,
         resource: resource._id,
         space: topic.space._id, 
+        type: "resource",
       }
       const activity = await ActivityModel.createActivity(user_id, activity_data);
       return res.status(201).json({ resource: resource_populated });
