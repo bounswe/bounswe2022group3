@@ -3,6 +3,7 @@ module.exports = removeImports({
   output: "standalone",
   reactStrictMode: true,
   API_URL: "https://api.bucademy.tk",
+  ANNOTATION_API_URL: "https://bucademy.tk",
   eslint: {
     ignoreDuringBuilds: true,
   },

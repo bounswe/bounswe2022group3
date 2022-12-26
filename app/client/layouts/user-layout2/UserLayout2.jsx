@@ -87,7 +87,7 @@ function UserLayout2({ children }) {
                 }
             )
             const lastDate = localStorage.getItem("lastDate") || new Date();
-            const count = response?.data.feed.filter((activity) => { return new Date(activity.createdAt) < lastDate }).length;
+            const count = response?.data.feed.filter((activity) => { return new Date(activity.createdAt) > new Date(lastDate) }).length;
             localStorage.setItem("lastDate", new Date());
             setBadgeCount(count);
             setActivities(activityList);
