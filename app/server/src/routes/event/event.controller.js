@@ -7,8 +7,10 @@ const EventController = {
         try {
             req.body.creator = req.auth.id
             const event = await EventModel.createEvent(req.body);
+            var space = await SpaceModel.getSpaceByID(req.body.space_id);
+            space.events.push(event._id);
+            await space.save();
             const user = await UserModel.User.findById(req.auth.id);
-            const space = await SpaceModel.Space.findById(req.body.space_id);  
             // {user} launched a new event called {event.name} in {space} space, {date.now-event.createdAt} ago.
             let activity_body = `${user.name} ${user.surname} launched a new event called "${event.event_title}" in "${space.name}" space, {timeDiff}.`;
             let activity_data = {

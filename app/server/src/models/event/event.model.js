@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const SpaceModel = require("../../models/space/space.model");
 
 const geoLocation = new mongoose.Schema(
     {
@@ -36,11 +35,6 @@ const createEvent = async (body) => {
     var event = new Event(body);
     event.participants = [];
     event.participant_count = 0;
-
-    var space = await SpaceModel.getSpaceByID(body.space_id);
-    space.events.push(event._id);
-    await space.save();
-
     return await event.save();
 };
 const deleteEvent = async (id) => {
