@@ -1,7 +1,5 @@
 //We will do the authorization checks here !!
 const jwt = require("jsonwebtoken");
-const UserModel = require("../models/user/user.model");
-const TokensModel = require("../models/tokens/tokens.model");
 const crypto = require("crypto");
 const jwt_ac_secret = process.env.JWT_AC_KEY;
 const jwt_ref_secret = process.env.JWT_REF_KEY;
@@ -28,31 +26,17 @@ const authorization = async (req, res, next) => {
     }
     // Acquire email from decrypted token
     const email = decrytedData.email;
-
+    req.auth = { email: email };
     // Return user data
-    const user = await UserModel.getUserByEmail(email);
-    if (user) {
       // Populating user token and checking if the request token is deprecated.
       //token_populated_user = await UserModel.getPopulatedTokens(user._id)
-      const tokens = await TokensModel.getTokensByEmail(user.email);
-      if (tokens.access_token !== token) {
-        return res.status(400).json({
-          message:
-            "This token is deprecated, user has been logged-out or has a new token now!",
-        });
-      }
-      req.auth = {
-        id: user._id,
-        email: user.email,
-        name: user.name,
-        surname: user.surname,
-        createdAt: user.createdAt,
-      };
-    } else {
-      return res.status(400).json({
-        message: "There is no existing user with the given token !",
-      });
-    }
+    //   req.auth = {
+    //     id: user._id,
+    //     email: user.email,
+    //     name: user.name,
+    //     surname: user.surname,
+    //     createdAt: user.createdAt,
+    //   };
     return next();
   } catch (error) {
     return res.status(400).json({
