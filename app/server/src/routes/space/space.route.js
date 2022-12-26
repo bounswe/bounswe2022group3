@@ -63,5 +63,12 @@ spaceRouter.get(
   SpaceController.getAllEvents
 );
 
+spaceRouter.post(
+  "/rate",
+  validate("rate-space"),
+  handleValidation,
+  authorization,
+  SpaceController.rateSpace
+);
 
 module.exports = spaceRouter;
