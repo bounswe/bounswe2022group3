@@ -254,6 +254,10 @@ const SpaceController = {
       for (interest_t of interests) {
         let spaces_t = await SpaceModel.Space.find({ $text: { $search: `\"${interest_t}\"` } })
           .limit(2)
+          .populate({
+            path: "creator",
+            select: { _id: 1, name: 1, surname: 1, image: 1 },
+          })
           .exec();
         for (space_t of spaces_t) {
           if (!space_ids.includes(space_t._id.toString())) {
