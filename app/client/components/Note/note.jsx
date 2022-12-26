@@ -71,7 +71,7 @@ function Note({ note, openEditNote, setOpenEditNote, space_id, setEditNote,setRe
                         }}
 
                         ><EditIcon /></Button>
-                        <Button><ShareIcon /></Button>
+                        <Button onClick={() => navigator.clipboard.writeText("https://bucademy.tk/note/"+note?._id)}><ShareIcon /></Button>
                         <Button onClick={() => { deleteNote() }}><DeleteIcon /></Button>
                     </ButtonGroup>
                 </CardActions>
