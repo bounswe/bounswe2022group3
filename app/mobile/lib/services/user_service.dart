@@ -78,6 +78,7 @@ class UserService {
       required String email,
       required String password,
       required bool agreement,
+      required List<String> tags,
       required BuildContext context}) async {
     var messages = {
       '201':
@@ -94,6 +95,7 @@ class UserService {
           "email": email,
           "password": password,
           "agreement": agreement,
+          "tags": tags,
         },
       );
       var snack = messages["${res.statusCode}"] ?? 'Registration failed.';
@@ -134,12 +136,8 @@ class UserService {
         persistenceService.set(
             PersistenceKeys.refreshToken, refresh.refresh_token),
       ]);
-      user = User(
-        refresh.name,
-        refresh.surname,
-        refresh.id,
-        image: refresh.image
-      );
+      user =
+          User(refresh.name, refresh.surname, refresh.id, image: refresh.image);
     } catch (e) {
       print(e);
     }
