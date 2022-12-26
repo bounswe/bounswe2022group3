@@ -224,11 +224,11 @@ const SpaceController = {
       const user = req.auth.id;
       var space = await SpaceModel.Space.findbyId(space_id);
       if(!space){
-        return res.status(400).json({ error: "Space does not exist!"});
+        return res.status(400).json({error: "Space does not exist!"});
       }
       var ratings = space.rating_map;
       var average_rating = space.rating;
-      var users_rated = Array.from(rating_map.keys());
+      var users_rated = Array.from(ratings.keys());
       var rate_count = ratings.size;
       if(users_rated.includes(user._id.toString())){
         var old_rating = space.rating_map.get(user._id);
@@ -243,9 +243,9 @@ const SpaceController = {
       }
       await space.save();
       let avg_rating = space.rating;
-      return res.status(200).json({ average_rating: avg_rating});
+      return res.status(200).json({rating: avg_rating});
     } catch (e) {
-      return res.status(400).send({ error: e.toString() });
+      return res.status(400).send({error: e.toString()});
     }
   },
   getRecommendedSpaces: async function (req, res) {
