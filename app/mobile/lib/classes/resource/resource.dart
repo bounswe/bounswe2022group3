@@ -1,3 +1,4 @@
+import 'package:bucademy/classes/discussion/discussion.dart';
 import 'package:bucademy/classes/user/user.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -26,8 +27,8 @@ class Resource {
   // @JsonKey(name: 'ratings')
   // final List<bişi bişi>
 
-  // @JsonKey(name: 'discussion')
-  // final Discussion discussion; //TODO: discussion class will be added
+  @JsonKey(name: 'discussion')
+  final DiscussionShortened? discussion; //TODO: discussion class will be added
 
   @JsonKey(name: 'createdAt')
   final DateTime createdAt;
@@ -36,7 +37,7 @@ class Resource {
   final DateTime updatedAt;
 
   Resource(this.id, this.name, this.body, this.topic, this.creator,
-      this.averageRating, this.createdAt, this.updatedAt);
+      this.averageRating, this.createdAt, this.updatedAt, this.discussion);
 
   factory Resource.fromJson(Map<String, dynamic> json) =>
       _$ResourceFromJson(json);
