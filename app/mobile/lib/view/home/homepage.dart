@@ -96,17 +96,19 @@ Widget homepageView() => ViewModelBuilder<HomeViewModel>.reactive(
                                       style: TextStyles.subtitle,
                                     ),
                                     const SizedBox(height: 20),
-                                    SingleChildScrollView(
-                                      scrollDirection: Axis.horizontal,
-                                      child: Row(
-                                        children: [
-                                          ...viewModel.recommendedSpaces.map(
-                                              (Course c) => courseTile(
-                                                  c, context,
-                                                  isClickable: false))
-                                        ],
-                                      ),
-                                    ),
+                                    viewModel.isLoading
+                                        ? loadingIndicator()
+                                        : SingleChildScrollView(
+                                            scrollDirection: Axis.horizontal,
+                                            child: Row(
+                                              children: [
+                                                ...viewModel.recommendedSpaces
+                                                    .map((Course c) =>
+                                                        courseTile(c, context,
+                                                            isClickable: false))
+                                              ],
+                                            ),
+                                          ),
                                     const SizedBox(height: 20),
                                     const Text(
                                       'Discover Top Spaces',
