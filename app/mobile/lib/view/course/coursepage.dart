@@ -17,7 +17,9 @@ import 'package:bucademy/view/course/note/note_view.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:stacked/stacked.dart';
-import 'package:bucademy/services/content_service.dart';
+import '../../classes/event/event.dart';
+import 'event/create_event.dart';
+import 'event/event_view.dart';
 
 Widget coursePageView(Course c) => ViewModelBuilder<
         CoursePageViewModel>.reactive(
@@ -218,9 +220,47 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                             shrinkWrap: true,
                             padding: const EdgeInsets.all(10.0),
                             children: [
-                              ...contentService.contents("Event").map(
-                                  (MockContent m) => mockTile(m
-                                      .name)) //TODO: mocktile MockContent ile çalışmalı ama aşağıda sorun çıkarıyor
+                              if (userService.user != null)
+                                GestureDetector(
+                                  onTap: () => createEvent(context, viewModel),
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 20, vertical: 20),
+                                    margin: const EdgeInsets.only(bottom: 10),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(
+                                          Constants.borderRadius),
+                                    ),
+                                    child: Row(
+                                      children: const [
+                                        Icon(Icons.add,
+                                            color: CustomColors.main, size: 30),
+                                        SizedBox(width: 15),
+                                        Text('Create a new event'),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ...viewModel.course!.events.map((EventShortened
+                                      es) =>
+                                  GestureDetector(
+                                    child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 20, vertical: 20),
+                                        margin:
+                                            const EdgeInsets.only(bottom: 10),
+                                        decoration: BoxDecoration(
+                                          color: CustomColors.getRandomColor(),
+                                          borderRadius: BorderRadius.circular(
+                                              Constants.borderRadius),
+                                        ),
+                                        child: Text(es.title)),
+                                    onTap: () =>
+                                        PersistentNavBarNavigator.pushNewScreen(
+                                            context,
+                                            screen: eventView(eventId: es.id),
+                                            withNavBar: false),
+                                  ))
                             ],
                           ),
                           ListView(
@@ -232,7 +272,7 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                                         child: mockTile(n!.title ),
                                         onTap: () => PersistentNavBarNavigator
                                             .pushNewScreen(context,
-                                                screen: noteView(note: n ),
+                                                screen: noteView(note: n),
                                                 withNavBar: false),
                                       ))
                             ],
@@ -321,6 +361,7 @@ class CoursePageViewModel extends ChangeNotifier {
   CoursePageViewModel(String courseId) {
     init(courseId);
   }
+
   Future<void> init(String courseId) async {
     CourseDetailed? c = await courseService.getCourseDetails(id: courseId);
     if (c != null) course = c;
@@ -334,9 +375,15 @@ class CoursePageViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addNewTopic(Topic t){
+  void addNewEvent(Event e) {
     if (course == null) return;
-    course!.topics.insert(0, Topic(t.name,t.id,course!.id));
+    course!.events.insert(0, EventShortened(e.description, e.id));
+    notifyListeners();
+  }
+
+  void addNewTopic(Topic t) {
+    if (course == null) return;
+    course!.topics.insert(0, Topic(t.name, t.id, course!.id));
     notifyListeners();
   }
 
