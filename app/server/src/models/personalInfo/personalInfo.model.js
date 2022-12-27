@@ -33,6 +33,11 @@ const personalInfoSchema = new mongoose.Schema({
       type: String,
     },
   ],
+  disinterested_spaces: [
+    {
+      type: String,
+    },
+  ],
   badges: [
     {
       type: mongoose.Schema.Types.ObjectId,

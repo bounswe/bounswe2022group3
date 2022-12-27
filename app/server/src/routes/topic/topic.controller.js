@@ -19,11 +19,12 @@ const TopicController = {
       let populated_topic = await TopicModel.getPopulatedTopic(topic);
       const user = await UserModel.User.findById(user_id);
       // {user} initiated {topic} topic in {space} space, {timeDiff}.
-      let activity_body = `${user.name} ${user.surname} initiated "${topic.name}" topic in "${space.name}]" space, {timeDiff}.`;
+      let activity_body = `${user.name} ${user.surname} initiated "${topic.name}" topic in "${space.name}" space, {timeDiff}.`;
       let activity_data = {
         body : activity_body,
         topic: topic._id,
         space: space._id, 
+        type: "topic"
       }
       const activity = await ActivityModel.createActivity(user_id, activity_data);
       return res.status(201).json({ topic: populated_topic });

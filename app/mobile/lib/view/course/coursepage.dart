@@ -228,8 +228,8 @@ Widget coursePageView(Course c) => ViewModelBuilder<
                             padding: const EdgeInsets.all(10.0),
                             children: [
                               ...(viewModel.course!.notes ?? [])
-                                  .map((Note n) => GestureDetector(
-                                        child: mockTile(n.title ),
+                                  .map((Note? n) => GestureDetector(
+                                        child: mockTile(n!.title ),
                                         onTap: () => PersistentNavBarNavigator
                                             .pushNewScreen(context,
                                                 screen: noteView(note: n ),

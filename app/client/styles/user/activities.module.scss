@@ -1,0 +1,47 @@
+.activitiesPageContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    padding: 5% 10% 0;
+}
+
+.activitiesContainer {
+    width: 80%;
+    background-color: #4d4ffa;
+    padding: 10px;
+    height: 100%;
+    border-radius: 12px;
+}
+
+.activityContainer {
+    border-radius: 12px;
+    padding: 20px 20px;
+    color: #4d4ffa;
+    background-color: white;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.activitiesTitle {
+    margin-bottom: 50px;
+}
+
+.activityIconFrame {
+    background-color: #4d4ffa;
+    border-radius: 100%;
+    min-width: 40px !important;
+    height: 40px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    margin-right: 20px;
+}
+
+.activityIcon {
+    color: white;
+}
