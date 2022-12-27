@@ -22,6 +22,7 @@ Container commentTile(Comment c, BuildContext context) => Container(
               profilePictureButton(
                   p_id: c.user.id,
                   context: context,
+                  userId: c.user.id,
                   imagePath: fullImagePath(c.user.image)),
               const SizedBox(width: 10),
               Expanded(
