@@ -115,6 +115,7 @@ export default function Home() {
             await axios.post(API_URL + "/userProfile/disinterest", {
                 space_id: id
             })
+            getRecommendedSpaces("");
         } catch (err) {
             console.log(err);
         }
@@ -172,7 +173,7 @@ export default function Home() {
 
                         {
                             recommendedSpaces.map(course => {
-                                return <Link href={'/my/spaces/' + course._id + "/resources"}>
+                                return <>
                                     <div className={styles.card} style={{ border: course.creator._id == localStorage.getItem("user_id") && "2px solid #4d4ffa" }}>
                                         <div className={styles.image} style={{position: "relative"}}>
                                             <img src={course.image} layout="fill" />
@@ -182,15 +183,17 @@ export default function Home() {
                                                 </div>
                                             </CustomTooltip>
                                         </div>
-                                        <div className={styles.details}>
-                                            <h3>{course.name}</h3>
-                                            <div>
-                                                <h4>{course.creator.name} {course.creator.surname}</h4>
-                                                <Rating defaultValue={course.rating} precision={0.1} readOnly />
+                                        <Link href={'/space/' + course._id}>
+                                            <div className={styles.details}>
+                                                <h3>{course.name}</h3>
+                                                <div>
+                                                    <h4>{course.creator.name} {course.creator.surname}</h4>
+                                                    <Rating defaultValue={course.rating} precision={0.1} readOnly />
+                                                </div>
                                             </div>
-                                        </div>
+                                        </Link>
                                     </div>
-                                </Link>
+                                </>
                             })
                         }
                     </Masonry>
