@@ -19,7 +19,7 @@ Widget feedView() => ViewModelBuilder<FeedViewModel>.reactive(
     onModelReady: (viewModel) => viewModel.refresh(),
     builder: (context, viewModel, child) {
       return Scaffold(
-        appBar: appBar(title: 'Feed'),
+        appBar: appBar(title: 'Feed', context: context),
         backgroundColor: Colors.white,
         body: RefreshIndicator(
           onRefresh: viewModel.refresh,
@@ -47,36 +47,46 @@ Widget feedView() => ViewModelBuilder<FeedViewModel>.reactive(
                               child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: viewModel.activities
-                                      .map((activity) => GestureDetector(
-                                            onTap: () =>
-                                                goToDetails(activity, context),
-                                            child: Container(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      vertical: 10,
-                                                      horizontal: 10),
-                                              child: Row(
-                                                children: [
-                                                  profilePicture(
-                                                      imagePath: fullImagePath(
-                                                          activity.user.image)),
-                                                  const SizedBox(width: 10),
-                                                  Flexible(
-                                                      child: RichText(
-                                                    text: TextSpan(
-                                                        text: activity.body,
-                                                        style: TextStyles
-                                                            .bodyBlack,
-                                                        children: [
-                                                          TextSpan(
+                                      .map((activity) => Container(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 10, horizontal: 10),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                profilePictureButton(
+                                                    imagePath: fullImagePath(
+                                                        activity.user.image),
+                                                    context: context,
+                                                    p_id: null,
+                                                    userId: activity.user.id),
+                                                Expanded(
+                                                  child: GestureDetector(
+                                                    onTap: () => goToDetails(
+                                                        activity, context),
+                                                    child: Row(
+                                                      children: [
+                                                        const SizedBox(
+                                                            width: 10),
+                                                        Flexible(
+                                                            child: RichText(
+                                                          text: TextSpan(
                                                               text:
-                                                                  '\n${activity.timeDiff}',
+                                                                  activity.body,
                                                               style: TextStyles
-                                                                  .infoGrey)
-                                                        ]),
-                                                  ))
-                                                ],
-                                              ),
+                                                                  .bodyBlack,
+                                                              children: [
+                                                                TextSpan(
+                                                                    text:
+                                                                        '\n${activity.timeDiff}',
+                                                                    style: TextStyles
+                                                                        .infoGrey)
+                                                              ]),
+                                                        ))
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ))
                                       .toList()),
