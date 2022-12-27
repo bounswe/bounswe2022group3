@@ -54,7 +54,7 @@ class NoteService {
         data: {"space_id": spaceId},
       );
       Map json = response.data;
-      return json['notes'].map<Note>((e) => Note.fromJson(e)).toList();
+      return json['notes'].map<Note>((e) => Note.fromJson(e['note'])).toList();
     } catch (e) {
       print(e);
     }
