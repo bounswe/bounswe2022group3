@@ -26,9 +26,7 @@ class Course {
   final Color color = CustomColors.getRandomColor();
   // final DateTime createdAt;
 
-
   Course(this.name, this.id, this.info, this.tags, this.image, this.creator, this.numberOfEnrolled, this.rating);
-
 
   factory Course.fromJson(Map<String, dynamic> json) => _$CourseFromJson(json);
 

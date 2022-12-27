@@ -111,9 +111,7 @@ goToDetails(Activity activity, BuildContext context) async {
 
   if (activity.topicId != null) {
     PersistentNavBarNavigator.pushNewScreen(context,
-        screen: topicPageView(courseDetailed.topics
-            .firstWhere((element) => element.id == activity.topicId)),
-        withNavBar: false);
+        screen: coursePageView(course), withNavBar: false);
   } else if (activity.discussionId != null) {
     PersistentNavBarNavigator.pushNewScreen(context,
         screen: discussionView(discussionId: activity.discussionId!),
