@@ -7,6 +7,7 @@ import 'package:bucademy/resources/text_styles.dart';
 import 'package:bucademy/services/locator.dart';
 import 'package:bucademy/view/course/coursepage.dart';
 import 'package:bucademy/view/course/discussion/discussion_view.dart';
+import 'package:bucademy/view/course/note/create_note_page.dart';
 import 'package:bucademy/view/resource/edit_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -76,7 +77,10 @@ Widget resourcePageView(TopicDetailed t, Resource r,
                                 ),
                               ),
                             FloatingActionButton(
-                              onPressed: null,
+                              onPressed: () =>
+                                  PersistentNavBarNavigator.pushNewScreen(
+                                      context,
+                                      screen: postNoteView(r.id)),
                               backgroundColor: CustomColors.main,
                               tooltip: 'Create A New Note',
                               heroTag: 'btn2',
