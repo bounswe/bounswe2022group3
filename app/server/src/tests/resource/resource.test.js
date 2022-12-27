@@ -4,7 +4,7 @@ const { dbConnect, dbDisconnect } = require("../utils/db");
 let spy;
 let app;
 
-describe("Topic", () => {
+describe("Resource", () => {
     beforeAll(async () => {
         dbConnect();
         const AuthService = require("../../services/auth");
@@ -13,12 +13,13 @@ describe("Topic", () => {
     });
     afterAll(async () => dbDisconnect());
     describe("create route", () => {
-        describe("given no space_id was provided", () => {
+        describe("given no topic_id was provided", () => {
             it("should return a 400", async () => {
                 await supertest(app)
                     .post("/topic")
                     .send({
-                        "name": "Standard Japanese"
+                        "name": "Scalar pitch",
+                        "body": "Words spoken in isolation: If the accent is on the first mora, then the pitch starts high, drops suddenly on the second mora, then levels out. The pitch may fall across both morae, or mostly on one or the other.",
                     })
                     .expect(400);
             });
