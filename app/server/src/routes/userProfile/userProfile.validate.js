@@ -9,5 +9,10 @@ exports.validate = (method) => {
         body("knowledge", "Knowledge doesn't exist.").exists().isArray(),
       ];
     }
+    case "disinterest": {
+      return [
+        body("space_id", "space_id doesn't exist.").exists()
+      ];
+    }
   }
 };

@@ -5,7 +5,7 @@ const AnnotationModel = require("../../models/annotation/annotation.model");
 const ActivityModel = require("../../models/activity/activity.model");
 const UserModel = require("../../models/user/user.model");
 const SpaceModel = require("../../models/space/space.model");
-
+const NoteModel = require("../../models/note/note.model");
 const ResourceController = {
   createResource: async function (req, res) {
     try {
@@ -36,7 +36,9 @@ const ResourceController = {
       let activity_data = {
         body : activity_body,
         resource: resource._id,
-        space: topic.space._id, 
+        space: topic.space._id,
+        topic: topic._id,
+        type: "resource",
       }
       const activity = await ActivityModel.createActivity(user_id, activity_data);
       return res.status(201).json({ resource: resource_populated });
@@ -68,6 +70,7 @@ const ResourceController = {
         }
         await topic.save();
         await space.save();
+        await NoteModel.Note.deleteMany({discussion: discussion._id});
         await ResourceModel.deleteResource(resource_id);
       }
       return res.status(201).json({ message: "Resource deleted successfully!" });

@@ -44,6 +44,7 @@ const createActivity = async (user_id, activity_data) => {
   var activity = new Activity({
     user: user_id,
     body: activity_data.body,
+    type: activity_data.type,
   });
   const user = await UserModel.User.findById(user_id);
   var personal_info = await PersonalInfoModel.getPersonalInfo(user.personal_info);
