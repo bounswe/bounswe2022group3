@@ -1225,13 +1225,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.7"
-  uuid:
-    dependency: transitive
-    description:
-      name: uuid
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.0.7"
   vector_math:
     dependency: transitive
     description:
