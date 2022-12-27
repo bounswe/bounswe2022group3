@@ -104,8 +104,7 @@ Widget homepageView() => ViewModelBuilder<HomeViewModel>.reactive(
                                               children: [
                                                 ...viewModel.recommendedSpaces
                                                     .map((Course c) =>
-                                                        courseTile(c, context,
-                                                            isClickable: false))
+                                                        courseTile(c, context))
                                               ],
                                             ),
                                           ),
