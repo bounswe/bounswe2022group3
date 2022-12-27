@@ -54,6 +54,7 @@ dependencies:
   flutter_launcher_icons: ^0.10.0
 
   restart_app: ^1.1.0
+  multiple_search_selection: ^2.3.2
 
 dev_dependencies:
   flutter_test:

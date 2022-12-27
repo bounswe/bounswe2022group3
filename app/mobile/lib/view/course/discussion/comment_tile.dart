@@ -11,7 +11,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-Container commentTile(Comment c) => Container(
+Container commentTile(Comment c, BuildContext context) => Container(
       margin: const EdgeInsets.symmetric(vertical: 0, horizontal: 8),
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Column(
@@ -19,7 +19,10 @@ Container commentTile(Comment c) => Container(
         children: [
           Row(
             children: [
-              profilePicture(imagePath: fullImagePath(c.user.image)),
+              profilePictureButton(
+                  p_id: c.user.id,
+                  context: context,
+                  imagePath: fullImagePath(c.user.image)),
               const SizedBox(width: 10),
               Expanded(
                   child: Column(
