@@ -16,7 +16,8 @@ Widget homepageView() => ViewModelBuilder<HomeViewModel>.reactive(
           appBar: appBar(
               title: userService.user != null
                   ? "Hello ${userService.user?.name}!"
-                  : null),
+                  : null,
+              context: context),
           body: RefreshIndicator(
             onRefresh: (() => viewModel.update()),
             child: Stack(

@@ -14,17 +14,24 @@ Widget profilePicture(
             height: height, width: widht, fit: BoxFit.cover);
 
 GestureDetector profilePictureButton(
-    {required String p_id,
+    {required String? p_id,
     required String imagePath,
     required BuildContext context,
     double height = 20,
     double widht = 20,
-    bool circle = true}) {
+    bool circle = true,
+    String? userId}) {
   return GestureDetector(
-      onTap: () {
-        navigatorService.controller.jumpToTab(1);
-        PersistentNavBarNavigator.pushNewScreen(context,
-            screen: profileView(p_id));
+      onTap: () async {
+        if (p_id == null && userId != null) {
+          p_id = (await profileService.getProfileInfo(userId))!.id;
+        }
+        if (userId == null) navigatorService.controller.jumpToTab(2);
+        if (p_id != null) {
+          // ignore: use_build_context_synchronously
+          PersistentNavBarNavigator.pushNewScreen(context,
+              screen: profileView(p_id!));
+        }
       },
       child: circle
           ? CircleAvatar(

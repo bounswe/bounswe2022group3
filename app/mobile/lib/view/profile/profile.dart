@@ -303,7 +303,7 @@ class ProfileView extends ChangeNotifier {
     if (!isFollowed) {
       isFollowed = await profileService.follow(p!.id);
     } else {
-      isFollowed = await profileService.unfollow(p!.id);
+      isFollowed = !(await profileService.unfollow(p!.id));
     }
     notifyListeners();
   }
@@ -318,7 +318,9 @@ class ProfileView extends ChangeNotifier {
       created = await getSpaces(p!.created_spaces, 'Created Spaces');
     }
     joined = await getSpaces([], 'Joined Spaces');
-    isFollowed = p!.follower_users!.contains(userService.user!);
+    isFollowed = p!.follower_users!
+            .indexWhere((element) => element.id == userService.user!.id) !=
+        -1;
     isInfoLoading = false;
     notifyListeners();
   }

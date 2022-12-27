@@ -5,7 +5,7 @@ import 'package:bucademy/services/locator.dart';
 import 'package:bucademy/view/widgets/profile_picture.dart';
 import 'package:flutter/material.dart';
 
-AppBar appBar({required String? title}) {
+AppBar appBar({required String? title, required BuildContext context}) {
   return AppBar(
     elevation: 0,
     backgroundColor: CustomColors.main,

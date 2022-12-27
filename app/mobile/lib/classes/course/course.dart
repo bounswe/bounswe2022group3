@@ -40,7 +40,7 @@ class CourseDetailed extends Course {
   List<String> badges = [];
   List<DiscussionShortened> discussions = [];
 
-  List<Note>? notes = [];
+  List<Note?>? notes = [];
 
   CourseDetailed(super.name, super.id, super.info, super.tags, super.image,
       super.creator, super.numberOfEnrolled, super.rating, this.topics, this.badges, this.discussions, this.notes);
