@@ -19,9 +19,7 @@ class _TextSelectionToolbarItemData {
 class SelectionControls extends MaterialTextSelectionControls {
   static const double _kToolbarContentDistanceBelow = 10.0;
   static const double _kToolbarContentDistance = 8.0;
-  /* int start;
-  int end;
-  String selected;*/
+
   final AnnotationCallback onAnnotationPressed;
   SelectionControls({required this.onAnnotationPressed});
   @override
@@ -61,16 +59,6 @@ class SelectionControls extends MaterialTextSelectionControls {
       handleAnnotation: //onAnnotationPressed,
           () {
         onAnnotationPressed(delegate);
-        /*
-        // start = delegate.textEditingValue.selection.start;
-        //end = delegate.textEditingValue.selection.end;
-        //selected = delegate.textEditingValue.text.substring(start, end);
-        delegate.userUpdateTextEditingValue(
-            delegate.textEditingValue.copyWith(
-                selection: TextSelection.collapsed(
-                    offset: delegate.textEditingValue.selection.baseOffset)),
-            SelectionChangedCause.toolbar);
-*/
         delegate.hideToolbar();
       },
       handleCut: canCut(delegate) && handleCut != null

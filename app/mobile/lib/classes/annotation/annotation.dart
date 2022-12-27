@@ -106,7 +106,7 @@ class Creator {
 class Target {
   List<Selector>? selector;
 
-  Target({required List<Selector> selector}) : selector = selector ?? [];
+  Target({required List<Selector> this.selector});
 
   Target.fromJson(Map<String, dynamic> json) {
     if (json['selector'] != null) {
