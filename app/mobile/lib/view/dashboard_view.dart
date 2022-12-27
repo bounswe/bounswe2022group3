@@ -50,7 +50,7 @@ class _DashboardViewState extends State<DashboardView> {
       screens: [
         homepageView(),
         feedView(),
-        profileView("63603cc10a14cd5cda504f15")
+        profileView(userService.user?.id ?? ''),
       ], //userService.user?.id ?? ''
       items: [
         PersistentBottomNavBarItem(
