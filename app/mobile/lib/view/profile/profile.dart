@@ -365,7 +365,7 @@ Widget aboutMe(Profile? p, BuildContext context) {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             seperator(context),
-            Text(p!.personal_info!.bio!),
+            Text(p!.personal_info!.bio ?? ""),
             const SizedBox(height: 15),
             const Text(
               'Interests',

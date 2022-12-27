@@ -180,23 +180,23 @@ Widget editProfileView(
                     showSelectAllButton: false,
                     maximumShowItemsHeight: 200,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Make my profile Private',
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w500)),
-                      Transform.scale(
-                        scale: 0.7,
-                        child: CupertinoSwitch(
-                            value: viewModel.isPrivate ?? false,
-                            onChanged: (val) {
-                              viewModel.isPrivate = val;
-                              viewModel.notifyListeners();
-                            }),
-                      )
-                    ],
-                  ),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //   children: [
+                  //     Text('Make my profile Private',
+                  //         style: TextStyle(
+                  //             fontSize: 16, fontWeight: FontWeight.w500)),
+                  //     Transform.scale(
+                  //       scale: 0.7,
+                  //       child: CupertinoSwitch(
+                  //           value: viewModel.isPrivate ?? false,
+                  //           onChanged: (val) {
+                  //             viewModel.isPrivate = val;
+                  //             viewModel.notifyListeners();
+                  //           }),
+                  //     )
+                  //   ],
+                  // ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
