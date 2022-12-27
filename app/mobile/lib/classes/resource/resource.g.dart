@@ -27,3 +27,15 @@ Map<String, dynamic> _$ResourceToJson(Resource instance) => <String, dynamic>{
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt.toIso8601String(),
     };
+
+ResourceShortened _$ResourceShortenedFromJson(Map<String, dynamic> json) =>
+    ResourceShortened(
+      json['_id'] as String,
+      json['name'] as String,
+    );
+
+Map<String, dynamic> _$ResourceShortenedToJson(ResourceShortened instance) =>
+    <String, dynamic>{
+      '_id': instance.id,
+      'name': instance.name,
+    };

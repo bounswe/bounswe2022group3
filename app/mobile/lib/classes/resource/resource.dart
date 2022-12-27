@@ -35,9 +35,27 @@ class Resource {
   @JsonKey(name: 'updatedAt')
   final DateTime updatedAt;
 
-  Resource(this.id, this.name, this.body,this.topic, this.creator, this.averageRating, this.createdAt, this.updatedAt);
+  Resource(this.id, this.name, this.body, this.topic, this.creator,
+      this.averageRating, this.createdAt, this.updatedAt);
 
-  factory Resource.fromJson(Map<String, dynamic> json) => _$ResourceFromJson(json);
+  factory Resource.fromJson(Map<String, dynamic> json) =>
+      _$ResourceFromJson(json);
 
   Map<String, dynamic> toJson() => _$ResourceToJson(this);
+}
+
+@JsonSerializable()
+class ResourceShortened {
+  @JsonKey(name: '_id')
+  final String id;
+
+  @JsonKey(name: 'name')
+  final String name;
+
+  ResourceShortened(this.id, this.name);
+
+  factory ResourceShortened.fromJson(Map<String, dynamic> json) =>
+      _$ResourceShortenedFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ResourceShortenedToJson(this);
 }

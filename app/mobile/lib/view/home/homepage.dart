@@ -13,7 +13,10 @@ Widget homepageView() => ViewModelBuilder<HomeViewModel>.reactive(
       viewModelBuilder: () => HomeViewModel(),
       onModelReady: (model) => model.getCourses(),
       builder: (context, viewModel, child) => Scaffold(
-          appBar: appBar(context),
+          appBar: appBar(
+              title: userService.user != null
+                  ? "Hello ${userService.user?.name}!"
+                  : null),
           body: RefreshIndicator(
             onRefresh: (() => viewModel.update()),
             child: Stack(

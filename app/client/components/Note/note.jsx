@@ -13,6 +13,7 @@ import { API_URL } from "../../next.config";
 import { useRouter } from 'next/router'
 import EditNote from "../../components/PopUps/EditNote";
 import Link from 'next/link';
+import { toast } from "react-toastify";
 
 const MDEditor = dynamic(
     () => import("@uiw/react-md-editor"),
@@ -71,7 +72,7 @@ function Note({ note, openEditNote, setOpenEditNote, space_id, setEditNote,setRe
                         }}
 
                         ><EditIcon /></Button>
-                        <Button><ShareIcon /></Button>
+                        <Button onClick={() => {navigator.clipboard.writeText("https://bucademy.tk/note/"+note?._id); toast.success("Successfully copied note link!")}}><ShareIcon /></Button>
                         <Button onClick={() => { deleteNote() }}><DeleteIcon /></Button>
                     </ButtonGroup>
                 </CardActions>

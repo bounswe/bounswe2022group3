@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'package:bucademy/view/feed/feed.dart';
 import 'package:bucademy/view/intro/intro.dart';
 import 'package:bucademy/view/profile/profile.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
@@ -47,13 +49,20 @@ class _DashboardViewState extends State<DashboardView> {
       controller: navigatorService.controller,
       screens: [
         homepageView(),
-        profileView(userService.user?.id ?? '')
+        feedView(),
+        profileView(userService.user?.id ?? ''),
       ], //userService.user?.id ?? ''
       items: [
         PersistentBottomNavBarItem(
           icon: const Icon(Icons.home),
           title: "Homepage",
           activeColorPrimary: Colors.red,
+          inactiveColorPrimary: Colors.grey,
+        ),
+        PersistentBottomNavBarItem(
+          icon: const Icon(CupertinoIcons.compass),
+          title: "Feed",
+          activeColorPrimary: Colors.green,
           inactiveColorPrimary: Colors.grey,
         ),
         PersistentBottomNavBarItem(

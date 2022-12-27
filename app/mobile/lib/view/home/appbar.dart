@@ -5,7 +5,7 @@ import 'package:bucademy/services/locator.dart';
 import 'package:bucademy/view/widgets/profile_picture.dart';
 import 'package:flutter/material.dart';
 
-AppBar appBar(BuildContext context) {
+AppBar appBar({required String? title}) {
   return AppBar(
     elevation: 0,
     backgroundColor: CustomColors.main,
@@ -19,9 +19,7 @@ AppBar appBar(BuildContext context) {
           imagePath: fullImagePath(userService.user?.image)),
     ),
     title: Text(
-      userService.user != null
-          ? "Hello ${userService.user?.name}!"
-          : "Welcome!",
+      title ?? "Welcome!",
       style: TextStyles.pageTitle,
     ),
     centerTitle: false,

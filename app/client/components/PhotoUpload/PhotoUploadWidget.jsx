@@ -11,23 +11,11 @@ function PhotoUploadWidget({ setFiles, files, setCropper }) {
         };
     }, [files]);
 
-    async function onCrop(e) {
-        e.preventDefault();
-        // if (cropper) {
-        //     SetLoading(true);
-        //     const dataURI = cropper.getCroppedCanvas().toDataURL("image/jpeg");
-        //     const blob = await (await fetch(dataURI)).blob();
-        //     await uploadPhoto(blob);
-        //     setFiles([]);
-        //     SetLoading(false);
-        // }
-    }
-
     return (
-        <div className={styles.stackable_grid_wrapper}>
+        <div className={styles.stackable_grid_wrapper} style={{width: "100%"}}>
             <div className={styles.stackable_grid_three}>
                 <div className={styles.column_of_three}>
-                    <h3 className={styles.heading_tertiary}>STEP 1 - ADD SPACE IMAGE</h3>
+                    <h3 className={styles.heading_tertiary}>STEP 1 - ADD IMAGE</h3>
                     <PhotoWidgetDropzone setFiles={setFiles} />
                 </div>
                 <div className={styles.column_of_three}>
