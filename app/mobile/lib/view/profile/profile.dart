@@ -48,7 +48,7 @@ Widget profileView(String p_id) => ViewModelBuilder<ProfileView>.reactive(
     viewModelBuilder: () => ProfileView(),
     onModelReady: (viewModel) => viewModel.getProfileInfo(p_id),
     builder: (context, viewModel, child) => DefaultTabController(
-        length: 4,
+        length: 3,
         child: Scaffold(
           body: p_id.length < 3
               ? Center(
@@ -265,11 +265,11 @@ Widget profileView(String p_id) => ViewModelBuilder<ProfileView>.reactive(
                           ]),
                       body: TabBarView(children: [
                         aboutMe(viewModel.p, context),
-                        ListView(
-                            shrinkWrap: true,
-                            padding: const EdgeInsets.all(10.0),
-                            children: list_open(
-                                viewModel.p!.personal_info!.activities!)),
+                        // ListView(
+                        //     shrinkWrap: true,
+                        //     padding: const EdgeInsets.all(10.0),
+                        //     children: list_open(
+                        //         viewModel.p!.personal_info!.activities!)),
                         ListView(
                           shrinkWrap: true,
                           padding: const EdgeInsets.all(10.0),
@@ -292,7 +292,7 @@ class ProfileView extends ChangeNotifier {
   List<Course>? created = [];
   List<String> tabNames = [
     "About",
-    "Activities",
+    // "Activities",
     "Joined Spaces",
     "Created Spaces"
   ];
