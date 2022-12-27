@@ -10,6 +10,7 @@ import 'package:bucademy/view/login/login.dart';
 import 'package:bucademy/view/profile/edit_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
+import 'package:restart_app/restart_app.dart';
 import 'package:stacked/stacked.dart';
 
 import 'package:bucademy/resources/custom_colors.dart';
@@ -215,6 +216,15 @@ Widget profileView(String p_id) => ViewModelBuilder<ProfileView>.reactive(
                               ),
                               actions: viewModel.isMyProfile
                                   ? [
+                                      IconButton(
+                                          onPressed: () async {
+                                            await userService.logout();
+                                            await Restart.restartApp();
+                                          },
+                                          icon: const Icon(
+                                            Icons.logout,
+                                            color: Colors.white,
+                                          )),
                                       IconButton(
                                           onPressed: () {
                                             viewModel.p != null
