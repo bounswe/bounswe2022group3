@@ -1,12 +1,15 @@
 // ignore_for_file: non_constant_identifier_names
-
 import 'dart:math';
 
+import 'package:bucademy/classes/course/course.dart';
 import 'package:bucademy/classes/profile/profile.dart';
 import 'package:bucademy/resources/constants.dart';
 import 'package:bucademy/services/locator.dart';
+import 'package:bucademy/view/home/course_tile.dart';
+import 'package:bucademy/view/login/login.dart';
+import 'package:bucademy/view/profile/edit_profile.dart';
 import 'package:flutter/material.dart';
-import 'package:restart_app/restart_app.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:stacked/stacked.dart';
 
 import 'package:bucademy/resources/custom_colors.dart';
@@ -43,14 +46,31 @@ class _SliverPersistentHeaderDelagete extends SliverPersistentHeaderDelegate {
 
 Widget profileView(String p_id) => ViewModelBuilder<ProfileView>.reactive(
     viewModelBuilder: () => ProfileView(),
-    onModelReady: (model) => model.getProfileInfo(p_id),
+    onModelReady: (viewModel) => viewModel.getProfileInfo(p_id),
     builder: (context, viewModel, child) => DefaultTabController(
-        length: 5,
+        length: 3,
         child: Scaffold(
           body: p_id.length < 3
-              ? const Text(
-                  "Please Login First") // send user to the  login page (to be discussed)
-              : p == null
+              ? Center(
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          "Please Login First",
+                        ),
+                        const SizedBox(height: 10),
+                        TextButton(
+                            onPressed: () =>
+                                PersistentNavBarNavigator.pushNewScreen(context,
+                                    screen: loginView()),
+                            style: ButtonStyle(
+                                backgroundColor: MaterialStateColor.resolveWith(
+                                    (states) => CustomColors.main)),
+                            child: const Text('login',
+                                style: TextStyle(color: Colors.white)))
+                      ]),
+                ) // send user to the  login page (to be discussed)
+              : viewModel.p == null
                   ? const Center(child: CircularProgressIndicator())
                   : NestedScrollView(
                       headerSliverBuilder: (BuildContext context,
@@ -59,27 +79,127 @@ Widget profileView(String p_id) => ViewModelBuilder<ProfileView>.reactive(
                             SliverAppBar(
                               pinned: true,
                               elevation: 0,
-                              expandedHeight: 240.0,
+                              expandedHeight:
+                                  viewModel.isMyProfile ? 230.0 : 260.0,
                               forceElevated: innerBoxIsScrolled,
                               foregroundColor: Colors.black,
                               backgroundColor: CustomColors.main,
-                              title: const Text(
-                                'My Profile',
+                              title: Text(
+                                viewModel.isMyProfile ? 'My Profile' : '',
                                 style: TextStyles.pageTitle,
                               ),
                               flexibleSpace: FlexibleSpaceBar(
                                 background: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                            horizontal: 10) +
-                                        const EdgeInsets.only(top: 60),
-                                    decoration: const BoxDecoration(
-                                      color: CustomColors.main,
-                                    ),
-                                    child: viewModel.isInfoLoading
-                                        ? const Center(
-                                            child: CircularProgressIndicator())
-                                        : profileHeader(context,
-                                            'https://randomuser.me/api/portraits/men/40.jpg')),
+                                  padding: const EdgeInsets.symmetric(
+                                          horizontal: 10) +
+                                      const EdgeInsets.only(top: 60),
+                                  decoration: const BoxDecoration(
+                                    color: CustomColors.main,
+                                  ),
+                                  child: viewModel.isInfoLoading
+                                      ? const Center(
+                                          child: CircularProgressIndicator())
+                                      : Column(
+                                          children: [
+                                            const SizedBox(height: 30),
+                                            profilePicture(
+                                                imagePath: fullImagePath(
+                                                    viewModel.p!.image!),
+                                                height: 40,
+                                                widht: 40),
+                                            const SizedBox(
+                                              height: 15,
+                                            ),
+                                            Text(
+                                              '${viewModel.p!.name!} ${viewModel.p!.surname!}',
+                                              style: const TextStyle(
+                                                  fontSize: 25,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            const SizedBox(height: 10),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                Container(
+                                                    margin:
+                                                        const EdgeInsets.all(2),
+                                                    decoration:
+                                                        const BoxDecoration(
+                                                            color: Colors
+                                                                .transparent),
+                                                    child: Row(children: [
+                                                      const Text('Followers'),
+                                                      const SizedBox(
+                                                        width: 10,
+                                                        height: 3,
+                                                      ),
+                                                      const Icon(Icons.person,
+                                                          size: 15),
+                                                      const SizedBox(width: 2),
+                                                      Text(viewModel.p!
+                                                                  .follower_users ==
+                                                              null
+                                                          ? '0'
+                                                          : viewModel
+                                                              .p!
+                                                              .follower_users!
+                                                              .length
+                                                              .toString()),
+                                                    ])),
+                                                Container(
+                                                  margin:
+                                                      const EdgeInsets.all(2),
+                                                  decoration:
+                                                      const BoxDecoration(
+                                                          color: Colors
+                                                              .transparent),
+                                                  child: Row(children: [
+                                                    const Text('Following'),
+                                                    const SizedBox(
+                                                      width: 10,
+                                                      height: 3,
+                                                    ),
+                                                    const Icon(Icons.person,
+                                                        size: 15),
+                                                    const SizedBox(width: 2),
+                                                    Text(viewModel.p!
+                                                                .followed_users ==
+                                                            null
+                                                        ? '0'
+                                                        : viewModel
+                                                            .p!
+                                                            .followed_users!
+                                                            .length
+                                                            .toString()),
+                                                  ]),
+                                                ),
+                                              ],
+                                            ),
+                                            !viewModel.isMyProfile
+                                                ? ElevatedButton(
+                                                    style: ElevatedButton.styleFrom(
+                                                        backgroundColor: Colors
+                                                            .grey.shade200,
+                                                        foregroundColor: Colors
+                                                            .blue.shade900,
+                                                        textStyle:
+                                                            const TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold)),
+                                                    onPressed: () {
+                                                      viewModel
+                                                          .followUnfollowCallback();
+                                                    },
+                                                    child: Text(
+                                                        viewModel.isFollowed
+                                                            ? 'Unfollow'
+                                                            : 'Follow'))
+                                                : const SizedBox(height: 0)
+                                          ],
+                                        ),
+                                ),
                               ),
                               leading: GestureDetector(
                                 child: const Icon(
@@ -87,127 +207,147 @@ Widget profileView(String p_id) => ViewModelBuilder<ProfileView>.reactive(
                                   color: Colors.white,
                                 ),
                                 onTap: () {
-                                  navigatorService.controller.jumpToTab(
-                                      0); // TODO: bunu değiştir bi önceki sayfa olsun
+                                  Navigator.of(context).canPop()
+                                      ? Navigator.of(context).pop()
+                                      : navigatorService.controller
+                                          .jumpToTab(0);
                                 },
                               ),
-                              actions: [
-                                IconButton(
-                                    onPressed: () {},
-                                    icon: const Icon(
-                                      Icons.settings,
-                                      color: Colors.white,
-                                    )),
-                                IconButton(
-                                    onPressed: () async {
-                                      await userService.logout();
-                                      Restart.restartApp();
-                                    },
-                                    icon: const Icon(
-                                      Icons.logout,
-                                      color: Colors.white,
-                                    ))
-                              ],
+                              actions: viewModel.isMyProfile
+                                  ? [
+                                      IconButton(
+                                          onPressed: () {
+                                            viewModel.p != null
+                                                ? PersistentNavBarNavigator
+                                                    .pushNewScreen(context,
+                                                        screen: editProfileView(
+                                                            viewModel,
+                                                            viewModel),
+                                                        withNavBar: false)
+                                                : ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                    const SnackBar(
+                                                        content: Text(
+                                                            'Please Wait for a Moment')),
+                                                  );
+                                          },
+                                          icon: const Icon(
+                                            Icons.edit,
+                                            color: Colors.white,
+                                          ))
+                                    ]
+                                  : [],
                             ),
                             SliverPersistentHeader(
                                 pinned: true,
                                 delegate: _SliverPersistentHeaderDelagete(
                                     tabBar: TabBar(
+                                  indicator: const BoxDecoration(
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(15),
+                                          topRight: Radius.circular(15)),
+                                      color:
+                                          Color.fromARGB(255, 164, 184, 255)),
                                   isScrollable: true,
                                   physics: const ClampingScrollPhysics(),
+                                  unselectedLabelColor: Colors.white70,
                                   labelColor: Colors.white,
-                                  tabs: tabNames
+                                  tabs: viewModel.tabNames
                                       .map((tabName) => Tab(
                                             child: Text(
                                               tabName,
                                               style: const TextStyle(
-                                                  color: Colors.white),
+                                                  fontWeight: FontWeight.bold),
                                             ),
                                           ))
                                       .toList(),
                                 ))),
                           ]),
-                      body: TabBarView(
-                        children: tabContent,
-                      )),
+                      body: TabBarView(children: [
+                        aboutMe(viewModel.p, context),
+                        // ListView(
+                        //     shrinkWrap: true,
+                        //     padding: const EdgeInsets.all(10.0),
+                        //     children: list_open(
+                        //         viewModel.p!.personal_info!.activities!)),
+                        ListView(
+                          shrinkWrap: true,
+                          padding: const EdgeInsets.all(10.0),
+                          children: spaceTiles(viewModel.joined, context),
+                        ),
+                        ListView(
+                          shrinkWrap: true,
+                          padding: const EdgeInsets.all(10.0),
+                          children: spaceTiles(viewModel.created, context),
+                        ),
+                      ])),
         )));
 
 class ProfileView extends ChangeNotifier {
+  Profile? p;
   bool isInfoLoading = false;
+  bool isMyProfile = false;
+  bool isFollowed = false;
+  List<Course>? joined = [];
+  List<Course>? created = [];
+  List<String> tabNames = [
+    "About",
+    // "Activities",
+    "Joined Spaces",
+    "Created Spaces"
+  ];
+  List<Widget> tabContent = [];
+  List<String>? tags = [];
 
-  Future<void> getProfileInfo(p_id) async {
+  Future<void> followUnfollowCallback() async {
+    if (!isFollowed) {
+      isFollowed = await profileService.follow(p!.id);
+    } else {
+      isFollowed = !(await profileService.unfollow(p!.id));
+    }
+    notifyListeners();
+  }
+
+  Future<void> getProfileInfo(String p_id) async {
     isInfoLoading = true;
     notifyListeners();
-
+    isMyProfile = userService.user!.id == p_id;
     p = await profileService.getProfileInfo(p_id);
+    tags = await profileService.getTags();
+    if (p!.created_spaces != null) {
+      created = await getSpaces(p!.created_spaces, 'Created Spaces');
+    }
+    joined = await getSpaces([], 'Joined Spaces');
+    isFollowed = p!.follower_users!
+            .indexWhere((element) => element.id == userService.user!.id) !=
+        -1;
     isInfoLoading = false;
     notifyListeners();
   }
+
+  Future<List<Course>> getSpaces(List<Space>? created, String tab) async {
+    List<Course> courses = [];
+    if (tab == 'Created Spaces') {
+      if (created == null) {
+        return [];
+      }
+      for (Space e in created) {
+        String courseId = e.id!;
+        CourseDetailed? cd = await courseService.getCourseDetails(id: courseId);
+        if (cd != null) {
+          Course c = Course(cd.name, cd.id, cd.info, cd.tags, cd.image,
+              cd.creator, cd.numberOfEnrolled, cd.rating);
+          courses.add(c);
+        }
+      }
+    } else if (tab == 'Joined Spaces') {
+      courses = await courseService.getEnrolledCourses();
+    }
+    return courses;
+  }
 }
 
-Widget profileHeader(context, String image_path) {
-  String full_name = '${p!.name!} ${p!.surname!}';
-  return Container(
-      //height: MediaQuery.of(context).size.height * 0.15,
-      //width: MediaQuery.of(context).size.width,
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10) +
-          const EdgeInsets.only(top: 10),
-      decoration: const BoxDecoration(
-          borderRadius: BorderRadius.only(
-        bottomLeft: Radius.circular(Constants.borderRadius),
-        bottomRight: Radius.circular(Constants.borderRadius),
-      )),
-      child: Column(children: [
-        const SizedBox(height: 20),
-        profilePicture(imagePath: image_path, height: 40, widht: 40),
-        const SizedBox(
-          height: 20,
-        ),
-        Text(
-          full_name,
-          style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Container(
-              margin: const EdgeInsets.all(2),
-              decoration: const BoxDecoration(color: Colors.transparent),
-              child: Row(children: [
-                const Text('Followers'),
-                const SizedBox(
-                  width: 10,
-                  height: 3,
-                ),
-                const Icon(Icons.person, size: 20),
-                const SizedBox(width: 2),
-                Text(p!.follower_users == null
-                    ? '0'
-                    : p!.follower_users!.length.toString()),
-              ]),
-            ),
-            Container(
-              margin: const EdgeInsets.all(2),
-              decoration: const BoxDecoration(color: Colors.transparent),
-              child: Row(children: [
-                const Text('Following'),
-                const SizedBox(
-                  width: 10,
-                  height: 3,
-                ),
-                const Icon(Icons.person, size: 20),
-                const SizedBox(width: 2),
-                Text(p!.followed_users == null
-                    ? '0'
-                    : p!.followed_users!.length.toString()),
-              ]),
-            )
-          ],
-        )
-      ]));
-}
-
-Widget aboutMe() {
+Widget aboutMe(Profile? p, BuildContext context) {
   return Container(
       //height: 400,
       //width: MediaQuery.of(context).size.width,
@@ -226,32 +366,36 @@ Widget aboutMe() {
               'About Me',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            //seperator(context),
-            //Text(p!.personal_info!.bio!),
-            const SizedBox(height: 2),
+            seperator(context),
+            Text(p!.personal_info!.bio ?? ""),
+            const SizedBox(height: 15),
             const Text(
               'Interests',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            //seperator(context),
-            Row(children: [
-              ...?p!.personal_info!.interests?.map((s) => tag(
-                  s,
-                  Color((Random().nextDouble() * 0xFFFFFF).toInt())
-                      .withOpacity(1.0)))
-            ]),
-            const SizedBox(height: 2),
+            seperator(context),
+            SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(children: [
+                  ...?p.personal_info!.interests?.map((s) => tag(
+                      s,
+                      Color((Random().nextDouble() * 0xFFFFFF).toInt())
+                          .withOpacity(1.0)))
+                ])),
+            const SizedBox(height: 15),
             const Text(
               'Knowledge',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            //seperator(context),
-            Row(children: [
-              ...p!.personal_info!.knowledge!.map((s) => tag(
-                  s,
-                  Color((Random().nextDouble() * 0xFFFFFF).toInt())
-                      .withOpacity(1.0)))
-            ]),
+            seperator(context),
+            SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(children: [
+                  ...p.personal_info!.knowledge!.map((s) => tag(
+                      s,
+                      Color((Random().nextDouble() * 0xFFFFFF).toInt())
+                          .withOpacity(1.0)))
+                ])),
           ]));
 }
 
@@ -310,36 +454,27 @@ List<Widget> list_open(List<String> list_name) {
   return tmp;
 }
 
-Profile? p;
-List<String> tabNames = [
-  "About",
-  "Activities",
-  "Achievements",
-  "Spaces",
-  "Notes",
-];
-List<Widget> tabContent = [
-  aboutMe(),
-  ListView(
-      shrinkWrap: true,
-      padding: const EdgeInsets.all(10.0),
-      children: list_open(p!.personal_info!.personal_activities!)),
-  ListView(
-    shrinkWrap: true,
-    padding: const EdgeInsets.all(10.0),
-    children: list_open(p!.personal_info!.personal_achievements!),
-  ),
-  ListView(
-      shrinkWrap: true,
-      padding: const EdgeInsets.all(10.0),
-      children: [const Text('Spaces')] //list_open(p!.created_spaces!),
-      ),
-  ListView(
-    shrinkWrap: true,
-    padding: const EdgeInsets.all(10.0),
-    children: [
-      const Text('Notes'),
-      //...profileService
-    ],
-  ),
-];
+List<Widget> spaceTiles(List<Course>? list_name, context) {
+  if (list_name == null || list_name.isEmpty) {
+    return [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: const [
+          SizedBox(width: 30),
+          Icon(Icons.circle, size: 10),
+          SizedBox(width: 10),
+          Text('Wow! Such Empty'),
+        ],
+      )
+    ];
+  }
+  List<Widget> space_tiles = [];
+
+  for (Course c in list_name) {
+    space_tiles.add(courseTile(c, context));
+    space_tiles.add(const SizedBox(
+      height: 10,
+    ));
+  }
+  return space_tiles;
+}

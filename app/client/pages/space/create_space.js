@@ -1,6 +1,6 @@
 import { Autocomplete, TextField } from "@mui/material";
 import { Field, Form, Formik } from "formik";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { API_URL } from "../../next.config";
 import * as Yup from "yup";
@@ -15,6 +15,7 @@ export default function create_space() {
     const [files, setFiles] = useState([]);
     const [cropper, setCropper] = useState();
     const [tags, setTags] = useState([])
+    const [tagList, setTagList] = useState([]);
 
     const router = useRouter();
 
@@ -37,6 +38,25 @@ export default function create_space() {
         }
     };
 
+    const get_tags = async () => {
+        try {
+            const res = (
+                await axios.get(`${API_URL}/userProfile/getTags`)
+            )?.data
+            console.log(res)
+            if (res) {
+                setTagList(res.words);
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    useEffect(() => {
+        get_tags();
+    }, [])
+
+
     return (
         <>
             <Formik
@@ -48,8 +68,10 @@ export default function create_space() {
                 onSubmit={handleSubmit}
             >
                 {({ errors, touched }) => (
-                    <div style={{marginTop: "20px"}}>
-                        <PhotoUploadWidget files={files} setFiles={setFiles} setCropper={setCropper} />
+                    <div style={{ marginTop: "20px" }}>
+                        <div style={{maxWidth: "900px", margin: "0 auto"}}>
+                            <PhotoUploadWidget files={files} setFiles={setFiles} setCropper={setCropper} />
+                        </div>
                         <Form className={styles.form}>
                             <Field
                                 id="name"
@@ -80,10 +102,9 @@ export default function create_space() {
                                 style={{ height: "50px", marginBottom: "10px" }}
                                 multiple
                                 id="tags-outlined"
-                                options={tags}
+                                options={tagList}
                                 defaultValue={[...tags]}
-                                freeSolo
-                                autoSelect
+                                filterSelectedOptions
                                 onChange={(e) => setTags([...tags, e.target.value])}
                                 renderInput={(params) => (
                                     <TextField
