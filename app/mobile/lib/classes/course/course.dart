@@ -25,7 +25,8 @@ class Course {
   final Color color = CustomColors.getRandomColor();
   // final DateTime createdAt;
 
-  Course(this.name, this.id, this.info, this.tags, this.image, this.creator, this.numberOfEnrolled);
+  Course(this.name, this.id, this.info, this.tags, this.image, this.creator,
+      this.numberOfEnrolled);
 
   factory Course.fromJson(Map<String, dynamic> json) => _$CourseFromJson(json);
 
@@ -37,10 +38,20 @@ class CourseDetailed extends Course {
   List<Topic> topics = [];
   List<String> badges = [];
   List<DiscussionShortened> discussions = [];
-  List<Note>? notes = [];
+  List<Note?>? notes = [];
 
-  CourseDetailed(super.name, super.id, super.info, super.tags, super.image,
-      super.creator, super.numberOfEnrolled, this.topics, this.badges, this.discussions, this.notes);
+  CourseDetailed(
+      super.name,
+      super.id,
+      super.info,
+      super.tags,
+      super.image,
+      super.creator,
+      super.numberOfEnrolled,
+      this.topics,
+      this.badges,
+      this.discussions,
+      this.notes);
 
   factory CourseDetailed.fromJson(Map<String, dynamic> json) =>
       _$CourseDetailedFromJson(json);
