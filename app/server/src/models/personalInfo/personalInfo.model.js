@@ -14,9 +14,10 @@ const personalInfoSchema = new mongoose.Schema({
       type: String,
     },
   ],
-  personal_activities: [
+  activities: [
     {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Activity",
     },
   ],
   knowledge: [
@@ -28,6 +29,11 @@ const personalInfoSchema = new mongoose.Schema({
     type: mongoose.Types.Decimal128,
   },
   interests: [
+    {
+      type: String,
+    },
+  ],
+  disinterested_spaces: [
     {
       type: String,
     },

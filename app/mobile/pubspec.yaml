@@ -47,6 +47,8 @@ dependencies:
   email_validator: ^2.1.17
   maps_launcher: any
   flutter_osm_plugin: ^0.42.0
+  animated_floating_buttons: ^0.0.1
+  share_plus: 4.2.0
   
 
   # The following adds the Cupertino Icons font to your application.

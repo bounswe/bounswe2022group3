@@ -3,6 +3,7 @@ import 'package:bucademy/services/content_service.dart';
 import 'package:bucademy/services/dio_service.dart';
 import 'package:bucademy/services/discussion_service.dart';
 import 'package:bucademy/services/event_service.dart';
+import 'package:bucademy/services/feed_service.dart';
 import 'package:bucademy/services/navigator_service.dart';
 import 'package:bucademy/services/note_service.dart';
 import 'package:bucademy/services/persistence_service.dart';
@@ -27,5 +28,6 @@ GetIt $initGetIt(
   gh.lazySingleton<ProfileService>((() => ProfileService()));
   gh.lazySingleton<EventService>(() => EventService());
   gh.lazySingleton<NoteService>((() => NoteService()));
+  gh.lazySingleton<FeedService>((() => FeedService()));
   return get;
 }

@@ -13,7 +13,10 @@ Widget homepageView() => ViewModelBuilder<HomeViewModel>.reactive(
       viewModelBuilder: () => HomeViewModel(),
       onModelReady: (model) => model.getCourses(),
       builder: (context, viewModel, child) => Scaffold(
-          appBar: appBar(),
+          appBar: appBar(
+              title: userService.user != null
+                  ? "Hello ${userService.user?.name}!"
+                  : null),
           body: RefreshIndicator(
             onRefresh: (() => viewModel.update()),
             child: Column(
@@ -29,7 +32,12 @@ Widget homepageView() => ViewModelBuilder<HomeViewModel>.reactive(
                         bottomLeft: Radius.circular(Constants.borderRadius),
                         bottomRight: Radius.circular(Constants.borderRadius),
                       )),
-                  child: searchBar(viewModel.search),
+                  child:
+                      searchBar(viewModel.search, viewModel.searchBarController,
+                          close: () {
+                    viewModel.closeSearch();
+                    FocusScope.of(context).requestFocus(FocusNode());
+                  }),
                 ),
                 Expanded(
                   child: Padding(
@@ -142,6 +150,7 @@ Widget homepageView() => ViewModelBuilder<HomeViewModel>.reactive(
 class HomeViewModel extends ChangeNotifier {
   List<Course> courses = [];
   List<Course> enrolledCourses = [];
+  TextEditingController searchBarController = TextEditingController();
 
   List<Course> searchResults = [];
   String? title;
@@ -155,6 +164,12 @@ class HomeViewModel extends ChangeNotifier {
     courses = await courseService.getCourses();
     enrolledCourses = await courseService.getEnrolledCourses();
     isLoading = false;
+    notifyListeners();
+  }
+
+  closeSearch() {
+    isSearchScreen = false;
+    searchBarController.clear();
     notifyListeners();
   }
 

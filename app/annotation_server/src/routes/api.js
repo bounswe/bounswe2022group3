@@ -4,7 +4,7 @@ const api = express.Router();
 
 const annotationRouter = require("./annotation/annotation.route");
 
-api.use("/annotation", annotationRouter);
+api.use("/", annotationRouter);
 
 module.exports = {
   api,

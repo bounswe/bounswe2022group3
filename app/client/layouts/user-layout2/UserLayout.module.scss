@@ -73,3 +73,54 @@
 .icon_mobile_nav[name="close-outline"] {
     display: none;
 }
+
+.activitiesPageContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 400px;
+    width: 400px;
+    position: relative;
+}
+
+.activitiesContainer {
+    background-color: #4d4ffa;
+    padding: 10px;
+    position: absolute;
+    top: 0;
+}
+
+.activityContainer {
+    border-radius: 12px;
+    padding: 10px 10px;
+    color: #4d4ffa;
+    background-color: white;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.activitiesTitle {
+    margin-bottom: 50px;
+}
+
+.activityIconFrame {
+    background-color: #4d4ffa;
+    border-radius: 100%;
+    min-width: 40px !important;
+    height: 40px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    margin-right: 20px;
+}
+
+.activityIcon {
+    color: white;
+}
+
+.activityBody {
+    font-size: 11px;
+}

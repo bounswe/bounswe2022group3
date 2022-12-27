@@ -1,30 +1,40 @@
 const SpaceModel = require("../../models/space/space.model");
 const EnrollmentModel = require("../../models/enrollment/enrollment.model");
 const UserModel = require("../../models/user/user.model");
+const ActivityModel = require("../../models/activity/activity.model");
+const semanticUrl = process.env.SEMANTIC_SEARCH_SERVER_URL
+const axios = require("axios"); 
 
 const EnrollmentController = {
   createEnrollment: async function (req, res) {
     try {
       const space_id = req.body.space_id;
-      const user = req.auth.id;
+      const user_id = req.auth.id;
       const space = await SpaceModel.Space.findById(space_id);
       if (!space) {
         return res.status(400).json({ error: "Space does not exist!" });
       }
       const enrolled_space = await EnrollmentModel.Enrollment.find({
-        user,
+        user: user_id,
         space: space_id,
       });
       if (enrolled_space.length > 0) {
         return res.status(400).json({ error: "User already enrolled!" });
       }
-      const enrollment = await EnrollmentModel.createEnrollment(user, space_id);
+      const enrollment = await EnrollmentModel.createEnrollment(user_id, space_id);
       space.enrollments.push(enrollment._id);
       space.enrolledUsersCount += 1;
-      space.save();
-      const creator = await UserModel.User.findById(user);
-      creator.enrollments.push(enrollment);
-      creator.save();
+      await space.save();
+      const user = await UserModel.User.findById(user_id);
+      // {user} enrolled to {space} space, {date.now-enrollment.createdAt} ago.
+      let activity_body = `${user.name} ${user.surname} enrolled to "${space.name}" space, {timeDiff}.`;
+      let activity_data = {
+        body : activity_body,
+        space: space._id,
+        type: "enrollment",
+      }
+      const activity = await ActivityModel.createActivity(user, activity_data);
+      
       return res.status(201).send({ enrollment });
     } catch (e) {
       return res.status(400).send({ error: e.toString() });
@@ -104,10 +114,18 @@ const EnrollmentController = {
             select: { _id: 1, name: 1, surname: 1, image: 1 }
           })
           .exec();
+          if (spaces.length < 1) {
+            spaces = await searchWithLabels(keyword)
+          }
+    
+          // if still not found, do semantic search
+          if (spaces.length < 1) {
+            spaces = await semanticSearch(keyword)
+          }
         for (var space of spaces) {
           var enr = await EnrollmentModel.Enrollment.find(
             {
-              space,
+              space: space._id,
               user,
             },
             "space is_active notes progress"
@@ -134,18 +152,18 @@ const EnrollmentController = {
             enrollments.push(space[0]);
           }
         }
-        const creator = await UserModel.User.findById(user);
-        for (var space of creator.created_spaces) {
-          var populated_space = await SpaceModel.Space.findOne({
-            _id: space
-          },
-            "name creator info rating tags image enrolledUsersCount"
-          ).populate({
-            path: "creator",
-            select: { _id: 1, name: 1, surname: 1, image: 1 }
-          });
-          enrollments.push(populated_space);
-        }
+        // const creator = await UserModel.User.findById(user);
+        // for (var space of creator.created_spaces) {
+        //   var populated_space = await SpaceModel.Space.findOne({
+        //     _id: space
+        //   },
+        //     "name creator info rating tags image enrolledUsersCount"
+        //   ).populate({
+        //     path: "creator",
+        //     select: { _id: 1, name: 1, surname: 1, image: 1 }
+        //   });
+        //   enrollments.push(populated_space);
+        // }
       }
       return res.status(200).json({ enrollments });
     } catch (e) {
@@ -153,5 +171,117 @@ const EnrollmentController = {
     }
   },
 };
+
+async function semanticSearch(searchText) {
+  const spaces = await SpaceModel.Space.find(
+    {},
+    "name info"
+  )
+
+  let names = []
+  let infos = []
+  let spaceIDs = []
+
+  for (let space of spaces) {
+    names.push(space.name)
+    infos.push(space.info)
+    spaceIDs.push(space._id)
+  }
+
+  const titlePayload = {
+    search_text: searchText,
+    search_list: names
+  };
+
+  const infoPayload = {
+    search_text: searchText,
+    search_list: infos
+  }
+
+  const titleRelevances = (await axios.post(`${semanticUrl}/relevance`, titlePayload, { headers: { "Accept-Encoding": "*" } })).data.relevances
+  const infoRelevances = (await axios.post(`${semanticUrl}/relevance`, infoPayload, { headers: { "Accept-Encoding": "*" } })).data.relevances
+
+  const relevancesAsSeperateArrays = {
+    titleRelevances,
+    infoRelevances,
+    spaceIDs
+  }
+
+  return await spacesWithRelevance(relevancesAsSeperateArrays)
+}
+
+async function spacesWithRelevance(relevancesAsSeperateArrays) {
+  const relevancesNormalized = calculateRelevance(relevancesAsSeperateArrays)
+
+  let spaces = []
+  for (let relevance of relevancesNormalized) {
+
+    const space = await SpaceModel.Space.findOne(
+      { _id: relevance.spaceID },
+      "name creator info rating tags image enrolledUsersCount"
+    )
+      .populate({
+        path: "creator",
+        select: { _id: 1, name: 1, surname: 1, image: 1 }
+      })
+      .exec()
+    spaces.push(space)
+  }
+
+  return spaces
+}
+
+function calculateRelevance(relevancesAsSeperateArrays) {
+
+  let relevances = []
+  for (let i = 0; i < relevancesAsSeperateArrays.titleRelevances.length; i++) {
+    relevances.push({
+      spaceID: relevancesAsSeperateArrays.spaceIDs[i],
+      titleRelevance: relevancesAsSeperateArrays.titleRelevances[i],
+      infoRelevance: relevancesAsSeperateArrays.infoRelevances[i]
+    })
+  }
+
+  let relevancesNormalized = []
+  for (let relevanceObject of relevances) {
+    relevancesNormalized.push({ spaceID: relevanceObject.spaceID, relevance: (0.3 * relevanceObject.titleRelevance) + (0.7 * relevanceObject.infoRelevance) })
+  }
+
+  relevancesNormalized = relevancesNormalized.filter(a => a.relevance > 0.25)
+  relevancesNormalized.sort((a, b) => b.relevance - a.relevance)
+  return relevancesNormalized
+}
+
+async function searchWithLabels(queryText) {
+  tokens = queryText.split()
+
+  searchString = ""
+  for (token of tokens) {
+    searchString += token + "+"
+  }
+
+  const mlUrl = `https://api.datamuse.com/words?max=10&ml=${searchString}`
+  const mlResult = (await axios.get(mlUrl)).data
+
+  inferredLabels = [queryText]
+  for (res of mlResult) {
+    inferredLabels.push(res.word);
+  }
+
+  let spaces = [];
+  let spaceIDs = [];
+  for (label of inferredLabels) {
+    let spacesFound = await SpaceModel.Space.find({ $text: { $search: `\"${label}\"` } }).exec()
+
+    for (let spaceFound of spacesFound) {
+      if (!spaceIDs.includes(spaceFound._id.toString())) {
+        spaces.push(spaceFound);
+        spaceIDs.push(spaceFound._id.toString());
+      }
+    }
+  }
+
+  return spaces
+}
 
 module.exports = EnrollmentController;

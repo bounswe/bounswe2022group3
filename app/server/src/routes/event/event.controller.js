@@ -1,10 +1,25 @@
 const EventModel = require("../../models/event/event.model");
-
+const ActivityModel = require("../../models/activity/activity.model");
+const UserModel = require("../../models/user/user.model");
+const SpaceModel = require("../../models/space/space.model");
 const EventController = {
     createEvent: async function (req, res) {
         try {
             req.body.creator = req.auth.id
-            const event = await EventModel.createEvent(req.body)
+            const event = await EventModel.createEvent(req.body);
+            var space = await SpaceModel.getSpaceByID(req.body.space_id);
+            space.events.push(event._id);
+            await space.save();
+            const user = await UserModel.User.findById(req.auth.id);
+            // {user} launched a new event called {event.name} in {space} space, {date.now-event.createdAt} ago.
+            let activity_body = `${user.name} ${user.surname} launched a new event called "${event.event_title}" in "${space.name}" space, {timeDiff}.`;
+            let activity_data = {
+                body : activity_body,
+                space: space._id,
+                event: event._id,
+                type: "event"
+            }
+            const activity = await ActivityModel.createActivity(req.auth.id, activity_data);
             return res.status(201).json({event})
         } catch (e) {
             return res.status(400).json({ error: e.toString() });
@@ -19,8 +34,12 @@ const EventController = {
             }
             if (event.creator.toString() != req.auth.id.toString()) {
                 return res.status(400).json({message: "User is not the creator of the event"})
+            }else{
+                const space = await SpaceModel.getSpaceByID(event.space_id)
+                space.events.remove(id)
+                await space.save()
+                await EventModel.deleteEvent(event_id)
             }
-            await EventModel.deleteEvent(event_id)
             return res.status(200).json({message: "event deleted"})
         } catch (e) {
             return res.status(400).json({ error: e.toString() });

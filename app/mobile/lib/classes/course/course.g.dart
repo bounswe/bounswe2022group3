@@ -46,7 +46,8 @@ CourseDetailed _$CourseDetailedFromJson(Map<String, dynamic> json) =>
           .map((e) => EventShortened.fromJson(e as Map<String, dynamic>))
           .toList(),
       (json['notes'] as List<dynamic>?)
-          ?.map((e) => Note.fromJson(e as Map<String, dynamic>))
+          ?.map((e) =>
+              e == null ? null : Note.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 

@@ -4,11 +4,12 @@ import 'package:bucademy/classes/topic/topic.dart';
 import 'package:bucademy/resources/custom_colors.dart';
 import 'package:bucademy/resources/text_styles.dart';
 import 'package:bucademy/services/locator.dart';
+import 'package:bucademy/view/course/coursepage.dart';
 import 'package:bucademy/view/topic/resource_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-Widget topicPageView(Topic c) => ViewModelBuilder<TopicPageViewModel>.reactive(
+Widget topicPageView(Topic c, CoursePageViewModel coursePageModel ) => ViewModelBuilder<TopicPageViewModel>.reactive(
     viewModelBuilder: () => TopicPageViewModel(c.id),
     builder: (context, viewModel, child) {
       return viewModel.contentsLoading
@@ -41,7 +42,7 @@ Widget topicPageView(Topic c) => ViewModelBuilder<TopicPageViewModel>.reactive(
                             : [
                                 ...viewModel.topic!.resources.map(
                                     (Resource cont) =>
-                                        resourceTile(viewModel.topic!, cont, context, viewModel))
+                                        resourceTile(viewModel.topic!, cont, context, viewModel, coursePageModel))
                               ]),
                     addButton(viewModel.topic!, context, viewModel),
                   ]),
