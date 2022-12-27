@@ -208,7 +208,7 @@ export default function Home() {
                         columnClassName="my-masonry-grid_column">
                         {
                             popularSpaces.map(course => {
-                                return <Link href={'/my/spaces/' + course._id + "/resources"}>
+                                return <Link href={'/space/' + course._id}>
                                     <div className={styles.card} style={{ border: course.creator._id == localStorage.getItem("user_id") && "2px solid #4d4ffa" }}>
                                         <div className={styles.image}>
                                             <img src={course.image} layout="fill" />
