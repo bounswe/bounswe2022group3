@@ -21,7 +21,7 @@ class UserService {
       if (res.statusCode != 200) return false;
 
       Login login = Login.fromJson(res.data);
-      await Future.wait([
+    await Future.wait([
         persistenceService.set(PersistenceKeys.email, login.email),
         persistenceService.set(PersistenceKeys.accessToken, login.access_token),
         persistenceService.set(

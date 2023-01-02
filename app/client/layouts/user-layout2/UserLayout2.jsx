@@ -42,6 +42,7 @@ function UserLayout2({ children }) {
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
+        setBadgeCount(0);
     };
 
     const handleClose = () => {

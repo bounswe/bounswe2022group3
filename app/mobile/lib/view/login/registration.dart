@@ -38,21 +38,21 @@ class RegistrationFormState extends State<RegistrationForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: SingleChildScrollView( // thanks to https://stackoverflow.com/questions/51774252/bottom-overloaded-by-213-pixels-in-flutter
-        child: Container(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Padding(padding: EdgeInsets.only(bottom: 80.0)),
-                Container(
-                    alignment: Alignment.center,
-                    height: 200,
-                    child: Image.network('https://raw.githubusercontent.com/bounswe/bounswe2022group3/master/app/client/public/education.png')
-                ),
-                const Padding(padding: EdgeInsets.only(bottom: 20.0)),
-                Form(
+        resizeToAvoidBottomInset: false,
+        body: SingleChildScrollView(
+          // thanks to https://stackoverflow.com/questions/51774252/bottom-overloaded-by-213-pixels-in-flutter
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Padding(padding: EdgeInsets.only(bottom: 80.0)),
+              Container(
+                  alignment: Alignment.center,
+                  height: 200,
+                  child: Image.network(
+                      'https://raw.githubusercontent.com/bounswe/bounswe2022group3/master/app/client/public/education.png')),
+              const Padding(padding: EdgeInsets.only(bottom: 20.0)),
+              Form(
                   key: _formKey,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -61,18 +61,18 @@ class RegistrationFormState extends State<RegistrationForm> {
                       surnameBar(_surnameController),
                       emailBar(_emailController),
                       passwordBar(_passwordController),
-                      Row(
-                          children: [
-                            Checkbox(
-                              value: _checked,
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  _checked = value!;
-                                });
-                              },
-                            ),
-                            const Text('I agree to the Terms of Use and Privacy Policy.'),]
-                      ),
+                      Row(children: [
+                        Checkbox(
+                          value: _checked,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              _checked = value!;
+                            });
+                          },
+                        ),
+                        const Text(
+                            'I agree to the Terms of Use and Privacy Policy.'),
+                      ]),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 16.0),
                         child: ElevatedButton(
@@ -80,41 +80,38 @@ class RegistrationFormState extends State<RegistrationForm> {
                             // Validate returns true if the form is valid, or false otherwise.
                             if (_formKey.currentState!.validate()) {
                               bool registered = await userService.register(
-                                name: _nameController.text,
-                                surname: _surnameController.text,
-                                email: _emailController.text,
-                                password: _passwordController.text,
-                                agreement: _checked,
-                                context: context);
+                                  name: _nameController.text,
+                                  surname: _surnameController.text,
+                                  email: _emailController.text,
+                                  password: _passwordController.text,
+                                  agreement: _checked,
+                                  context: context);
                               if (registered) {
                                 _viewModel.navigateToLogin(context);
                               } /*else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text( 'Registration failed.')),
-                                );
-                              }*/
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text( 'Registration failed.')),
+                            );
+                          }*/
                             }
                           },
                           child: const Text('Register'),
                         ),
                       ),
                     ],
-                  )
-                ),
-                GestureDetector(
-                  child: Container(
-                    alignment: Alignment.center,
-                    child: const Text(
-                      'Already have an account? Log in',
-                    ),
+                  )),
+              GestureDetector(
+                child: Container(
+                  alignment: Alignment.center,
+                  child: const Text(
+                    'Already have an account? Log in',
                   ),
-                  onTap: () => _viewModel.navigateToLogin(context),
                 ),
-              ],
-            )
-        ),
-      )
-    );
+                onTap: () => _viewModel.navigateToLogin(context),
+              ),
+            ],
+          ),
+        ));
   }
 }
 
@@ -124,12 +121,10 @@ class RegistrationViewModel extends ChangeNotifier {
   bool isLoading = false;
 
   void navigateToLogin(BuildContext context) {
-    Navigator.of(context)
-        .pushAndRemoveUntil(
+    Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
             builder: (context) => LoginFormState().build(context)),
-            (route) => false
-    );
+        (route) => false);
   }
 
   void navigateToHomepage(BuildContext context) {

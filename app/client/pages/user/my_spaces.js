@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import styles from '../../styles/user/spaces.module.scss'
 import Button from '../../components/Button/Button'
-import { Avatar, AvatarGroup, Rating, styled, TextField, Tooltip, tooltipClasses } from '@mui/material'
+import { Avatar, AvatarGroup, IconButton, Rating, styled, TextField, Tooltip, tooltipClasses } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search';
 import { API_URL } from "../../next.config";
 import debounce from "lodash/debounce";
@@ -13,7 +13,20 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import HomeIcon from '@mui/icons-material/Home';
 import { useRouter } from 'next/router';
 import UserLayout2 from '../../layouts/user-layout2/UserLayout2';
+import NotInterestedIcon from '@mui/icons-material/NotInterested';
 
+
+const CustomTooltip = styled(({ className, ...props }) => (
+    <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+    [`& .${tooltipClasses.arrow}`]: {
+        color: "#4d4ffa",
+    },
+    [`& .${tooltipClasses.tooltip}`]: {
+        backgroundColor: "#4d4ffa",
+        color: '#fff'
+    },
+}));
 
 export default function Home() {
     const [courseList, setCourseList] = useState([])
@@ -97,30 +110,15 @@ export default function Home() {
         950: 1
     };
 
-    // const CustomTooltip = styled(({ className, ...props }) => (
-    //     <Tooltip {...props} classes={{ popper: className }} />
-    // ))(({ theme }) => ({
-    //     [`& .${tooltipClasses.arrow}`]: {
-    //         color: "#4d4ffa",
-    //     },
-    //     [`& .${tooltipClasses.tooltip}`]: {
-    //         backgroundColor: "#4d4ffa",
-    //         color: '#fff'
-    //     },
-    // }));
-
-    async function logout() {
+    async function notInterested(id) {
         try {
-            await axios.post(API_URL + "/user/logout", {})
+            await axios.post(API_URL + "/userProfile/disinterest", {
+                space_id: id
+            })
+            getRecommendedSpaces("");
         } catch (err) {
             console.log(err);
         }
-
-        localStorage.removeItem("access_token");
-        localStorage.removeItem("refresh_token");
-        localStorage.removeItem("email");
-        localStorage.removeItem("user_id");
-        router.push("/user/login");
     }
 
     return (
@@ -175,20 +173,27 @@ export default function Home() {
 
                         {
                             recommendedSpaces.map(course => {
-                                return <Link href={'/my/spaces/' + course._id + "/resources"}>
+                                return <>
                                     <div className={styles.card} style={{ border: course.creator._id == localStorage.getItem("user_id") && "2px solid #4d4ffa" }}>
-                                        <div className={styles.image}>
+                                        <div className={styles.image} style={{position: "relative"}}>
                                             <img src={course.image} layout="fill" />
+                                            <CustomTooltip title="Not interested" arrow>
+                                                <div onClick={() => notInterested(course._id)} style={{position: "absolute", top: "20px", right: "20px", zIndex: 120, backgroundColor: "#4d4ffa", borderRadius: "50%", padding: "10px 10px 7px 10px"}}>
+                                                    <NotInterestedIcon style={{color: "#fff"}}/>
+                                                </div>
+                                            </CustomTooltip>
                                         </div>
-                                        <div className={styles.details}>
-                                            <h3>{course.name}</h3>
-                                            <div>
-                                                <h4>{course.creator.name} {course.creator.surname}</h4>
-                                                <Rating defaultValue={course.rating} precision={0.1} readOnly />
+                                        <Link href={'/space/' + course._id}>
+                                            <div className={styles.details}>
+                                                <h3>{course.name}</h3>
+                                                <div>
+                                                    <h4>{course.creator.name} {course.creator.surname}</h4>
+                                                    <Rating defaultValue={course.rating} precision={0.1} readOnly />
+                                                </div>
                                             </div>
-                                        </div>
+                                        </Link>
                                     </div>
-                                </Link>
+                                </>
                             })
                         }
                     </Masonry>
@@ -203,7 +208,7 @@ export default function Home() {
                         columnClassName="my-masonry-grid_column">
                         {
                             popularSpaces.map(course => {
-                                return <Link href={'/my/spaces/' + course._id + "/resources"}>
+                                return <Link href={'/space/' + course._id}>
                                     <div className={styles.card} style={{ border: course.creator._id == localStorage.getItem("user_id") && "2px solid #4d4ffa" }}>
                                         <div className={styles.image}>
                                             <img src={course.image} layout="fill" />
