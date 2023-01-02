@@ -58,6 +58,7 @@
       - [Web Mockup](#web-mockup-2)
       - [Mobile Mockup](#mobile-mockup-2)
   - [Project plan](#project-plan)
+  - [Unit Tests](#unit-tests)
 
 
 ## Manuals
@@ -632,3 +633,7 @@ Then, edit or delete those notes by respectively clicking:
 ![image](https://user-images.githubusercontent.com/49765256/197226544-f3795f8e-4a1b-4a4b-816b-b5212e73239f.png)
 ![image](https://user-images.githubusercontent.com/49765256/199111153-eb5cfffd-5af5-4200-8634-2981f688147f.png)
 ![image](https://user-images.githubusercontent.com/49765256/199111171-98736b11-1f35-4eb1-b46e-c5f4fbb5768a.png)
+ 
+## Unit Tests
+
+Unit tests can be viewed from [here](https://github.com/bounswe/bounswe2022group3/tree/master/app/server/src/tests).
