@@ -100,8 +100,6 @@ If you encounter any issues while using the platform, try the following:
 - If the issue persists, contact the platform's support team for assistance.
 #### Technical Specifications
 The platform has the following technical specifications:
-- Supported operating systems: Windows 10, macOS 10.13 and higher
-- Minimum hardware requirements: 4 GB RAM, 2 GHz processor
 - Supported browsers: Google Chrome, Mozilla Firefox, Microsoft Edge
 - Internet connection: broadband recommended
 
