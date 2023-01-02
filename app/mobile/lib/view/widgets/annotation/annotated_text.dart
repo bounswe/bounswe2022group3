@@ -2,7 +2,6 @@ import 'package:bucademy/classes/annotation/annotation.dart';
 import 'package:bucademy/services/locator.dart';
 import 'package:bucademy/view/widgets/annotation/annotation_dialog.dart';
 import 'package:bucademy/view/widgets/annotation/custom_selection.dart';
-//import 'package:bucademy/view/widgets/annotation/custom_selection.dart';
 import 'package:flutter/material.dart';
 
 class AnnotatableText extends StatefulWidget {
@@ -14,6 +13,7 @@ class AnnotatableText extends StatefulWidget {
   final double? textScaleFactor;
   final TextAlign? textAlign;
   final Function? onTapText;
+  final ChangeNotifier? viewModel;
 
   AnnotatableText(
       {Key? key,
@@ -24,7 +24,8 @@ class AnnotatableText extends StatefulWidget {
       this.delegate,
       this.textScaleFactor,
       this.onTapText,
-      this.textAlign})
+      this.textAlign,
+      this.viewModel})
       : super(key: key);
 
   @override
@@ -43,28 +44,8 @@ class AnnotatableTextState extends State<AnnotatableText> {
     super.initState();
   }
 
-  void placeAnnotations() {
-    Annotation xx = Annotation(
-        id: '007',
-        resource: '638e2c787d27641963500dbb',
-        body: [
-          Body(
-              purpose: 'commenting',
-              type: 'TextualBody',
-              value: 'hehehehehe',
-              creator:
-                  Creator(id: '63600785a9e01d1e420ed804', name: 'Şule Erkul'),
-              created: DateTime.now().toString(),
-              modified: DateTime.now().toString())
-        ],
-        target: Target(selector: [
-          Selector(type: 'TextQuoteSelector', exact: 'rrraa'),
-          Selector(type: 'TextPositionSelector', start: 3, end: 8)
-        ]),
-        context: 'http://www.w3.org/ns/anno.jsonld',
-        type: 'Annotation');
-
-    annotations.add(xx);
+  void placeAnnotations() async {
+    annotations = await annotationService.getAll('19');
   }
 
   void onAnnotationPressed(TextSelectionDelegate delegate) async {
@@ -84,8 +65,7 @@ class AnnotatableTextState extends State<AnnotatableText> {
       int start, int end, String selected, String comment) async {
     String createdTime = DateTime.now().toString();
     Annotation a = Annotation(
-        id: '007',
-        resource: '638e2c787d27641963500dbb',
+        resource: '19',
         body: [
           Body(
               purpose: 'commenting',
@@ -103,13 +83,14 @@ class AnnotatableTextState extends State<AnnotatableText> {
         context: 'http://www.w3.org/ns/anno.jsonld',
         type: 'Annotation');
 
-    /* bool created = await annotationService.create(a);
+    bool created = await annotationService.create(a);
     if (created) {
       setState(() {
         children = [];
         annotations.add(a);
       });
-    }*/
+    }
+    widget.viewModel != null ? widget.viewModel!.notifyListeners() : null;
   }
 
   @override

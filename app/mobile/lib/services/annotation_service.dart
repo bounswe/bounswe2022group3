@@ -11,8 +11,8 @@ class AnnotationService {
     try {
       var req = annotation.toJson();
       print(req);
-      Response response = await dioService.dio.post('/annotation', data: req);
-
+      Response response =
+          await dioService.dio.post('bucademy.tk/annotation', data: req);
       if (response.statusCode! >= 200) {
         return true;
       }
@@ -24,8 +24,8 @@ class AnnotationService {
 
   Future<Annotation?> getOne(String annotation_id) async {
     try {
-      Response response =
-          await dioService.dio.get('/annotation/getOne/$annotation_id');
+      Response response = await dioService.dio
+          .get('bucademy.tk/annotation/getOne/$annotation_id');
       if (response.statusCode != 200) {
         return null;
       }
@@ -41,7 +41,7 @@ class AnnotationService {
   Future<List<Annotation>> getAll(String resource_id) async {
     try {
       Response response =
-          await dioService.dio.get('/annotation/get/$resource_id');
+          await dioService.dio.get('bucademy.tk/annotation/get/$resource_id');
       if (response.statusCode != 200) {
         return [];
       }
@@ -59,7 +59,7 @@ class AnnotationService {
   Future<bool> delete(String annotation_id) async {
     try {
       Response response = await dioService.dio.delete(
-        '/annotation/delete',
+        'bucademy.tk/annotation/delete',
         data: {'id': annotation_id},
       );
       if (response.statusCode == 200) {
@@ -77,7 +77,7 @@ class AnnotationService {
       var req = annotation.toJson();
       print(req);
       Response response =
-          await dioService.dio.post('/annotation/update', data: req);
+          await dioService.dio.post('bucademy.tk/annotation/update', data: req);
 
       if (response.statusCode! >= 200) {
         return true;
