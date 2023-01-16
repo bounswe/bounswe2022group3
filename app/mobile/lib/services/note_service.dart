@@ -52,10 +52,7 @@ class NoteService {
         data: {"space_id": spaceId},
       );
       Map json = response.data;
-      return await Future.wait(json['notes']
-          .map<Future<Note?>>(
-              (e) => noteService.getNote(noteId: e['note']['_id']))
-          .toList());
+      return json['notes'].map<Note>((e) => Note.fromJson(e['note'])).toList();
     } catch (e) {
       print(e);
     }
