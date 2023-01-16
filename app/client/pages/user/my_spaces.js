@@ -41,8 +41,16 @@ export default function Home() {
     }
 
     const debounceSearch = useCallback(
-        debounce((value) => getCourses(value), 500), []
+        debounce((value) => getCourses(value), 1000), []
     );
+
+    const search = async (e) => {
+        e.preventDefault();
+        const { value } = e.target;
+        if (value) {
+            getCourses(value)
+        }
+    }
 
     async function getCourses(courseKey) {
         try {
@@ -131,7 +139,7 @@ export default function Home() {
             <div className={styles.search}>
                 <div className={styles.searchbar}>
                     <SearchIcon />
-                    <form className={styles.searchbar_form}>
+                    <form className={styles.searchbar_form} onSubmit={search}>
                         <input type="search" placeholder="Search..." className={styles.searchbar_input} onChange={onSearchbarChange} />
                     </form>
                 </div>
@@ -175,11 +183,11 @@ export default function Home() {
                             recommendedSpaces.map(course => {
                                 return <>
                                     <div className={styles.card} style={{ border: course.creator._id == localStorage.getItem("user_id") && "2px solid #4d4ffa" }}>
-                                        <div className={styles.image} style={{position: "relative"}}>
+                                        <div className={styles.image} style={{ position: "relative" }}>
                                             <img src={course.image} layout="fill" />
                                             <CustomTooltip title="Not interested" arrow>
-                                                <div onClick={() => notInterested(course._id)} style={{position: "absolute", top: "20px", right: "20px", zIndex: 120, backgroundColor: "#4d4ffa", borderRadius: "50%", padding: "10px 10px 7px 10px"}}>
-                                                    <NotInterestedIcon style={{color: "#fff"}}/>
+                                                <div onClick={() => notInterested(course._id)} style={{ position: "absolute", top: "20px", right: "20px", zIndex: 120, backgroundColor: "#4d4ffa", borderRadius: "50%", padding: "10px 10px 7px 10px" }}>
+                                                    <NotInterestedIcon style={{ color: "#fff" }} />
                                                 </div>
                                             </CustomTooltip>
                                         </div>

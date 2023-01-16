@@ -20,7 +20,7 @@ export default function Home() {
   }
 
   const debounceSearch = useCallback(
-    debounce((value) => getCourses(value), 500), []
+    debounce((value) => getCourses(value), 1000), []
   );
 
   async function getCourses(courseKey) {
@@ -30,6 +30,14 @@ export default function Home() {
     }
     catch (e) {
       console.log(e)
+    }
+  }
+
+  const search = async (e) => {
+    e.preventDefault();
+    const { value } = e.target;
+    if (value) {
+      getCourses(value)
     }
   }
 
@@ -104,7 +112,7 @@ export default function Home() {
       <section className={styles.search_container}>
         <div className={styles.searchbar}>
           <SearchIcon />
-          <form className={styles.searchbar_form}>
+          <form className={styles.searchbar_form} onSubmit={search}>
             <input type="search" placeholder="Search..." className={styles.searchbar_input} onChange={onSearchbarChange} />
           </form>
         </div>
