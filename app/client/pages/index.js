@@ -12,16 +12,8 @@ import Masonry from 'react-masonry-css'
 
 export default function Home() {
   const [courseList, setCourseList] = useState([])
+  const [keyword, setKeyword] = useState("")
   const router = useRouter();
-
-  const onSearchbarChange = async (e) => {
-    const { value } = e.target;
-    debounceSearch(value)
-  }
-
-  const debounceSearch = useCallback(
-    debounce((value) => getCourses(value), 1000), []
-  );
 
   async function getCourses(courseKey) {
     try {
@@ -35,10 +27,7 @@ export default function Home() {
 
   const search = async (e) => {
     e.preventDefault();
-    const { value } = e.target;
-    if (value) {
-      getCourses(value)
-    }
+    getCourses(keyword);
   }
 
   useEffect(() => {
@@ -111,9 +100,9 @@ export default function Home() {
 
       <section className={styles.search_container}>
         <div className={styles.searchbar}>
-          <SearchIcon />
+          <SearchIcon onClick={() => getCourses(keyword)} style={{ cursor: "pointer", zIndex: 10000 }} />
           <form className={styles.searchbar_form} onSubmit={search}>
-            <input type="search" placeholder="Search..." className={styles.searchbar_input} onChange={onSearchbarChange} />
+            <input type="search" placeholder="Search..." className={styles.searchbar_input} value={keyword} onChange={e => setKeyword(e.target.value)} />
           </form>
         </div>
       </section>
